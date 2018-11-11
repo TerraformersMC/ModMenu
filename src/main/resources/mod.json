@@ -1,0 +1,13 @@
+{
+  "id": "modmenu",
+  "name": "Mod Menu",
+  "version": "0.1.0",
+  "side": "universal",
+  "initializer": "prospector.modmenu.ModMenu",
+  "mixins": {
+    "client": "modmenu.client.json",
+    "common": "modmenu.common.json"
+  },
+  "authors": {
+  }
+}

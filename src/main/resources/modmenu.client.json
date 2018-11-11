@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "prospector.modmenu.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "GuiMainMenuMixin",
+    "GuiMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

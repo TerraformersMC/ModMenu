@@ -1,0 +1,35 @@
+buildscript {
+	repositories {
+		jcenter()
+		maven {
+			name = 'Fabric'
+			url = 'http://maven.modmuss50.me/'
+		}
+	}
+	dependencies {
+		classpath "net.fabricmc:fabric-loom:0.0.13-SNAPSHOT"
+	}
+}
+
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+}
+
+apply plugin: net.fabricmc.loom.LoomGradlePlugin
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = "ModMenu"
+version = "0.1.0"
+
+minecraft {
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:18w44a"
+	mappings "net.fabricmc:pomf:18w44a.38"
+	modCompile "net.fabricmc:fabric-loader:18w44a-0.1.0.43"
+}
