@@ -7,7 +7,5 @@
   "mixins": {
     "client": "modmenu.client.json",
     "common": "modmenu.common.json"
-  },
-  "authors": {
   }
 }
