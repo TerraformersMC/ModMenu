@@ -40,6 +40,7 @@ public class GuiModList extends Gui {
 		this.searchBox.method_1863((var1, var2) -> {
 			this.modList.searchFilter(() -> var2, false);
 		});
+
 		this.modList = new WidgetModList(this.game, this.width, this.height, 48, this.height - 64, 36, () -> this.searchBox.getText(), this.modList);
 
 		this.addButton(new WidgetButton(0, this.width / 2 + 82, this.height - 28, 72, 20, I18n.translate("gui.cancel", new Object[0])) {

@@ -32,4 +32,5 @@ dependencies {
 	minecraft "com.mojang:minecraft:18w44a"
 	mappings "net.fabricmc:pomf:18w44a.38"
 	modCompile "net.fabricmc:fabric-loader:18w44a-0.1.0.43"
+	modCompile "net.fabricmc:fabric:0.0.2"
 }

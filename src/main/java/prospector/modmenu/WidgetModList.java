@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public class WidgetModList extends WidgetListMulti {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private List<ModInfo> modInfoList = null;
+	private List<ModContainer> modInfoList = null;
 
 	public WidgetModList(MinecraftGame game,
 	                     int width,
@@ -37,25 +37,26 @@ public class WidgetModList extends WidgetListMulti {
 		if (this.modInfoList == null || var2) {
 			this.modInfoList = new ArrayList<>();
 			for (ModContainer modContainer : mods) {
-				modInfoList.add(modContainer.getInfo());
+				modInfoList.add(modContainer);
 			}
-			this.modInfoList.sort(Comparator.comparing(ModInfo::getName));
+			this.modInfoList.sort(Comparator.comparing(modContainer -> modContainer.getInfo().getName()));
 		}
 
 		String term = searchTerm.get().toLowerCase(Locale.ROOT);
-		Iterator<ModInfo> iter = this.modInfoList.iterator();
+		Iterator<ModContainer> iter = this.modInfoList.iterator();
 
 		while (true) {
+			ModContainer container;
 			ModInfo info;
 			do {
 				if (!iter.hasNext()) {
 					return;
 				}
-
-				info = iter.next();
+				container = iter.next();
+				info = container.getInfo();
 			} while (!info.getName().toLowerCase(Locale.ROOT).contains(term) && !info.getId().toLowerCase(Locale.ROOT).contains(term) && !info.getAuthors().stream().anyMatch(person -> person.getName().equalsIgnoreCase(term)));
 
-			this.method_1901(new WidgetModEntry(info));
+			this.method_1901(new WidgetModEntry(container));
 		}
 	}
 }
