@@ -2,12 +2,17 @@ package prospector.modmenu;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import net.fabricmc.loader.FabricLoader;
+import net.fabricmc.loader.ModContainer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.widget.WidgetButton;
 import net.minecraft.client.gui.widget.WidgetTextField;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
 
 public class GuiModList extends Gui {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -15,6 +20,7 @@ public class GuiModList extends Gui {
 	private String tooltip;
 	protected WidgetTextField searchBox;
 	private WidgetModList modList;
+	public ModContainer selectedMod = null;
 	protected Gui previousGui;
 
 	public GuiModList(Gui previousGui) {
@@ -41,9 +47,26 @@ public class GuiModList extends Gui {
 			this.modList.searchFilter(() -> var2, false);
 		});
 
-		this.modList = new WidgetModList(this.game, this.width, this.height, 48, this.height - 64, 36, () -> this.searchBox.getText(), this.modList);
+		this.modList = new WidgetModList(this.game, this.width, this.height, 48, this.height - 118, 36, () -> this.searchBox.getText(), this.modList);
 
-		this.addButton(new WidgetButton(0, this.width / 2 + 82, this.height - 28, 72, 20, I18n.translate("gui.cancel", new Object[0])) {
+		this.addButton(new WidgetButton(1, this.width / 2 - 154, this.height - 52, 150, 20, I18n.translate("modmenu.modsFolder", new Object[0])) {
+			public void onPressed(double var1, double var3) {
+				SystemUtil.getOperatingSystem().open(new File(FabricLoader.INSTANCE.getGameDirectory(), "mods"));
+			}
+		});
+		this.addButton(new WidgetButton(2, this.width / 2 + 4, this.height - 52, 150, 20, I18n.translate("modmenu.configsFolder", new Object[0])) {
+			public void onPressed(double var1, double var3) {
+				SystemUtil.getOperatingSystem().open(FabricLoader.INSTANCE.getConfigDirectory());
+			}
+		});
+		WidgetButton configureButton = new WidgetButton(3, this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.configure", new Object[0])) {
+			public void onPressed(double var1, double var3) {
+
+			}
+		};
+		configureButton.enabled = false;
+		this.addButton(configureButton);
+		this.addButton(new WidgetButton(0, this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.cancel", new Object[0])) {
 			public void onPressed(double var1, double var3) {
 				game.openGui(previousGui);
 			}

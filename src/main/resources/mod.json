@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "side": "universal",
   "initializer": "prospector.modmenu.ModMenu",
-  "description": "Adds a mod menu to view the list of mods you have installed. This mod is pretty cool because it does stuff and occasionally it also does things.",
+  "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": {
     "client": "modmenu.client.json",
     "common": "modmenu.common.json"

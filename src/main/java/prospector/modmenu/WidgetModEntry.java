@@ -14,21 +14,23 @@ import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import prospector.modmenu.util.RenderUtils;
 
 import java.io.InputStream;
-import java.util.List;
 
 public class WidgetModEntry extends WidgetListMulti.class_351 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftGame game;
 	public ModContainer container;
 	public ModInfo info;
+	public WidgetModList list;
 	private final Identifier iconLocation;
 	private final NativeImageBackedTexture nativeImageBackedTexture;
 	private static final Identifier unknownIcon = new Identifier("textures/misc/unknown_pack.png");
 
-	public WidgetModEntry(ModContainer container) {
+	public WidgetModEntry(ModContainer container, WidgetModList list) {
 		this.container = container;
+		this.list = list;
 		this.info = container.getInfo();
 		this.game = MinecraftGame.getInstance();
 		this.iconLocation = new Identifier("modmenu", "modicon");
@@ -36,40 +38,21 @@ public class WidgetModEntry extends WidgetListMulti.class_351 {
 	}
 
 	@Override
-	public void drawEntry(int i, int i1, int i2, int i3, boolean b, float v) {
-		int var7 = this.method_1906();
-		int var8 = this.method_1907();
+	public void drawEntry(int width, int height, int i2, int i3, boolean b, float v) {
+		int y = this.method_1906();
+		int x = this.method_1907();
+		if (container.equals(list.selected)) {
+			Drawable.drawRect(x - 2, y - 2, x - 2 + width - 15, y - 2 + 36, 0xFF808080);
+			Drawable.drawRect(x - 1, y - 1, x - 3 + width - 15, y - 3 + 36, 0xFF000000);
+		}
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.game.getTextureManager().bindTexture(this.nativeImageBackedTexture != null ? this.iconLocation : unknownIcon);
 		GlStateManager.enableBlend();
-		Drawable.drawTexturedRect(var8, var7, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+		Drawable.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
 		GlStateManager.disableBlend();
-		this.game.fontRenderer.drawWithShadow(info.getName(), (float) (var8 + 32 + 3), (float) (var7 + 1), 0xFFFFFF);
-		this.game.fontRenderer.drawWithShadow(" (" + info.getId() + ")", (float) (var8 + 32 + 3) + game.fontRenderer.method_1727(info.getName()), (float) (var7 + 1), 0xAAAAAA);
-		drawWrappedString(info.getDescription(), (var8 + 32 + 3), (var7 + 11), i - 40, 2, 0xAAAAAA);
-	}
-
-	public void drawWrappedString(String string, int x, int y, int wrapWidth, int lines, int color) {
-		while (string != null && string.endsWith("\n")) {
-			string = string.substring(0, string.length() - 1);
-		}
-		List<String> strings = game.fontRenderer.wrapStringToWidthAsList(string, wrapWidth);
-
-		for (int i = 0; i < strings.size(); i++) {
-			if (i >= lines) {
-				break;
-			}
-			String line = strings.get(i);
-			if (i == lines - 1) {
-				line += "...";
-			}
-			int x1 = x;
-			if (game.fontRenderer.isRightToLeft()) {
-				int width = game.fontRenderer.method_1727(game.fontRenderer.mirror(line));
-				x1 += (float) (wrapWidth - width);
-			}
-			game.fontRenderer.drawWithShadow(line, x1, y + i * game.fontRenderer.FONT_HEIGHT, color);
-		}
+		this.game.fontRenderer.drawWithShadow(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
+		this.game.fontRenderer.drawWithShadow(" (" + info.getId() + ")", (float) (x + 32 + 3) + game.fontRenderer.method_1727(info.getName()), (float) (y + 1), 0xAAAAAA);
+		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), width - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 
 	@Nullable
@@ -108,5 +91,11 @@ public class WidgetModEntry extends WidgetListMulti.class_351 {
 			LOGGER.error("Invalid icon for mod {}", this.container.getInfo().getName(), var18);
 			return null;
 		}
+	}
+
+	@Override
+	public boolean mouseClicked(double v, double v1, int i) {
+		list.selected = container;
+		return true;
 	}
 }
