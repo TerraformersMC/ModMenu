@@ -41,7 +41,7 @@ public class WidgetModList extends WidgetListMulti {
 			int x = this.width / 2 - 154;
 			int y = y2 + 8;
 			this.game.fontRenderer.drawWithShadow(info.getName(), x, y, 0xFFFFFF);
-			this.game.fontRenderer.drawWithShadow(" (Mod ID: " + info.getId() + ")", x + game.fontRenderer.method_1727(info.getName()), y, 0xAAAAAA);
+			this.game.fontRenderer.drawWithShadow(" (Mod ID: " + info.getId() + ")", x + game.fontRenderer.getStringWidth(info.getName()), y, 0xAAAAAA);
 			RenderUtils.drawWrappedString(info.getDescription(), x + 4, y + 10, 308, 5, 0x808080);
 		}
 	}

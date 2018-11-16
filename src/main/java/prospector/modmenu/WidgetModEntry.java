@@ -51,7 +51,7 @@ public class WidgetModEntry extends WidgetListMulti.class_351 {
 		Drawable.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
 		GlStateManager.disableBlend();
 		this.game.fontRenderer.drawWithShadow(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
-		this.game.fontRenderer.drawWithShadow(" (" + info.getId() + ")", (float) (x + 32 + 3) + game.fontRenderer.method_1727(info.getName()), (float) (y + 1), 0xAAAAAA);
+		this.game.fontRenderer.drawWithShadow(" (" + info.getId() + ")", (float) (x + 32 + 3) + game.fontRenderer.getStringWidth(info.getName()), (float) (y + 1), 0xAAAAAA);
 		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), width - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 

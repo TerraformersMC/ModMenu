@@ -25,7 +25,7 @@ public class RenderUtils {
 			}
 			int x1 = x;
 			if (game.fontRenderer.isRightToLeft()) {
-				int width = game.fontRenderer.method_1727(game.fontRenderer.mirror(line));
+				int width = game.fontRenderer.getStringWidth(game.fontRenderer.mirror(line));
 				x1 += (float) (wrapWidth - width);
 			}
 			game.fontRenderer.drawWithShadow(line, x1, y + i * game.fontRenderer.FONT_HEIGHT, color);
