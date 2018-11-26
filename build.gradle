@@ -41,35 +41,34 @@ dependencies {
 	modCompile "net.fabricmc:fabric:0.0.3-SNAPSHOT"
 }
 
-publishing {
-	publications {
-		maven(MavenPublication) {
-			groupId project.group
-			artifactId project.archivesBaseName
-			version project.version
-
-			from components.java
-
-			artifact apiJar {
-				classifier "api"
-			}
-
-			artifact deobfJar {
-				classifier "dev"
-			}
-
-			artifact sourceJar {
-				classifier "sources"
-			}
-		}
-	}
+uploadArchives {
 	repositories {
-		maven {
-			url "http://mavenupload.modmuss50.me/"
+		mavenDeployer {
+			//This is used when the build is done on a slave node
 			if (project.hasProperty('mavenPass')) {
-				credentials {
-					username 'buildslave'
-					password project.getProperty('mavenPass')
+				println 'Uploading to remote Maven Repo'
+				repository(url: "http://mavenupload.modmuss50.me/") {
+					authentication(userName: "buildslave", password: project.getProperty('mavenPass'))
+				}
+			} else {
+				//this is when the build is executed on the master node
+				println 'Uploading to local Maven Repo'
+				repository(url: "file:///var/www/maven/")
+			}
+			pom {
+				groupId = project.group
+				version = project.version
+				artifactId = project.archivesBaseName
+				project {
+					name project.archivesBaseName
+					packaging 'jar'
+					description project.archivesBaseName
+					url 'https://github.com/ProfessorProspector/ModMenu'
+					scm {
+						url 'https://github.com/ProfessorProspector/ModMenu'
+						connection 'scm:git:git@github.com:ProfessorProspector/ModMenu.git'
+						developerConnection 'scm:git:git@github.com:ProfessorProspector/ModMenu.git'
+					}
 				}
 			}
 		}
