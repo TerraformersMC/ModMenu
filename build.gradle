@@ -22,8 +22,14 @@ apply plugin: net.fabricmc.loom.LoomGradlePlugin
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+group = "prospector.modmenu"
 archivesBaseName = "ModMenu"
 version = "0.1.0"
+
+def ENV = System.getenv()
+if (ENV.BUILD_NUMBER) {
+	version = version + "-" + "${System.getenv().BUILD_NUMBER}"
+}
 
 minecraft {
 }
@@ -33,4 +39,39 @@ dependencies {
 	mappings "net.fabricmc:pomf:18w47a.7"
 	modCompile "net.fabricmc:fabric-loader:18w44a-0.1.0.47"
 	modCompile "net.fabricmc:fabric:0.0.3-SNAPSHOT"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId project.group
+			artifactId project.archivesBaseName
+			version project.version
+
+			from components.java
+
+			artifact apiJar {
+				classifier "api"
+			}
+
+			artifact deobfJar {
+				classifier "dev"
+			}
+
+			artifact sourceJar {
+				classifier "sources"
+			}
+		}
+	}
+	repositories {
+		maven {
+			url "http://mavenupload.modmuss50.me/"
+			if (project.hasProperty('mavenPass')) {
+				credentials {
+					username 'buildslave'
+					password project.getProperty('mavenPass')
+				}
+			}
+		}
+	}
 }

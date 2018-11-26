@@ -1,7 +1,6 @@
 package prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.sun.istack.internal.Nullable;
 import net.fabricmc.fabric.resources.ModResourcePackUtil;
 import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
@@ -55,7 +54,6 @@ public class WidgetModEntry extends WidgetListMulti.class_351 {
 		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), width - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 
-	@Nullable
 	private NativeImageBackedTexture getNativeImageBackedTexture() {
 		try {
 			InputStream inputStream = ModResourcePackUtil.openDefault(container.getInfo(), "pack.png");
