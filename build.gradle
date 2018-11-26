@@ -29,8 +29,8 @@ minecraft {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:18w46a"
-	mappings "net.fabricmc:pomf:18w46a.3"
-	modCompile "net.fabricmc:fabric-loader:18w44a-0.1.0.45"
-	modCompile "net.fabricmc:fabric:0.0.2"
+	minecraft "com.mojang:minecraft:18w47a"
+	mappings "net.fabricmc:pomf:18w47a.7"
+	modCompile "net.fabricmc:fabric-loader:18w44a-0.1.0.47"
+	modCompile "net.fabricmc:fabric:0.0.3-SNAPSHOT"
 }

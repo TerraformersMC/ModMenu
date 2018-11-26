@@ -19,7 +19,7 @@ public class GuiMixin {
 	@Inject(at = @At("HEAD"), method = "addButton(Lnet/minecraft/client/gui/widget/WidgetButton;)Lnet/minecraft/client/gui/widget/WidgetButton;", cancellable = true)
 	protected void addButton(WidgetButton var1, CallbackInfoReturnable info) {
 		if (((Object) this) instanceof GuiMainMenu) {
-			if (ModMenu.replaceRealmsButton) {
+			if (ModMenu.replacesRealmsButton()) {
 				if (var1.id == 14) {
 					info.cancel();
 				}
@@ -33,7 +33,7 @@ public class GuiMixin {
 			}
 		}
 		if (((Object) this) instanceof GuiPauseMenu) {
-			if (ModMenu.replaceMojangFeedbackButtons) {
+			if (ModMenu.replacesMojangFeedbackButtons()) {
 				if (var1.id == 8 || var1.id == 9) {
 					info.cancel();
 				}

@@ -1,4 +1,4 @@
-package prospector.modmenu;
+package prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.sun.istack.internal.Nullable;

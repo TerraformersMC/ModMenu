@@ -1,4 +1,4 @@
-package prospector.modmenu;
+package prospector.modmenu.gui;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -36,7 +36,7 @@ public class GuiModList extends Gui {
 	}
 
 	protected void onInitialized() {
-		this.game.field_1774.method_1462(true);
+		this.game.keyboard.enableRepeatEvents(true);
 		this.title = I18n.translate("modmenu.title");
 		this.searchBox = new WidgetTextField(0, this.fontRenderer, this.width / 2 - 100, 22, 200, 20, this.searchBox) {
 			public void method_1876(boolean var1) {

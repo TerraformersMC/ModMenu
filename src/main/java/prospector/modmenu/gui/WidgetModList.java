@@ -1,4 +1,4 @@
-package prospector.modmenu;
+package prospector.modmenu.gui;
 
 import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
