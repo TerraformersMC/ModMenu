@@ -4,7 +4,7 @@ import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
 import net.minecraft.client.MinecraftGame;
-import net.minecraft.client.gui.widget.WidgetListMulti;
+import net.minecraft.client.gui.widget.EntryListWidget;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import prospector.modmenu.util.RenderUtils;
@@ -12,19 +12,19 @@ import prospector.modmenu.util.RenderUtils;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class WidgetModList extends WidgetListMulti {
+public class ModListWidget extends EntryListWidget {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private List<ModContainer> modInfoList = null;
 	public ModContainer selected;
 
-	public WidgetModList(MinecraftGame game,
+	public ModListWidget(MinecraftGame game,
 	                     int width,
 	                     int height,
 	                     int y1,
 	                     int y2,
 	                     int entryHeight,
-	                     Supplier<String> searchTerm, WidgetModList list) {
+	                     Supplier<String> searchTerm, ModListWidget list) {
 		super(game, width, height, y1, y2, entryHeight);
 		if (list != null) {
 			this.modInfoList = list.modInfoList;
@@ -76,7 +76,7 @@ public class WidgetModList extends WidgetListMulti {
 				info = container.getInfo();
 			} while (!info.getName().toLowerCase(Locale.ROOT).contains(term) && !info.getId().toLowerCase(Locale.ROOT).contains(term) && !info.getAuthors().stream().anyMatch(person -> person.getName().equalsIgnoreCase(term)));
 
-			this.method_1901(new WidgetModEntry(container, this));
+			this.method_1901(new ModEntryWidget(container, this));
 		}
 	}
 }

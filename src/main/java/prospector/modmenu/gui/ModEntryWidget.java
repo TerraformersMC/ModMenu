@@ -6,7 +6,7 @@ import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
 import net.minecraft.client.MinecraftGame;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.widget.WidgetListMulti;
+import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
@@ -17,17 +17,17 @@ import prospector.modmenu.util.RenderUtils;
 
 import java.io.InputStream;
 
-public class WidgetModEntry extends WidgetListMulti.class_351 {
+public class ModEntryWidget extends EntryListWidget.Entry {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftGame game;
 	public ModContainer container;
 	public ModInfo info;
-	public WidgetModList list;
+	public ModListWidget list;
 	private final Identifier iconLocation;
 	private final NativeImageBackedTexture nativeImageBackedTexture;
 	private static final Identifier unknownIcon = new Identifier("textures/misc/unknown_pack.png");
 
-	public WidgetModEntry(ModContainer container, WidgetModList list) {
+	public ModEntryWidget(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
 		this.info = container.getInfo();
