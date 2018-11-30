@@ -1,6 +1,6 @@
 package prospector.modmenu.gui;
 
-import net.minecraft.client.MinecraftGame;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
@@ -17,7 +17,8 @@ public class ModMenuButtonWidget extends ButtonWidget {
 		this.gui = gui;
 	}
 
+	@Override
 	public void onPressed(double var1, double var3) {
-		MinecraftGame.getInstance().openGui(new GuiModList(gui));
+		MinecraftClient.getInstance().openGui(new GuiModList(gui));
 	}
 }

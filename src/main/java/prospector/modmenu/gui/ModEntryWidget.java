@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.resources.ModResourcePackUtil;
 import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
-import net.minecraft.client.MinecraftGame;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.texture.NativeImage;
@@ -19,7 +19,7 @@ import java.io.InputStream;
 
 public class ModEntryWidget extends EntryListWidget.Entry {
 	private static final Logger LOGGER = LogManager.getLogger();
-	private final MinecraftGame game;
+	private final MinecraftClient client;
 	public ModContainer container;
 	public ModInfo info;
 	public ModListWidget list;
@@ -31,7 +31,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 		this.container = container;
 		this.list = list;
 		this.info = container.getInfo();
-		this.game = MinecraftGame.getInstance();
+		this.client = MinecraftClient.getInstance();
 		this.iconLocation = new Identifier("modmenu", "modicon");
 		this.nativeImageBackedTexture = this.getNativeImageBackedTexture();
 	}
@@ -45,12 +45,12 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 			Drawable.drawRect(x - 1, y - 1, x - 3 + width - 15, y - 3 + 36, 0xFF000000);
 		}
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.game.getTextureManager().bindTexture(this.nativeImageBackedTexture != null ? this.iconLocation : unknownIcon);
+		this.client.getTextureManager().bindTexture(this.nativeImageBackedTexture != null ? this.iconLocation : unknownIcon);
 		GlStateManager.enableBlend();
 		Drawable.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
 		GlStateManager.disableBlend();
-		this.game.fontRenderer.drawWithShadow(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
-		this.game.fontRenderer.drawWithShadow(" (" + info.getId() + ")", (float) (x + 32 + 3) + game.fontRenderer.getStringWidth(info.getName()), (float) (y + 1), 0xAAAAAA);
+		this.client.fontRenderer.drawWithShadow(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
+		this.client.fontRenderer.drawWithShadow(" (" + info.getId() + ")", (float) (x + 32 + 3) + client.fontRenderer.getStringWidth(info.getName()), (float) (y + 1), 0xAAAAAA);
 		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), width - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 
@@ -64,7 +64,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 				NativeImage var4 = NativeImage.fromInputStream(inputStream);
 				Validate.validState(var4.getHeight() == var4.getWidth(), "Must be square icon");
 				NativeImageBackedTexture var5 = new NativeImageBackedTexture(var4);
-				this.game.getTextureManager().registerTexture(this.iconLocation, var5);
+				this.client.getTextureManager().registerTexture(this.iconLocation, var5);
 				var6 = var5;
 			} catch (Throwable var16) {
 				var3 = var16;

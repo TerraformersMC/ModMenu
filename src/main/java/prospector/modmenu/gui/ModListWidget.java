@@ -3,7 +3,7 @@ package prospector.modmenu.gui;
 import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
-import net.minecraft.client.MinecraftGame;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,14 +18,14 @@ public class ModListWidget extends EntryListWidget {
 	private List<ModContainer> modInfoList = null;
 	public ModContainer selected;
 
-	public ModListWidget(MinecraftGame game,
+	public ModListWidget(MinecraftClient client,
 	                     int width,
 	                     int height,
 	                     int y1,
 	                     int y2,
 	                     int entryHeight,
 	                     Supplier<String> searchTerm, ModListWidget list) {
-		super(game, width, height, y1, y2, entryHeight);
+		super(client, width, height, y1, y2, entryHeight);
 		if (list != null) {
 			this.modInfoList = list.modInfoList;
 		}
@@ -40,8 +40,8 @@ public class ModListWidget extends EntryListWidget {
 			ModInfo info = selected.getInfo();
 			int x = this.width / 2 - 154;
 			int y = y2 + 8;
-			this.game.fontRenderer.drawWithShadow(info.getName(), x, y, 0xFFFFFF);
-			this.game.fontRenderer.drawWithShadow(" (Mod ID: " + info.getId() + ")", x + game.fontRenderer.getStringWidth(info.getName()), y, 0xAAAAAA);
+			this.client.fontRenderer.drawWithShadow(info.getName(), x, y, 0xFFFFFF);
+			this.client.fontRenderer.drawWithShadow(" (Mod ID: " + info.getId() + ")", x + client.fontRenderer.getStringWidth(info.getName()), y, 0xAAAAAA);
 			RenderUtils.drawWrappedString(info.getDescription(), x + 4, y + 10, 308, 5, 0x808080);
 		}
 	}
@@ -56,9 +56,7 @@ public class ModListWidget extends EntryListWidget {
 		List<ModContainer> mods = FabricLoader.INSTANCE.getMods();
 		if (this.modInfoList == null || var2) {
 			this.modInfoList = new ArrayList<>();
-			for (ModContainer modContainer : mods) {
-				modInfoList.add(modContainer);
-			}
+			modInfoList.addAll(mods);
 			this.modInfoList.sort(Comparator.comparing(modContainer -> modContainer.getInfo().getName()));
 		}
 

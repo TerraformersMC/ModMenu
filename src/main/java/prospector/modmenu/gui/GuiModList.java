@@ -27,18 +27,22 @@ public class GuiModList extends Gui {
 		this.previousGui = previousGui;
 	}
 
+	@Override
 	public boolean mouseScrolled(double var1) {
 		return this.modList.mouseScrolled(var1);
 	}
 
+	@Override
 	public void update() {
 		this.searchBox.tick();
 	}
 
+	@Override
 	protected void onInitialized() {
-		this.game.keyboard.enableRepeatEvents(true);
+		this.client.keyboard.enableRepeatEvents(true);
 		this.title = I18n.translate("modmenu.title");
 		this.searchBox = new TextFieldWidget(0, this.fontRenderer, this.width / 2 - 100, 22, 200, 20, this.searchBox) {
+			@Override
 			public void method_1876(boolean var1) {
 				super.method_1876(true);
 			}
@@ -47,19 +51,22 @@ public class GuiModList extends Gui {
 			this.modList.searchFilter(() -> var2, false);
 		});
 
-		this.modList = new ModListWidget(this.game, this.width, this.height, 48, this.height - 118, 36, () -> this.searchBox.getText(), this.modList);
+		this.modList = new ModListWidget(this.client, this.width, this.height, 48, this.height - 118, 36, () -> this.searchBox.getText(), this.modList);
 
 		this.addButton(new ButtonWidget(1, this.width / 2 - 154, this.height - 52, 150, 20, I18n.translate("modmenu.modsFolder", new Object[0])) {
+			@Override
 			public void onPressed(double var1, double var3) {
 				SystemUtil.getOperatingSystem().open(new File(FabricLoader.INSTANCE.getGameDirectory(), "mods"));
 			}
 		});
 		this.addButton(new ButtonWidget(2, this.width / 2 + 4, this.height - 52, 150, 20, I18n.translate("modmenu.configsFolder", new Object[0])) {
+			@Override
 			public void onPressed(double var1, double var3) {
 				SystemUtil.getOperatingSystem().open(FabricLoader.INSTANCE.getConfigDirectory());
 			}
 		});
 		ButtonWidget configureButton = new ButtonWidget(3, this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.configure", new Object[0])) {
+			@Override
 			public void onPressed(double var1, double var3) {
 
 			}
@@ -67,8 +74,9 @@ public class GuiModList extends Gui {
 		configureButton.enabled = false;
 		this.addButton(configureButton);
 		this.addButton(new ButtonWidget(0, this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.cancel", new Object[0])) {
+			@Override
 			public void onPressed(double var1, double var3) {
-				game.openGui(previousGui);
+				client.openGui(previousGui);
 			}
 		});
 		this.listeners.add(this.searchBox);
@@ -77,14 +85,17 @@ public class GuiModList extends Gui {
 		this.searchBox.method_1856(false);
 	}
 
+	@Override
 	public boolean keyPressed(int var1, int var2, int var3) {
 		return super.keyPressed(var1, var2, var3) || this.searchBox.keyPressed(var1, var2, var3);
 	}
 
+	@Override
 	public boolean charTyped(char var1, int var2) {
 		return this.searchBox.charTyped(var1, var2);
 	}
 
+	@Override
 	public void draw(int var1, int var2, float var3) {
 		this.tooltip = null;
 		this.modList.draw(var1, var2, var3);

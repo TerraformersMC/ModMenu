@@ -1,19 +1,19 @@
 package prospector.modmenu.util;
 
-import net.fabricmc.api.Side;
-import net.fabricmc.api.Sided;
-import net.minecraft.client.MinecraftGame;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 
 import java.util.List;
 
-@Sided(Side.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderUtils {
 	public static void drawWrappedString(String string, int x, int y, int wrapWidth, int lines, int color) {
-		MinecraftGame game = MinecraftGame.getInstance();
+		MinecraftClient client = MinecraftClient.getInstance();
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
-		List<String> strings = game.fontRenderer.wrapStringToWidthAsList(string, wrapWidth);
+		List<String> strings = client.fontRenderer.wrapStringToWidthAsList(string, wrapWidth);
 
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
@@ -24,11 +24,11 @@ public class RenderUtils {
 				line += "...";
 			}
 			int x1 = x;
-			if (game.fontRenderer.isRightToLeft()) {
-				int width = game.fontRenderer.getStringWidth(game.fontRenderer.mirror(line));
+			if (client.fontRenderer.isRightToLeft()) {
+				int width = client.fontRenderer.getStringWidth(client.fontRenderer.mirror(line));
 				x1 += (float) (wrapWidth - width);
 			}
-			game.fontRenderer.drawWithShadow(line, x1, y + i * game.fontRenderer.FONT_HEIGHT, color);
+			client.fontRenderer.drawWithShadow(line, x1, y + i * client.fontRenderer.FONT_HEIGHT, color);
 		}
 	}
 }
