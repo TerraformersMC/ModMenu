@@ -12,7 +12,7 @@ import prospector.modmenu.ModMenu;
 import prospector.modmenu.gui.ModMenuButtonWidget;
 
 @Mixin(MainMenuGui.class)
-public class GuiMainMenuMixin extends Gui {
+public class MainMenuGuiMixin extends Gui {
 
 	@Inject(at = @At("RETURN"), method = "initWidgetsNormal(II)V")
 	public void drawMenuButton(CallbackInfo info) {
