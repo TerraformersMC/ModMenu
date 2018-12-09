@@ -1,7 +1,7 @@
 package prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.fabricmc.fabric.resources.ModResourcePackUtil;
+import net.fabricmc.fabric.resources.impl.ModResourcePackUtil;
 import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
 import net.minecraft.client.MinecraftClient;

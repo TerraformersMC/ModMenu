@@ -4,12 +4,12 @@ buildscript {
 	repositories {
 		jcenter()
 		maven {
-			name = 'Fabric'
+			name = 'Modmuss50'
 			url = 'http://maven.modmuss50.me/'
 		}
 	}
 	dependencies {
-		classpath "net.fabricmc:fabric-loom:0.0.14-SNAPSHOT"
+		classpath "net.fabricmc:fabric-loom:0.1.0-SNAPSHOT"
 	}
 }
 
@@ -28,7 +28,7 @@ targetCompatibility = 1.8
 
 group = "prospector.modmenu"
 archivesBaseName = "ModMenu"
-version = "0.1.0"
+version = "1.0.0"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
@@ -40,9 +40,9 @@ minecraft {
 
 dependencies {
 	minecraft "com.mojang:minecraft:18w49a"
-	mappings "net.fabricmc:pomf:18w49a.2"
-	modCompile "net.fabricmc:fabric-loader:0.1.0.52"
-	modCompile "net.fabricmc:fabric:0.0.3-SNAPSHOT"
+	mappings "net.fabricmc:pomf:18w49a.19"
+	modCompile "net.fabricmc:fabric-loader:0.2.0.53"
+	modCompile "net.fabricmc:fabric:0.1.0"
 }
 
 uploadArchives {

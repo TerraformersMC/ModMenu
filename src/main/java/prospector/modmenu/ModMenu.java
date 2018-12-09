@@ -1,9 +1,9 @@
 package prospector.modmenu;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.api.Side;
 import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
+import net.fabricmc.loader.ModInfo;
 import net.minecraft.realms.Realms;
 
 public class ModMenu implements ModInitializer {
@@ -16,7 +16,7 @@ public class ModMenu implements ModInitializer {
 	public void onInitialize() {
 		boolean hasServersideInstalled = false;
 		for (ModContainer modContainer : FabricLoader.INSTANCE.getMods()) {
-			if (modContainer.getInfo().getSide() != Side.CLIENT) {
+			if (modContainer.getInfo().getSide() != ModInfo.Side.CLIENT) {
 				hasServersideInstalled = true;
 				break;
 			}
