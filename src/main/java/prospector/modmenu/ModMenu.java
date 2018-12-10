@@ -21,7 +21,7 @@ public class ModMenu implements ClientModInitializer {
 				break;
 			}
 		}
-		if (Realms.sessionId() == null) {
+		if (Realms.sessionId() == null || hasServersideInstalled) {
 			replaceRealmsButton = true;
 		}
 	}
