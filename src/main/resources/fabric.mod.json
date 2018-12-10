@@ -2,11 +2,10 @@
   "id": "modmenu",
   "name": "Mod Menu",
   "version": "0.1.0",
-  "side": "universal",
+  "side": "client",
   "initializer": "prospector.modmenu.ModMenu",
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": {
-    "client": "modmenu.client.json",
-    "common": "modmenu.common.json"
+	"client": "mixins.modmenu.client.json"
   }
 }

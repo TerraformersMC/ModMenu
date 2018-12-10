@@ -1,19 +1,19 @@
 package prospector.modmenu;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
 import net.minecraft.realms.Realms;
 
-public class ModMenu implements ModInitializer {
+public class ModMenu implements ClientModInitializer {
 	private static boolean replaceRealmsButton = false;
-	private static boolean replaceMojangFeedbackButtons = true;
+	private static boolean replaceMojangFeedbackButtons = false;
 	private static int buttonIdMainMenu = 27;
 	private static int buttonIdPauseMenu = 27;
 
 	@Override
-	public void onInitialize() {
+	public void onInitializeClient() {
 		boolean hasServersideInstalled = false;
 		for (ModContainer modContainer : FabricLoader.INSTANCE.getMods()) {
 			if (modContainer.getInfo().getSide() != ModInfo.Side.CLIENT) {
@@ -21,7 +21,7 @@ public class ModMenu implements ModInitializer {
 				break;
 			}
 		}
-		if (Realms.sessionId() == null || hasServersideInstalled) {
+		if (Realms.sessionId() == null) {
 			replaceRealmsButton = true;
 		}
 	}
