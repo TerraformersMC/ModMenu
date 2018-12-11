@@ -1,4 +1,4 @@
-package prospector.modmenu;
+package io.github.prospector.modmenu;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.FabricLoader;

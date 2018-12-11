@@ -1,4 +1,4 @@
-package prospector.modmenu.util;
+package io.github.prospector.modmenu.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -1,4 +1,4 @@
-package prospector.modmenu.gui;
+package io.github.prospector.modmenu.gui;
 
 import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import prospector.modmenu.util.RenderUtils;
+import io.github.prospector.modmenu.util.RenderUtils;
 
 import java.util.*;
 import java.util.function.Supplier;

@@ -1,4 +1,4 @@
-package prospector.modmenu.gui;
+package io.github.prospector.modmenu.gui;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Gui;

@@ -1,4 +1,4 @@
-package prospector.modmenu.gui;
+package io.github.prospector.modmenu.gui;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;

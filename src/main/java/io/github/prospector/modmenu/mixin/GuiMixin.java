@@ -1,5 +1,6 @@
-package prospector.modmenu.mixin;
+package io.github.prospector.modmenu.mixin;
 
+import io.github.prospector.modmenu.ModMenu;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.MainMenuGui;
 import net.minecraft.client.gui.menu.PauseMenuGui;
@@ -9,7 +10,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import prospector.modmenu.ModMenu;
 
 @Mixin(Gui.class)
 public class GuiMixin {

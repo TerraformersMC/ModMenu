@@ -1,5 +1,7 @@
-package prospector.modmenu.mixin;
+package io.github.prospector.modmenu.mixin;
 
+import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.gui.ModMenuButtonWidget;
 import net.fabricmc.loader.FabricLoader;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.menu.PauseMenuGui;
@@ -8,8 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import prospector.modmenu.ModMenu;
-import prospector.modmenu.gui.ModMenuButtonWidget;
 
 @Mixin(PauseMenuGui.class)
 public class PauseMenuGuiMixin extends Gui {

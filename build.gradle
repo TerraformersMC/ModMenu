@@ -26,7 +26,7 @@ apply plugin: 'maven-publish'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = "prospector.modmenu"
+group = "io.github.prospector.modmenu"
 archivesBaseName = "ModMenu"
 version = "1.0.0"
 

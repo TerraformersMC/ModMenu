@@ -1,6 +1,7 @@
-package prospector.modmenu.gui;
+package io.github.prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.fabric.resources.impl.ModResourcePackUtil;
 import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
@@ -13,7 +14,6 @@ import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import prospector.modmenu.util.RenderUtils;
 
 import java.io.InputStream;
 
