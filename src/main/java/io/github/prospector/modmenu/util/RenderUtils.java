@@ -28,7 +28,7 @@ public class RenderUtils {
 				int width = client.fontRenderer.getStringWidth(client.fontRenderer.mirror(line));
 				x1 += (float) (wrapWidth - width);
 			}
-			client.fontRenderer.drawWithShadow(line, x1, y + i * client.fontRenderer.FONT_HEIGHT, color);
+			client.fontRenderer.draw(line, x1, y + i * client.fontRenderer.fontHeight, color);
 		}
 	}
 }

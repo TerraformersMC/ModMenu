@@ -7,6 +7,8 @@ import net.fabricmc.loader.ModInfo;
 import net.minecraft.realms.Realms;
 
 public class ModMenu implements ClientModInitializer {
+	public static final String MOD_ID = "modmenu";
+
 	private static boolean replaceRealmsButton = false;
 	private static boolean replaceMojangFeedbackButtons = false;
 	private static int buttonIdMainMenu = 27;
