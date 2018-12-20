@@ -40,8 +40,8 @@ minecraft {
 
 dependencies {
 	minecraft "com.mojang:minecraft:18w50a"
-	mappings "net.fabricmc:yarn:18w50a.38"
-	modCompile "net.fabricmc:fabric-loader:0.2.0.70"
+	mappings "net.fabricmc:yarn:18w50a.46"
+	modCompile "net.fabricmc:fabric-loader:0.2.0.71"
 	modCompile "net.fabricmc:fabric:0.1.1.58"
 }
 
@@ -70,8 +70,8 @@ uploadArchives {
 					url 'https://github.com/Prospector/ModMenu'
 					scm {
 						url 'https://github.com/Prospector/ModMenu'
-						connection 'scm:git:git@github.com:ProfessorProspector/ModMenu.git'
-						developerConnection 'scm:git:git@github.com:ProfessorProspector/ModMenu.git'
+						connection 'scm:git:git@github.com:Prospector/ModMenu.git'
+						developerConnection 'scm:git:git@github.com:Prospector/ModMenu.git'
 					}
 				}
 			}
