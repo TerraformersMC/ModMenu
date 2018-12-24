@@ -40,9 +40,9 @@ minecraft {
 
 dependencies {
 	minecraft "com.mojang:minecraft:18w50a"
-	mappings "net.fabricmc:yarn:18w50a.46"
-	modCompile "net.fabricmc:fabric-loader:0.2.0.71"
-	modCompile "net.fabricmc:fabric:0.1.1.58"
+	mappings "net.fabricmc:yarn:18w50a.67"
+	modCompile "net.fabricmc:fabric-loader:0.3.0.74"
+	modCompile "net.fabricmc:fabric:0.1.2.63"
 }
 
 uploadArchives {
