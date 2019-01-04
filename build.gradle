@@ -9,7 +9,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "net.fabricmc:fabric-loom:0.1.0-SNAPSHOT"
+		classpath "net.fabricmc:fabric-loom:0.2.0-SNAPSHOT"
 	}
 }
 
@@ -40,9 +40,9 @@ minecraft {
 
 dependencies {
 	minecraft "com.mojang:minecraft:18w50a"
-	mappings "net.fabricmc:yarn:18w50a.67"
-	modCompile "net.fabricmc:fabric-loader:0.3.0.74"
-	modCompile "net.fabricmc:fabric:0.1.2.63"
+	mappings "net.fabricmc:yarn:18w50a.90"
+	modCompile "net.fabricmc:fabric-loader:0.3.2.91"
+	modCompile "net.fabricmc:fabric:0.1.3.68"
 }
 
 uploadArchives {

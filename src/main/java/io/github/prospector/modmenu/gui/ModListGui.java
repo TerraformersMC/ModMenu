@@ -51,7 +51,7 @@ public class ModListGui extends Gui {
 				super.setFocused(true);
 			}
 		};
-		this.searchBox.method_1863((var1, var2) -> {
+		this.searchBox.setChangedListener((var1, var2) -> {
 			this.modList.searchFilter(() -> var2, false);
 		});
 
