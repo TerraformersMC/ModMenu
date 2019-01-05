@@ -56,7 +56,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 
 	private NativeImageBackedTexture getNativeImageBackedTexture() {
 		try {
-			InputStream inputStream = ModResourcePackUtil.class.getClassLoader().getResourceAsStream("assets/" + info.getId() + "/assets/contrivitive/icon.png");
+			InputStream inputStream = ModResourcePackUtil.class.getClassLoader().getResourceAsStream("assets/" + info.getId() + "/icon.png");
 			if (inputStream == null) {
 				if (info.getId().equals("fabricloader") || info.getId().equals("fabric")) {
 					inputStream = ModResourcePackUtil.class.getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
