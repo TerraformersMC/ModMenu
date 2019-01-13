@@ -4,6 +4,9 @@
   "version": "$version",
   "side": "client",
   "initializer": "io.github.prospector.modmenu.ModMenu",
+  "requires": {
+	"fabric": "*"
+  },
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": {
 	"client": "mixins.modmenu.client.json"
