@@ -3,9 +3,9 @@
   "package": "io.github.prospector.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-	"GuiMixin",
-	"MainMenuGuiMixin",
-	"PauseMenuGuiMixin"
+	"ScreenMixin",
+	"MainMenuScreenMixin",
+	"PauseMenuScreenMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

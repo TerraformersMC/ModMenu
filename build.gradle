@@ -39,10 +39,10 @@ minecraft {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:19w02a"
-	mappings "net.fabricmc:yarn:19w02a.20"
-	modCompile "net.fabricmc:fabric-loader:0.3.2.93"
-	modCompile "net.fabricmc:fabric:0.1.4.71"
+	minecraft "com.mojang:minecraft:19w06a"
+	mappings "net.fabricmc:yarn:19w06a.9"
+	modCompile "net.fabricmc:fabric-loader:0.3.6.107"
+	modCompile "net.fabricmc:fabric:0.2.0.92"
 }
 
 processResources {

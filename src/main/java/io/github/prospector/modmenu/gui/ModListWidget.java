@@ -20,7 +20,7 @@ public class ModListWidget extends EntryListWidget {
 
 	private List<ModContainer> modInfoList = null;
 	public ModEntryWidget selected;
-	public ModListGui gui;
+	public ModListScreen screen;
 
 	public ModListWidget(MinecraftClient client,
 	                     int width,
@@ -28,14 +28,14 @@ public class ModListWidget extends EntryListWidget {
 	                     int y1,
 	                     int y2,
 	                     int entryHeight,
-	                     Supplier<String> searchTerm, ModListWidget list, ModListGui gui) {
+	                     Supplier<String> searchTerm, ModListWidget list, ModListScreen screen) {
 		super(client, width, height, y1, y2, entryHeight);
 		if (list != null) {
 			this.modInfoList = list.modInfoList;
 		}
 		this.selected = null;
 		this.searchFilter(searchTerm, false);
-		this.gui = gui;
+		this.screen = screen;
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class ModListWidget extends EntryListWidget {
 			}
 			y = y1 + imageOffset + 24;
 			if (info.getDescription() != null && !info.getDescription().isEmpty()) {
-				RenderUtils.drawWrappedString(info.getDescription(), x, y, gui.width - this.width - 20, 5, 0xAAAAAA);
+				RenderUtils.drawWrappedString(info.getDescription(), x, y, screen.width - this.width - 20, 5, 0xAAAAAA);
 			}
 		}
 	}

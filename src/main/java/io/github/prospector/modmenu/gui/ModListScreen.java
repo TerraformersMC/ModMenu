@@ -3,8 +3,9 @@ package io.github.prospector.modmenu.gui;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.prospector.modmenu.ModMenu;
 import net.fabricmc.loader.FabricLoader;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -14,15 +15,15 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-public class ModListGui extends Gui {
+public class ModListScreen extends Screen {
 	private static final Logger LOGGER = LogManager.getLogger();
 	protected String title;
 	private String tooltip;
 	protected TextFieldWidget searchBox;
 	private ModListWidget modList;
-	protected Gui previousGui;
+	protected Screen previousGui;
 
-	public ModListGui(Gui previousGui) {
+	public ModListScreen(Screen previousGui) {
 		this.previousGui = previousGui;
 	}
 
@@ -39,7 +40,7 @@ public class ModListGui extends Gui {
 	@Override
 	protected void onInitialized() {
 		this.client.keyboard.enableRepeatEvents(true);
-		this.title = I18n.translate("modmenu.title");
+		this.title = ModMenu.noFabric ? "Mods" : I18n.translate("modmenu.title");
 		int paneX = (int) (this.width * 0.48);
 		int paneY = 48;
 		int paneWidth = this.width - paneX;
@@ -57,22 +58,21 @@ public class ModListGui extends Gui {
 
 		this.modList = new ModListWidget(this.client, paneX, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
 
-		this.addButton(new ButtonWidget(1, this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.modsFolder", new Object[0])) {
+		this.addButton(new ButtonWidget(1, this.width / 2 - 154, this.height - 28, 150, 20, ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder", new Object[0])) {
 			@Override
 			public void onPressed(double var1, double var3) {
 				SystemUtil.getOperatingSystem().open(new File(FabricLoader.INSTANCE.getGameDirectory(), "mods"));
 			}
 		});
-//		this.addButton(new ButtonWidget(2, this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("modmenu.configsFolder", new Object[0])) {
-//			@Override
-//			public void onPressed(double var1, double var3) {
-//				SystemUtil.getOperatingSystem().open(FabricLoader.INSTANCE.getConfigDirectory());
-//			}
-//		});
-
+		//		this.addButton(new ButtonWidget(2, this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("modmenu.configsFolder", new Object[0])) {
+		//			@Override
+		//			public void onPressed(double var1, double var3) {
+		//				SystemUtil.getOperatingSystem().open(FabricLoader.INSTANCE.getConfigDirectory());
+		//			}
+		//		});
 
 		int configButtonWidth = 100;
-		ButtonWidget configureButton = new ButtonWidget(3, paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY1() + 36, configButtonWidth, 20, I18n.translate("modmenu.configure", new Object[0])) {
+		ButtonWidget configureButton = new ButtonWidget(3, paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY1() + 36, configButtonWidth, 20, ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0])) {
 			@Override
 			public void onPressed(double var1, double var3) {
 			}
@@ -88,7 +88,7 @@ public class ModListGui extends Gui {
 		this.addButton(new ButtonWidget(0, this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done", new Object[0])) {
 			@Override
 			public void onPressed(double var1, double var3) {
-				client.openGui(previousGui);
+				client.openScreen(previousGui);
 			}
 		});
 		this.listeners.add(this.searchBox);

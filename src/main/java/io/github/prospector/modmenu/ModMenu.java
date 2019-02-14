@@ -14,8 +14,11 @@ public class ModMenu implements ClientModInitializer {
 	private static int buttonIdMainMenu = 27;
 	private static int buttonIdPauseMenu = 27;
 
+	public static boolean noFabric;
+
 	@Override
 	public void onInitializeClient() {
+		noFabric = !net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("fabric");
 		boolean hasServersideInstalled = false;
 		for (ModContainer modContainer : FabricLoader.INSTANCE.getMods()) {
 			if (modContainer.getInfo().getSide() != ModInfo.Side.CLIENT) {
