@@ -17,7 +17,7 @@ public class PauseMenuScreenMixin extends Screen {
 	@Inject(at = @At("RETURN"), method = "onInitialized()V")
 	public void drawMenuButton(CallbackInfo info) {
 		int i = FabricLoader.INSTANCE.getMods().size();
-		this.addButton(new ModMenuButtonWidget(ModMenu.getButtonIdPauseMenu(), this.width / 2 - 102, this.height / 4 + 8 + 24 * 2, 204, 20, (ModMenu.noFabric ? "Mods" : I18n.translate("modmenu.title")) + " " + (ModMenu.noFabric ? "(" + i + " Loaded)"
-		                                                                                                                                                                                                                            : I18n.translate("modmenu.loaded", i)), this));
+		this.addButton(new ModMenuButtonWidget(this.width / 2 - 102, this.height / 4 + 8 + 24 * 3, 204, 20, (ModMenu.noFabric ? "Mods" : I18n.translate("modmenu.title")) + " " + (ModMenu.noFabric ? "(" + i + " Loaded)"
+		                                                                                                                                                                                            : I18n.translate("modmenu.loaded", i)), this));
 	}
 }

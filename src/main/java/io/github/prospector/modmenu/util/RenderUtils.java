@@ -13,7 +13,7 @@ public class RenderUtils {
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
-		List<String> strings = client.fontRenderer.wrapStringToWidthAsList(string, wrapWidth);
+		List<String> strings = client.textRenderer.wrapStringToWidthAsList(string, wrapWidth);
 
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
@@ -24,11 +24,11 @@ public class RenderUtils {
 				line += "...";
 			}
 			int x1 = x;
-			if (client.fontRenderer.isRightToLeft()) {
-				int width = client.fontRenderer.getStringWidth(client.fontRenderer.mirror(line));
+			if (client.textRenderer.isRightToLeft()) {
+				int width = client.textRenderer.getStringWidth(client.textRenderer.mirror(line));
 				x1 += (float) (wrapWidth - width);
 			}
-			client.fontRenderer.draw(line, x1, y + i * client.fontRenderer.fontHeight, color);
+			client.textRenderer.draw(line, x1, y + i * client.textRenderer.fontHeight, color);
 		}
 	}
 }

@@ -7,13 +7,13 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 public class ModMenuButtonWidget extends ButtonWidget {
 	public Screen screen;
 
-	public ModMenuButtonWidget(int i, int i1, int i2, String s, Screen screen) {
-		super(i, i1, i2, s);
+	public ModMenuButtonWidget(int i1, int i2, String s, Screen screen) {
+		super(i1, i2, s);
 		this.screen = screen;
 	}
 
-	public ModMenuButtonWidget(int i, int i1, int i2, int i3, int i4, String s, Screen screen) {
-		super(i, i1, i2, i3, i4, s);
+	public ModMenuButtonWidget(int i1, int i2, int i3, int i4, String s, Screen screen) {
+		super(i1, i2, i3, i4, s);
 		this.screen = screen;
 	}
 

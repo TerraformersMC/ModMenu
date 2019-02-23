@@ -8,6 +8,7 @@ import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -42,15 +43,15 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 		int y = this.getY();
 		int x = this.getX();
 		if (this.equals(list.selected)) {
-			Drawable.drawRect(x - 2, y - 2, x - 2 + width - 15, y - 2 + 36, 0xFF808080);
-			Drawable.drawRect(x - 1, y - 1, x - 3 + width - 15, y - 3 + 36, 0xFF000000);
+			DrawableHelper.drawRect(x - 2, y - 2, x - 2 + width - 15, y - 2 + 36, 0xFF808080);
+			DrawableHelper.drawRect(x - 1, y - 1, x - 3 + width - 15, y - 3 + 36, 0xFF000000);
 		}
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.client.getTextureManager().bindTexture(this.nativeImageBackedTexture != null ? this.iconLocation : unknownIcon);
 		GlStateManager.enableBlend();
-		Drawable.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+		DrawableHelper.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
 		GlStateManager.disableBlend();
-		this.client.fontRenderer.draw(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
+		this.client.textRenderer.draw(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
 		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), width - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 

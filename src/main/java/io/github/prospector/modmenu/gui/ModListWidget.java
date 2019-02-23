@@ -7,6 +7,8 @@ import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.ModInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.text.TextFormat;
 import org.apache.logging.log4j.LogManager;
@@ -48,15 +50,15 @@ public class ModListWidget extends EntryListWidget {
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.client.getTextureManager().bindTexture(selected.nativeImageBackedTexture != null ? selected.iconLocation : ModEntryWidget.unknownIcon);
 			GlStateManager.enableBlend();
-			Drawable.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+			DrawableHelper.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
 			GlStateManager.disableBlend();
-			int lineSpacing = client.fontRenderer.fontHeight + 1;
+			int lineSpacing = client.textRenderer.fontHeight + 1;
 			int imageOffset = 36;
-			this.client.fontRenderer.draw(info.getName(), x + imageOffset, y, 0xFFFFFF);
-			this.client.fontRenderer.draw(" (ID: " + info.getId() + ")", x + imageOffset + client.fontRenderer.getStringWidth(info.getName()), y, 0xAAAAAA);
-			this.client.fontRenderer.draw("v" + info.getVersionString(), x + imageOffset, y + lineSpacing, 0xAAAAAA);
+			this.client.textRenderer.draw(info.getName(), x + imageOffset, y, 0xFFFFFF);
+			this.client.textRenderer.draw(" (ID: " + info.getId() + ")", x + imageOffset + client.textRenderer.getStringWidth(info.getName()), y, 0xAAAAAA);
+			this.client.textRenderer.draw("v" + info.getVersionString(), x + imageOffset, y + lineSpacing, 0xAAAAAA);
 			if (info.getLinks().getHomepage() != null && !info.getLinks().getHomepage().isEmpty()) {
-				this.client.fontRenderer.draw(TextFormat.BLUE + "" + TextFormat.UNDERLINE + info.getLinks().getHomepage(), x + imageOffset, y + lineSpacing * 2, 0);
+				this.client.textRenderer.draw(TextFormat.BLUE + "" + TextFormat.UNDERLINE + info.getLinks().getHomepage(), x + imageOffset, y + lineSpacing * 2, 0);
 			}
 			y = y1 + imageOffset + 24;
 			if (info.getDescription() != null && !info.getDescription().isEmpty()) {
