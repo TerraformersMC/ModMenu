@@ -1,0 +1,8 @@
+{
+  "modmenu.title": "Modid",
+  "modmenu.loaded": "(%s laaditud)",
+  "modmenu.config": "Muuda seadistust",
+  "modmenu.modsFolder": "Ava modide kaust",
+  "modmenu.configsFolder": "Ava seadistuste kaust",
+  "modmenu.configure": "Seadista..."
+}
