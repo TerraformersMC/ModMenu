@@ -1,0 +1,8 @@
+{
+  "modmenu.title": "Mods",
+  "modmenu.loaded": "(%s geladen)",
+  "modmenu.config": "Ändere Konfiguration",
+  "modmenu.modsFolder": "Öffne Mods-Ordner",
+  "modmenu.configsFolder": "Öffne Konfigurationen-Ordner",
+  "modmenu.configure": "Konfiguriere..."
+}
