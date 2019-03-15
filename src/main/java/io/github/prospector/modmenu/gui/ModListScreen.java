@@ -73,15 +73,16 @@ public class ModListScreen extends Screen {
 		ButtonWidget configureButton = new ButtonWidget(paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY1() + 36, configButtonWidth, 20, ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0])) {
 			@Override
 			public void onPressed() {
+				ModMenu.CONFIG_RUNNABLE_MAP.get(modList.selected.info.getId()).run();
 			}
 
 			@Override
 			public void draw(int var1, int var2, float var3) {
+			    enabled = modList.selected != null && ModMenu.CONFIG_RUNNABLE_MAP.get(modList.selected.info.getId()) != null;
 				visible = modList.selected != null;
 				super.draw(var1, var2, var3);
 			}
 		};
-		configureButton.enabled = false;
 		this.addButton(configureButton);
 		this.addButton(new ButtonWidget(this.screenWidth / 2 + 4, this.screenHeight - 28, 150, 20, I18n.translate("gui.done", new Object[0])) {
 			@Override
@@ -97,6 +98,10 @@ public class ModListScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(int var1, int var2, int var3) {
+		if (var1 == 256 && this.doesEscapeKeyClose()) {
+			client.openScreen(previousGui);
+			return true;
+		}
 		return super.keyPressed(var1, var2, var3) || this.searchBox.keyPressed(var1, var2, var3);
 	}
 

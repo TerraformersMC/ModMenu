@@ -1,0 +1,8 @@
+{
+  "modmenu.title": "模組",
+  "modmenu.loaded": "(已載入%s個)",
+  "modmenu.config": "編輯設置",
+  "modmenu.modsFolder": "開啟模組資料夾",
+  "modmenu.configsFolder": "開啟設置資料夾",
+  "modmenu.configure": "設置..."
+}

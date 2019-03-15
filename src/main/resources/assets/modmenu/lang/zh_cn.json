@@ -1,0 +1,8 @@
+{
+  "modmenu.title": "模组",
+  "modmenu.loaded": "(已载入%s个)",
+  "modmenu.config": "编辑配置",
+  "modmenu.modsFolder": "开启模组资料夹",
+  "modmenu.configsFolder": "开启配置资料夹",
+  "modmenu.configure": "配置..."
+}
