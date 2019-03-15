@@ -2,15 +2,12 @@ package io.github.prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.util.RenderUtils;
-import net.fabricmc.loader.FabricLoader;
-import net.fabricmc.loader.ModContainer;
-import net.fabricmc.loader.ModInfo;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.text.TextFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,7 +41,7 @@ public class ModListWidget extends EntryListWidget {
 	public void draw(int i, int i1, float v) {
 		super.draw(i, i1, v);
 		if (selected != null) {
-			ModInfo info = selected.info;
+			ModMetadata metadata = selected.info;
 			int x = width + 8;
 			int y = y1;
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -54,15 +51,15 @@ public class ModListWidget extends EntryListWidget {
 			GlStateManager.disableBlend();
 			int lineSpacing = client.textRenderer.fontHeight + 1;
 			int imageOffset = 36;
-			this.client.textRenderer.draw(info.getName(), x + imageOffset, y, 0xFFFFFF);
-			this.client.textRenderer.draw(" (ID: " + info.getId() + ")", x + imageOffset + client.textRenderer.getStringWidth(info.getName()), y, 0xAAAAAA);
-			this.client.textRenderer.draw("v" + info.getVersionString(), x + imageOffset, y + lineSpacing, 0xAAAAAA);
-			if (info.getLinks().getHomepage() != null && !info.getLinks().getHomepage().isEmpty()) {
-				this.client.textRenderer.draw(TextFormat.BLUE + "" + TextFormat.UNDERLINE + info.getLinks().getHomepage(), x + imageOffset, y + lineSpacing * 2, 0);
-			}
+			this.client.textRenderer.draw(metadata.getName(), x + imageOffset, y, 0xFFFFFF);
+			this.client.textRenderer.draw(" (ID: " + metadata.getId() + ")", x + imageOffset + client.textRenderer.getStringWidth(metadata.getName()), y, 0xAAAAAA);
+			this.client.textRenderer.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, y + lineSpacing, 0xAAAAAA);
+			//			if (metadata.getLinks().getHomepage() != null && !metadata.getLinks().getHomepage().isEmpty()) {
+			//				this.client.textRenderer.draw(TextFormat.BLUE + "" + TextFormat.UNDERLINE + metadata.getLinks().getHomepage(), x + imageOffset, y + lineSpacing * 2, 0);
+			//			}
 			y = y1 + imageOffset + 24;
-			if (info.getDescription() != null && !info.getDescription().isEmpty()) {
-				RenderUtils.drawWrappedString(info.getDescription(), x, y, screen.width - this.width - 20, 5, 0xAAAAAA);
+			if (metadata.getDescription() != null && !metadata.getDescription().isEmpty()) {
+				RenderUtils.drawWrappedString(metadata.getDescription(), x, y, screen.screenWidth - this.width - 20, 5, 0xAAAAAA);
 			}
 		}
 	}
@@ -74,11 +71,11 @@ public class ModListWidget extends EntryListWidget {
 
 	public void searchFilter(Supplier<String> searchTerm, boolean var2) {
 		this.clearEntries();
-		List<ModContainer> mods = FabricLoader.INSTANCE.getMods();
+		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
 		if (this.modInfoList == null || var2) {
 			this.modInfoList = new ArrayList<>();
 			modInfoList.addAll(mods);
-			this.modInfoList.sort(Comparator.comparing(modContainer -> modContainer.getInfo().getName()));
+			this.modInfoList.sort(Comparator.comparing(modContainer -> modContainer.getMetadata().getName()));
 		}
 
 		String term = searchTerm.get().toLowerCase(Locale.ROOT);
@@ -86,14 +83,14 @@ public class ModListWidget extends EntryListWidget {
 
 		while (true) {
 			ModContainer container;
-			ModInfo info;
+			ModMetadata metadata;
 			do {
 				if (!iter.hasNext()) {
 					return;
 				}
 				container = iter.next();
-				info = container.getInfo();
-			} while (!info.getName().toLowerCase(Locale.ROOT).contains(term) && !info.getId().toLowerCase(Locale.ROOT).contains(term) && !info.getAuthors().stream().anyMatch(person -> person.getName().equalsIgnoreCase(term)));
+				metadata = container.getMetadata();
+			} while (!metadata.getName().toLowerCase(Locale.ROOT).contains(term) && !metadata.getId().toLowerCase(Locale.ROOT).contains(term));
 
 			this.addEntry(new ModEntryWidget(container, this));
 		}

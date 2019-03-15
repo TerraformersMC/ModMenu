@@ -3,11 +3,9 @@ package io.github.prospector.modmenu.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.util.RenderUtils;
-import net.fabricmc.fabric.impl.resources.ModResourcePackUtil;
-import net.fabricmc.loader.ModContainer;
-import net.fabricmc.loader.ModInfo;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.texture.NativeImage;
@@ -23,7 +21,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftClient client;
 	public ModContainer container;
-	public ModInfo info;
+	public ModMetadata info;
 	public ModListWidget list;
 	public final Identifier iconLocation;
 	public final NativeImageBackedTexture nativeImageBackedTexture;
@@ -32,7 +30,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 	public ModEntryWidget(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
-		this.info = container.getInfo();
+		this.info = container.getMetadata();
 		this.client = MinecraftClient.getInstance();
 		this.iconLocation = new Identifier("modmenu", info.getId() + "_icon");
 		this.nativeImageBackedTexture = this.getNativeImageBackedTexture();
@@ -57,12 +55,12 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 
 	private NativeImageBackedTexture getNativeImageBackedTexture() {
 		try {
-			InputStream inputStream = ModResourcePackUtil.class.getClassLoader().getResourceAsStream("assets/" + info.getId() + "/icon.png");
+			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + info.getId() + "/icon.png");
 			if (inputStream == null) {
 				if (info.getId().equals("fabricloader") || info.getId().equals("fabric")) {
-					inputStream = ModResourcePackUtil.class.getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
+					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
 				} else {
-					inputStream = ModResourcePackUtil.class.getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
+					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
 				}
 			}
 			Throwable var3 = null;
@@ -94,7 +92,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 
 			return var6;
 		} catch (Throwable var18) {
-			LOGGER.error("Invalid icon for mod {}", this.container.getInfo().getName(), var18);
+			LOGGER.error("Invalid icon for mod {}", this.container.getMetadata().getName(), var18);
 			return null;
 		}
 	}

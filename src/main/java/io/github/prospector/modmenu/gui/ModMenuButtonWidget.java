@@ -18,7 +18,7 @@ public class ModMenuButtonWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void onPressed(double var1, double var3) {
+	public void onPressed() {
 		MinecraftClient.getInstance().openScreen(new ModListScreen(screen));
 	}
 }
