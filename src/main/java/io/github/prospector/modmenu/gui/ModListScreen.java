@@ -73,12 +73,12 @@ public class ModListScreen extends Screen {
 		ButtonWidget configureButton = new ButtonWidget(paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY1() + 36, configButtonWidth, 20, ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0])) {
 			@Override
 			public void onPressed() {
-				ModMenu.CONFIG_RUNNABLE_MAP.get(modList.selected.info.getId()).run();
+				ModMenu.CONFIG_OVERRIDES.get(modList.selected.info.getId()).run();
 			}
 
 			@Override
 			public void draw(int var1, int var2, float var3) {
-			    enabled = modList.selected != null && ModMenu.CONFIG_RUNNABLE_MAP.get(modList.selected.info.getId()) != null;
+			    enabled = modList.selected != null && ModMenu.CONFIG_OVERRIDES.get(modList.selected.info.getId()) != null;
 				visible = modList.selected != null;
 				super.draw(var1, var2, var3);
 			}
