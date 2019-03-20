@@ -70,17 +70,17 @@ public class ModListScreen extends Screen {
 		//		});
 
 		int configButtonWidth = 100;
-		ButtonWidget configureButton = new ButtonWidget(paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY1() + 36, configButtonWidth, 20, ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0])) {
+		ButtonWidget configureButton = new ButtonWidget(paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY() + 36, configButtonWidth, 20, ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0])) {
 			@Override
 			public void onPressed() {
 				ModMenu.CONFIG_OVERRIDES.get(modList.selected.info.getId()).run();
 			}
 
 			@Override
-			public void draw(int var1, int var2, float var3) {
-			    enabled = modList.selected != null && ModMenu.CONFIG_OVERRIDES.get(modList.selected.info.getId()) != null;
+			public void render(int var1, int var2, float var3) {
+				active = modList.selected != null && ModMenu.CONFIG_OVERRIDES.get(modList.selected.info.getId()) != null;
 				visible = modList.selected != null;
-				super.draw(var1, var2, var3);
+				super.render(var1, var2, var3);
 			}
 		};
 		this.addButton(configureButton);
@@ -116,14 +116,14 @@ public class ModListScreen extends Screen {
 	}
 
 	@Override
-	public void draw(int var1, int var2, float var3) {
+	public void render(int var1, int var2, float var3) {
 		this.drawBackground();
 		this.tooltip = null;
-		this.modList.draw(var1, var2, var3);
-		this.searchBox.draw(var1, var2, var3);
+		this.modList.render(var1, var2, var3);
+		this.searchBox.render(var1, var2, var3);
 		GlStateManager.disableBlend();
 		this.drawStringCentered(this.fontRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
-		super.draw(var1, var2, var3);
+		super.render(var1, var2, var3);
 		if (this.tooltip != null) {
 			this.drawTooltip(Lists.newArrayList(Splitter.on("\n").split(this.tooltip)), var1, var2);
 		}

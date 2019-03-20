@@ -38,12 +38,12 @@ public class ModListWidget extends EntryListWidget {
 	}
 
 	@Override
-	public void draw(int i, int i1, float v) {
-		super.draw(i, i1, v);
+	public void render(int i, int i1, float v) {
+		super.render(i, i1, v);
 		if (selected != null) {
 			ModMetadata metadata = selected.info;
 			int x = width + 8;
-			int y = y1;
+			int y = this.y;
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.client.getTextureManager().bindTexture(selected.nativeImageBackedTexture != null ? selected.iconLocation : ModEntryWidget.unknownIcon);
 			GlStateManager.enableBlend();
@@ -57,7 +57,7 @@ public class ModListWidget extends EntryListWidget {
 			//			if (metadata.getLinks().getHomepage() != null && !metadata.getLinks().getHomepage().isEmpty()) {
 			//				this.client.textRenderer.draw(TextFormat.BLUE + "" + TextFormat.UNDERLINE + metadata.getLinks().getHomepage(), x + imageOffset, y + lineSpacing * 2, 0);
 			//			}
-			y = y1 + imageOffset + 24;
+			y = this.y + imageOffset + 24;
 			if (metadata.getDescription() != null && !metadata.getDescription().isEmpty()) {
 				RenderUtils.drawWrappedString(metadata.getDescription(), x, y, screen.screenWidth - this.width - 20, 5, 0xAAAAAA);
 			}
@@ -105,11 +105,7 @@ public class ModListWidget extends EntryListWidget {
 		return width;
 	}
 
-	public int getY1() {
-		return this.y1;
-	}
-
-	public int getY2() {
-		return this.y2;
+	public int getY() {
+		return this.y;
 	}
 }
