@@ -59,7 +59,7 @@ public class ModListWidget extends EntryListWidget {
 			//			}
 			y = this.y + imageOffset + 24;
 			if (metadata.getDescription() != null && !metadata.getDescription().isEmpty()) {
-				RenderUtils.drawWrappedString(metadata.getDescription(), x, y, screen.screenWidth - this.width - 20, 5, 0xAAAAAA);
+				RenderUtils.drawWrappedString(metadata.getDescription(), x, y, screen.screenWidth - this.width - 20, 20, 0xAAAAAA);
 			}
 		}
 	}
