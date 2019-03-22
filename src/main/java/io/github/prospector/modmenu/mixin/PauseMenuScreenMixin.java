@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.menu.PauseMenuScreen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.TextComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PauseMenuScreen.class)
 public class PauseMenuScreenMixin extends Screen {
+
+	public PauseMenuScreenMixin(TextComponent title) {
+		super(title);
+	}
 
 	@Inject(at = @At("RETURN"), method = "onInitialized()V")
 	public void drawMenuButton(CallbackInfo info) {
