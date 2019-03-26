@@ -40,7 +40,7 @@ minecraft {
 
 dependencies {
 	minecraft "com.mojang:minecraft:19w12b"
-	mappings "net.fabricmc:yarn:19w12b.1"
+	mappings "net.fabricmc:yarn:19w12b.3"
 	modCompile "net.fabricmc:fabric-loader:0.3.7.109"
 	modCompile "net.fabricmc:fabric:0.2.5.114"
 }
