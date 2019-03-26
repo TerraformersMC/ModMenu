@@ -1,13 +1,13 @@
 package io.github.prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.resource.language.I18n;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,15 +52,13 @@ public class ModListWidget extends EntryListWidget {
 			int lineSpacing = client.textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			this.client.textRenderer.draw(metadata.getName(), x + imageOffset, y, 0xFFFFFF);
-			this.client.textRenderer.draw(" (ID: " + metadata.getId() + ")", x + imageOffset + client.textRenderer.getStringWidth(metadata.getName()), y, 0xAAAAAA);
+			if (i > x && i1 > y && i1 < y + imageOffset && i < screen.screenWidth)
+				screen.setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 			this.client.textRenderer.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, y + lineSpacing, 0xAAAAAA);
 			//			if (metadata.getLinks().getHomepage() != null && !metadata.getLinks().getHomepage().isEmpty()) {
 			//				this.client.textRenderer.draw(TextFormat.BLUE + "" + TextFormat.UNDERLINE + metadata.getLinks().getHomepage(), x + imageOffset, y + lineSpacing * 2, 0);
 			//			}
 			y = this.y + imageOffset + 24;
-			if (metadata.getDescription() != null && !metadata.getDescription().isEmpty()) {
-				RenderUtils.drawWrappedString(metadata.getDescription(), x, y, screen.screenWidth - this.width - 20, 5, 0xAAAAAA);
-			}
 		}
 	}
 
