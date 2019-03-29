@@ -2,11 +2,11 @@ package io.github.prospector.modmenu.gui;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.gui.widget.ItemListWidget;
 
-public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
+public class DescriptionListWidget extends ItemListWidget<DescriptionListWidget.DescriptionItem> {
 
-	private ModEntryWidget lastSelected = null;
+	private ModItemWidget lastSelected = null;
 	private ModListScreen parent;
 	private TextRenderer textRenderer;
 
@@ -17,38 +17,43 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public int getEntryWidth() {
+	public DescriptionItem getSelectedItem() {
+		return null;
+	}
+
+	@Override
+	public int getItemWidth() {
 		return this.width - 10;
 	}
 
 	@Override
 	protected int getScrollbarPosition() {
-		return this.width - 6 + x;
+		return this.width - 6 + left;
 	}
 
 	@Override
 	public void render(int int_1, int int_2, float float_1) {
-		if (parent.getModList().selected != lastSelected) {
-			lastSelected = parent.getModList().selected;
-			clearEntries();
-			scrollY = 0d;
+		if (parent.getModList().getSelectedItem() != lastSelected) {
+			lastSelected = parent.getModList().getSelectedItem();
+			clearItems();
+			capYPosition(-Double.MAX_VALUE);
 			if (lastSelected != null && lastSelected.info.getDescription() != null && !lastSelected.info.getDescription().isEmpty())
-				for (String line : textRenderer.wrapStringToWidthAsList(lastSelected.info.getDescription().replaceAll("\n", "\n\n"), getEntryWidth()))
-					getInputListeners().add(new DescriptionEntry(line));
+				for (String line : textRenderer.wrapStringToWidthAsList(lastSelected.info.getDescription().replaceAll("\n", "\n\n"), getItemWidth()))
+					children().add(new DescriptionItem(line));
 		}
 		super.render(int_1, int_2, float_1);
 	}
 
-	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
+	protected class DescriptionItem extends ItemListWidget.Item<DescriptionItem> {
 		protected String text;
 
-		public DescriptionEntry(String text) {
+		public DescriptionItem(String text) {
 			this.text = text;
 		}
 
 		@Override
-		public void draw(int i, int i1, int i2, int i3, boolean b, float v) {
-			MinecraftClient.getInstance().textRenderer.drawWithShadow(text, getX(), getY(), 0xAAAAAA);
+		public void render(int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+			MinecraftClient.getInstance().textRenderer.drawWithShadow(text, x, y, 0xAAAAAA);
 		}
 	}
 
