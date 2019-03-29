@@ -14,20 +14,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Screen.class)
 public class ScreenMixin {
 
-	@Shadow public int screenHeight;
+	@Shadow public int height;
 
-	@Inject(at = @At("HEAD"), method = "addButton", cancellable = true, remap = false)
+	@Inject(at = @At("HEAD"), method = "addButton", cancellable = true)
 	protected void addButton(AbstractButtonWidget button, CallbackInfoReturnable info) {
 		if (((Object) this) instanceof MainMenuScreen) {
-			if (button.y <= this.screenHeight / 4 + 48 + 24 * 3) {
+			if (button.y <= this.height / 4 + 48 + 24 * 3) {
 				button.y -= 12;
 			}
-			if (button.y > this.screenHeight / 4 + 48 + 24 * 3) {
+			if (button.y > this.height / 4 + 48 + 24 * 3) {
 				button.y += 12;
 			}
 		}
 		if (((Object) this) instanceof PauseMenuScreen) {
-			if (button.y >= this.screenHeight / 4 - 16 + 24 * 4 - 1 && !(button instanceof ModMenuButtonWidget)) {
+			if (button.y >= this.height / 4 - 16 + 24 * 4 - 1 && !(button instanceof ModMenuButtonWidget)) {
 				button.y += 24;
 			}
 			button.y -= 12;
