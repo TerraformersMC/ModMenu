@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.gui.widget.ItemListWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 
-public class ModEntryWidget extends EntryListWidget.Entry {
+public class ModItemWidget extends ItemListWidget.Item<ModItemWidget> {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftClient client;
 	public ModContainer container;
@@ -27,7 +27,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 	public final NativeImageBackedTexture nativeImageBackedTexture;
 	public static final Identifier unknownIcon = new Identifier("textures/misc/unknown_pack.png");
 
-	public ModEntryWidget(ModContainer container, ModListWidget list) {
+	public ModItemWidget(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
 		this.info = container.getMetadata();
@@ -37,20 +37,14 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 	}
 
 	@Override
-	public void draw(int width, int height, int var3, int var4, boolean var5, float var6) {
-		int y = this.getY();
-		int x = this.getX();
-		if (this.equals(list.selected)) {
-			DrawableHelper.drawRect(x - 2, y - 2, x - 2 + width - 15, y - 2 + 36, 0xFF808080);
-			DrawableHelper.drawRect(x - 1, y - 1, x - 3 + width - 15, y - 3 + 36, 0xFF000000);
-		}
+	public void render(int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.client.getTextureManager().bindTexture(this.nativeImageBackedTexture != null ? this.iconLocation : unknownIcon);
 		GlStateManager.enableBlend();
-		DrawableHelper.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
 		GlStateManager.disableBlend();
 		this.client.textRenderer.draw(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
-		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), width - 32 - 3 - 25 - 4, 2, 0x808080);
+		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), itemWidth - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 
 	private NativeImageBackedTexture getNativeImageBackedTexture() {
@@ -99,7 +93,7 @@ public class ModEntryWidget extends EntryListWidget.Entry {
 
 	@Override
 	public boolean mouseClicked(double v, double v1, int i) {
-		list.selected = this;
+		list.selectItem(this);
 		return true;
 	}
 }

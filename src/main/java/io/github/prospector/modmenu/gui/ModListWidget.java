@@ -5,8 +5,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.gui.menu.options.LanguageOptionsScreen;
+import net.minecraft.client.gui.widget.ItemListWidget;
 import net.minecraft.client.resource.language.I18n;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,11 +14,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class ModListWidget extends EntryListWidget {
+public class ModListWidget extends ItemListWidget<ModItemWidget> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private List<ModContainer> modInfoList = null;
-	public ModEntryWidget selected;
 	public ModListScreen screen;
 
 	public ModListWidget(MinecraftClient client,
@@ -32,7 +31,6 @@ public class ModListWidget extends EntryListWidget {
 		if (list != null) {
 			this.modInfoList = list.modInfoList;
 		}
-		this.selected = null;
 		this.searchFilter(searchTerm, false);
 		this.screen = screen;
 	}
@@ -40,35 +38,41 @@ public class ModListWidget extends EntryListWidget {
 	@Override
 	public void render(int i, int i1, float v) {
 		super.render(i, i1, v);
+		ModItemWidget selected = getSelectedItem();
 		if (selected != null) {
 			ModMetadata metadata = selected.info;
 			int x = width + 8;
-			int y = this.y;
+			int y = this.top;
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.client.getTextureManager().bindTexture(selected.nativeImageBackedTexture != null ? selected.iconLocation : ModEntryWidget.unknownIcon);
+			this.client.getTextureManager().bindTexture(selected.nativeImageBackedTexture != null ? selected.iconLocation : ModItemWidget.unknownIcon);
 			GlStateManager.enableBlend();
-			DrawableHelper.drawTexturedRect(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+			blit(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
 			GlStateManager.disableBlend();
 			int lineSpacing = client.textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			this.client.textRenderer.draw(metadata.getName(), x + imageOffset, y, 0xFFFFFF);
-			if (i > x && i1 > y && i1 < y + imageOffset && i < screen.screenWidth)
+			if (i > x && i1 > y && i1 < y + imageOffset && i < screen.width)
 				screen.setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 			this.client.textRenderer.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, y + lineSpacing, 0xAAAAAA);
 			//			if (metadata.getLinks().getHomepage() != null && !metadata.getLinks().getHomepage().isEmpty()) {
 			//				this.client.textRenderer.draw(TextFormat.BLUE + "" + TextFormat.UNDERLINE + metadata.getLinks().getHomepage(), x + imageOffset, y + lineSpacing * 2, 0);
 			//			}
-			y = this.y + imageOffset + 24;
+			y = this.top + imageOffset + 24;
 		}
 	}
 
 	@Override
-	public int getEntryWidth() {
+	protected boolean isFocused() {
+		return screen.getFocused() == this;
+	}
+
+	@Override
+	public int getItemWidth() {
 		return this.width - 8;
 	}
 
 	public void searchFilter(Supplier<String> searchTerm, boolean var2) {
-		this.clearEntries();
+		this.clearItems();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
 		if (this.modInfoList == null || var2) {
 			this.modInfoList = new ArrayList<>();
@@ -90,7 +94,7 @@ public class ModListWidget extends EntryListWidget {
 				metadata = container.getMetadata();
 			} while (!metadata.getName().toLowerCase(Locale.ROOT).contains(term) && !metadata.getId().toLowerCase(Locale.ROOT).contains(term));
 
-			this.addEntry(new ModEntryWidget(container, this));
+			this.addItem(new ModItemWidget(container, this));
 		}
 	}
 
@@ -104,6 +108,6 @@ public class ModListWidget extends EntryListWidget {
 	}
 
 	public int getY() {
-		return this.y;
+		return this.top;
 	}
 }
