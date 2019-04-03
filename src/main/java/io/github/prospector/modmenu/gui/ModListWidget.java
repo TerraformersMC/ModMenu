@@ -46,7 +46,7 @@ public class ModListWidget extends ItemListWidget<ModItemWidget> {
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.client.getTextureManager().bindTexture(selected.nativeImageBackedTexture != null ? selected.iconLocation : ModItemWidget.unknownIcon);
 			GlStateManager.enableBlend();
-			blit(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+			blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 			GlStateManager.disableBlend();
 			int lineSpacing = client.textRenderer.fontHeight + 1;
 			int imageOffset = 36;

@@ -41,7 +41,7 @@ public class ModItemWidget extends ItemListWidget.Item<ModItemWidget> {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.client.getTextureManager().bindTexture(this.nativeImageBackedTexture != null ? this.iconLocation : unknownIcon);
 		GlStateManager.enableBlend();
-		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
 		this.client.textRenderer.draw(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
 		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), itemWidth - 32 - 3 - 25 - 4, 2, 0x808080);
