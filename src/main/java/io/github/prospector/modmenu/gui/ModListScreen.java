@@ -26,13 +26,13 @@ public class ModListScreen extends Screen {
 	protected String textTitle;
 	protected TextFieldWidget searchBox;
 	protected DescriptionListWidget descriptionListWidget;
-	protected Screen previousGui;
+	protected Screen parent;
 	protected ModListWidget modList;
 	private String tooltip;
 
 	public ModListScreen(Screen previousGui) {
 		super(ModMenu.noFabric ? new StringTextComponent("Mods") : new TranslatableTextComponent("modmenu.title"));
-		this.previousGui = previousGui;
+		this.parent = previousGui;
 		this.textTitle = title.getFormattedText();
 	}
 
@@ -58,13 +58,8 @@ public class ModListScreen extends Screen {
 		int paneWidth = this.width - paneX;
 
 		int searchBoxWidth = paneX - 32;
-		this.searchBox = new TextFieldWidget(this.font, paneX / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox) {
-			@Override
-			public void setFocused(boolean focused) {
-				super.setFocused(true);
-			}
-		};
-		this.searchBox.setChangedListener((string_1) -> this.modList.searchFilter(() -> string_1, false));
+		this.searchBox = new TextFieldWidget(this.font, paneX / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox);
+		this.searchBox.setChangedListener((string_1) -> this.modList.filter(() -> string_1, false));
 
 		this.modList = new ModListWidget(this.minecraft, paneX, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneX + 6, this.height, paneY + 60, this.height - 36, 12, this);
@@ -75,21 +70,20 @@ public class ModListScreen extends Screen {
 
 		int configButtonWidth = 100;
 		ButtonWidget configureButton = new ButtonWidget(paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY() + 36, configButtonWidth, 20,
-			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0]), button -> ModMenu.CONFIG_OVERRIDES.get(modList.getSelectedItem().info.getId()).run()) {
+			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0]), button -> ModMenu.CONFIG_OVERRIDES.get(modList.getSelectedItem().metadata.getId()).run()) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = modList.getSelectedItem() != null && ModMenu.CONFIG_OVERRIDES.get(modList.getSelectedItem().info.getId()) != null;
+				active = modList.getSelectedItem() != null && ModMenu.CONFIG_OVERRIDES.get(modList.getSelectedItem().metadata.getId()) != null;
 				visible = modList.getSelectedItem() != null;
 				super.render(var1, var2, var3);
 			}
 		};
-		this.addButton(configureButton);
-		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(previousGui)));
 		this.children.add(this.searchBox);
 		this.children.add(this.modList);
+		this.addButton(configureButton);
 		this.children.add(this.descriptionListWidget);
-		this.searchBox.setFocused(true);
-		this.searchBox.method_1856(false);
+		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
+		this.method_20085(this.searchBox);
 	}
 
 	public ModListWidget getModList() {
@@ -97,17 +91,13 @@ public class ModListScreen extends Screen {
 	}
 
 	@Override
-	public boolean keyPressed(int var1, int var2, int var3) {
-		if (var1 == 256 && this.shouldCloseOnEsc()) {
-			minecraft.openScreen(previousGui);
-			return true;
-		}
-		return super.keyPressed(var1, var2, var3) || this.searchBox.keyPressed(var1, var2, var3);
+	public boolean keyPressed(int int_1, int int_2, int int_3) {
+		return super.keyPressed(int_1, int_2, int_3) ? true : this.searchBox.keyPressed(int_1, int_2, int_3);
 	}
 
 	@Override
-	public boolean charTyped(char var1, int var2) {
-		return this.searchBox.charTyped(var1, var2);
+	public boolean charTyped(char char_1, int int_1) {
+		return this.searchBox.charTyped(char_1, int_1);
 	}
 
 	@Override

@@ -5,9 +5,9 @@ import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.class_4280;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.ItemListWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
@@ -17,41 +17,41 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 
-public class ModItemWidget extends ItemListWidget.Item<ModItemWidget> {
+public class ModItem extends class_4280.class_4281<ModItem> implements AutoCloseable {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftClient client;
 	public ModContainer container;
-	public ModMetadata info;
+	public ModMetadata metadata;
 	public ModListWidget list;
 	public final Identifier iconLocation;
-	public final NativeImageBackedTexture nativeImageBackedTexture;
+	public final NativeImageBackedTexture icon;
 	public static final Identifier unknownIcon = new Identifier("textures/misc/unknown_pack.png");
 
-	public ModItemWidget(ModContainer container, ModListWidget list) {
+	public ModItem(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
-		this.info = container.getMetadata();
+		this.metadata = container.getMetadata();
 		this.client = MinecraftClient.getInstance();
-		this.iconLocation = new Identifier("modmenu", info.getId() + "_icon");
-		this.nativeImageBackedTexture = this.getNativeImageBackedTexture();
+		this.iconLocation = new Identifier("modmenu", metadata.getId() + "_icon");
+		this.icon = this.getIcon();
 	}
 
 	@Override
 	public void render(int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.client.getTextureManager().bindTexture(this.nativeImageBackedTexture != null ? this.iconLocation : unknownIcon);
+		this.client.getTextureManager().bindTexture(this.icon != null ? this.iconLocation : unknownIcon);
 		GlStateManager.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
-		this.client.textRenderer.draw(info.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
-		RenderUtils.drawWrappedString(info.getDescription(), (x + 32 + 3 + 4), (y + 11), itemWidth - 32 - 3 - 25 - 4, 2, 0x808080);
+		this.client.textRenderer.draw(metadata.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
+		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + 11), itemWidth - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 
-	private NativeImageBackedTexture getNativeImageBackedTexture() {
+	private NativeImageBackedTexture getIcon() {
 		try {
-			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + info.getId() + "/icon.png");
+			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + metadata.getId() + "/icon.png");
 			if (inputStream == null) {
-				if (info.getId().equals("fabricloader") || info.getId().equals("fabric")) {
+				if (metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric")) {
 					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
 				} else {
 					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
@@ -93,7 +93,14 @@ public class ModItemWidget extends ItemListWidget.Item<ModItemWidget> {
 
 	@Override
 	public boolean mouseClicked(double v, double v1, int i) {
-		list.selectItem(this);
+		list.method_20157(this);
 		return true;
+	}
+
+	public void close() {
+		if (this.icon != null) {
+			this.icon.close();
+		}
+
 	}
 }

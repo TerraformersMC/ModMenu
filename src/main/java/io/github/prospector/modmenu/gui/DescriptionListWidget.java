@@ -6,7 +6,7 @@ import net.minecraft.client.gui.widget.ItemListWidget;
 
 public class DescriptionListWidget extends ItemListWidget<DescriptionListWidget.DescriptionItem> {
 
-	private ModItemWidget lastSelected = null;
+	private ModItem lastSelected = null;
 	private ModListScreen parent;
 	private TextRenderer textRenderer;
 
@@ -37,8 +37,8 @@ public class DescriptionListWidget extends ItemListWidget<DescriptionListWidget.
 			lastSelected = parent.getModList().getSelectedItem();
 			clearItems();
 			capYPosition(-Double.MAX_VALUE);
-			if (lastSelected != null && lastSelected.info.getDescription() != null && !lastSelected.info.getDescription().isEmpty())
-				for (String line : textRenderer.wrapStringToWidthAsList(lastSelected.info.getDescription().replaceAll("\n", "\n\n"), getItemWidth()))
+			if (lastSelected != null && lastSelected.metadata.getDescription() != null && !lastSelected.metadata.getDescription().isEmpty())
+				for (String line : textRenderer.wrapStringToWidthAsList(lastSelected.metadata.getDescription().replaceAll("\n", "\n\n"), getItemWidth()))
 					children().add(new DescriptionItem(line));
 		}
 		super.render(int_1, int_2, float_1);
