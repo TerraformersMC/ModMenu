@@ -98,7 +98,7 @@ public class ModItem extends AlwaysSelectedItemListWidget.class_4281<ModItem> im
 		try {
 			InputStream inputStream;
 			try {
-				inputStream = Files.newInputStream(container.getPath(metadata.getIconPath(64).orElse("assets/" + metadata.getId() + "/icon.png")));
+				inputStream = Files.newInputStream(container.getPath(metadata.getIconPath(64 * MinecraftClient.getInstance().options.guiScale).orElse("assets/" + metadata.getId() + "/icon.png")));
 			} catch (NoSuchFileException e) {
 				if (metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric")) {
 					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
