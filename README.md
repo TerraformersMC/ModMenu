@@ -12,7 +12,6 @@ A picture's worth 2 words
 - The icon comes from the icon specified in your fabric.mod.json (as per the spec)
 - Clientside-only and API badges are defined as custom objects in your fabric.mod.json as such:
 ```json
-...
 "custom": {
     "modmenu:api": true,
     "modmenu:clientsideOnly": true
