@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.class_4280;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.menu.AlwaysSelectedItemListWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.text.TranslatableTextComponent;
@@ -15,10 +15,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class ModListWidget extends class_4280<ModItem> {
+public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private List<ModContainer> modInfoList = null;
+	private List<ModContainer> modContainerList = null;
 	public ModListScreen parent;
 
 	public ModListWidget(MinecraftClient client,
@@ -30,7 +30,7 @@ public class ModListWidget extends class_4280<ModItem> {
 	                     Supplier<String> searchTerm, ModListWidget list, ModListScreen parent) {
 		super(client, width, height, y1, y2, entryHeight);
 		if (list != null) {
-			this.modInfoList = list.modInfoList;
+			this.modContainerList = list.modContainerList;
 		}
 		this.filter(searchTerm, false);
 		this.parent = parent;
@@ -80,18 +80,19 @@ public class ModListWidget extends class_4280<ModItem> {
 	public void filter(Supplier<String> searchTerm, boolean var2) {
 		this.clearItems();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
-		if (this.modInfoList == null || var2) {
-			this.modInfoList = new ArrayList<>();
-			modInfoList.addAll(mods);
-			this.modInfoList.sort(Comparator.comparing(modContainer -> modContainer.getMetadata().getName()));
+		if (this.modContainerList == null || var2) {
+			this.modContainerList = new ArrayList<>();
+			modContainerList.addAll(mods);
+			this.modContainerList.sort(Comparator.comparing(modContainer -> modContainer.getMetadata().getName()));
 		}
 
 		String term = searchTerm.get().toLowerCase(Locale.ROOT);
-		Iterator<ModContainer> iter = this.modInfoList.iterator();
+		Iterator<ModContainer> iter = this.modContainerList.iterator();
 
 		while (true) {
 			ModContainer container;
 			ModMetadata metadata;
+
 			do {
 				if (!iter.hasNext()) {
 					return;
@@ -99,7 +100,6 @@ public class ModListWidget extends class_4280<ModItem> {
 				container = iter.next();
 				metadata = container.getMetadata();
 			} while (!metadata.getName().toLowerCase(Locale.ROOT).contains(term) && !metadata.getId().toLowerCase(Locale.ROOT).contains(term));
-
 			this.addItem(new ModItem(container, this));
 		}
 	}

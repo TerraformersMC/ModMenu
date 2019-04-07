@@ -1,14 +1,27 @@
 {
+  "schemaVersion": 1,
   "id": "modmenu",
   "name": "Mod Menu",
   "version": "$version",
-  "side": "client",
-  "initializer": "io.github.prospector.modmenu.ModMenu",
-  "requires": {
+  "environment": "client",
+  "license": "MIT",
+  "icon": "assets/modmenu/icon.png",
+  "entrypoints": {
+	"client": [
+	  "io.github.prospector.modmenu.ModMenu"
+	]
+  },
+  "recommends": {
 	"fabric": "*"
   },
+  "authors": [
+	"Prospector"
+  ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
-  "mixins": {
-	"client": "mixins.modmenu.client.json"
+  "mixins": [
+	"mixins.modmenu.json"
+  ],
+  "custom": {
+	"modmenu:clientsideOnly": true
   }
 }

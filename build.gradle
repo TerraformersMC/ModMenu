@@ -28,7 +28,7 @@ targetCompatibility = 1.8
 
 group = "io.github.prospector.modmenu"
 archivesBaseName = "ModMenu"
-version = "1.1.12"
+version = "1.2.0"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
@@ -40,9 +40,9 @@ minecraft {
 
 dependencies {
 	minecraft "com.mojang:minecraft:19w14b"
-	mappings "net.fabricmc:yarn:19w14b.1"
-	modCompile "net.fabricmc:fabric-loader:0.3.7.109"
-	modCompile "net.fabricmc:fabric:0.2.6.119"
+	mappings "net.fabricmc:yarn:19w14b.4"
+	modCompile "net.fabricmc:fabric-loader:0.4.0+build.113"
+	modCompile "net.fabricmc:fabric:0.2.6.121"
 }
 
 processResources {

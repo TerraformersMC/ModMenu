@@ -65,9 +65,6 @@ public class ModListScreen extends Screen {
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneX + 6, this.height, paneY + 60, this.height - 36, 12, this);
 		this.descriptionListWidget.setLeftPos(paneX + 6);
 
-		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20,
-			ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
-
 		int configButtonWidth = 100;
 		ButtonWidget configureButton = new ButtonWidget(paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY() + 36, configButtonWidth, 20,
 			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure", new Object[0]), button -> ModMenu.CONFIG_OVERRIDES.get(modList.getSelectedItem().metadata.getId()).run()) {
@@ -82,6 +79,8 @@ public class ModListScreen extends Screen {
 		this.children.add(this.modList);
 		this.addButton(configureButton);
 		this.children.add(this.descriptionListWidget);
+		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20,
+			ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
 		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
 		this.method_20085(this.searchBox);
 	}
