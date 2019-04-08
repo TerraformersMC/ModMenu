@@ -17,6 +17,9 @@
   "authors": [
 	"Prospector"
   ],
+  "contributors": [
+	"Daniel She", "Draylar", "Mordna", "Madis0", "Yanis48", "Boundarybreaker"
+  ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
 	"mixins.modmenu.json"

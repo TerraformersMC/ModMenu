@@ -73,7 +73,7 @@ public class ModItem extends AlwaysSelectedItemListWidget.class_4281<ModItem> im
 					drawBadge("API", 0x8810d098, 0x88046146);
 				}
 			} else {
-				if (metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().contains("API")) {
+				if (metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().endsWith(" API")) {
 					drawBadge("API", 0x8810d098, 0x88046146);
 				}
 			}
