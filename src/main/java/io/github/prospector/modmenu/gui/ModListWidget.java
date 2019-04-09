@@ -40,6 +40,9 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 	public void render(int i, int i1, float v) {
 		super.render(i, i1, v);
 		ModItem selected = getSelectedItem();
+		if (selected == null && getItem(0) != null) {
+			selectItem(getItem(0));
+		}
 		if (selected != null) {
 			ModMetadata metadata = selected.metadata;
 			int x = width + 8;

@@ -53,7 +53,7 @@ public class ModListScreen extends Screen {
 	@Override
 	protected void init() {
 		this.minecraft.keyboard.enableRepeatEvents(true);
-		int paneX = width / 2 - 6;
+		int paneX = width / 2 - 4;
 		int paneY = 48;
 		int paneWidth = this.width - paneX;
 
@@ -62,8 +62,8 @@ public class ModListScreen extends Screen {
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(() -> string_1, false));
 
 		this.modList = new ModListWidget(this.minecraft, paneX, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
-		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneX + 6, this.height, paneY + 60, this.height - 36, 12, this);
-		this.descriptionListWidget.setLeftPos(paneX + 6);
+		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneX, this.height, paneY + 60, this.height - 36, 12, this);
+		this.descriptionListWidget.setLeftPos(width / 2 + 4);
 
 		int configButtonWidth = 100;
 		ButtonWidget configureButton = new ButtonWidget(paneX + paneWidth / 2 - configButtonWidth / 2, modList.getY() + 36, configButtonWidth, 20,
