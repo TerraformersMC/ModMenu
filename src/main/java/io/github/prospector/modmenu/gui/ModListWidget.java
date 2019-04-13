@@ -1,12 +1,10 @@
 package io.github.prospector.modmenu.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.menu.AlwaysSelectedItemListWidget;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.text.TranslatableTextComponent;
 import org.apache.logging.log4j.LogManager;
@@ -29,36 +27,27 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 	                     int entryHeight,
 	                     Supplier<String> searchTerm, ModListWidget list, ModListScreen parent) {
 		super(client, width, height, y1, y2, entryHeight);
+		this.parent = parent;
 		if (list != null) {
 			this.modContainerList = list.modContainerList;
 		}
 		this.filter(searchTerm, false);
-		this.parent = parent;
+		if (parent.selected != null && !children().isEmpty()) {
+			for (ModItem item : children()) {
+				if (item.metadata.equals(parent.selected.metadata)) {
+					selectItem(item);
+				}
+			}
+		} else {
+			if (getSelectedItem() == null && getItem(0) != null) {
+				selectItem(getItem(0));
+			}
+		}
 	}
 
 	@Override
-	public void render(int i, int i1, float v) {
-		super.render(i, i1, v);
-		ModItem selected = getSelectedItem();
-		if (selected == null && getItem(0) != null) {
-			selectItem(getItem(0));
-		}
-		if (selected != null) {
-			ModMetadata metadata = selected.metadata;
-			int x = width + 8;
-			int y = this.top;
-			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.client.getTextureManager().bindTexture(selected.icon != null ? selected.iconLocation : ModItem.unknownIcon);
-			GlStateManager.enableBlend();
-			blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
-			GlStateManager.disableBlend();
-			int lineSpacing = client.textRenderer.fontHeight + 1;
-			int imageOffset = 36;
-			this.client.textRenderer.draw(metadata.getName(), x + imageOffset, y, 0xFFFFFF);
-			if (i > x && i1 > y && i1 < y + imageOffset && i < parent.width)
-				parent.setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
-			this.client.textRenderer.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, y + lineSpacing, 0xAAAAAA);
-		}
+	public void render(int mouseX, int mouseY, float delta) {
+		super.render(mouseX, mouseY, delta);
 	}
 
 	@Override
@@ -66,7 +55,7 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 		return parent.getFocused() == this;
 	}
 
-	public void method_20157(ModItem modItem) {
+	public void select(ModItem modItem) {
 		this.selectItem(modItem);
 		if (modItem != null) {
 			ModMetadata metadata = modItem.metadata;
@@ -76,9 +65,17 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 	}
 
 	@Override
+	public void selectItem(ModItem itemListWidget$Item_1) {
+		super.selectItem(itemListWidget$Item_1);
+		parent.selected = getSelectedItem();
+	}
+
+	@Override
 	public int getItemWidth() {
 		return this.width - 8;
 	}
+
+
 
 	public void filter(Supplier<String> searchTerm, boolean var2) {
 		this.clearItems();
@@ -116,7 +113,7 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 		return width;
 	}
 
-	public int getY() {
+	public int getTop() {
 		return this.top;
 	}
 

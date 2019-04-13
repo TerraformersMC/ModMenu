@@ -5,5 +5,11 @@
   "modmenu.modsFolder": "Open Mods Folder",
   "modmenu.configsFolder": "Open Configs Folder",
   "modmenu.configure": "Configure...",
-  "modmenu.modIdToolTip": "Mod ID: %s"
+  "modmenu.modIdToolTip": "Mod ID: %s",
+  "modmenu.website": "Website",
+  "modmenu.issues": "Issues",
+  "modmenu.configurationUnavailable": "Configuration Unavailable",
+  "modmenu.authorPrefix": "By %s",
+  "modmenu.apiTooltip": "This is an API used by other mods and likely doesn't have content",
+  "modmenu.clientTooltip": "You should be able to join vanilla servers with this mod"
 }

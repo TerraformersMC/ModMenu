@@ -11,6 +11,10 @@
 	  "io.github.prospector.modmenu.ModMenu"
 	]
   },
+  "contact": {
+	"homepage": "https://minecraft.curseforge.com/projects/modmenu",
+	"issues": "https://github.com/Prospector/ModMenu/issues"
+  },
   "recommends": {
 	"fabric": "*"
   },
