@@ -4,5 +4,10 @@
   "modmenu.config": "Modifier la config",
   "modmenu.modsFolder": "Ouvrir le dossier des mods",
   "modmenu.configsFolder": "Ouvrir le dossier des configs",
-  "modmenu.configure": "Configurer..."
+  "modmenu.configure": "Configurer...",
+  "modmenu.modIdToolTip": "ID du mod : %s",
+  "modmenu.website": "Site web",
+  "modmenu.issues": "Problèmes",
+  "modmenu.configurationUnavailable": "Configuration non disponible",
+  "modmenu.authorPrefix": "Par %s"
 }
