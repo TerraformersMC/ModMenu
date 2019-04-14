@@ -1,0 +1,13 @@
+{
+  "modmenu.title": "Моды",
+  "modmenu.loaded": "(%s загружен(о))",
+  "modmenu.config": "Изменить настройки",
+  "modmenu.modsFolder": "Открыть папку с модами",
+  "modmenu.configsFolder": "Открыть папку с настройками",
+  "modmenu.configure": "Настрить...",
+  "modmenu.modIdToolTip": "ID мода: %s",
+  "modmenu.website": "Вебсайт",
+  "modmenu.issues": "Вопросы/Проблемы",
+  "modmenu.configurationUnavailable": "Настройки недоступны",
+  "modmenu.authorPrefix": "От %s"
+}
