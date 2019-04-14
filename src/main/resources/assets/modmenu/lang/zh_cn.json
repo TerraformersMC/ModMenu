@@ -4,5 +4,10 @@
   "modmenu.config": "编辑配置",
   "modmenu.modsFolder": "开启模组资料夹",
   "modmenu.configsFolder": "开启配置资料夹",
-  "modmenu.configure": "配置..."
+  "modmenu.configure": "配置...",
+  "modmenu.modIdToolTip": "Mod ID: %s",
+  "modmenu.website": "网站",
+  "modmenu.issues": "反馈",
+  "modmenu.configurationUnavailable": "配置不可用",
+  "modmenu.authorPrefix": "作者: %s"
 }
