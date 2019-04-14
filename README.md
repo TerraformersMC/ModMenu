@@ -5,7 +5,7 @@
 
 A picture's worth 2 words
 
-![](https://i.imgur.com/q1MVV4x.png "Mod Menu")
+![](https://i.imgur.com/JKEatou.png "Mod Menu")
 
 ### Developers:
 - Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/ModMenu/
