@@ -121,7 +121,7 @@ public class ModListScreen extends Screen {
 		}, modList.getSelectedItem().metadata.getContact().get("issues").get(), true))) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = modList.getSelectedItem() != null && modList.getSelectedItem().metadata.getContact().get("homepage").isPresent();
+				active = modList.getSelectedItem() != null && modList.getSelectedItem().metadata.getContact().get("issues").isPresent();
 				visible = modList.getSelectedItem() != null;
 				super.render(var1, var2, var3);
 			}
