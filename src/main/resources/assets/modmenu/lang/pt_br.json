@@ -1,0 +1,13 @@
+{
+  "modmenu.title": "Mods",
+  "modmenu.loaded": "(%s Carregado)",
+  "modmenu.config": "Editar Config",
+  "modmenu.modsFolder": "Abrir pasta de mods",
+  "modmenu.configsFolder": "Abrir pasta de Config",
+  "modmenu.configure": "Configuração...",
+  "modmenu.modIdToolTip": "Mod ID: %s",
+  "modmenu.website": "Website",
+  "modmenu.issues": "Problemas",
+  "modmenu.configurationUnavailable": "Configuração indisponível",
+  "modmenu.authorPrefix": "Por %s"
+}
