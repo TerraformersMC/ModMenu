@@ -28,7 +28,7 @@ targetCompatibility = 1.8
 
 group = "io.github.prospector.modmenu"
 archivesBaseName = "ModMenu"
-version = "1.3.3"
+version = "1.3.4"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
