@@ -1,0 +1,13 @@
+{
+  "modmenu.title": "Модификации",
+  "modmenu.loaded": "(%s заредени)",
+  "modmenu.config": "Редактирай конфигурация",
+  "modmenu.modsFolder": "Отвори папка с модификации",
+  "modmenu.configsFolder": "Отвори папка с конфигурации",
+  "modmenu.configure": "Конфигурирай...",
+  "modmenu.modIdToolTip": "ID на модификацията: %s",
+  "modmenu.website": "Уебсайт",
+  "modmenu.issues": "Проблеми",
+  "modmenu.configurationUnavailable": "Конфигурацията не е на разположение",
+  "modmenu.authorPrefix": "От %s"
+}
