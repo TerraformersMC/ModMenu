@@ -77,7 +77,7 @@ public class ModListScreen extends Screen {
 		rightPaneX = width / 2 + 4;
 
 		int searchBoxWidth = leftPaneRight - 32;
-		this.searchBox = new TextFieldWidget(this.font, leftPaneRight / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox);
+		this.searchBox = new TextFieldWidget(this.font, leftPaneRight / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox, ModMenu.noFabric ? "Search for mods" : I18n.translate("selectWorld.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(() -> string_1, false));
 
 		this.modList = new ModListWidget(this.minecraft, paneWidth + 4, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);

@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 
-public class ModItem extends AlwaysSelectedItemListWidget.class_4281<ModItem> implements AutoCloseable {
+public class ModItem extends AlwaysSelectedItemListWidget.Item<ModItem> implements AutoCloseable {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftClient client;
 	public ModContainer container;
