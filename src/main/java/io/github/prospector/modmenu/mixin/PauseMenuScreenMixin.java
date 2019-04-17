@@ -19,7 +19,7 @@ public class PauseMenuScreenMixin extends Screen {
 		super(title);
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/menu/PauseMenuScreen;addButton(Lnet/minecraft/client/gui/widget/AbstractButtonWidget;)Lnet/minecraft/client/gui/widget/AbstractButtonWidget;", ordinal = 5), method = "init()V", remap = false)
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/menu/PauseMenuScreen;addButton(Lnet/minecraft/client/gui/widget/AbstractButtonWidget;)Lnet/minecraft/client/gui/widget/AbstractButtonWidget;", ordinal = 5), method = "init()V")
 	public void drawMenuButton(CallbackInfo info) {
 		int i = FabricLoader.getInstance().getAllMods().size();
 		this.addButton(new ModMenuButtonWidget(this.width / 2 - 102, this.height / 4 + 8 + 24 * 3, 204, 20, (ModMenu.noFabric ? "Mods" : I18n.translate("modmenu.title")) + " " + (ModMenu.noFabric ? "(" + i + " Loaded)" : I18n.translate("modmenu.loaded", i)), this));

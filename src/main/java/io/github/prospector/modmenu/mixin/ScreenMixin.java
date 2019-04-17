@@ -16,7 +16,7 @@ public class ScreenMixin {
 
 	@Shadow public int height;
 
-	@Inject(at = @At("HEAD"), method = "addButton", cancellable = true, remap = false)
+	@Inject(at = @At("HEAD"), method = "addButton", cancellable = true)
 	protected void addButton(AbstractButtonWidget button, CallbackInfoReturnable info) {
 		if (((Object) this) instanceof MainMenuScreen) {
 			if (button.y <= this.height / 4 + 48 + 24 * 3) {
