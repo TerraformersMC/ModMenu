@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Screen.class)
 public class ScreenMixin {
 
-	@Shadow public int height;
+	@Shadow(remap = false) public int height;
 
-	@Inject(at = @At("HEAD"), method = "addButton", cancellable = true)
+	@Inject(at = @At("HEAD"), method = "addButton", cancellable = true, remap = false)
 	protected void addButton(AbstractButtonWidget button, CallbackInfoReturnable info) {
 		if (((Object) this) instanceof MainMenuScreen) {
 			if (button.y <= this.height / 4 + 48 + 24 * 3) {
