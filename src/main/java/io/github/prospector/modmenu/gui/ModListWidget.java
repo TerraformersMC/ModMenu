@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
+import io.github.prospector.modmenu.ModMenu;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -75,8 +76,6 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 		return this.width - 8;
 	}
 
-
-
 	public void filter(Supplier<String> searchTerm, boolean var2) {
 		this.clearItems();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
@@ -87,20 +86,15 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 		}
 
 		String term = searchTerm.get().toLowerCase(Locale.ROOT);
-		Iterator<ModContainer> iter = this.modContainerList.iterator();
-
-		while (true) {
-			ModContainer container;
-			ModMetadata metadata;
-
-			do {
-				if (!iter.hasNext()) {
-					return;
-				}
-				container = iter.next();
-				metadata = container.getMetadata();
-			} while (!metadata.getName().toLowerCase(Locale.ROOT).contains(term) && !metadata.getId().toLowerCase(Locale.ROOT).contains(term));
-			this.addItem(new ModItem(container, this));
+		for (ModContainer container : this.modContainerList) {
+			ModMetadata metadata = container.getMetadata();
+			Boolean api = ModMenu.MOD_API.get(metadata.getId());
+			if (api == null) {
+				api = metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().endsWith(" API");
+			}
+			if (metadata.getName().toLowerCase(Locale.ROOT).contains(term) || metadata.getId().toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (api && "api".contains(term)) || ("clientside".contains(term) && ModMenu.MOD_CLIENTSIDE.get(metadata.getId()) != null && ModMenu.MOD_CLIENTSIDE.get(metadata.getId()))) {
+				this.addItem(new ModItem(container, this));
+			}
 		}
 	}
 

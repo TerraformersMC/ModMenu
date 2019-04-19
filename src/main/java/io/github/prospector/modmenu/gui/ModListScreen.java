@@ -9,6 +9,7 @@ import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.ingame.ConfirmChatLinkScreen;
@@ -84,11 +85,17 @@ public class ModListScreen extends Screen {
 		this.modList.setLeftPos(leftPaneX);
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> ModMenu.CONFIG_OVERRIDES.get(modList.getSelectedItem().metadata.getId()).run(),
+		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+			if (ModMenu.API_MAP.containsKey(modList.getSelectedItem().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelectedItem().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent()) {
+				MinecraftClient.getInstance().openScreen(ModMenu.API_MAP.get(modList.getSelectedItem().metadata.getId()).getConfigScreen(this).get().get());
+			} else {
+				ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelectedItem().metadata.getId()).run();
+			}
+		},
 			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure")) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = modList.getSelectedItem() != null && ModMenu.CONFIG_OVERRIDES.get(modList.getSelectedItem().metadata.getId()) != null;
+				active = modList.getSelectedItem() != null && ModMenu.API_MAP.containsKey(modList.getSelectedItem().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelectedItem().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent() || ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelectedItem().metadata.getId()) != null;
 				visible = modList.getSelectedItem() != null;
 				super.render(var1, var2, var3);
 				if (!active && isHovered) {
@@ -128,14 +135,31 @@ public class ModListScreen extends Screen {
 		};
 		this.children.add(this.searchBox);
 		this.children.add(this.modList);
-		this.addButton(configureButton);
-		this.addButton(websiteButton);
-		this.addButton(issuesButton);
+		this.
+
+			addButton(configureButton);
+		this.
+
+			addButton(websiteButton);
+		this.
+
+			addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
-		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20,
-			ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
-		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
-		this.method_20085(this.searchBox);
+		this.
+
+			addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20,
+				ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().
+
+				open(new File(FabricLoader.getInstance().
+
+					getGameDirectory(), "mods"))));
+		this.
+
+			addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
+		this.
+
+			method_20085(this.searchBox);
+
 		init = true;
 	}
 

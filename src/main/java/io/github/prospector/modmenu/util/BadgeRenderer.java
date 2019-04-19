@@ -36,21 +36,16 @@ public class BadgeRenderer {
 				drawBadge(new String(new byte[] { -30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101 }), 0x881DFF48, 0x8807690E, mouseX, mouseY);
 			}
 		} else {
-			ModMenuModConfig config = ModMenu.MOD_MENU_MOD_CONFIG_OVERRIDES.get(metadata.getId());
-			if (config == null) {
-				config = ModMenu.MOD_MENU_MOD_CONFIGS.get(metadata.getId());
+			Boolean clientside = ModMenu.MOD_CLIENTSIDE.get(metadata.getId());
+			if (clientside != null && clientside) {
+				drawBadge("Client", 0x884383E3, 0x880E4699, mouseX, mouseY);
 			}
-			if (config != null) {
-				if (config.isModClientsideOnly()) {
-					drawBadge("Client", 0x884383E3, 0x880E4699, mouseX, mouseY);
-				}
-				if (config.isModApi()) {
-					drawBadge("API", 0x8810d098, 0x88046146, mouseX, mouseY);
-				}
-			} else {
-				if (metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().endsWith(" API")) {
-					drawBadge("API", 0x8810d098, 0x88046146, mouseX, mouseY);
-				}
+			Boolean api = ModMenu.MOD_API.get(metadata.getId());
+			if (api == null) {
+				api = metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().endsWith(" API");
+			}
+			if (api) {
+				drawBadge("API", 0x8810d098, 0x88046146, mouseX, mouseY);
 			}
 		}
 	}
