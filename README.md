@@ -17,3 +17,12 @@ A picture's worth 2 words
     "modmenu:clientsideOnly": true
 }
 ```
+- ModMenuAPI
+    - To use the API, implement the ModMenuApi interface on a class and add that as an entry point of type "modmenu" in your fabric.mod.json as such:
+  ```json
+  "entrypoints": {
+	"modmenu": [ "com.example.mod.ExampleModMenuApiImpl" ]
+  }
+  ```
+    - Features
+        - Mods can provide a Supplier<Screen> to provide a custom config screen to open with the config button. Implement the `getConfigScreen` method in your API implementation.
