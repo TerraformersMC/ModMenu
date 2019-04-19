@@ -39,7 +39,7 @@ public class ModListScreen extends Screen {
 	protected Screen parent;
 	protected ModListWidget modList;
 	protected String tooltip;
-	protected ModItem selected;
+	protected ModListItem selected;
 	protected BadgeRenderer badgeRenderer;
 	boolean init = false;
 	int leftPaneX;
@@ -196,7 +196,7 @@ public class ModListScreen extends Screen {
 		ModMetadata metadata = modList.getSelectedItem().metadata;
 		int x = rightPaneX;
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.minecraft.getTextureManager().bindTexture(selected.icon != null ? selected.iconLocation : ModItem.unknownIcon);
+		this.minecraft.getTextureManager().bindTexture(selected.icon != null ? selected.iconLocation : ModListItem.unknownIcon);
 		GlStateManager.enableBlend();
 		blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();

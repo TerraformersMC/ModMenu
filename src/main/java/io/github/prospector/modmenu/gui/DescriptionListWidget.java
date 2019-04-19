@@ -6,7 +6,7 @@ import net.minecraft.client.gui.widget.ItemListWidget;
 
 public class DescriptionListWidget extends ItemListWidget<DescriptionListWidget.DescriptionItem> {
 
-	private ModItem lastSelected = null;
+	private ModListItem lastSelected = null;
 	private ModListScreen parent;
 	private TextRenderer textRenderer;
 

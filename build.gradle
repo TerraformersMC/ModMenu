@@ -38,11 +38,17 @@ if (ENV.BUILD_NUMBER) {
 minecraft {
 }
 
+repositories {
+	maven {url "https://maven.jamieswhiteshirt.com/libs-release/"}
+}
+
+
 dependencies {
 	minecraft "com.mojang:minecraft:1.14 Pre-Release 5"
 	mappings "net.fabricmc:yarn:1.14 Pre-Release 5+build.2"
 	modCompile "net.fabricmc:fabric-loader:0.4.1+build.126"
 	modCompile "net.fabricmc:fabric:0.2.7+build.123"
+	modCompile "com.jamieswhiteshirt:developer-mode:1.0.11"
 }
 
 processResources {

@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 
-public class ModItem extends AlwaysSelectedItemListWidget.Item<ModItem> implements AutoCloseable {
+public class ModListItem extends AlwaysSelectedItemListWidget.Item<ModListItem> implements AutoCloseable {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftClient client;
 	public ModContainer container;
@@ -30,7 +30,7 @@ public class ModItem extends AlwaysSelectedItemListWidget.Item<ModItem> implemen
 	public final NativeImageBackedTexture icon;
 	public static final Identifier unknownIcon = new Identifier("textures/misc/unknown_pack.png");
 
-	public ModItem(ModContainer container, ModListWidget list) {
+	public ModListItem(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
 		this.metadata = container.getMetadata();

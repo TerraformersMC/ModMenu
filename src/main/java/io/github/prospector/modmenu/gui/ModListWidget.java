@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
+public class ModListWidget extends AlwaysSelectedItemListWidget<ModListItem> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private List<ModContainer> modContainerList = null;
@@ -34,7 +34,7 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 		}
 		this.filter(searchTerm, false);
 		if (parent.selected != null && !children().isEmpty()) {
-			for (ModItem item : children()) {
+			for (ModListItem item : children()) {
 				if (item.metadata.equals(parent.selected.metadata)) {
 					selectItem(item);
 				}
@@ -56,7 +56,7 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 		return parent.getFocused() == this;
 	}
 
-	public void select(ModItem modItem) {
+	public void select(ModListItem modItem) {
 		this.selectItem(modItem);
 		if (modItem != null) {
 			ModMetadata metadata = modItem.metadata;
@@ -66,7 +66,7 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 	}
 
 	@Override
-	public void selectItem(ModItem itemListWidget$Item_1) {
+	public void selectItem(ModListItem itemListWidget$Item_1) {
 		super.selectItem(itemListWidget$Item_1);
 		parent.selected = getSelectedItem();
 	}
@@ -93,7 +93,7 @@ public class ModListWidget extends AlwaysSelectedItemListWidget<ModItem> {
 				api = metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().endsWith(" API");
 			}
 			if (metadata.getName().toLowerCase(Locale.ROOT).contains(term) || metadata.getId().toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (api && "api".contains(term)) || ("clientside".contains(term) && ModMenu.MOD_CLIENTSIDE.get(metadata.getId()) != null && ModMenu.MOD_CLIENTSIDE.get(metadata.getId()))) {
-				this.addItem(new ModItem(container, this));
+				this.addItem(new ModListItem(container, this));
 			}
 		}
 	}
