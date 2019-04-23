@@ -1,0 +1,14 @@
+{
+  "modmenu.title": "Modit",
+  "modmenu.loaded": "(%s ladattu)",
+  "modmenu.config": "Muuta asetuksia",
+  "modmenu.modsFolder": "Avaa modikansio",
+  "modmenu.configsFolder": "Avaa asetuskansio",
+  "modmenu.configure": "Asetukset...",
+  "modmenu.modIdToolTip": "Modi-ID: %s",
+  "modmenu.website": "Kotisivu",
+  "modmenu.issues": "Ongelmat",
+  "modmenu.configurationUnavailable": "Ei asetuksia",
+  "modmenu.authorPrefix": "Tehnyt %s",
+  "modmenu.search": "Etsi modeja"
+}
