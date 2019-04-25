@@ -4,5 +4,11 @@
   "modmenu.config": "Muuda seadistust",
   "modmenu.modsFolder": "Ava modide kaust",
   "modmenu.configsFolder": "Ava seadistuste kaust",
-  "modmenu.configure": "Seadista..."
+  "modmenu.configure": "Seadista...",
+  "modmenu.modIdToolTip": "Modi ID: %s",
+  "modmenu.website": "Veebileht",
+  "modmenu.issues": "Veahaldus",
+  "modmenu.configurationUnavailable": "Seadistus pole saadaval",
+  "modmenu.authorPrefix": "Autorilt %s",
+  "modmenu.search": "Otsi mode"
 }
