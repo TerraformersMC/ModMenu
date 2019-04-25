@@ -9,21 +9,21 @@ public class TexturedButtonWidget extends ButtonWidget {
 	private final Identifier texture;
 	private final int u;
 	private final int v;
-	private final int textureWidth;
-	private final int textureHeight;
+	private final int uWidth;
+	private final int vHeight;
 
-	public TexturedButtonWidget(int x, int y, int width, int height, int int_6, int int_7, Identifier texture, PressAction onPress) {
-		this(x, y, width, height, int_6, int_7, texture, 256, 256, onPress);
+	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
+		this(x, y, width, height, u, v, texture, 256, 256, onPress);
 	}
 
-	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier identifier_1, int textureWidth, int tedxtureHeight, PressAction onPress) {
-		this(x, y, width, height, u, v, identifier_1, textureWidth, tedxtureHeight, onPress, "");
+	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress) {
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, "");
 	}
 
-	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int textureWidth, int textureHeight, PressAction onPress, String string_1) {
-		super(x, y, width, height, string_1, onPress);
-		this.textureWidth = textureWidth;
-		this.textureHeight = textureHeight;
+	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, String message) {
+		super(x, y, width, height, message, onPress);
+		this.uWidth = uWidth;
+		this.vHeight = vHeight;
 		this.u = u;
 		this.v = v;
 		this.texture = texture;
@@ -45,7 +45,7 @@ public class TexturedButtonWidget extends ButtonWidget {
 			adjustedV += this.height;
 		}
 
-		blit(this.x, this.y, this.u, adjustedV, this.width, this.height, this.textureWidth, this.textureHeight);
+		blit(this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		GlStateManager.enableDepthTest();
 	}
 }

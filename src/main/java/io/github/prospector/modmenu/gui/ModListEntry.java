@@ -8,7 +8,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.menu.AlwaysSelectedItemListWidget;
+import net.minecraft.client.gui.menu.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 
-public class ModListItem extends AlwaysSelectedItemListWidget.Item<ModListItem> implements AutoCloseable {
+public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> implements AutoCloseable {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftClient client;
 	public ModContainer container;
@@ -30,7 +30,7 @@ public class ModListItem extends AlwaysSelectedItemListWidget.Item<ModListItem> 
 	public final NativeImageBackedTexture icon;
 	public static final Identifier unknownIcon = new Identifier("textures/misc/unknown_pack.png");
 
-	public ModListItem(ModContainer container, ModListWidget list) {
+	public ModListEntry(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
 		this.metadata = container.getMetadata();
@@ -40,15 +40,15 @@ public class ModListItem extends AlwaysSelectedItemListWidget.Item<ModListItem> 
 	}
 
 	@Override
-	public void render(int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.client.getTextureManager().bindTexture(this.icon != null ? this.iconLocation : unknownIcon);
 		GlStateManager.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
 		this.client.textRenderer.draw(metadata.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
-		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(metadata.getName()) + 2, y, itemWidth, metadata, list.parent).draw(mouseX, mouseY);
-		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), itemWidth - 32 - 3 - 25 - 4, 2, 0x808080);
+		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(metadata.getName()) + 2, y, rowWidth, metadata, list.parent).draw(mouseX, mouseY);
+		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 3 - 25 - 4, 2, 0x808080);
 	}
 
 	private NativeImageBackedTexture getIcon() {

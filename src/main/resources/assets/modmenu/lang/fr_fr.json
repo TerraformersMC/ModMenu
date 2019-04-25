@@ -8,6 +8,5 @@
   "modmenu.modIdToolTip": "ID du mod : %s",
   "modmenu.website": "Site web",
   "modmenu.issues": "Problèmes",
-  "modmenu.configurationUnavailable": "Configuration non disponible",
   "modmenu.authorPrefix": "Par %s"
 }

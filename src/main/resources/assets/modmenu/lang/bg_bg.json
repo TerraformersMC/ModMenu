@@ -8,6 +8,5 @@
   "modmenu.modIdToolTip": "ID на модификацията: %s",
   "modmenu.website": "Уебсайт",
   "modmenu.issues": "Проблеми",
-  "modmenu.configurationUnavailable": "Конфигурацията не е на разположение",
   "modmenu.authorPrefix": "От %s"
 }

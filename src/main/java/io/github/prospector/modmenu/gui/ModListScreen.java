@@ -39,10 +39,11 @@ public class ModListScreen extends Screen {
 	protected Screen parent;
 	protected ModListWidget modList;
 	protected String tooltip;
-	protected ModListItem selected;
+	protected ModListEntry selected;
 	protected BadgeRenderer badgeRenderer;
-	boolean init = false;
+	protected double scrollPercent = 0;
 	int leftPaneX;
+	boolean init = false;
 	int leftPaneRight;
 	int paneY;
 	int paneWidth;
@@ -86,21 +87,18 @@ public class ModListScreen extends Screen {
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
 		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
-			if (ModMenu.API_MAP.containsKey(modList.getSelectedItem().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelectedItem().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent()) {
-				MinecraftClient.getInstance().openScreen(ModMenu.API_MAP.get(modList.getSelectedItem().metadata.getId()).getConfigScreen(this).get().get());
+			if (ModMenu.API_MAP.containsKey(modList.getSelected().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelected().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent()) {
+				MinecraftClient.getInstance().openScreen(ModMenu.API_MAP.get(modList.getSelected().metadata.getId()).getConfigScreen(this).get().get());
 			} else {
-				ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelectedItem().metadata.getId()).run();
+				ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelected().metadata.getId()).run();
 			}
 		},
 			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure")) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = modList.getSelectedItem() != null && ModMenu.API_MAP.containsKey(modList.getSelectedItem().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelectedItem().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent() || ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelectedItem().metadata.getId()) != null;
-				visible = modList.getSelectedItem() != null;
+				active = modList.getSelected() != null && ModMenu.API_MAP.containsKey(modList.getSelected().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelected().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent() || ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelected().metadata.getId()) != null;
+				visible = active;
 				super.render(var1, var2, var3);
-				if (!active && isHovered) {
-					setTooltip(ModMenu.noFabric ? "Configuration Unavailable" : I18n.translate("modmenu.configurationUnavailable"));
-				}
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
@@ -108,57 +106,41 @@ public class ModListScreen extends Screen {
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
 			ModMenu.noFabric ? "Website" : I18n.translate("modmenu.website"), button -> this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 			if (bool) {
-				SystemUtil.getOperatingSystem().open(modList.getSelectedItem().metadata.getContact().get("homepage").get());
+				SystemUtil.getOperatingSystem().open(modList.getSelected().metadata.getContact().get("homepage").get());
 			}
 			this.minecraft.openScreen(this);
-		}, modList.getSelectedItem().metadata.getContact().get("homepage").get(), true))) {
+		}, modList.getSelected().metadata.getContact().get("homepage").get(), true))) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = modList.getSelectedItem() != null && modList.getSelectedItem().metadata.getContact().get("homepage").isPresent();
-				visible = modList.getSelectedItem() != null;
+				active = modList.getSelected() != null && modList.getSelected().metadata.getContact().get("homepage").isPresent();
+				visible = modList.getSelected() != null;
 				super.render(var1, var2, var3);
 			}
 		};
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
 			ModMenu.noFabric ? "Issues" : I18n.translate("modmenu.issues"), button -> this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 			if (bool) {
-				SystemUtil.getOperatingSystem().open(modList.getSelectedItem().metadata.getContact().get("issues").get());
+				SystemUtil.getOperatingSystem().open(modList.getSelected().metadata.getContact().get("issues").get());
 			}
 			this.minecraft.openScreen(this);
-		}, modList.getSelectedItem().metadata.getContact().get("issues").get(), true))) {
+		}, modList.getSelected().metadata.getContact().get("issues").get(), true))) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = modList.getSelectedItem() != null && modList.getSelectedItem().metadata.getContact().get("issues").isPresent();
-				visible = modList.getSelectedItem() != null;
+				active = modList.getSelected() != null && modList.getSelected().metadata.getContact().get("issues").isPresent();
+				visible = modList.getSelected() != null;
 				super.render(var1, var2, var3);
 			}
 		};
 		this.children.add(this.searchBox);
 		this.children.add(this.modList);
-		this.
-
-			addButton(configureButton);
-		this.
-
-			addButton(websiteButton);
-		this.
-
-			addButton(issuesButton);
+		this.addButton(configureButton);
+		this.addButton(websiteButton);
+		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
-		this.
-
-			addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20,
-				ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().
-
-				open(new File(FabricLoader.getInstance().
-
-					getGameDirectory(), "mods"))));
-		this.
-
-			addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
-		this.
-
-			method_20085(this.searchBox);
+		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20,
+			ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
+		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
+		this.setInitialFocus(this.searchBox);
 
 		init = true;
 	}
@@ -181,7 +163,7 @@ public class ModListScreen extends Screen {
 	public void render(int mouseX, int mouseY, float delta) {
 		overlayBackground(0, 0, width, height, 64, 64, 64, 255, 255);
 		this.tooltip = null;
-		if (modList.getSelectedItem() != null) {
+		if (modList.getSelected() != null) {
 			this.descriptionListWidget.render(mouseX, mouseY, delta);
 		}
 		this.modList.render(mouseX, mouseY, delta);
@@ -193,10 +175,10 @@ public class ModListScreen extends Screen {
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
 
-		ModMetadata metadata = modList.getSelectedItem().metadata;
+		ModMetadata metadata = modList.getSelected().metadata;
 		int x = rightPaneX;
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.minecraft.getTextureManager().bindTexture(selected.icon != null ? selected.iconLocation : ModListItem.unknownIcon);
+		this.minecraft.getTextureManager().bindTexture(selected.icon != null ? selected.iconLocation : ModListEntry.unknownIcon);
 		GlStateManager.enableBlend();
 		blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();

@@ -2,11 +2,11 @@ package io.github.prospector.modmenu.gui;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ItemListWidget;
+import net.minecraft.client.gui.widget.EntryListWidget;
 
-public class DescriptionListWidget extends ItemListWidget<DescriptionListWidget.DescriptionItem> {
+public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionItem> {
 
-	private ModListItem lastSelected = null;
+	private ModListEntry lastSelected = null;
 	private ModListScreen parent;
 	private TextRenderer textRenderer;
 
@@ -17,12 +17,12 @@ public class DescriptionListWidget extends ItemListWidget<DescriptionListWidget.
 	}
 
 	@Override
-	public DescriptionItem getSelectedItem() {
+	public DescriptionItem getSelected() {
 		return null;
 	}
 
 	@Override
-	public int getItemWidth() {
+	public int getRowWidth() {
 		return this.width - 10;
 	}
 
@@ -33,18 +33,18 @@ public class DescriptionListWidget extends ItemListWidget<DescriptionListWidget.
 
 	@Override
 	public void render(int int_1, int int_2, float float_1) {
-		if (parent.getModList().getSelectedItem() != lastSelected) {
-			lastSelected = parent.getModList().getSelectedItem();
-			clearItems();
-			capYPosition(-Double.MAX_VALUE);
+		if (parent.getModList().getSelected() != lastSelected) {
+			lastSelected = parent.getModList().getSelected();
+			clearEntries();
+			setScrollAmount(-Double.MAX_VALUE);
 			if (lastSelected != null && lastSelected.metadata.getDescription() != null && !lastSelected.metadata.getDescription().isEmpty())
-				for (String line : textRenderer.wrapStringToWidthAsList(lastSelected.metadata.getDescription().replaceAll("\n", "\n\n"), getItemWidth()))
+				for (String line : textRenderer.wrapStringToWidthAsList(lastSelected.metadata.getDescription().replaceAll("\n", "\n\n"), getRowWidth()))
 					children().add(new DescriptionItem(line));
 		}
 		super.render(int_1, int_2, float_1);
 	}
 
-	protected class DescriptionItem extends ItemListWidget.Item<DescriptionItem> {
+	protected class DescriptionItem extends EntryListWidget.Entry<DescriptionItem> {
 		protected String text;
 
 		public DescriptionItem(String text) {
