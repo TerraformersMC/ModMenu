@@ -9,7 +9,6 @@ import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.ingame.ConfirmChatLinkScreen;
@@ -87,16 +86,17 @@ public class ModListScreen extends Screen {
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
 		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
-			if (ModMenu.API_MAP.containsKey(modList.getSelected().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelected().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent()) {
-				MinecraftClient.getInstance().openScreen(ModMenu.API_MAP.get(modList.getSelected().metadata.getId()).getConfigScreen(this).get().get());
+			final Screen screen = ModMenu.getConfigScreen(modList.getSelected().metadata.getId(), this);
+			if (screen != null) {
+				minecraft.openScreen(screen);
 			} else {
-				ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelected().metadata.getId()).run();
+				ModMenu.openConfigScreen(modList.getSelected().metadata.getId());
 			}
 		},
 			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure")) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = modList.getSelected() != null && ModMenu.API_MAP.containsKey(modList.getSelected().metadata.getId()) && ModMenu.API_MAP.get(modList.getSelected().metadata.getId()).getConfigScreen(ModListScreen.this).isPresent() || ModMenu.CONFIG_OVERRIDES_LEGACY.get(modList.getSelected().metadata.getId()) != null;
+				active = modList.getSelected() != null && ModMenu.hasFactory(modList.getSelected().metadata.getId()) || ModMenu.hasLegacyConfigScreenTask(modList.getSelected().metadata.getId());
 				visible = active;
 				super.render(var1, var2, var3);
 			}
