@@ -24,14 +24,14 @@ public class ModMenu implements ClientModInitializer {
 
 	public static boolean noFabric;
 
-	private static ImmutableMap<String, Function<Screen, Screen>> configScreenFactories = ImmutableMap.of();
+	private static ImmutableMap<String, Function<Screen, ? extends Screen>> configScreenFactories = ImmutableMap.of();
 
 	public static boolean hasFactory(String modid) {
 		return configScreenFactories.containsKey(modid);
 	}
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
-		Function<Screen, Screen> factory = configScreenFactories.get(modid);
+		Function<Screen, ? extends Screen> factory = configScreenFactories.get(modid);
 		return factory != null ? factory.apply(menuScreen) : null;
 	}
 
@@ -59,7 +59,7 @@ public class ModMenu implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		noFabric = !FabricLoader.getInstance().isModLoaded("fabric");
-		ImmutableMap.Builder<String, Function<Screen, Screen>> factories = ImmutableMap.builder();
+		ImmutableMap.Builder<String, Function<Screen, ? extends Screen>> factories = ImmutableMap.builder();
 		FabricLoader.getInstance().getEntrypoints("modmenu", ModMenuApi.class).forEach(api -> factories.put(api.getModId(), api.getConfigScreenFactory()));
 		configScreenFactories = factories.build();
 		for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {

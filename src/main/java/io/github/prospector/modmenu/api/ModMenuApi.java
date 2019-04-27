@@ -46,7 +46,7 @@ public interface ModMenuApi {
 	 *
 	 * @return A factory function for constructing config screen instances.
 	 */
-	default Function<Screen, Screen> getConfigScreenFactory() {
+	default Function<Screen, ? extends Screen> getConfigScreenFactory() {
 		return screen -> getConfigScreen(screen).map(Supplier::get).orElse(null);
 	}
 }
