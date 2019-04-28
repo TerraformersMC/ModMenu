@@ -107,7 +107,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 
 	@Override
 	protected int getScrollbarPosition() {
-		return width - 6;
+		return this.width - 6;
 	}
 
 	public int getWidth() {
