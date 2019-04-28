@@ -28,25 +28,26 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ModListScreen extends Screen {
+	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier("modmenu", "textures/gui/configure_button.png");
 	private static final Logger LOGGER = LogManager.getLogger();
-	public static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier("modmenu", "textures/gui/configure_button.png");
-	protected String textTitle;
-	protected TextFieldWidget searchBox;
-	protected DescriptionListWidget descriptionListWidget;
-	protected Screen parent;
-	protected ModListWidget modList;
-	protected String tooltip;
-	protected ModListEntry selected;
-	protected BadgeRenderer badgeRenderer;
-	protected double scrollPercent = 0;
-	int leftPaneX;
-	boolean init = false;
-	int leftPaneRight;
-	int paneY;
-	int paneWidth;
-	int rightPaneX;
+	private final String textTitle;
+	private TextFieldWidget searchBox;
+	private DescriptionListWidget descriptionListWidget;
+	private Screen parent;
+	private ModListWidget modList;
+	private String tooltip;
+	private ModListEntry selected;
+	private BadgeRenderer badgeRenderer;
+	private double scrollPercent = 0;
+	private int leftPaneX;
+	private boolean init = false;
+	private int leftPaneRight;
+	private int paneY;
+	private int paneWidth;
+	private int rightPaneX;
 
 	public ModListScreen(Screen previousGui) {
 		super(ModMenu.noFabric ? new StringTextComponent("Mods") : new TranslatableTextComponent("modmenu.title"));
@@ -70,7 +71,7 @@ public class ModListScreen extends Screen {
 
 	@Override
 	protected void init() {
-		this.minecraft.keyboard.enableRepeatEvents(true);
+		Objects.requireNonNull(this.minecraft).keyboard.enableRepeatEvents(true);
 		leftPaneX = 4;
 		leftPaneRight = width / 2 - 4;
 		paneY = 48;
@@ -86,7 +87,8 @@ public class ModListScreen extends Screen {
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
 		final ModListEntry selectedEntry = modList.getSelected();
-		final String modid = selectedEntry.metadata.getId();
+		final ModMetadata metadata = Objects.requireNonNull(selectedEntry).getMetadata();
+		final String modid = metadata.getId();
 		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final Screen screen = ModMenu.getConfigScreen(modid, this);
 			if (screen != null) {
@@ -108,13 +110,13 @@ public class ModListScreen extends Screen {
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
 			ModMenu.noFabric ? "Website" : I18n.translate("modmenu.website"), button -> this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 			if (bool) {
-				SystemUtil.getOperatingSystem().open(selectedEntry.metadata.getContact().get("homepage").get());
+				SystemUtil.getOperatingSystem().open(metadata.getContact().get("homepage").get());
 			}
 			this.minecraft.openScreen(this);
-		}, selectedEntry.metadata.getContact().get("homepage").get(), true))) {
+		}, metadata.getContact().get("homepage").get(), true))) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = selectedEntry.metadata.getContact().get("homepage").isPresent();
+				active = metadata.getContact().get("homepage").isPresent();
 				visible = true;
 				super.render(var1, var2, var3);
 			}
@@ -122,13 +124,13 @@ public class ModListScreen extends Screen {
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
 			ModMenu.noFabric ? "Issues" : I18n.translate("modmenu.issues"), button -> this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 			if (bool) {
-				SystemUtil.getOperatingSystem().open(selectedEntry.metadata.getContact().get("issues").get());
+				SystemUtil.getOperatingSystem().open(metadata.getContact().get("issues").get());
 			}
 			this.minecraft.openScreen(this);
-		}, selectedEntry.metadata.getContact().get("issues").get(), true))) {
+		}, metadata.getContact().get("issues").get(), true))) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = selectedEntry.metadata.getContact().get("issues").isPresent();
+				active = metadata.getContact().get("issues").isPresent();
 				visible = true;
 				super.render(var1, var2, var3);
 			}
@@ -177,10 +179,10 @@ public class ModListScreen extends Screen {
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
 
-		ModMetadata metadata = modList.getSelected().metadata;
+		ModMetadata metadata = modList.getSelected().getMetadata();
 		int x = rightPaneX;
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.minecraft.getTextureManager().bindTexture(selected.icon != null ? selected.iconLocation : ModListEntry.unknownIcon);
+		Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(selected.getIcon() != null ? selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
 		GlStateManager.enableBlend();
 		blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
@@ -190,7 +192,7 @@ public class ModListScreen extends Screen {
 		if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + font.fontHeight && mouseX < x + imageOffset + font.getStringWidth(metadata.getName())) {
 			setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 		}
-		if (init || badgeRenderer == null || badgeRenderer.metadata != metadata) {
+		if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
 			badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(metadata.getName()) + 2, paneY, width - 28, metadata, this);
 			init = false;
 		}
@@ -216,9 +218,8 @@ public class ModListScreen extends Screen {
 	protected void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBufferBuilder();
-		minecraft.getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
+		Objects.requireNonNull(minecraft).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		float f = 32.0F;
 		buffer.begin(7, VertexFormats.POSITION_UV_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0D, y2 / 32.0D).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0D, y2 / 32.0D).color(red, green, blue, endAlpha).next();
@@ -229,5 +230,21 @@ public class ModListScreen extends Screen {
 
 	public void setTooltip(String tooltip) {
 		this.tooltip = tooltip;
+	}
+
+	public ModListEntry getSelectedEntry() {
+		return selected;
+	}
+
+	public void updateSelectedEntry(ModListEntry entry) {
+		this.selected = entry;
+	}
+
+	public double getScrollPercent() {
+		return scrollPercent;
+	}
+
+	public void updateScrollPercent(double scrollPercent) {
+		this.scrollPercent = scrollPercent;
 	}
 }

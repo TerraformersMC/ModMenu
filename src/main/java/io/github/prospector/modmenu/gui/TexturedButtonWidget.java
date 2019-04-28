@@ -12,15 +12,15 @@ public class TexturedButtonWidget extends ButtonWidget {
 	private final int uWidth;
 	private final int vHeight;
 
-	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
+	protected TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
 		this(x, y, width, height, u, v, texture, 256, 256, onPress);
 	}
 
-	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress) {
+	protected TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress) {
 		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, "");
 	}
 
-	public TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, String message) {
+	protected TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, String message) {
 		super(x, y, width, height, message, onPress);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
@@ -29,11 +29,12 @@ public class TexturedButtonWidget extends ButtonWidget {
 		this.texture = texture;
 	}
 
-	public void setPos(int x, int y) {
+	protected void setPos(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	@Override
 	public void renderButton(int mouseX, int mouseY, float delta) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		client.getTextureManager().bindTexture(this.texture);

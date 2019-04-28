@@ -25,4 +25,4 @@ A picture's worth 2 words
   }
   ```
     - Features
-        - Mods can provide a Supplier<Screen> to provide a custom config screen to open with the config button. Implement the `getConfigScreen` method in your API implementation.
+        - Mods can provide a Screen factory to provide a custom config screen to open with the config button. Implement the `getConfigScreenFactory` method in your API implementation.

@@ -6,9 +6,9 @@ import net.minecraft.client.gui.widget.EntryListWidget;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionItem> {
 
+	private final ModListScreen parent;
+	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
-	private ModListScreen parent;
-	private TextRenderer textRenderer;
 
 	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModListScreen parent) {
 		super(client, width, height, top, bottom, entryHeight);
@@ -32,16 +32,20 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public void render(int int_1, int int_2, float float_1) {
-		if (parent.getModList().getSelected() != lastSelected) {
-			lastSelected = parent.getModList().getSelected();
+	public void render(int mouseX, int mouseY, float delta) {
+		ModListEntry selectedEntry = parent.getModList().getSelected();
+		if (selectedEntry != lastSelected) {
+			lastSelected = selectedEntry;
 			clearEntries();
 			setScrollAmount(-Double.MAX_VALUE);
-			if (lastSelected != null && lastSelected.metadata.getDescription() != null && !lastSelected.metadata.getDescription().isEmpty())
-				for (String line : textRenderer.wrapStringToWidthAsList(lastSelected.metadata.getDescription().replaceAll("\n", "\n\n"), getRowWidth()))
+			String description = lastSelected.getMetadata().getDescription();
+			if (lastSelected != null && description != null && !description.isEmpty()) {
+				for (String line : textRenderer.wrapStringToWidthAsList(description.replaceAll("\n", "\n\n"), getRowWidth())) {
 					children().add(new DescriptionItem(line));
+				}
+			}
 		}
-		super.render(int_1, int_2, float_1);
+		super.render(mouseX, mouseY, delta);
 	}
 
 	protected class DescriptionItem extends EntryListWidget.Entry<DescriptionItem> {

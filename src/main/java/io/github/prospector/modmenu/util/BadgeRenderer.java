@@ -8,14 +8,10 @@ import net.minecraft.client.MinecraftClient;
 import java.util.Calendar;
 
 public class BadgeRenderer {
-	protected int startX;
-	protected int startY;
-	protected int badgeX;
-	protected int badgeY;
-	protected int badgeMax;
-	public ModMetadata metadata;
-	private MinecraftClient client;
-	protected ModListScreen screen;
+	protected int startX, startY, badgeX, badgeY, badgeMax;
+	protected ModMetadata metadata;
+	protected MinecraftClient client;
+	protected final ModListScreen screen;
 
 	public BadgeRenderer(int startX, int startY, int endX, ModMetadata metadata, ModListScreen screen) {
 		this.startX = startX;
@@ -29,6 +25,7 @@ public class BadgeRenderer {
 	public void draw(int mouseX, int mouseY) {
 		this.badgeX = startX;
 		this.badgeY = startY;
+		//noinspection MagicConstant
 		if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {
 			if (metadata.getId().equals(new String(new byte[] { 109, 111, 100, 109, 101, 110, 117 }))) {
 				drawBadge(new String(new byte[] { -30, -100, -104, 32, 86, 105, 114, 117, 115, 32, 68, 101, 116, 101, 99, 116, 101, 100 }), 0x88FF2222, 0x887F0808, mouseX, mouseY);
@@ -54,10 +51,11 @@ public class BadgeRenderer {
 		int width = client.textRenderer.getStringWidth(text) + 6;
 		if (badgeX + width < badgeMax) {
 			RenderUtils.drawBadge(badgeX, badgeY, width, text, outlineColor, fillColor, 0xCACACA);
-			if (mouseX > badgeX && mouseY > badgeY && mouseY < badgeY + client.textRenderer.fontHeight + 4 && mouseX < badgeX + width) {
-				//do nothing hahaha i made computer do stupid check for no reason
-			}
 			badgeX += width + 3;
 		}
+	}
+
+	public ModMetadata getMetadata() {
+		return metadata;
 	}
 }

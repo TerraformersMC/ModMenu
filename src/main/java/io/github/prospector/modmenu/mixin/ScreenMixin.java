@@ -18,6 +18,7 @@ public class ScreenMixin {
 
 	@Inject(at = @At("HEAD"), method = "addButton", cancellable = true)
 	protected void addButton(AbstractButtonWidget button, CallbackInfoReturnable info) {
+		//noinspection ConstantConditions
 		if (((Object) this) instanceof MainMenuScreen) {
 			if (button.y <= this.height / 4 + 48 + 24 * 3) {
 				button.y -= 12;
@@ -26,6 +27,7 @@ public class ScreenMixin {
 				button.y += 12;
 			}
 		}
+		//noinspection ConstantConditions
 		if (((Object) this) instanceof PauseMenuScreen) {
 			if (button.y >= this.height / 4 - 16 + 24 * 4 - 1 && !(button instanceof ModMenuButtonWidget)) {
 				button.y += 24;

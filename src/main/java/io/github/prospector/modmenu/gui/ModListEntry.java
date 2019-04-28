@@ -19,16 +19,17 @@ import org.apache.logging.log4j.Logger;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.util.Objects;
 
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> implements AutoCloseable {
+	public static final Identifier UNKNOWN_ICON = new Identifier("textures/misc/unknown_pack.png");
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final MinecraftClient client;
-	public ModContainer container;
-	public ModMetadata metadata;
-	public ModListWidget list;
-	public final Identifier iconLocation;
-	public final NativeImageBackedTexture icon;
-	public static final Identifier unknownIcon = new Identifier("textures/misc/unknown_pack.png");
+	private final ModContainer container;
+	private final ModMetadata metadata;
+	private final ModListWidget list;
+	private final Identifier iconLocation;
+	private final NativeImageBackedTexture icon;
 
 	public ModListEntry(ModContainer container, ModListWidget list) {
 		this.container = container;
@@ -36,22 +37,22 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		this.metadata = container.getMetadata();
 		this.client = MinecraftClient.getInstance();
 		this.iconLocation = new Identifier("modmenu", metadata.getId() + "_icon");
-		this.icon = this.getIcon();
+		this.icon = this.createIcon();
 	}
 
 	@Override
 	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.client.getTextureManager().bindTexture(this.icon != null ? this.iconLocation : unknownIcon);
+		this.client.getTextureManager().bindTexture(this.icon != null ? this.iconLocation : UNKNOWN_ICON);
 		GlStateManager.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
 		this.client.textRenderer.draw(metadata.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
-		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(metadata.getName()) + 2, y, rowWidth, metadata, list.parent).draw(mouseX, mouseY);
-		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 3 - 25 - 4, 2, 0x808080);
+		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(metadata.getName()) + 2, y, rowWidth, metadata, list.getParent()).draw(mouseX, mouseY);
+		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 3, 2, 0x808080);
 	}
 
-	private NativeImageBackedTexture getIcon() {
+	private NativeImageBackedTexture createIcon() {
 		try {
 			InputStream inputStream;
 			try {
@@ -66,7 +67,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			Throwable var3 = null;
 			NativeImageBackedTexture var6;
 			try {
-				NativeImage image = NativeImage.fromInputStream(inputStream);
+				NativeImage image = NativeImage.fromInputStream(Objects.requireNonNull(inputStream));
 				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
 				NativeImageBackedTexture var5 = new NativeImageBackedTexture(image);
 				this.client.getTextureManager().registerTexture(this.iconLocation, var5);
@@ -102,10 +103,22 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		return true;
 	}
 
+	@Override
 	public void close() {
 		if (this.icon != null) {
 			this.icon.close();
 		}
+	}
 
+	public ModMetadata getMetadata() {
+		return metadata;
+	}
+
+	public Identifier getIconLocation() {
+		return iconLocation;
+	}
+
+	public NativeImageBackedTexture getIcon() {
+		return icon;
 	}
 }
