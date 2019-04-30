@@ -86,10 +86,8 @@ public class ModListScreen extends Screen {
 		this.modList.setLeftPos(leftPaneX);
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		final ModListEntry selectedEntry = modList.getSelected();
-		final ModMetadata metadata = Objects.requireNonNull(selectedEntry).getMetadata();
-		final String modid = metadata.getId();
 		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+			final String modid = Objects.requireNonNull(modList.getSelected()).getMetadata().getId();
 			final Screen screen = ModMenu.getConfigScreen(modid, this);
 			if (screen != null) {
 				minecraft.openScreen(screen);
@@ -100,6 +98,7 @@ public class ModListScreen extends Screen {
 			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure")) {
 			@Override
 			public void render(int mouseX, int mouseY, float delta) {
+				final String modid = Objects.requireNonNull(modList.getSelected()).getMetadata().getId();
 				active = ModMenu.hasFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
 				visible = active;
 				super.render(mouseX, mouseY, delta);
@@ -108,29 +107,35 @@ public class ModListScreen extends Screen {
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = urlButtonWidths > 200 ? 200 : urlButtonWidths;
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
-			ModMenu.noFabric ? "Website" : I18n.translate("modmenu.website"), button -> this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
-			if (bool) {
-				SystemUtil.getOperatingSystem().open(metadata.getContact().get("homepage").get());
-			}
-			this.minecraft.openScreen(this);
-		}, metadata.getContact().get("homepage").get(), true))) {
+			ModMenu.noFabric ? "Website" : I18n.translate("modmenu.website"), button -> {
+			final ModMetadata metadata = Objects.requireNonNull(modList.getSelected()).getMetadata();
+			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
+				if (bool) {
+					SystemUtil.getOperatingSystem().open(metadata.getContact().get("homepage").get());
+				}
+				this.minecraft.openScreen(this);
+			}, metadata.getContact().get("homepage").get(), true));
+		}) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = metadata.getContact().get("homepage").isPresent();
+				active = Objects.requireNonNull(modList.getSelected()).getMetadata().getContact().get("homepage").isPresent();
 				visible = true;
 				super.render(var1, var2, var3);
 			}
 		};
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
-			ModMenu.noFabric ? "Issues" : I18n.translate("modmenu.issues"), button -> this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
-			if (bool) {
-				SystemUtil.getOperatingSystem().open(metadata.getContact().get("issues").get());
-			}
-			this.minecraft.openScreen(this);
-		}, metadata.getContact().get("issues").get(), true))) {
+			ModMenu.noFabric ? "Issues" : I18n.translate("modmenu.issues"), button -> {
+			final ModMetadata metadata = Objects.requireNonNull(modList.getSelected()).getMetadata();
+			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
+				if (bool) {
+					SystemUtil.getOperatingSystem().open(metadata.getContact().get("issues").get());
+				}
+				this.minecraft.openScreen(this);
+			}, metadata.getContact().get("issues").get(), true));
+		}) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = metadata.getContact().get("issues").isPresent();
+				active = Objects.requireNonNull(modList.getSelected()).getMetadata().getContact().get("issues").isPresent();
 				visible = true;
 				super.render(var1, var2, var3);
 			}
