@@ -50,7 +50,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 			ModMetadata metadata = entry.getMetadata();
 			NarratorManager.INSTANCE.method_19788(new TranslatableTextComponent("narrator.select", metadata.getName()).getString());
 		}
-
 	}
 
 	@Override
@@ -103,44 +102,44 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	}
 
 	@Override
-	protected void renderList(int int_1, int int_2, int mouseX, int mouseY, float delta) {
-		int int_5 = this.getItemCount();
+	protected void renderList(int x, int y, int mouseX, int mouseY, float delta) {
+		int itemCount = this.getItemCount();
 		Tessellator tessellator_1 = Tessellator.getInstance();
-		BufferBuilder bufferBuilder_1 = tessellator_1.getBufferBuilder();
+		BufferBuilder buffer = tessellator_1.getBufferBuilder();
 
-		for (int index = 0; index < int_5; ++index) {
-			int y = this.getRowTop(index);
-			int int_8 = this.getRowTop(int_1) + this.itemHeight;
-			if (int_8 >= this.top && y <= this.bottom) {
-				int int_9 = int_2 + index * this.itemHeight + this.headerHeight;
-				int rowHeight = this.itemHeight - 4;
+		for (int index = 0; index < itemCount; ++index) {
+			int entryTop = this.getRowTop(index);
+			int entryBottom = this.getRowTop(index) + this.itemHeight;
+			if (entryBottom >= this.top && entryTop <= this.bottom) {
+				int int_9 = y + index * this.itemHeight + this.headerHeight;
+				int entryHeight = this.itemHeight - 4;
 				ModListEntry entry = this.getEntry(index);
 				int rowWidth = this.getRowWidth() - 14;
-				int x;
+				int entryLeft;
 				if (this.renderSelection && this.isSelectedItem(index)) {
-					x = getRowLeft() - 2;
-					int int_13 = this.left + this.width / 2 + rowWidth / 2;
+					entryLeft = getRowLeft() - 2;
+					int entryRight = this.left + this.width / 2 + rowWidth / 2;
 					GlStateManager.disableTexture();
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
 					GlStateManager.color4f(float_2, float_2, float_2, 1.0F);
-					bufferBuilder_1.begin(7, VertexFormats.POSITION);
-					bufferBuilder_1.vertex((double) x, (double) (int_9 + rowHeight + 2), 0.0D).next();
-					bufferBuilder_1.vertex((double) int_13, (double) (int_9 + rowHeight + 2), 0.0D).next();
-					bufferBuilder_1.vertex((double) int_13, (double) (int_9 - 2), 0.0D).next();
-					bufferBuilder_1.vertex((double) x, (double) (int_9 - 2), 0.0D).next();
+					buffer.begin(7, VertexFormats.POSITION);
+					buffer.vertex((double) entryLeft, (double) (int_9 + entryHeight + 2), 0.0D).next();
+					buffer.vertex((double) entryRight, (double) (int_9 + entryHeight + 2), 0.0D).next();
+					buffer.vertex((double) entryRight, (double) (int_9 - 2), 0.0D).next();
+					buffer.vertex((double) entryLeft, (double) (int_9 - 2), 0.0D).next();
 					tessellator_1.draw();
 					GlStateManager.color4f(0.0F, 0.0F, 0.0F, 1.0F);
-					bufferBuilder_1.begin(7, VertexFormats.POSITION);
-					bufferBuilder_1.vertex((double) (x + 1), (double) (int_9 + rowHeight + 1), 0.0D).next();
-					bufferBuilder_1.vertex((double) (int_13 - 1), (double) (int_9 + rowHeight + 1), 0.0D).next();
-					bufferBuilder_1.vertex((double) (int_13 - 1), (double) (int_9 - 1), 0.0D).next();
-					bufferBuilder_1.vertex((double) (x + 1), (double) (int_9 - 1), 0.0D).next();
+					buffer.begin(7, VertexFormats.POSITION);
+					buffer.vertex((double) (entryLeft + 1), (double) (int_9 + entryHeight + 1), 0.0D).next();
+					buffer.vertex((double) (entryRight - 1), (double) (int_9 + entryHeight + 1), 0.0D).next();
+					buffer.vertex((double) (entryRight - 1), (double) (int_9 - 1), 0.0D).next();
+					buffer.vertex((double) (entryLeft + 1), (double) (int_9 - 1), 0.0D).next();
 					tessellator_1.draw();
 					GlStateManager.enableTexture();
 				}
 
-				x = this.getRowLeft();
-				entry.render(index, y, x, rowWidth, rowHeight, mouseX, mouseY, this.isMouseOver((double) mouseX, (double) mouseY) && Objects.equals(this.getEntryAtPosition((double) mouseX, (double) mouseY), entry), delta);
+				entryLeft = this.getRowLeft();
+				entry.render(index, entryTop, entryLeft, rowWidth, entryHeight, mouseX, mouseY, this.isMouseOver((double) mouseX, (double) mouseY) && Objects.equals(this.getEntryAtPosition((double) mouseX, (double) mouseY), entry), delta);
 			}
 		}
 
