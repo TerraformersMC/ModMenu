@@ -1,6 +1,6 @@
 {
   "modmenu.title": "Mods",
-  "modmenu.loaded": "(%s Carregado)",
+  "modmenu.loaded": "(%s Carregados)",
   "modmenu.config": "Editar Config",
   "modmenu.modsFolder": "Abrir pasta de mods",
   "modmenu.configsFolder": "Abrir pasta de Config",
