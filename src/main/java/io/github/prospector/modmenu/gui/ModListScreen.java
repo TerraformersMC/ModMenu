@@ -18,8 +18,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +49,7 @@ public class ModListScreen extends Screen {
 	private int rightPaneX;
 
 	public ModListScreen(Screen previousGui) {
-		super(ModMenu.noFabric ? new StringTextComponent("Mods") : new TranslatableTextComponent("modmenu.title"));
+		super(ModMenu.noFabric ? new TextComponent("Mods") : new TextComponent("modmenu.title"));
 		this.parent = previousGui;
 		this.textTitle = title.getFormattedText();
 	}
