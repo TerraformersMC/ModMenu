@@ -5,8 +5,10 @@ import io.github.prospector.modmenu.gui.ModMenuButtonWidget;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.menu.PauseMenuScreen;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.TextComponent;
+
+import net.minecraft.network.chat.TextComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,9 +21,24 @@ public class PauseMenuScreenMixin extends Screen {
 		super(title);
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/menu/PauseMenuScreen;addButton(Lnet/minecraft/client/gui/widget/AbstractButtonWidget;)Lnet/minecraft/client/gui/widget/AbstractButtonWidget;", ordinal = 5), method = "init()V")
+	@Inject(at = @At("RETURN"), method = "init()V")
 	public void drawMenuButton(CallbackInfo info) {
 		int i = FabricLoader.getInstance().getAllMods().size();
-		this.addButton(new ModMenuButtonWidget(this.width / 2 - 102, this.height / 4 + 8 + 24 * 3, 204, 20, (ModMenu.noFabric ? "Mods" : I18n.translate("modmenu.title")) + " " + (ModMenu.noFabric ? "(" + i + " Loaded)" : I18n.translate("modmenu.loaded", i)), this));
+		addButton(new ModMenuButtonWidget(this.width / 2 - 102, this.height / 4 + 8 + 24 * 3, 204, 20, (ModMenu.noFabric ? "Mods" : I18n.translate("modmenu.title")) + " " + (ModMenu.noFabric ? "(" + i + " Loaded)" : I18n.translate("modmenu.loaded", i)), this), 5);
+	}
+
+	private void addButton(AbstractButtonWidget button, int tabOrder) {
+		addButton(button);
+		//Bit of ugly code to set the tab order of a button after the fact, better than a fragile mixin
+		children.remove(button);
+		children.add(tabOrder, button);
+	}
+
+	protected <T extends AbstractButtonWidget> T addButton(T button) {
+		if (button.y >= this.height / 4 - 16 + 24 * 4 - 1 && !(button instanceof ModMenuButtonWidget)) {
+			button.y += 24;
+		}
+		button.y -= 12;
+		return super.addButton(button);
 	}
 }

@@ -9,7 +9,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "net.fabricmc:fabric-loom:0.2.1-SNAPSHOT"
+		classpath "net.fabricmc:fabric-loom:0.2.2-SNAPSHOT"
 	}
 }
 
@@ -28,7 +28,7 @@ targetCompatibility = 1.8
 
 group = "io.github.prospector.modmenu"
 archivesBaseName = "ModMenu"
-version = "1.5.2"
+version = "1.5.3"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
@@ -43,9 +43,9 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:1.14"
-	mappings "net.fabricmc:yarn:1.14+build.2"
-	modCompile "net.fabricmc:fabric-loader:0.4.2+build.132"
+	minecraft "com.mojang:minecraft:1.14.1 Pre-Release 2"
+	mappings "net.fabricmc:yarn:1.14.1 Pre-Release 2+build.1"
+	modCompile "net.fabricmc:fabric-loader:0.4.6+build.143"
 	modCompile "net.fabricmc:fabric:0.2.7+build.127"
 	modCompile "com.jamieswhiteshirt:developer-mode:1.0.11"
 }
