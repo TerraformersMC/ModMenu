@@ -1,7 +1,7 @@
 package io.github.prospector.modmenu.api;
 
 import io.github.prospector.modmenu.ModMenu;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 
 import java.util.Optional;
 import java.util.function.Function;

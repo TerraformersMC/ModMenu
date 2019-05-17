@@ -6,7 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.menu.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -48,7 +48,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		this.setSelected(entry);
 		if (entry != null) {
 			ModMetadata metadata = entry.getMetadata();
-			NarratorManager.INSTANCE.method_19788(new TranslatableComponent("narrator.select", metadata.getName()).getString());
+			NarratorManager.INSTANCE.narrate(new TranslatableComponent("narrator.select", metadata.getName()).getString());
 		}
 	}
 

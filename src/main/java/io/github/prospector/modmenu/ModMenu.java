@@ -8,7 +8,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class ModMenu implements ClientModInitializer {
 	public static void addLegacyConfigScreenTask(String modid, Runnable task) {
 		LEGACY_CONFIG_SCREEN_TASKS.putIfAbsent(modid, task);
 	}
-	
+
 	public static boolean hasLegacyConfigScreenTask(String modid) {
 		return LEGACY_CONFIG_SCREEN_TASKS.containsKey(modid);
 	}

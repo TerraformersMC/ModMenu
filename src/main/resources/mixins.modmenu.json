@@ -2,7 +2,7 @@
   "required": true,
   "package": "io.github.prospector.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
-  "client": [ "MainMenuScreenMixin", "PauseMenuScreenMixin" ],
+  "client": [ "TitleScreenMixin", "PauseMenuScreenMixin" ],
   "injectors": {
 	"defaultRequire": 1
   }

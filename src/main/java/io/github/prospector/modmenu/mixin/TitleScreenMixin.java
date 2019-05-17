@@ -3,8 +3,8 @@ package io.github.prospector.modmenu.mixin;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModMenuButtonWidget;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.MainMenuScreen;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.network.chat.TextComponent;
@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MainMenuScreen.class)
-public class MainMenuScreenMixin extends Screen {
+@Mixin(TitleScreen.class)
+public class TitleScreenMixin extends Screen {
 
-	public MainMenuScreenMixin(TextComponent title) {
+	public TitleScreenMixin(TextComponent title) {
 		super(title);
 	}
 
@@ -28,7 +28,7 @@ public class MainMenuScreenMixin extends Screen {
 			ModMenu.noFabric ? "(" + i + " Loaded)" : I18n.translate("modmenu.loaded", i)), this));
 	}
 
-	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Screen;init(Lnet/minecraft/client/MinecraftClient;II)V"), method = "init", index = 2)
+	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;init(Lnet/minecraft/client/MinecraftClient;II)V"), method = "init", index = 2)
 	private int adjustRealmsHeight(int height) {
 		return height - 51;
 	}
