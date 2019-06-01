@@ -18,16 +18,15 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class ModListScreen extends Screen {
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier("modmenu", "textures/gui/configure_button.png");
@@ -47,9 +46,10 @@ public class ModListScreen extends Screen {
 	private int paneY;
 	private int paneWidth;
 	private int rightPaneX;
+	public Set<String> showModChildren = new HashSet<>();
 
 	public ModListScreen(Screen previousGui) {
-		super(ModMenu.noFabric ? new TextComponent("Mods") : new TextComponent("modmenu.title"));
+		super(new TranslatableComponent("modmenu.title"));
 		this.parent = previousGui;
 		this.textTitle = title.getFormattedText();
 	}
@@ -78,7 +78,7 @@ public class ModListScreen extends Screen {
 		rightPaneX = width / 2 + 4;
 
 		int searchBoxWidth = leftPaneRight - 32;
-		this.searchBox = new TextFieldWidget(this.font, leftPaneRight / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox, ModMenu.noFabric ? "Search for mods" : I18n.translate("selectWorld.search"));
+		this.searchBox = new TextFieldWidget(this.font, leftPaneRight / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(() -> string_1, false));
 
 		this.modList = new ModListWidget(this.minecraft, paneWidth + 4, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
@@ -94,11 +94,16 @@ public class ModListScreen extends Screen {
 				ModMenu.openConfigScreen(modid);
 			}
 		},
-			ModMenu.noFabric ? "Configure..." : I18n.translate("modmenu.configure")) {
+			I18n.translate("modmenu.configure")) {
 			@Override
 			public void render(int mouseX, int mouseY, float delta) {
-				final String modid = Objects.requireNonNull(modList.getSelected()).getMetadata().getId();
-				active = ModMenu.hasFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
+				if (modList.getSelected() != null) {
+					String modid = modList.getSelected().getMetadata().getId();
+					active = ModMenu.hasFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
+
+				} else {
+					active = false;
+				}
 				visible = active;
 				super.render(mouseX, mouseY, delta);
 			}
@@ -106,7 +111,7 @@ public class ModListScreen extends Screen {
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = urlButtonWidths > 200 ? 200 : urlButtonWidths;
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
-			ModMenu.noFabric ? "Website" : I18n.translate("modmenu.website"), button -> {
+			I18n.translate("modmenu.website"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(modList.getSelected()).getMetadata();
 			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -123,7 +128,7 @@ public class ModListScreen extends Screen {
 			}
 		};
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
-			ModMenu.noFabric ? "Issues" : I18n.translate("modmenu.issues"), button -> {
+			I18n.translate("modmenu.issues"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(modList.getSelected()).getMetadata();
 			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -145,8 +150,7 @@ public class ModListScreen extends Screen {
 		this.addButton(websiteButton);
 		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
-		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20,
-			ModMenu.noFabric ? "Open Mods Folder" : I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
+		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
 		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
 		this.setInitialFocus(this.searchBox);
 
@@ -185,6 +189,7 @@ public class ModListScreen extends Screen {
 
 		ModMetadata metadata = modList.getSelected().getMetadata();
 		int x = rightPaneX;
+		DrawableHelper.fill(x, paneY, x + 32, paneY + 32, 0xFFE1E1E1);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(selected.getIcon() != null ? selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
 		GlStateManager.enableBlend();
@@ -192,7 +197,13 @@ public class ModListScreen extends Screen {
 		GlStateManager.disableBlend();
 		int lineSpacing = font.fontHeight + 1;
 		int imageOffset = 36;
-		font.draw(metadata.getName(), x + imageOffset, paneY + 1, 0xFFFFFF);
+		String name = metadata.getName();
+		String trimmedName = name;
+		int maxNameWidth = this.width - (x + imageOffset);
+		if (font.getStringWidth(name) > maxNameWidth) {
+			trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth("...")) + "...";
+		}
+		font.draw(trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
 		if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + font.fontHeight && mouseX < x + imageOffset + font.getStringWidth(metadata.getName())) {
 			setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 		}
@@ -211,7 +222,7 @@ public class ModListScreen extends Screen {
 			} else {
 				authors = names.get(0);
 			}
-			RenderUtils.drawWrappedString(ModMenu.noFabric ? "By " + authors : I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
+			RenderUtils.drawWrappedString(I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 		}
 		if (this.tooltip != null) {
 			this.renderTooltip(Lists.newArrayList(Splitter.on("\n").split(this.tooltip)), mouseX, mouseY);
@@ -250,5 +261,9 @@ public class ModListScreen extends Screen {
 
 	public void updateScrollPercent(double scrollPercent) {
 		this.scrollPercent = scrollPercent;
+	}
+
+	public Supplier<String> getSearchInput() {
+		return () -> searchBox.getText();
 	}
 }

@@ -24,12 +24,12 @@ import java.util.Objects;
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> implements AutoCloseable {
 	public static final Identifier UNKNOWN_ICON = new Identifier("textures/misc/unknown_pack.png");
 	private static final Logger LOGGER = LogManager.getLogger();
-	private final MinecraftClient client;
-	private final ModContainer container;
-	private final ModMetadata metadata;
-	private final ModListWidget list;
-	private final Identifier iconLocation;
-	private final NativeImageBackedTexture icon;
+	protected final MinecraftClient client;
+	protected final ModContainer container;
+	protected final ModMetadata metadata;
+	protected final ModListWidget list;
+	protected final Identifier iconLocation;
+	protected final NativeImageBackedTexture icon;
 
 	public ModListEntry(ModContainer container, ModListWidget list) {
 		this.container = container;
@@ -42,13 +42,22 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	@Override
 	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+		x += getXOffset();
+		rowWidth -= getXOffset();
+		DrawableHelper.fill(x, y, x + 32, y + 32, 0xFFE1E1E1);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.client.getTextureManager().bindTexture(this.icon != null ? this.iconLocation : UNKNOWN_ICON);
 		GlStateManager.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
-		this.client.textRenderer.draw(metadata.getName(), (float) (x + 32 + 3), (float) (y + 1), 0xFFFFFF);
-		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(metadata.getName()) + 2, y, rowWidth, metadata, list.getParent()).draw(mouseX, mouseY);
+		String name = metadata.getName();
+		String trimmedName = name;
+		int maxNameWidth = rowWidth - 32 - 3;
+		if (this.client.textRenderer.getStringWidth(name) > maxNameWidth) {
+			trimmedName = this.client.textRenderer.trimToWidth(name, maxNameWidth - this.client.textRenderer.getStringWidth("...")) + "...";
+		}
+		this.client.textRenderer.draw(trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
+		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(name) + 2, y, rowWidth, metadata, list.getParent()).draw(mouseX, mouseY);
 		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 3, 2, 0x808080);
 	}
 
@@ -120,5 +129,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	public NativeImageBackedTexture getIcon() {
 		return icon;
+	}
+
+	public int getXOffset() {
+		return 0;
 	}
 }

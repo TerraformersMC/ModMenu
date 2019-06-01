@@ -33,11 +33,10 @@ public class BadgeRenderer {
 				drawBadge(new String(new byte[] { -30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101 }), 0x881DFF48, 0x8807690E, mouseX, mouseY);
 			}
 		} else {
-			Boolean clientside = ModMenu.MOD_CLIENTSIDE.get(metadata.getId());
-			if (clientside != null && clientside) {
+			if (ModMenu.CLIENTSIDE_MODS.contains(metadata.getId())) {
 				drawBadge("Client", 0x884383E3, 0x880E4699, mouseX, mouseY);
 			}
-			Boolean api = ModMenu.MOD_API.get(metadata.getId());
+			Boolean api = ModMenu.API_MODS.get(metadata.getId());
 			if (api == null) {
 				api = metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().endsWith(" API");
 			}
