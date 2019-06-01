@@ -1,7 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.sun.istack.internal.Nullable;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.entries.IndependentEntry;
@@ -216,7 +215,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		}
 	}
 
-	@Nullable
 	public final ModListEntry getEntryAtPos(double x, double y) {
 		int int_5 = MathHelper.floor(y - (double) this.top) - this.headerHeight + (int) this.getScrollAmount() - 4;
 		int index = int_5 / this.itemHeight;
