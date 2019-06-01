@@ -17,6 +17,12 @@ A picture's worth 2 words
     "modmenu:clientsideOnly": true
 }
 ```
+- Mod parenting is used to display a mod as a child of another one. This is meant to be used for mods divided into different modules. The following element in a fabric.mod.json will define the mod as a child of the mod 'flamingo':
+```json
+"custom": {
+    "modmenu:parent": "flamingo"
+}
+```
 - ModMenuAPI
     - To use the API, implement the ModMenuApi interface on a class and add that as an entry point of type "modmenu" in your fabric.mod.json as such:
   ```json
