@@ -57,8 +57,8 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			trimmedName = this.client.textRenderer.trimToWidth(name, maxNameWidth - this.client.textRenderer.getStringWidth("...")) + "...";
 		}
 		this.client.textRenderer.draw(trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
-		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(name) + 2, y, rowWidth, metadata, list.getParent()).draw(mouseX, mouseY);
-		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 3, 2, 0x808080);
+		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(mouseX, mouseY);
+		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 4, 2, 0x808080);
 	}
 
 	private NativeImageBackedTexture createIcon() {
@@ -67,7 +67,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			try {
 				inputStream = Files.newInputStream(container.getPath(metadata.getIconPath(64 * MinecraftClient.getInstance().options.guiScale).orElse("assets/" + metadata.getId() + "/icon.png")));
 			} catch (NoSuchFileException e) {
-				if (metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric")) {
+				if (metadata.getId().equals("fabricloader")) {
 					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
 				} else {
 					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");

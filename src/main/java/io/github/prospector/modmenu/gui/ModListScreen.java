@@ -175,7 +175,8 @@ public class ModListScreen extends Screen {
 	public void render(int mouseX, int mouseY, float delta) {
 		overlayBackground(0, 0, width, height, 64, 64, 64, 255, 255);
 		this.tooltip = null;
-		if (modList.getSelected() != null) {
+		ModListEntry selectedEntry = modList.getSelected();
+		if (selectedEntry != null) {
 			this.descriptionListWidget.render(mouseX, mouseY, delta);
 		}
 		this.modList.render(mouseX, mouseY, delta);
@@ -186,12 +187,11 @@ public class ModListScreen extends Screen {
 		GlStateManager.disableBlend();
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
-
-		ModMetadata metadata = modList.getSelected().getMetadata();
+		ModMetadata metadata = selectedEntry.getMetadata();
 		int x = rightPaneX;
 		DrawableHelper.fill(x, paneY, x + 32, paneY + 32, 0xFFE1E1E1);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(selected.getIcon() != null ? selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
+		Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(this.selected.getIcon() != null ? this.selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
 		GlStateManager.enableBlend();
 		blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
@@ -208,7 +208,7 @@ public class ModListScreen extends Screen {
 			setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 		}
 		if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
-			badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(metadata.getName()) + 2, paneY, width - 28, metadata, this);
+			badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(metadata.getName()) + 2, paneY, width - 28, selectedEntry.container, this);
 			init = false;
 		}
 		badgeRenderer.draw(mouseX, mouseY);

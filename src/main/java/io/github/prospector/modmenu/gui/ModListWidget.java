@@ -24,8 +24,8 @@ import java.util.function.Supplier;
 
 public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	private static final Logger LOGGER = LogManager.getLogger();
-	private List<ModContainer> modContainerList = null;
 	private final ModListScreen parent;
+	private List<ModContainer> modContainerList = null;
 	private String selectedModId = null;
 	private boolean scrolling;
 
@@ -42,7 +42,12 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	@Override
 	public void setScrollAmount(double amount) {
 		super.setScrollAmount(amount);
-		parent.updateScrollPercent(getScrollAmount() / Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
+		int denominator = Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4));
+		if (denominator <= 0) {
+			parent.updateScrollPercent(0);
+		} else {
+			parent.updateScrollPercent(getScrollAmount() / Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
+		}
 	}
 
 	@Override
