@@ -9,5 +9,7 @@
   "modmenu.website": "Website",
   "modmenu.issues": "Issues",
   "modmenu.authorPrefix": "By %s",
-  "modmenu.search": "Search for mods"
+  "modmenu.search": "Search for mods",
+  "modmenu.clientsideOnly": "Client",
+  "modmenu.api": "API"
 }

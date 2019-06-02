@@ -5,6 +5,7 @@ import io.github.prospector.modmenu.gui.ModListScreen;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
 
 import java.util.Calendar;
 
@@ -29,14 +30,14 @@ public class BadgeRenderer {
 		this.badgeX = startX;
 		this.badgeY = startY;
 		if (ModMenu.CLIENTSIDE_MODS.contains(metadata.getId())) {
-			drawBadge("Client", 0x884383E3, 0x880E4699, mouseX, mouseY);
+			drawBadge(I18n.translate("modmenu.clientsideOnly"), 0x884383E3, 0x880E4699, mouseX, mouseY);
 		}
 		Boolean api = ModMenu.API_MODS.get(metadata.getId());
 		if (api == null) {
 			api = metadata.getId().equals("fabricloader") || metadata.getId().equals("fabric") || metadata.getName().endsWith(" API");
 		}
 		if (api) {
-			drawBadge("API", 0x8810d098, 0x88046146, mouseX, mouseY);
+			drawBadge(I18n.translate("modmenu.api"), 0x8810d098, 0x88046146, mouseX, mouseY);
 		}
 		//noinspection MagicConstant
 		if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {
