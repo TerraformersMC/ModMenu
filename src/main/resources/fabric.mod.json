@@ -15,7 +15,7 @@
 	"homepage": "https://minecraft.curseforge.com/projects/modmenu",
 	"issues": "https://github.com/Prospector/ModMenu/issues"
   },
-  "requires": {
+  "depends": {
 	"fabric-resource-loader-v0": "*"
   },
   "authors": [

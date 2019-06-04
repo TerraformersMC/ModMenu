@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.mixin;
 
+import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModMenuButtonWidget;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
@@ -25,7 +26,7 @@ public class TitleScreenMixin extends Screen {
 	@Inject(at = @At("RETURN"), method = "initWidgetsNormal(II)V")
 	public void drawMenuButton(CallbackInfo info) {
 		int i = FabricLoader.getInstance().getAllMods().size();
-		this.addButton(new ModMenuButtonWidget(this.width / 2 - 100, this.height / 4 + 48 + 24 * 3, 200, 20, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", NumberFormat.getInstance().format(i)), this));
+		this.addButton(new ModMenuButtonWidget(this.width / 2 - 100, this.height / 4 + 48 + 24 * 3, 200, 20, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", NumberFormat.getInstance().format(i - ModMenu.PARENT_MAP.values().size())), this));
 	}
 
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;init(Lnet/minecraft/client/MinecraftClient;II)V"), method = "init", index = 2)

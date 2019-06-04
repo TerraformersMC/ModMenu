@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.mixin;
 
+import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModMenuButtonWidget;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.PauseScreen;
@@ -24,7 +25,7 @@ public class PauseMenuScreenMixin extends Screen {
 	@Inject(at = @At("RETURN"), method = "init()V")
 	public void drawMenuButton(CallbackInfo info) {
 		int i = FabricLoader.getInstance().getAllMods().size();
-		addButton(new ModMenuButtonWidget(this.width / 2 - 102, this.height / 4 + 8 + 24 * 3, 204, 20, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", NumberFormat.getInstance().format(i)), this), 5);
+		addButton(new ModMenuButtonWidget(this.width / 2 - 102, this.height / 4 + 8 + 24 * 3, 204, 20, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", NumberFormat.getInstance().format(i - ModMenu.PARENT_MAP.values().size())), this), 5);
 	}
 
 	private void addButton(AbstractButtonWidget button, int tabOrder) {
