@@ -1,0 +1,16 @@
+
+{
+  "modmenu.title": "Mody",
+  "modmenu.loaded": "(%s Załadowanych)",
+  "modmenu.config": "Edytuj konfigurację",
+  "modmenu.modsFolder": "Otwórz folder z modami",
+  "modmenu.configsFolder": "Otwórz folder z plikami kontiguracyjnymi",
+  "modmenu.configure": "Konfiguruję...",
+  "modmenu.modIdToolTip": "Mod ID: %s",
+  "modmenu.website": "Strona",
+  "modmenu.issues": "Problemy",
+  "modmenu.authorPrefix": "Stworzone przez %s",
+  "modmenu.search": "Szukam modów...",
+  "modmenu.clientsideOnly": "Client",
+  "modmenu.api": "API"
+}
