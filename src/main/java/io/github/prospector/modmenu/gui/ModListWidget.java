@@ -14,7 +14,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.NarratorManager;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,7 +59,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		this.setSelected(entry);
 		if (entry != null) {
 			ModMetadata metadata = entry.getMetadata();
-			NarratorManager.INSTANCE.narrate(new TranslatableComponent("narrator.select", metadata.getName()).getString());
+			NarratorManager.INSTANCE.narrate(new TranslatableText("narrator.select", metadata.getName()).getString());
 		}
 	}
 
