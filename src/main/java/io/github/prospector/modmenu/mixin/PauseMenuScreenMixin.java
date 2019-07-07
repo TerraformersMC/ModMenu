@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screen.PauseScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +18,7 @@ import java.text.NumberFormat;
 @Mixin(PauseScreen.class)
 public class PauseMenuScreenMixin extends Screen {
 
-	public PauseMenuScreenMixin(TextComponent title) {
+	public PauseMenuScreenMixin(Text title) {
 		super(title);
 	}
 
