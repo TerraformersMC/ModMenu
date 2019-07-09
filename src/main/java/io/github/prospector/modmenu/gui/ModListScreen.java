@@ -100,12 +100,17 @@ public class ModListScreen extends Screen {
 				if (modList.getSelected() != null) {
 					String modid = modList.getSelected().getMetadata().getId();
 					active = ModMenu.hasFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
-
 				} else {
 					active = false;
 				}
 				visible = active;
 				super.render(mouseX, mouseY, delta);
+			}
+
+			@Override
+			public void renderButton(int int_1, int int_2, float float_1) {
+				GlStateManager.color4f(1, 1, 1, 1f);
+				super.renderButton(int_1, int_2, float_1);
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
