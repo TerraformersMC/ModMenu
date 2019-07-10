@@ -55,11 +55,14 @@ jar {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact(jar) {
-				builtBy remapJar
-			}
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
+			}
+
+			afterEvaluate {
+				artifact(remapJar.output) {
+					builtBy remapJar
+				}
 			}
 		}
 	}
