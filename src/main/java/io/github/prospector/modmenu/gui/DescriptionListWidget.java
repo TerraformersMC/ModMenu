@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
 
-public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionItem> {
+public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
 	private final ModListScreen parent;
 	private final TextRenderer textRenderer;
@@ -17,7 +17,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public DescriptionItem getSelected() {
+	public DescriptionEntry getSelected() {
 		return null;
 	}
 
@@ -41,17 +41,23 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			String description = lastSelected.getMetadata().getDescription();
 			if (lastSelected != null && description != null && !description.isEmpty()) {
 				for (String line : textRenderer.wrapStringToWidthAsList(description.replaceAll("\n", "\n\n"), getRowWidth())) {
-					children().add(new DescriptionItem(line));
+					children().add(new DescriptionEntry(line));
 				}
 			}
 		}
 		super.render(mouseX, mouseY, delta);
 	}
 
-	protected class DescriptionItem extends EntryListWidget.Entry<DescriptionItem> {
+	@Override
+	protected void renderHoleBackground(int y1, int y2, int startAlpha, int endAlpha) {
+		// Awful hack but it makes the background "seamless"
+		ModListScreen.overlayBackground(left, y1, right, y2, 64, 64, 64, startAlpha, endAlpha);
+	}
+
+	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
 		protected String text;
 
-		public DescriptionItem(String text) {
+		public DescriptionEntry(String text) {
 			this.text = text;
 		}
 

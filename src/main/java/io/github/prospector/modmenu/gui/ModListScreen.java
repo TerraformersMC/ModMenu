@@ -9,16 +9,18 @@ import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
@@ -40,18 +42,16 @@ public class ModListScreen extends Screen {
 	private ModListEntry selected;
 	private BadgeRenderer badgeRenderer;
 	private double scrollPercent = 0;
-	private int leftPaneX;
 	private boolean init = false;
-	private int leftPaneRight;
 	private int paneY;
 	private int paneWidth;
 	private int rightPaneX;
 	public Set<String> showModChildren = new HashSet<>();
 
 	public ModListScreen(Screen previousGui) {
-		super(new TranslatableComponent("modmenu.title"));
+		super(new TranslatableText("modmenu.title"));
 		this.parent = previousGui;
-		this.textTitle = title.getFormattedText();
+		this.textTitle = title.asFormattedString();
 	}
 
 	@Override
@@ -71,21 +71,19 @@ public class ModListScreen extends Screen {
 	@Override
 	protected void init() {
 		Objects.requireNonNull(this.minecraft).keyboard.enableRepeatEvents(true);
-		leftPaneX = 4;
-		leftPaneRight = width / 2 - 4;
 		paneY = 48;
 		paneWidth = this.width / 2 - 8;
-		rightPaneX = width / 2 + 4;
+		rightPaneX = width - paneWidth;
 
-		int searchBoxWidth = leftPaneRight - 32;
-		this.searchBox = new TextFieldWidget(this.font, leftPaneRight / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
+		int searchBoxWidth = paneWidth - 32;
+		this.searchBox = new TextFieldWidget(this.font, paneWidth / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(() -> string_1, false));
 
-		this.modList = new ModListWidget(this.minecraft, paneWidth + 4, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
-		this.modList.setLeftPos(leftPaneX);
+		this.modList = new ModListWidget(this.minecraft, paneWidth, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
+		this.modList.setLeftPos(0);
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, 20, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String modid = Objects.requireNonNull(modList.getSelected()).getMetadata().getId();
 			final Screen screen = ModMenu.getConfigScreen(modid, this);
 			if (screen != null) {
@@ -178,7 +176,7 @@ public class ModListScreen extends Screen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		overlayBackground(0, 0, width, height, 64, 64, 64, 255, 255);
+		ModListScreen.overlayBackground(paneWidth, 0, rightPaneX, height, 64, 64, 64, 255, 255);
 		this.tooltip = null;
 		ModListEntry selectedEntry = modList.getSelected();
 		if (selectedEntry != null) {
@@ -186,9 +184,6 @@ public class ModListScreen extends Screen {
 		}
 		this.modList.render(mouseX, mouseY, delta);
 		this.searchBox.render(mouseX, mouseY, delta);
-		overlayBackground(modList.getWidth(), 0, width / 2 + 4, height, 64, 64, 64, 255, 255);
-		overlayBackground(0, 0, 4, height, 64, 64, 64, 255, 255);
-		overlayBackground(width - 4, 0, width, height, 64, 64, 64, 255, 255);
 		GlStateManager.disableBlend();
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
@@ -235,10 +230,10 @@ public class ModListScreen extends Screen {
 
 	}
 
-	protected void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
+	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBufferBuilder();
-		Objects.requireNonNull(minecraft).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
+		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		buffer.begin(7, VertexFormats.POSITION_UV_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0D, y2 / 32.0D).color(red, green, blue, endAlpha).next();
