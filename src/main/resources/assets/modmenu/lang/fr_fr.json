@@ -8,5 +8,8 @@
   "modmenu.modIdToolTip": "ID du mod : %s",
   "modmenu.website": "Site web",
   "modmenu.issues": "Problèmes",
-  "modmenu.authorPrefix": "Par %s"
+  "modmenu.authorPrefix": "Par %s",
+  "modmenu.search": "Rechercher des mods",
+  "modmenu.clientsideOnly": "Client",
+  "modmenu.api": "API"
 }
