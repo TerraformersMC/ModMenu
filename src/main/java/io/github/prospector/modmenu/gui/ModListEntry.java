@@ -76,7 +76,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			Throwable var3 = null;
 			NativeImageBackedTexture var6;
 			try {
-				NativeImage image = NativeImage.fromInputStream(Objects.requireNonNull(inputStream));
+				NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
 				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
 				NativeImageBackedTexture var5 = new NativeImageBackedTexture(image);
 				this.client.getTextureManager().registerTexture(this.iconLocation, var5);
