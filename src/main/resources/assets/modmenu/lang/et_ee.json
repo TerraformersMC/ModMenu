@@ -10,6 +10,5 @@
   "modmenu.issues": "Veahaldus",
   "modmenu.authorPrefix": "Autorilt %s",
   "modmenu.search": "Otsi mode",
-  "modmenu.clientsideOnly": "Klient",
-  "modmenu.api": "API"
+  "modmenu.clientsideOnly": "Klient"
 }

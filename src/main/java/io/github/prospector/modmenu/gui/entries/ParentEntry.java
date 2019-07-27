@@ -9,13 +9,14 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class ParentEntry extends ModListEntry {
 	private static final Identifier PARENT_MOD_TEXTURE = new Identifier(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
-	protected List<ModContainer> children;
+	protected List<ModContainer> children = new ArrayList<>();
 	protected ModListWidget list;
 	protected boolean hoveringIcon = false;
 

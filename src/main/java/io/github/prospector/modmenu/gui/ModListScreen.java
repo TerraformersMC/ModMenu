@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
@@ -15,7 +16,6 @@ import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -27,11 +27,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.Supplier;
 
 public class ModListScreen extends Screen {
-	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier("modmenu", "textures/gui/configure_button.png");
+	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
+	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final String textTitle;
 	private TextFieldWidget searchBox;
@@ -42,10 +44,13 @@ public class ModListScreen extends Screen {
 	private ModListEntry selected;
 	private BadgeRenderer badgeRenderer;
 	private double scrollPercent = 0;
+	private boolean showModCount = false;
 	private boolean init = false;
+	private boolean filterOptionsShown = false;
 	private int paneY;
 	private int paneWidth;
 	private int rightPaneX;
+	private int searchBoxX;
 	public Set<String> showModChildren = new HashSet<>();
 
 	public ModListScreen(Screen previousGui) {
@@ -75,15 +80,16 @@ public class ModListScreen extends Screen {
 		paneWidth = this.width / 2 - 8;
 		rightPaneX = width - paneWidth;
 
-		int searchBoxWidth = paneWidth - 32;
-		this.searchBox = new TextFieldWidget(this.font, paneWidth / 2 - searchBoxWidth / 2, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
+		int searchBoxWidth = paneWidth - 32 - 22;
+		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - 22 / 2;
+		this.searchBox = new TextFieldWidget(this.font, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(() -> string_1, false));
 
-		this.modList = new ModListWidget(this.minecraft, paneWidth, this.height, paneY, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
+		this.modList = new ModListWidget(this.minecraft, paneWidth, this.height, paneY + 19, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
 		this.modList.setLeftPos(0);
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, 20, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String modid = Objects.requireNonNull(modList.getSelected()).getMetadata().getId();
 			final Screen screen = ModMenu.getConfigScreen(modid, this);
 			if (screen != null) {
@@ -125,8 +131,8 @@ public class ModListScreen extends Screen {
 		}) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = Objects.requireNonNull(modList.getSelected()).getMetadata().getContact().get("homepage").isPresent();
-				visible = true;
+				visible = modList.getSelected() != null;
+				active = visible && modList.getSelected().getMetadata().getContact().get("homepage").isPresent();
 				super.render(var1, var2, var3);
 			}
 		};
@@ -142,12 +148,58 @@ public class ModListScreen extends Screen {
 		}) {
 			@Override
 			public void render(int var1, int var2, float var3) {
-				active = Objects.requireNonNull(modList.getSelected()).getMetadata().getContact().get("issues").isPresent();
-				visible = true;
+				visible = modList.getSelected() != null;
+				active = visible && modList.getSelected().getMetadata().getContact().get("issues").isPresent();
 				super.render(var1, var2, var3);
 			}
 		};
 		this.children.add(this.searchBox);
+		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> {
+			filterOptionsShown = !filterOptionsShown;
+		}) {
+			@Override
+			public void render(int int_1, int int_2, float float_1) {
+				super.render(int_1, int_2, float_1);
+				if (isHovered()) {
+					setTooltip(I18n.translate("modmenu.toggleFilterOptions"));
+				}
+			}
+		});
+		String showLibrariesText = I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
+		int showLibrariesWidth = font.getStringWidth(showLibrariesText) + 20;
+		int showLibrariesX;
+		if ((showLibrariesWidth + font.getStringWidth(I18n.translate("modmenu.showingMods", NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()) + "/" + NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()))) + 20) >= searchBoxX + searchBoxWidth + 22) {
+			showLibrariesX = paneWidth / 2 - showLibrariesWidth / 2;
+			showModCount = false;
+		} else {
+			showLibrariesX = searchBoxX + searchBoxWidth + 22 - showLibrariesWidth + 1;
+			showModCount = true;
+		}
+		this.addButton(new ButtonWidget(showLibrariesX, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
+			ModMenu.toggleLibrariesShown();
+			modList.reloadFilter();
+		}) {
+			@Override
+			public void render(int mouseX, int mouseY, float delta) {
+				visible = filterOptionsShown;
+				this.setMessage(I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())));
+				super.render(mouseX, mouseY, delta);
+			}
+		});
+
+		/*
+		this.addButton(new ButtonWidget(searchBoxX + 102, 46, 150, 20, I18n.translate("modmenu.environmentFilter"), button -> {
+			environmentFilter = environmentFilter.next();
+			modList.reloadFilter();
+		}) {
+			@Override
+			public void render(int mouseX, int mouseY, float delta) {
+				visible = searchSubtextShown;
+				this.setMessage(I18n.translate("modmenu.environmentFilter", I18n.translate(environmentFilter.getTranslationKey())));
+				super.render(mouseX, mouseY, delta);
+			}
+		});
+		*/
 		this.children.add(this.modList);
 		this.addButton(configureButton);
 		this.addButton(websiteButton);
@@ -187,45 +239,50 @@ public class ModListScreen extends Screen {
 		GlStateManager.disableBlend();
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
-		ModMetadata metadata = selectedEntry.getMetadata();
-		int x = rightPaneX;
-		DrawableHelper.fill(x, paneY, x + 32, paneY + 32, 0xFFE1E1E1);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(this.selected.getIcon() != null ? this.selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
-		GlStateManager.enableBlend();
-		blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
-		GlStateManager.disableBlend();
-		int lineSpacing = font.fontHeight + 1;
-		int imageOffset = 36;
-		String name = metadata.getName();
-		String trimmedName = name;
-		int maxNameWidth = this.width - (x + imageOffset);
-		if (font.getStringWidth(name) > maxNameWidth) {
-			trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth("...")) + "...";
+		if (showModCount || !filterOptionsShown) {
+			font.draw(I18n.translate("modmenu.showingMods", NumberFormat.getInstance().format(modList.getDisplayedCount()) + "/" + NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size())), searchBoxX, 52, 0xFFFFFF);
 		}
-		font.draw(trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
-		if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + font.fontHeight && mouseX < x + imageOffset + font.getStringWidth(metadata.getName())) {
-			setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
-		}
-		if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
-			badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(metadata.getName()) + 2, paneY, width - 28, selectedEntry.container, this);
-			init = false;
-		}
-		badgeRenderer.draw(mouseX, mouseY);
-		font.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
-		String authors;
-		List<String> names = new ArrayList<>();
-		metadata.getAuthors().forEach(person -> names.add(person.getName()));
-		if (!names.isEmpty()) {
-			if (names.size() > 1) {
-				authors = Joiner.on(", ").join(names);
-			} else {
-				authors = names.get(0);
+		if (selectedEntry != null) {
+			ModMetadata metadata = selectedEntry.getMetadata();
+			int x = rightPaneX;
+			DrawableHelper.fill(x, paneY, x + 32, paneY + 32, 0xFFE1E1E1);
+			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(this.selected.getIcon() != null ? this.selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
+			GlStateManager.enableBlend();
+			blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
+			GlStateManager.disableBlend();
+			int lineSpacing = font.fontHeight + 1;
+			int imageOffset = 36;
+			String name = metadata.getName();
+			String trimmedName = name;
+			int maxNameWidth = this.width - (x + imageOffset);
+			if (font.getStringWidth(name) > maxNameWidth) {
+				trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth("...")) + "...";
 			}
-			RenderUtils.drawWrappedString(I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
-		}
-		if (this.tooltip != null) {
-			this.renderTooltip(Lists.newArrayList(Splitter.on("\n").split(this.tooltip)), mouseX, mouseY);
+			font.draw(trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
+			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + font.fontHeight && mouseX < x + imageOffset + font.getStringWidth(metadata.getName())) {
+				setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
+			}
+			if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
+				badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(metadata.getName()) + 2, paneY, width - 28, selectedEntry.container, this);
+				init = false;
+			}
+			badgeRenderer.draw(mouseX, mouseY);
+			font.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
+			String authors;
+			List<String> names = new ArrayList<>();
+			metadata.getAuthors().forEach(person -> names.add(person.getName()));
+			if (!names.isEmpty()) {
+				if (names.size() > 1) {
+					authors = Joiner.on(", ").join(names);
+				} else {
+					authors = names.get(0);
+				}
+				RenderUtils.drawWrappedString(I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
+			}
+			if (this.tooltip != null) {
+				this.renderTooltip(Lists.newArrayList(Splitter.on("\n").split(this.tooltip)), mouseX, mouseY);
+			}
 		}
 
 	}
@@ -265,5 +322,9 @@ public class ModListScreen extends Screen {
 
 	public Supplier<String> getSearchInput() {
 		return () -> searchBox.getText();
+	}
+
+	public boolean showingFilterOptions() {
+		return filterOptionsShown;
 	}
 }

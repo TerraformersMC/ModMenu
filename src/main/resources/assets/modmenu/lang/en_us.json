@@ -11,5 +11,10 @@
   "modmenu.authorPrefix": "By %s",
   "modmenu.search": "Search for mods",
   "modmenu.clientsideOnly": "Client",
-  "modmenu.api": "API"
+  "modmenu.library": "Library",
+  "modmenu.toggleFilterOptions": "Toggle Filter Options",
+  "modmenu.showLibraries": "Libraries: %s",
+  "modmenu.showLibraries.true": "Shown",
+  "modmenu.showLibraries.false": "Hidden",
+  "modmenu.showingMods": "Showing %s Mods"
 }

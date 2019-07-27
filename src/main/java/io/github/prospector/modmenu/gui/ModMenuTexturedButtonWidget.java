@@ -5,22 +5,22 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.Identifier;
 
-public class TexturedButtonWidget extends ButtonWidget {
+public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	private final Identifier texture;
 	private final int u;
 	private final int v;
 	private final int uWidth;
 	private final int vHeight;
 
-	protected TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
+	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
 		this(x, y, width, height, u, v, texture, 256, 256, onPress);
 	}
 
-	protected TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress) {
+	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress) {
 		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, "");
 	}
 
-	protected TexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, String message) {
+	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, String message) {
 		super(x, y, width, height, message, onPress);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
@@ -38,6 +38,7 @@ public class TexturedButtonWidget extends ButtonWidget {
 	public void renderButton(int mouseX, int mouseY, float delta) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		client.getTextureManager().bindTexture(this.texture);
+		GlStateManager.color4f(1, 1, 1, 1f);
 		GlStateManager.disableDepthTest();
 		int adjustedV = this.v;
 		if (!active) {

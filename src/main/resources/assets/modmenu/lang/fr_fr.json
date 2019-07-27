@@ -10,6 +10,5 @@
   "modmenu.issues": "Problèmes",
   "modmenu.authorPrefix": "Par %s",
   "modmenu.search": "Rechercher des mods",
-  "modmenu.clientsideOnly": "Client",
-  "modmenu.api": "API"
+  "modmenu.clientsideOnly": "Client"
 }

@@ -2,6 +2,7 @@ package io.github.prospector.modmenu.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.gui.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.entries.IndependentEntry;
 import io.github.prospector.modmenu.gui.entries.ParentEntry;
@@ -85,6 +86,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		return i;
 	}
 
+	public void reloadFilter() {
+		filter(parent.getSearchInput(), false);
+	}
+
 	public void filter(Supplier<String> searchTerm, boolean var2) {
 		this.clearEntries();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
@@ -142,11 +147,19 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	public boolean passesFilter(ModContainer container, String term) {
 		ModMetadata metadata = container.getMetadata();
 		String id = metadata.getId();
-		Boolean api = ModMenu.API_MODS.get(id);
-		if (api == null) {
-			api = id.equals("fabricloader") || metadata.getName().endsWith(" API");
+		boolean library = false;
+		if (ModMenu.LIBRARY_MODS.get(id) != null) {
+			library = ModMenu.LIBRARY_MODS.get(id);
 		}
-		return metadata.getName().toLowerCase(Locale.ROOT).contains(term) || id.toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (api && "api".contains(term)) || ("clientside".contains(term) && ModMenu.CLIENTSIDE_MODS.contains(id)) || ("configurations configs configures".contains(term) && ModMenu.hasFactory(id) || ModMenu.PARENT_MAP.containsKey(container) && ModMenu.PARENT_MAP.get(container).stream().anyMatch(modContainer -> passesFilter(modContainer, term)));
+		boolean childPasses = ModMenu.PARENT_MAP.containsKey(container) && ModMenu.PARENT_MAP.get(container).stream().anyMatch(modContainer -> passesFilter(modContainer, term));
+		if (childPasses) {
+			return true;
+		}
+		if (library && !ModMenuConfigManager.getConfig().showLibraries()) {
+			return false;
+		}
+		boolean clientside = ModMenu.CLIENTSIDE_MODS.contains(id);
+		return metadata.getName().toLowerCase(Locale.ROOT).contains(term) || id.toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (library && "api library".contains(term)) || ("clientside".contains(term) && clientside) || ("configurations configs configures configurable".contains(term) && ModMenu.hasFactory(id));
 	}
 
 	@Override
@@ -233,7 +246,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 
 	@Override
 	public int getRowWidth() {
-		return this.width - (Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)) > 0 ? 22 : 16);
+		return this.width - (Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)) > 0 ? 18 : 12);
 	}
 
 	@Override
@@ -256,5 +269,16 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	@Override
 	protected int getMaxPosition() {
 		return super.getMaxPosition() + 4;
+	}
+
+	public int getDisplayedCount() {
+		int count = 0;
+		for (Entry entry : children()) {
+			count++;
+			if (entry instanceof ParentEntry) {
+				count += ((ParentEntry) entry).getChildren().size();
+			}
+		}
+		return count;
 	}
 }
