@@ -1,7 +1,5 @@
 package io.github.prospector.modmenu.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.github.prospector.modmenu.ModMenu;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -33,11 +31,13 @@ public class ModMenuConfigManager {
 		prepareBiomeConfigFile();
 
 		try {
+			if (!file.exists()) {
+				save();
+			}
 			if (file.exists()) {
-				Gson gson = new Gson();
 				BufferedReader br = new BufferedReader(new FileReader(file));
 
-				config = gson.fromJson(br, ModMenuConfig.class);
+				config = ModMenu.GSON.fromJson(br, ModMenuConfig.class);
 			}
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load Mod Menu configuration file; reverting to defaults");
@@ -48,8 +48,7 @@ public class ModMenuConfigManager {
 	public static void save() {
 		prepareBiomeConfigFile();
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String jsonString = gson.toJson(config);
+		String jsonString = ModMenu.GSON.toJson(config);
 
 		try (FileWriter fileWriter = new FileWriter(file)) {
 			fileWriter.write(jsonString);
