@@ -10,5 +10,11 @@
   "modmenu.issues": "Problèmes",
   "modmenu.authorPrefix": "Par %s",
   "modmenu.search": "Rechercher des mods",
-  "modmenu.clientsideOnly": "Client"
+  "modmenu.clientsideOnly": "Client",
+  "modmenu.library": "Librairies",
+  "modmenu.toggleFilterOptions": "Basculer options de filtre",
+  "modmenu.showLibraries": "Librairies : %s",
+  "modmenu.showLibraries.true": "montrées",
+  "modmenu.showLibraries.false": "cachées",
+  "modmenu.showingMods": "%s mods affichés"
 }
