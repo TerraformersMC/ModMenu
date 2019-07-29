@@ -181,7 +181,7 @@ public class ModListScreen extends Screen {
 		}
 		this.addButton(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
 			ModMenuConfigManager.getConfig().toggleSortMode();
-			modList.reloadFilter();
+			modList.reloadFilters();
 		}) {
 			@Override
 			public void render(int mouseX, int mouseY, float delta) {
@@ -192,7 +192,7 @@ public class ModListScreen extends Screen {
 		});
 		this.addButton(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())), button -> {
 			ModMenuConfigManager.getConfig().toggleShowLibraries();
-			modList.reloadFilter();
+			modList.reloadFilters();
 		}) {
 			@Override
 			public void render(int mouseX, int mouseY, float delta) {

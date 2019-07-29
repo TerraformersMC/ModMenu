@@ -3,10 +3,11 @@
   "package": "io.github.prospector.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinTitleScreen",
-    "MixinGameMenuScreen"
+    "MixinEntryListWidgetEntries",
+    "MixinGameMenuScreen",
+    "MixinTitleScreen"
   ],
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   }
 }

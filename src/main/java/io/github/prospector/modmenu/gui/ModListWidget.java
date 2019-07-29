@@ -84,10 +84,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		if (addedMods.contains(entry.container)) {
 			return 0;
 		}
-		addedMods.add(entry.container);
-		int i = super.addEntry(entry);
-		if (entry.getMetadata().getId().equals(selectedModId)) {
-			setSelected(entry);
+		int i = 0;
+		for (int q = 0; q < 12_000; q++) {
+			addedMods.add(entry.container);
+			i = super.addEntry(entry);
+			if (entry.getMetadata().getId().equals(selectedModId)) {
+				setSelected(entry);
+			}
 		}
 		return i;
 	}
@@ -104,15 +107,20 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		return super.remove(index);
 	}
 
-	public void reloadFilter() {
-		filter(parent.getSearchInput(), true);
+	public void reloadFilters() {
+		filter(parent.getSearchInput(), true, false);
 	}
 
-	public void filter(Supplier<String> searchTerm, boolean var2) {
+
+	public void filter(Supplier<String> searchTerm, boolean refresh) {
+		filter(searchTerm, refresh, true);
+	}
+
+	public void filter(Supplier<String> searchTerm, boolean refresh, boolean search) {
 		this.clearEntries();
 		addedMods.clear();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
-		if (this.modContainerList == null || var2) {
+		if (this.modContainerList == null || refresh) {
 			this.modContainerList = new ArrayList<>();
 			modContainerList.addAll(mods);
 			this.modContainerList.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
@@ -123,7 +131,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 			ModMetadata metadata = container.getMetadata();
 			String id = metadata.getId();
 			for (String term : terms) {
-				if (passesFilter(container, term)) {
+				if (passesFilters(container, term, search)) {
 					if (!ModMenu.PARENT_MAP.values().contains(container)) {
 						if (ModMenu.PARENT_MAP.keySet().contains(container)) {
 							List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
@@ -133,7 +141,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 							if (this.parent.showModChildren.contains(id)) {
 								List<ModContainer> passed = new ArrayList<>();
 								for (ModContainer child : children) {
-									if (passesFilter(child, term)) {
+									if (passesFilters(child, term, search)) {
 										passed.add(child);
 									}
 								}
@@ -166,22 +174,24 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		}
 	}
 
-	public boolean passesFilter(ModContainer container, String term) {
+	public boolean passesFilters(ModContainer container, String term, boolean search) {
 		ModMetadata metadata = container.getMetadata();
 		String id = metadata.getId();
 		boolean library = false;
 		if (ModMenu.LIBRARY_MODS.get(id) != null) {
 			library = ModMenu.LIBRARY_MODS.get(id);
 		}
-		boolean childPasses = ModMenu.PARENT_MAP.containsKey(container) && ModMenu.PARENT_MAP.get(container).stream().anyMatch(modContainer -> passesFilter(modContainer, term));
-		if (childPasses) {
+		if (ModMenu.PARENT_MAP.containsKey(container) && ModMenu.PARENT_MAP.get(container).stream().anyMatch(modContainer -> passesFilters(modContainer, term, search))) {
 			return true;
 		}
 		if (library && !ModMenuConfigManager.getConfig().showLibraries()) {
 			return false;
 		}
-		boolean clientside = ModMenu.CLIENTSIDE_MODS.contains(id);
-		return metadata.getName().toLowerCase(Locale.ROOT).contains(term) || id.toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (library && "api library".contains(term)) || ("clientside".contains(term) && clientside) || ("configurations configs configures configurable".contains(term) && ModMenu.hasFactory(id));
+		if (search) {
+			boolean clientside = ModMenu.CLIENTSIDE_MODS.contains(id);
+			return metadata.getName().toLowerCase(Locale.ROOT).contains(term) || id.toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (library && "api library".contains(term)) || ("clientside".contains(term) && clientside) || ("configurations configs configures configurable".contains(term) && ModMenu.hasFactory(id));
+		}
+		return true;
 	}
 
 	@Override
