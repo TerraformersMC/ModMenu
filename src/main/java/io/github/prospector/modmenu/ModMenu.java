@@ -90,16 +90,16 @@ public class ModMenu implements ClientModInitializer {
 					}
 				} else {
 					if (id.startsWith("fabric-") && Character.isDigit(id.charAt(id.length() - 1)) || id.equals("fabric-api-base") || id.equals("fabric-renderer-indigo")) {
+						FABRIC_MODS.add(id);
 						if (FabricLoader.getInstance().isModLoaded("fabric")) {
-							FABRIC_MODS.add(id);
 							Optional<ModContainer> parent = FabricLoader.getInstance().getModContainer("fabric");
 							parent.ifPresent(modContainer -> PARENT_MAP.put(modContainer, mod));
-							if (!LIBRARY_MODS.containsKey(id)) {
-								updateCacheLibraryValue(id, true);
-							}
-							if (id.equals("fabric-keybindings-v0") || id.equals("fabric-models-v0") || id.equals("fabric-renderer-api-v1") || id.equals("fabric-renderer-indigo") || id.equals("fabric-rendering-fluids-v1") || id.equals("fabric-rendering-v0") || id.equals("fabric-textures-v0")) {
-								CLIENTSIDE_MODS.add(id);
-							}
+						}
+						if (!LIBRARY_MODS.containsKey(id)) {
+							updateCacheLibraryValue(id, true);
+						}
+						if (id.equals("fabric-keybindings-v0") || id.equals("fabric-models-v0") || id.equals("fabric-renderer-api-v1") || id.equals("fabric-renderer-indigo") || id.equals("fabric-rendering-fluids-v1") || id.equals("fabric-rendering-v0") || id.equals("fabric-textures-v0")) {
+							CLIENTSIDE_MODS.add(id);
 						}
 					}
 					if (id.equals("fabricloader") || id.equals("fabric") || metadata.getName().endsWith(" API")) {
