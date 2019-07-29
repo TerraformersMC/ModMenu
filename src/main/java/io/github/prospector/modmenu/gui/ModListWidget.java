@@ -6,6 +6,7 @@ import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.gui.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.entries.IndependentEntry;
 import io.github.prospector.modmenu.gui.entries.ParentEntry;
+import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -60,7 +61,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		this.setSelected(entry);
 		if (entry != null) {
 			ModMetadata metadata = entry.getMetadata();
-			NarratorManager.INSTANCE.narrate(new TranslatableText("narrator.select", metadata.getName()).getString());
+			NarratorManager.INSTANCE.narrate(new TranslatableText("narrator.select", FabricHardcodedBsUtil.formatFabricModuleName(metadata.getName())).getString());
 		}
 	}
 
@@ -96,7 +97,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		if (this.modContainerList == null || var2) {
 			this.modContainerList = new ArrayList<>();
 			modContainerList.addAll(mods);
-			this.modContainerList.sort(Comparator.comparing(modContainer -> modContainer.getMetadata().getName()));
+			this.modContainerList.sort(Comparator.comparing(modContainer -> FabricHardcodedBsUtil.formatFabricModuleName(modContainer.getMetadata().getName())));
 		}
 
 		String term = searchTerm.get().toLowerCase(Locale.ROOT);
@@ -272,13 +273,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	}
 
 	public int getDisplayedCount() {
-		int count = 0;
-		for (Entry entry : children()) {
-			count++;
-			if (entry instanceof ParentEntry) {
-				count += ((ParentEntry) entry).getChildren().size();
-			}
-		}
-		return count;
+		return children().size();
 	}
 }

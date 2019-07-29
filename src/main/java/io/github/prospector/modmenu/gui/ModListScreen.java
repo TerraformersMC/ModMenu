@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.BadgeRenderer;
+import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -254,17 +255,18 @@ public class ModListScreen extends Screen {
 			int lineSpacing = font.fontHeight + 1;
 			int imageOffset = 36;
 			String name = metadata.getName();
+			name = FabricHardcodedBsUtil.formatFabricModuleName(name);
 			String trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (font.getStringWidth(name) > maxNameWidth) {
 				trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth("...")) + "...";
 			}
 			font.draw(trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
-			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + font.fontHeight && mouseX < x + imageOffset + font.getStringWidth(metadata.getName())) {
+			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + font.fontHeight && mouseX < x + imageOffset + font.getStringWidth(trimmedName)) {
 				setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 			}
 			if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
-				badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(metadata.getName()) + 2, paneY, width - 28, selectedEntry.container, this);
+				badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
 				init = false;
 			}
 			badgeRenderer.draw(mouseX, mouseY);

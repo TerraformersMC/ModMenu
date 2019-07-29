@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
+import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
@@ -39,6 +40,10 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			clearEntries();
 			setScrollAmount(-Double.MAX_VALUE);
 			String description = lastSelected.getMetadata().getDescription();
+			String id = lastSelected.getMetadata().getId();
+			if (description.isEmpty() && FabricHardcodedBsUtil.getFabricDescriptions().containsKey(id)) {
+				description = FabricHardcodedBsUtil.getFabricModuleDescription(id);
+			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
 				for (String line : textRenderer.wrapStringToWidthAsList(description.replaceAll("\n", "\n\n"), getRowWidth())) {
 					children().add(new DescriptionEntry(line));

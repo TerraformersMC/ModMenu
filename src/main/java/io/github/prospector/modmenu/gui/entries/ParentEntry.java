@@ -5,29 +5,48 @@ import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModListEntry;
 import io.github.prospector.modmenu.gui.ModListWidget;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class ParentEntry extends ModListEntry {
 	private static final Identifier PARENT_MOD_TEXTURE = new Identifier(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
-	protected List<ModContainer> children = new ArrayList<>();
+	protected List<ModContainer> children;
 	protected ModListWidget list;
 	protected boolean hoveringIcon = false;
 
 	public ParentEntry(ModContainer parent, List<ModContainer> children, ModListWidget list) {
 		super(parent, list);
+		this.children = children;
 		this.list = list;
 	}
 
 	@Override
 	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		super.render(index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
+		TextRenderer font = client.textRenderer;
+		int childrenBadgeHeight = font.fontHeight;
+		int childrenBadgeWidth = font.fontHeight;
+		int children = getChildren().size();
+		int childrenWidth = font.getStringWidth(Integer.toString(children)) - 1;
+		if (childrenBadgeWidth < childrenWidth + 4) {
+			childrenBadgeWidth = childrenWidth + 4;
+		}
+		int childrenBadgeX = x + 32 - childrenBadgeWidth;
+		int childrenBadgeY = y + 32 - childrenBadgeHeight;
+		int childrenOutlineColor = 0x8810d098;
+		int childrenFillColor = 0x88046146;
+		DrawableHelper.fill(childrenBadgeX + 1, childrenBadgeY, childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + 1, childrenOutlineColor);
+		DrawableHelper.fill(childrenBadgeX, childrenBadgeY + 1, childrenBadgeX + 1, childrenBadgeY + childrenBadgeHeight - 1, childrenOutlineColor);
+		DrawableHelper.fill(childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + 1, childrenBadgeX + childrenBadgeWidth, childrenBadgeY + childrenBadgeHeight - 1, childrenOutlineColor);
+		DrawableHelper.fill(childrenBadgeX + 1, childrenBadgeY + 1, childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + childrenBadgeHeight - 1, childrenFillColor);
+		DrawableHelper.fill(childrenBadgeX + 1, childrenBadgeY + childrenBadgeHeight - 1, childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + childrenBadgeHeight, childrenOutlineColor);
+		font.draw(Integer.toString(children), childrenBadgeX + childrenBadgeWidth / 2 - childrenWidth / 2, childrenBadgeY + 1, 0xCACACA);
 		this.hoveringIcon = mouseX >= x - 1 && mouseX <= x - 1 + 32 && mouseY >= y - 1 && mouseY <= y - 1 + 32;
 		if (isMouseOver(mouseX, mouseY)) {
 			DrawableHelper.fill(x, y, x + 32, y + 32, 0xA0909090);

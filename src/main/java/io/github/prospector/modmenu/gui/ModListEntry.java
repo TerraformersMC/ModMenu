@@ -3,10 +3,12 @@ package io.github.prospector.modmenu.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.util.BadgeRenderer;
+import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.texture.NativeImage;
@@ -44,21 +46,26 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		x += getXOffset();
 		rowWidth -= getXOffset();
-		DrawableHelper.fill(x, y, x + 32, y + 32, 0xFFE1E1E1);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.client.getTextureManager().bindTexture(this.icon != null ? this.iconLocation : UNKNOWN_ICON);
 		GlStateManager.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
 		String name = metadata.getName();
+		name = FabricHardcodedBsUtil.formatFabricModuleName(name);
 		String trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;
-		if (this.client.textRenderer.getStringWidth(name) > maxNameWidth) {
-			trimmedName = this.client.textRenderer.trimToWidth(name, maxNameWidth - this.client.textRenderer.getStringWidth("...")) + "...";
+		TextRenderer font = this.client.textRenderer;
+		if (font.getStringWidth(name) > maxNameWidth) {
+			trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth("...")) + "...";
 		}
-		this.client.textRenderer.draw(trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
-		new BadgeRenderer(x + 32 + 3 + this.client.textRenderer.getStringWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(mouseX, mouseY);
-		RenderUtils.drawWrappedString(metadata.getDescription(), (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 4, 2, 0x808080);
+		font.draw(trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
+		new BadgeRenderer(x + 32 + 3 + font.getStringWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(mouseX, mouseY);
+		String description = metadata.getDescription();
+		if (description.isEmpty() && FabricHardcodedBsUtil.getFabricDescriptions().containsKey(metadata.getId())) {
+			description = FabricHardcodedBsUtil.getFabricModuleDescription(metadata.getId());
+		}
+		RenderUtils.drawWrappedString(description, (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 7, 2, 0x808080);
 	}
 
 	private NativeImageBackedTexture createIcon() {
@@ -67,7 +74,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			try {
 				inputStream = Files.newInputStream(container.getPath(metadata.getIconPath(64 * MinecraftClient.getInstance().options.guiScale).orElse("assets/" + metadata.getId() + "/icon.png")));
 			} catch (NoSuchFileException e) {
-				if (ModMenu.FABRIC_MODS.contains(metadata.getId())) {
+				if (FabricHardcodedBsUtil.getFabricMods().contains(metadata.getId())) {
 					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
 				} else {
 					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
