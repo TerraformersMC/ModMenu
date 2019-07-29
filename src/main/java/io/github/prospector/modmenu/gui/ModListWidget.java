@@ -28,6 +28,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final ModListScreen parent;
 	private List<ModContainer> modContainerList = null;
+	private Set<ModContainer> addedMods = new HashSet<>();
 	private String selectedModId = null;
 	private boolean scrolling;
 
@@ -80,6 +81,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 
 	@Override
 	public int addEntry(ModListEntry entry) {
+		if (addedMods.contains(entry.container)) {
+			return 0;
+		}
+		addedMods.add(entry.container);
 		int i = super.addEntry(entry);
 		if (entry.getMetadata().getId().equals(selectedModId)) {
 			setSelected(entry);
@@ -87,42 +92,58 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		return i;
 	}
 
+	@Override
+	protected boolean removeEntry(ModListEntry entry) {
+		addedMods.remove(entry.container);
+		return super.removeEntry(entry);
+	}
+
+	@Override
+	protected ModListEntry remove(int index) {
+		addedMods.remove(getEntry(index).container);
+		return super.remove(index);
+	}
+
 	public void reloadFilter() {
-		filter(parent.getSearchInput(), false);
+		filter(parent.getSearchInput(), true);
 	}
 
 	public void filter(Supplier<String> searchTerm, boolean var2) {
 		this.clearEntries();
+		addedMods.clear();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
 		if (this.modContainerList == null || var2) {
 			this.modContainerList = new ArrayList<>();
 			modContainerList.addAll(mods);
-			this.modContainerList.sort(Comparator.comparing(modContainer -> FabricHardcodedBsUtil.formatFabricModuleName(modContainer.getMetadata().getName())));
+			this.modContainerList.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
 		}
 
-		String term = searchTerm.get().toLowerCase(Locale.ROOT);
+		Set<String> terms = new HashSet<>(Arrays.asList(searchTerm.get().toLowerCase(Locale.ROOT).split(" ?\\| ?")));
 		for (ModContainer container : this.modContainerList) {
 			ModMetadata metadata = container.getMetadata();
 			String id = metadata.getId();
-			if (passesFilter(container, term)) {
-				if (!ModMenu.PARENT_MAP.values().contains(container)) {
-					if (ModMenu.PARENT_MAP.keySet().contains(container)) {
-						List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
-						ParentEntry parent = new ParentEntry(container, children, this);
-						this.addEntry(parent);
-						if (this.parent.showModChildren.contains(id)) {
-							List<ModContainer> passed = new ArrayList<>();
-							for (ModContainer child : children) {
-								if (passesFilter(child, term)) {
-									passed.add(child);
+			for (String term : terms) {
+				if (passesFilter(container, term)) {
+					if (!ModMenu.PARENT_MAP.values().contains(container)) {
+						if (ModMenu.PARENT_MAP.keySet().contains(container)) {
+							List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
+							children.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
+							ParentEntry parent = new ParentEntry(container, children, this);
+							this.addEntry(parent);
+							if (this.parent.showModChildren.contains(id)) {
+								List<ModContainer> passed = new ArrayList<>();
+								for (ModContainer child : children) {
+									if (passesFilter(child, term)) {
+										passed.add(child);
+									}
+								}
+								for (ModContainer child : passed) {
+									this.addEntry(new ChildEntry(child, parent, this, passed.indexOf(child) == passed.size() - 1));
 								}
 							}
-							for (ModContainer child : passed) {
-								this.addEntry(new ChildEntry(child, parent, this, passed.indexOf(child) == passed.size() - 1));
-							}
+						} else {
+							this.addEntry(new IndependentEntry(container, this));
 						}
-					} else {
-						this.addEntry(new IndependentEntry(container, this));
 					}
 				}
 			}

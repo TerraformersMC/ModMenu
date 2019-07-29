@@ -167,17 +167,31 @@ public class ModListScreen extends Screen {
 			}
 		});
 		String showLibrariesText = I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
+		String sortingText = I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
 		int showLibrariesWidth = font.getStringWidth(showLibrariesText) + 20;
-		int showLibrariesX;
-		if ((showLibrariesWidth + font.getStringWidth(I18n.translate("modmenu.showingMods", NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()) + "/" + NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()))) + 20) >= searchBoxX + searchBoxWidth + 22) {
-			showLibrariesX = paneWidth / 2 - showLibrariesWidth / 2;
+		int sortingWidth = font.getStringWidth(sortingText) + 20;
+		int filtersX;
+		int filtersWidth = showLibrariesWidth + sortingWidth + 2;
+		if ((filtersWidth + font.getStringWidth(I18n.translate("modmenu.showingMods", NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()) + "/" + NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()))) + 20) >= searchBoxX + searchBoxWidth + 22) {
+			filtersX = paneWidth / 2 - filtersWidth / 2;
 			showModCount = false;
 		} else {
-			showLibrariesX = searchBoxX + searchBoxWidth + 22 - showLibrariesWidth + 1;
+			filtersX = searchBoxX + searchBoxWidth + 22 - filtersWidth + 1;
 			showModCount = true;
 		}
-		this.addButton(new ButtonWidget(showLibrariesX, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
-			ModMenu.toggleLibrariesShown();
+		this.addButton(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
+			ModMenuConfigManager.getConfig().toggleSortMode();
+			modList.reloadFilter();
+		}) {
+			@Override
+			public void render(int mouseX, int mouseY, float delta) {
+				visible = filterOptionsShown;
+				this.setMessage(I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey())));
+				super.render(mouseX, mouseY, delta);
+			}
+		});
+		this.addButton(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())), button -> {
+			ModMenuConfigManager.getConfig().toggleShowLibraries();
 			modList.reloadFilter();
 		}) {
 			@Override
@@ -187,20 +201,6 @@ public class ModListScreen extends Screen {
 				super.render(mouseX, mouseY, delta);
 			}
 		});
-
-		/*
-		this.addButton(new ButtonWidget(searchBoxX + 102, 46, 150, 20, I18n.translate("modmenu.environmentFilter"), button -> {
-			environmentFilter = environmentFilter.next();
-			modList.reloadFilter();
-		}) {
-			@Override
-			public void render(int mouseX, int mouseY, float delta) {
-				visible = searchSubtextShown;
-				this.setMessage(I18n.translate("modmenu.environmentFilter", I18n.translate(environmentFilter.getTranslationKey())));
-				super.render(mouseX, mouseY, delta);
-			}
-		});
-		*/
 		this.children.add(this.modList);
 		this.addButton(configureButton);
 		this.addButton(websiteButton);
@@ -246,7 +246,6 @@ public class ModListScreen extends Screen {
 		if (selectedEntry != null) {
 			ModMetadata metadata = selectedEntry.getMetadata();
 			int x = rightPaneX;
-			DrawableHelper.fill(x, paneY, x + 32, paneY + 32, 0xFFE1E1E1);
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(this.selected.getIcon() != null ? this.selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
 			GlStateManager.enableBlend();

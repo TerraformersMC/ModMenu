@@ -101,10 +101,6 @@ public class ModMenu implements ClientModInitializer {
 		});
 	}
 
-	public static void toggleLibrariesShown() {
-		ModMenuConfigManager.getConfig().toggleShowLibraries();
-	}
-
 	public static String getFormattedModCount() {
 		return NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size());
 	}
