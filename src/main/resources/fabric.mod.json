@@ -7,28 +7,42 @@
   "license": "MIT",
   "icon": "assets/modmenu/icon.png",
   "entrypoints": {
-	"client": [
-	  "io.github.prospector.modmenu.ModMenu"
-	]
+    "client": [
+      "io.github.prospector.modmenu.ModMenu"
+    ]
   },
   "contact": {
-	"homepage": "https://minecraft.curseforge.com/projects/modmenu",
-	"issues": "https://github.com/Prospector/ModMenu/issues"
+    "homepage": "https://minecraft.curseforge.com/projects/modmenu",
+    "issues": "https://github.com/Prospector/ModMenu/issues"
   },
   "depends": {
-	"fabric-resource-loader-v0": "*"
+    "fabric-resource-loader-v0": "*"
   },
   "authors": [
-	"Prospector"
+    "Prospector"
   ],
   "contributors": [
-	"Daniel She", "Draylar", "Mordna", "Madis0", "Yanis48", "Boundarybreaker"
+    "Daniel She",
+    "Draylar",
+    "Mordna",
+    "Madis0",
+    "Yanis48",
+    "Boundarybreaker",
+    "fewizz",
+    "XuyuEre",
+    "geniiii",
+    "thiagokenis",
+    "Juuxel",
+    "InsomniaKitten",
+    "modmuss50",
+    "Patbox",
+    "Lykrast"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
-	"mixins.modmenu.json"
+    "mixins.modmenu.json"
   ],
   "custom": {
-	"modmenu:clientsideOnly": true
+    "modmenu:clientsideOnly": true
   }
 }
