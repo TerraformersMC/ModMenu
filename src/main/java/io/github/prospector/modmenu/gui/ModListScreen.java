@@ -247,7 +247,7 @@ public class ModListScreen extends Screen {
 			ModMetadata metadata = selectedEntry.getMetadata();
 			int x = rightPaneX;
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(this.selected.getIcon() != null ? this.selected.getIconLocation() : ModListEntry.UNKNOWN_ICON);
+			this.selected.bindIconTexture();
 			GlStateManager.enableBlend();
 			blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 			GlStateManager.disableBlend();
@@ -265,7 +265,7 @@ public class ModListScreen extends Screen {
 				setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 			}
 			if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
-				badgeRenderer = new BadgeRenderer(x + imageOffset + this.minecraft.textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
+				badgeRenderer = new BadgeRenderer(x + imageOffset + Objects.requireNonNull(this.minecraft).textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
 				init = false;
 			}
 			badgeRenderer.draw(mouseX, mouseY);
@@ -299,6 +299,12 @@ public class ModListScreen extends Screen {
 		buffer.vertex(x2, y1, 0.0D).texture(x2 / 32.0D, y1 / 32.0D).color(red, green, blue, startAlpha).next();
 		buffer.vertex(x1, y1, 0.0D).texture(x1 / 32.0D, y1 / 32.0D).color(red, green, blue, startAlpha).next();
 		tessellator.draw();
+	}
+
+	@Override
+	public void onClose() {
+		super.onClose();
+		this.modList.close();
 	}
 
 	public void setTooltip(String tooltip) {
