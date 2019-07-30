@@ -84,13 +84,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		if (addedMods.contains(entry.container)) {
 			return 0;
 		}
-		int i = 0;
-		for (int q = 0; q < 12_000; q++) {
-			addedMods.add(entry.container);
-			i = super.addEntry(entry);
-			if (entry.getMetadata().getId().equals(selectedModId)) {
-				setSelected(entry);
-			}
+		addedMods.add(entry.container);
+		int i = super.addEntry(entry);
+		if (entry.getMetadata().getId().equals(selectedModId)) {
+			setSelected(entry);
 		}
 		return i;
 	}
