@@ -196,7 +196,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		}
 		if (search) {
 			boolean clientside = ModMenu.CLIENTSIDE_MODS.contains(id);
-			return metadata.getName().toLowerCase(Locale.ROOT).contains(term) || id.toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (library && "api library".contains(term)) || ("clientside".contains(term) && clientside) || ("configurations configs configures configurable".contains(term) && ModMenu.hasFactory(id));
+			return FabricHardcodedBsUtil.formatFabricModuleName(metadata.getName()).toLowerCase(Locale.ROOT).contains(term) || id.toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (library && "api library".contains(term)) || ("clientside".contains(term) && clientside) || ("configurations configs configures configurable".contains(term) && ModMenu.hasFactory(id));
 		}
 		return true;
 	}
@@ -327,5 +327,9 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	void cacheModIcon(Path path, NativeImageBackedTexture tex) {
 		this.modIconsCache.put(path, tex);
+	}
+
+	public Set<ModContainer> getCurrentModSet() {
+		return addedMods;
 	}
 }

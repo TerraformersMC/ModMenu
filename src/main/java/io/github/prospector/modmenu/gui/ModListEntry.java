@@ -50,8 +50,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		GlStateManager.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
-		String name = metadata.getName();
-		name = FabricHardcodedBsUtil.formatFabricModuleName(name);
+		String name = FabricHardcodedBsUtil.formatFabricModuleName(metadata.getName());
 		String trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;
 		TextRenderer font = this.client.textRenderer;

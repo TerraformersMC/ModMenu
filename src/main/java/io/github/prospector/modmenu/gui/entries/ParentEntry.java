@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class ParentEntry extends ModListEntry {
@@ -32,7 +33,7 @@ public class ParentEntry extends ModListEntry {
 		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
-		int children = getChildren().size();
+		int children = (int) getChildren().stream().filter(child -> Arrays.stream(list.getParent().getSearchInput().get().toLowerCase(Locale.ROOT).split(" ?\\| ?")).anyMatch(term -> list.passesFilters(child, term, true))).count();
 		int childrenWidth = font.getStringWidth(Integer.toString(children)) - 1;
 		if (childrenBadgeWidth < childrenWidth + 4) {
 			childrenBadgeWidth = childrenWidth + 4;
