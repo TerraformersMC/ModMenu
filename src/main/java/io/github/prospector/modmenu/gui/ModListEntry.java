@@ -21,11 +21,16 @@ import org.apache.logging.log4j.Logger;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> implements AutoCloseable {
 	public static final Identifier UNKNOWN_ICON = new Identifier("textures/misc/unknown_pack.png");
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	private static final Map<Identifier, NativeImageBackedTexture> MOD_ICONS = new HashMap<>();
+
 	protected final MinecraftClient client;
 	protected final ModContainer container;
 	protected final ModMetadata metadata;
@@ -39,7 +44,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		this.metadata = container.getMetadata();
 		this.client = MinecraftClient.getInstance();
 		this.iconLocation = new Identifier("modmenu", metadata.getId() + "_icon");
-		this.icon = this.createIcon();
+		this.icon = MOD_ICONS.computeIfAbsent(this.iconLocation, (id) -> this.createIcon());
 	}
 
 	@Override

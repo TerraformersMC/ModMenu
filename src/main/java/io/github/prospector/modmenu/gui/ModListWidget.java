@@ -7,6 +7,7 @@ import io.github.prospector.modmenu.gui.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.entries.IndependentEntry;
 import io.github.prospector.modmenu.gui.entries.ParentEntry;
 import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
+import io.github.prospector.modmenu.util.TestModContainer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -26,6 +27,7 @@ import java.util.function.Supplier;
 
 public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 	private static final Logger LOGGER = LogManager.getLogger();
+	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
 	private final ModListScreen parent;
 	private List<ModContainer> modContainerList = null;
 	private Set<ModContainer> addedMods = new HashSet<>();
@@ -117,6 +119,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 		this.clearEntries();
 		addedMods.clear();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
+		if (DEBUG) {
+			mods = new ArrayList<>(mods);
+			mods.addAll(TestModContainer.getTestModContainers());
+		}
 		if (this.modContainerList == null || refresh) {
 			this.modContainerList = new ArrayList<>();
 			modContainerList.addAll(mods);
