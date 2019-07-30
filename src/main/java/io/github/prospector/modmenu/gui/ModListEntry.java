@@ -32,19 +32,13 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	protected final ModContainer container;
 	protected final ModMetadata metadata;
 	protected final ModListWidget list;
-	protected final Identifier iconLocation;
-	protected final NativeImageBackedTexture icon;
+	protected Identifier iconLocation;
 
 	public ModListEntry(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
 		this.metadata = container.getMetadata();
 		this.client = MinecraftClient.getInstance();
-		this.iconLocation = new Identifier("modmenu", metadata.getId() + "_icon");
-		this.icon = this.createIcon();
-		if (this.icon != null) {
-			this.client.getTextureManager().registerTexture(this.iconLocation, this.icon);
-		}
 	}
 
 	@Override
@@ -52,7 +46,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		x += getXOffset();
 		rowWidth -= getXOffset();
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.client.getTextureManager().bindTexture(this.icon != null ? this.iconLocation : UNKNOWN_ICON);
+		this.bindIconTexture();
 		GlStateManager.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		GlStateManager.disableBlend();
@@ -116,12 +110,17 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		return metadata;
 	}
 
-	public Identifier getIconLocation() {
-		return iconLocation;
-	}
-
-	public NativeImageBackedTexture getIcon() {
-		return icon;
+	public void bindIconTexture() {
+		if (this.iconLocation == null) {
+			this.iconLocation = new Identifier("modmenu", metadata.getId() + "_icon");
+			NativeImageBackedTexture icon = this.createIcon();
+			if (icon != null) {
+				this.client.getTextureManager().registerTexture(this.iconLocation, icon);
+			} else {
+				this.iconLocation = UNKNOWN_ICON;
+			}
+		}
+		this.client.getTextureManager().bindTexture(this.iconLocation);
 	}
 
 	public int getXOffset() {

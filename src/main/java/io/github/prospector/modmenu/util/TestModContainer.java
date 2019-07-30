@@ -23,7 +23,7 @@ public class TestModContainer implements ModContainer {
 	public static Collection<ModContainer> getTestModContainers() {
 		if (testModContainers == null) {
 			testModContainers = new ArrayList<>();
-			for (int i = 0; i < 500; i++) {
+			for (int i = 0; i < 1000; i++) {
 				testModContainers.add(new TestModContainer());
 			}
 		}
