@@ -16,18 +16,22 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
+public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable {
 	private static final Logger LOGGER = LogManager.getLogger();
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
+
+	private final Map<Path, NativeImageBackedTexture> modIconsCache = new HashMap<>();
 	private final ModListScreen parent;
 	private List<ModContainer> modContainerList = null;
 	private Set<ModContainer> addedMods = new HashSet<>();
@@ -308,5 +312,20 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> {
 
 	public int getDisplayedCount() {
 		return children().size();
+	}
+
+	@Override
+	public void close() {
+		for (NativeImageBackedTexture tex : this.modIconsCache.values()) {
+			tex.close();
+		}
+	}
+
+	NativeImageBackedTexture getCachedModIcon(Path path) {
+		return this.modIconsCache.get(path);
+	}
+
+	void cacheModIcon(Path path, NativeImageBackedTexture tex) {
+		this.modIconsCache.put(path, tex);
 	}
 }

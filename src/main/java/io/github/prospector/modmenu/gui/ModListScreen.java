@@ -301,6 +301,12 @@ public class ModListScreen extends Screen {
 		tessellator.draw();
 	}
 
+	@Override
+	public void onClose() {
+		super.onClose();
+		this.modList.close();
+	}
+
 	public void setTooltip(String tooltip) {
 		this.tooltip = tooltip;
 	}

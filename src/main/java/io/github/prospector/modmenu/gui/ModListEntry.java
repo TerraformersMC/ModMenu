@@ -5,6 +5,7 @@ import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
 import io.github.prospector.modmenu.util.RenderUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
@@ -20,16 +21,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Path;
 import java.util.Objects;
 
-public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> implements AutoCloseable {
+public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> {
 	public static final Identifier UNKNOWN_ICON = new Identifier("textures/misc/unknown_pack.png");
 	private static final Logger LOGGER = LogManager.getLogger();
-
-	private static final Map<Identifier, NativeImageBackedTexture> MOD_ICONS = new HashMap<>();
 
 	protected final MinecraftClient client;
 	protected final ModContainer container;
@@ -44,7 +41,10 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		this.metadata = container.getMetadata();
 		this.client = MinecraftClient.getInstance();
 		this.iconLocation = new Identifier("modmenu", metadata.getId() + "_icon");
-		this.icon = MOD_ICONS.computeIfAbsent(this.iconLocation, (id) -> this.createIcon());
+		this.icon = this.createIcon();
+		if (this.icon != null) {
+			this.client.getTextureManager().registerTexture(this.iconLocation, this.icon);
+		}
 	}
 
 	@Override
@@ -75,45 +75,33 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	private NativeImageBackedTexture createIcon() {
 		try {
-			InputStream inputStream;
-			try {
-				inputStream = Files.newInputStream(container.getPath(metadata.getIconPath(64 * MinecraftClient.getInstance().options.guiScale).orElse("assets/" + metadata.getId() + "/icon.png")));
-			} catch (NoSuchFileException e) {
+			Path path = container.getPath(metadata.getIconPath(64 * MinecraftClient.getInstance().options.guiScale).orElse("assets/" + metadata.getId() + "/icon.png"));
+			NativeImageBackedTexture cached = this.list.getCachedModIcon(path);
+			if (cached != null) {
+				return cached;
+			}
+			if (!Files.exists(path)) {
+				ModContainer modMenu = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(IllegalAccessError::new);
 				if (FabricHardcodedBsUtil.getFabricMods().contains(metadata.getId())) {
-					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
+					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
 				} else {
-					inputStream = getClass().getClassLoader().getResourceAsStream("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
+					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
 				}
 			}
-			Throwable var3 = null;
-			NativeImageBackedTexture var6;
-			try {
+			cached = this.list.getCachedModIcon(path);
+			if (cached != null) {
+				return cached;
+			}
+			try (InputStream inputStream = Files.newInputStream(path)) {
 				NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
 				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-				NativeImageBackedTexture var5 = new NativeImageBackedTexture(image);
-				this.client.getTextureManager().registerTexture(this.iconLocation, var5);
-				var6 = var5;
-			} catch (Throwable var16) {
-				var3 = var16;
-				throw var16;
-			} finally {
-				if (inputStream != null) {
-					if (var3 != null) {
-						try {
-							inputStream.close();
-						} catch (Throwable var15) {
-							var3.addSuppressed(var15);
-						}
-					} else {
-						inputStream.close();
-					}
-				}
-
+				NativeImageBackedTexture tex = new NativeImageBackedTexture(image);
+				this.list.cacheModIcon(path, tex);
+				return tex;
 			}
 
-			return var6;
-		} catch (Throwable var18) {
-			LOGGER.error("Invalid icon for mod {}", this.container.getMetadata().getName(), var18);
+		} catch (Throwable t) {
+			LOGGER.error("Invalid icon for mod {}", this.container.getMetadata().getName(), t);
 			return null;
 		}
 	}
@@ -122,13 +110,6 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public boolean mouseClicked(double v, double v1, int i) {
 		list.select(this);
 		return true;
-	}
-
-	@Override
-	public void close() {
-		if (this.icon != null) {
-			this.icon.close();
-		}
 	}
 
 	public ModMetadata getMetadata() {
