@@ -19,7 +19,7 @@ public class MixinGameMenuScreen extends Screen {
 		super(title);
 	}
 
-	@Inject(at = @At("RETURN"), method = "init()V")
+	@Inject(at = @At("RETURN"), method = "initWidgets()V")
 	public void drawMenuButton(CallbackInfo info) {
 		addButton(new ModMenuButtonWidget(this.width / 2 - 102, this.height / 4 + 8 + 24 * 3, 204, 20, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", ModMenu.getFormattedModCount()), this), 5);
 	}
