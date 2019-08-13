@@ -1,0 +1,23 @@
+{
+  "modmenu.title": "モッド",
+  "modmenu.loaded": "(%s ロードされた)",
+  "modmenu.config": "設定を変更して",
+  "modmenu.modsFolder": "モッドフォルダーを開く",
+  "modmenu.configsFolder": "設定フォルダーを開く",
+  "modmenu.configure": "構成して",
+  "modmenu.modIdToolTip": "モッドID: %s",
+  "modmenu.website": "ウェブサイト",
+  "modmenu.issues": "課題トラッカー",
+  "modmenu.authorPrefix": "%s",
+  "modmenu.search": "モッドを検索して",
+  "modmenu.clientsideOnly": "クライアント",
+  "modmenu.library": "モッド効用",
+  "modmenu.toggleFilterOptions": "フィルターの設定を切り替えて",
+  "modmenu.showLibraries": "モッド効用: %s",
+  "modmenu.showLibraries.true": "表す",
+  "modmenu.showLibraries.false": "隠す",
+  "modmenu.showingMods": "%s モッドを表す",
+  "modmenu.sorting": "整理: %s",
+  "modmenu.sorting.ascending": "上行",
+  "modmenu.sorting.decending": "下行"
+}
