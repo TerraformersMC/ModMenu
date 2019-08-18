@@ -34,7 +34,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		ModListEntry selectedEntry = parent.getModList().getSelected();
+		ModListEntry selectedEntry = parent.getSelectedEntry();
 		if (selectedEntry != lastSelected) {
 			lastSelected = selectedEntry;
 			clearEntries();

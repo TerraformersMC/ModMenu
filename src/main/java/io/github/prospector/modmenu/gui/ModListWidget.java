@@ -171,7 +171,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				}
 			}
 		} else {
-			if (getSelected() == null && getEntry(0) != null) {
+			if (getSelected() == null && !children().isEmpty() && getEntry(0) != null) {
 				setSelected(getEntry(0));
 			}
 		}
