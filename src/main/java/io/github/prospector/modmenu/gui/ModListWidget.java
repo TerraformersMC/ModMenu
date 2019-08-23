@@ -1,6 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.gui.entries.ChildEntry;
@@ -218,23 +218,23 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				if (this.renderSelection && this.isSelectedItem(index)) {
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
 					int selectionRight = x + rowWidth + 2;
-					GlStateManager.disableTexture();
+					RenderSystem.disableTexture();
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
-					GlStateManager.color4f(float_2, float_2, float_2, 1.0F);
+					RenderSystem.color4f(float_2, float_2, float_2, 1.0F);
 					buffer.begin(7, VertexFormats.POSITION);
 					buffer.vertex((double) entryLeft, (double) (entryTop + entryHeight + 2), 0.0D).next();
 					buffer.vertex((double) selectionRight, (double) (entryTop + entryHeight + 2), 0.0D).next();
 					buffer.vertex((double) selectionRight, (double) (entryTop - 2), 0.0D).next();
 					buffer.vertex((double) entryLeft, (double) (entryTop - 2), 0.0D).next();
 					tessellator_1.draw();
-					GlStateManager.color4f(0.0F, 0.0F, 0.0F, 1.0F);
+					RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
 					buffer.begin(7, VertexFormats.POSITION);
 					buffer.vertex((double) (entryLeft + 1), (double) (entryTop + entryHeight + 1), 0.0D).next();
 					buffer.vertex((double) (selectionRight - 1), (double) (entryTop + entryHeight + 1), 0.0D).next();
 					buffer.vertex((double) (selectionRight - 1), (double) (entryTop - 1), 0.0D).next();
 					buffer.vertex((double) (entryLeft + 1), (double) (entryTop - 1), 0.0D).next();
 					tessellator_1.draw();
-					GlStateManager.enableTexture();
+					RenderSystem.enableTexture();
 				}
 
 				entryLeft = this.getRowLeft();

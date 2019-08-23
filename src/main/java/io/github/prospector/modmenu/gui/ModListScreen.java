@@ -3,7 +3,7 @@ package io.github.prospector.modmenu.gui;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.BadgeRenderer;
@@ -113,7 +113,7 @@ public class ModListScreen extends Screen {
 
 			@Override
 			public void renderButton(int int_1, int int_2, float float_1) {
-				GlStateManager.color4f(1, 1, 1, 1f);
+				RenderSystem.color4f(1, 1, 1, 1f);
 				super.renderButton(int_1, int_2, float_1);
 			}
 		};
@@ -236,7 +236,7 @@ public class ModListScreen extends Screen {
 		}
 		this.modList.render(mouseX, mouseY, delta);
 		this.searchBox.render(mouseX, mouseY, delta);
-		GlStateManager.disableBlend();
+		RenderSystem.disableBlend();
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
 		if (showModCount || !filterOptionsShown) {
@@ -245,11 +245,11 @@ public class ModListScreen extends Screen {
 		if (selectedEntry != null) {
 			ModMetadata metadata = selectedEntry.getMetadata();
 			int x = rightPaneX;
-			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.selected.bindIconTexture();
-			GlStateManager.enableBlend();
+			RenderSystem.enableBlend();
 			blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
-			GlStateManager.disableBlend();
+			RenderSystem.disableBlend();
 			int lineSpacing = font.fontHeight + 1;
 			int imageOffset = 36;
 			String name = metadata.getName();
@@ -291,7 +291,7 @@ public class ModListScreen extends Screen {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBufferBuilder();
 		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		buffer.begin(7, VertexFormats.POSITION_UV_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0D, y2 / 32.0D).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0D, y2 / 32.0D).color(red, green, blue, endAlpha).next();

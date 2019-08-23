@@ -1,6 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.Identifier;
@@ -38,8 +38,8 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	public void renderButton(int mouseX, int mouseY, float delta) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		client.getTextureManager().bindTexture(this.texture);
-		GlStateManager.color4f(1, 1, 1, 1f);
-		GlStateManager.disableDepthTest();
+		RenderSystem.color4f(1, 1, 1, 1f);
+		RenderSystem.disableDepthTest();
 		int adjustedV = this.v;
 		if (!active) {
 			adjustedV += this.height * 2;
@@ -48,6 +48,6 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 		}
 
 		blit(this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
-		GlStateManager.enableDepthTest();
+		RenderSystem.enableDepthTest();
 	}
 }

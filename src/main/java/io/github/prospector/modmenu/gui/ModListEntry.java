@@ -1,6 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
@@ -45,11 +45,11 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		x += getXOffset();
 		rowWidth -= getXOffset();
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.bindIconTexture();
-		GlStateManager.enableBlend();
+		RenderSystem.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
-		GlStateManager.disableBlend();
+		RenderSystem.disableBlend();
 		String name = FabricHardcodedBsUtil.formatFabricModuleName(metadata.getName());
 		String trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;

@@ -1,6 +1,6 @@
 package io.github.prospector.modmenu.gui.entries;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModListEntry;
 import io.github.prospector.modmenu.gui.ModListWidget;
@@ -54,7 +54,7 @@ public class ParentEntry extends ModListEntry {
 			this.client.getTextureManager().bindTexture(PARENT_MOD_TEXTURE);
 			int xOffset = list.getParent().showModChildren.contains(getMetadata().getId()) ? 32 : 0;
 			int yOffset = hoveringIcon ? 32 : 0;
-			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			DrawableHelper.blit(x, y, xOffset, yOffset, 32 + xOffset, 32 + yOffset, 256, 256);
 		}
 	}
