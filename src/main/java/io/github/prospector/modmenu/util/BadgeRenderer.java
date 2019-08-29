@@ -36,6 +36,9 @@ public class BadgeRenderer {
 		if (ModMenu.CLIENTSIDE_MODS.contains(metadata.getId())) {
 			drawBadge(I18n.translate("modmenu.clientsideOnly"), 0x884383E3, 0x880E4699, mouseX, mouseY);
 		}
+		if (metadata.getId().equals("minecraft")) {
+			drawBadge(I18n.translate("modmenu.minecraft"), 0x88BCBCBC, 0x88535353, mouseX, mouseY);
+		}
 		//noinspection MagicConstant
 		if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {
 			if (metadata.getId().equals(new String(new byte[]{109, 111, 100, 109, 101, 110, 117}))) {

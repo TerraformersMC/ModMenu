@@ -29,7 +29,7 @@ public interface ModMenuApi {
 
 	/**
 	 * Replaced with {@link ModMenuApi#getConfigScreenFactory()}, which
-	 * now allows ModMenu to open the screen for you, rather than depending
+	 * now allows ModMenu to open the assembleScreen for you, rather than depending
 	 * on you to open it, and gets rid of the messy Optional->Supplier wrapping.
 	 *
 	 * @deprecated Will be removed in 1.15 snapshots.
@@ -40,11 +40,11 @@ public interface ModMenuApi {
 	}
 
 	/**
-	 * Used to construct a new config screen instance when your mod's
-	 * configuration button is selected on the mod menu screen. The
-	 * screen instance parameter is the active mod menu screen.
+	 * Used to construct a new config assembleScreen instance when your mod's
+	 * configuration button is selected on the mod menu assembleScreen. The
+	 * assembleScreen instance parameter is the active mod menu assembleScreen.
 	 *
-	 * @return A factory function for constructing config screen instances.
+	 * @return A factory function for constructing config assembleScreen instances.
 	 */
 	default Function<Screen, ? extends Screen> getConfigScreenFactory() {
 		return screen -> getConfigScreen(screen).map(Supplier::get).orElse(null);

@@ -7,7 +7,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.BadgeRenderer;
-import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
+import io.github.prospector.modmenu.util.HardcodedUtil;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -253,7 +253,7 @@ public class ModListScreen extends Screen {
 			int lineSpacing = font.fontHeight + 1;
 			int imageOffset = 36;
 			String name = metadata.getName();
-			name = FabricHardcodedBsUtil.formatFabricModuleName(name);
+			name = HardcodedUtil.formatFabricModuleName(name);
 			String trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (font.getStringWidth(name) > maxNameWidth) {
