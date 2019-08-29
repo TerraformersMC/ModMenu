@@ -5,10 +5,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
-import net.fabricmc.loader.api.metadata.ContactInformation;
-import net.fabricmc.loader.api.metadata.ModDependency;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.api.metadata.Person;
+import net.fabricmc.loader.api.metadata.*;
 import net.fabricmc.loader.util.version.VersionParsingException;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -141,6 +138,16 @@ public class TestModContainer implements ModContainer {
 
 		@Override
 		public JsonElement getCustomElement(String key) {
+			return null;
+		}
+
+		@Override
+		public boolean containsCustomValue(String key) {
+			return false;
+		}
+
+		@Override
+		public CustomValue getCustomValue(String key) {
 			return null;
 		}
 	}

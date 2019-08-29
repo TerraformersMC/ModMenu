@@ -1,6 +1,6 @@
 package io.github.prospector.modmenu.config;
 
-import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
+import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.fabricmc.loader.api.ModContainer;
 
 import java.util.Comparator;
@@ -28,7 +28,7 @@ public class ModMenuConfig {
 	}
 
 	public static enum Sorting {
-		ASCENDING(Comparator.comparing(modContainer -> FabricHardcodedBsUtil.formatFabricModuleName(modContainer.getMetadata().getName())), "modmenu.sorting.ascending"),
+		ASCENDING(Comparator.comparing(modContainer -> HardcodedUtil.formatFabricModuleName(modContainer.getMetadata().getName())), "modmenu.sorting.ascending"),
 		DECENDING(ASCENDING.getComparator().reversed(), "modmenu.sorting.decending");
 
 		Comparator<ModContainer> comparator;

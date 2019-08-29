@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
-import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
+import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -62,33 +62,33 @@ public class ModMenu implements ClientModInitializer {
 		FabricLoader.getInstance().getEntrypoints("modmenu", ModMenuApi.class).forEach(api -> factories.put(api.getModId(), api.getConfigScreenFactory()));
 		configScreenFactories = factories.build();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
-		FabricHardcodedBsUtil.initializeFabricHardcodedBs();
+		HardcodedUtil.initializeHardcodings();
 		for (ModContainer mod : mods) {
 			ModMetadata metadata = mod.getMetadata();
 			String id = metadata.getId();
 			try {
-				if (metadata.containsCustomElement("modmenu:api")) {
-					updateCacheLibraryValue(id, metadata.getCustomElement("modmenu:api").getAsBoolean());
+				if (metadata.containsCustomValue("modmenu:api")) {
+					updateCacheLibraryValue(id, metadata.getCustomValue("modmenu:api").getAsBoolean());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				if (metadata.containsCustomElement("modmenu:clientsideOnly") && metadata.getCustomElement("modmenu:clientsideOnly").getAsBoolean()) {
+				if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
 					CLIENTSIDE_MODS.add(id);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				if (metadata.containsCustomElement("modmenu:parent")) {
-					String parentId = metadata.getCustomElement("modmenu:parent").getAsString();
+				if (metadata.containsCustomValue("modmenu:parent")) {
+					String parentId = metadata.getCustomValue("modmenu:parent").getAsString();
 					if (parentId != null) {
 						Optional<ModContainer> parent = FabricLoader.getInstance().getModContainer(parentId);
 						parent.ifPresent(modContainer -> PARENT_MAP.put(modContainer, mod));
 					}
 				} else {
-					FabricHardcodedBsUtil.hardcodeModuleMetadata(mod, metadata, id);
+					HardcodedUtil.hardcodeModuleMetadata(mod, metadata, id);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

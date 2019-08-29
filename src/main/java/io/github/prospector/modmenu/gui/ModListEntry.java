@@ -3,7 +3,7 @@ package io.github.prospector.modmenu.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.util.BadgeRenderer;
-import io.github.prospector.modmenu.util.FabricHardcodedBsUtil;
+import io.github.prospector.modmenu.util.HardcodedUtil;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -50,7 +50,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		RenderSystem.enableBlend();
 		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		RenderSystem.disableBlend();
-		String name = FabricHardcodedBsUtil.formatFabricModuleName(metadata.getName());
+		String name = HardcodedUtil.formatFabricModuleName(metadata.getName());
 		String trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;
 		TextRenderer font = this.client.textRenderer;
@@ -60,8 +60,8 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		font.draw(trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
 		new BadgeRenderer(x + 32 + 3 + font.getStringWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(mouseX, mouseY);
 		String description = metadata.getDescription();
-		if (description.isEmpty() && FabricHardcodedBsUtil.getFabricDescriptions().containsKey(metadata.getId())) {
-			description = FabricHardcodedBsUtil.getFabricModuleDescription(metadata.getId());
+		if (description.isEmpty() && HardcodedUtil.getHardcodedDescriptions().containsKey(metadata.getId())) {
+			description = HardcodedUtil.getHardcodedDescription(metadata.getId());
 		}
 		RenderUtils.drawWrappedString(description, (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 7, 2, 0x808080);
 	}
@@ -75,8 +75,10 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			}
 			if (!Files.exists(path)) {
 				ModContainer modMenu = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(IllegalAccessError::new);
-				if (FabricHardcodedBsUtil.getFabricMods().contains(metadata.getId())) {
+				if (HardcodedUtil.getFabricMods().contains(metadata.getId())) {
 					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
+				} else if (metadata.getId().equals("minecraft")) {
+					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/mc_icon.png");
 				} else {
 					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
 				}

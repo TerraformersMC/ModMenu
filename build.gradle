@@ -27,6 +27,10 @@ dependencies {
 	}
 }
 
+minecraft {
+	refmapName = 'modmenu.refmap.json'
+}
+
 processResources {
 	inputs.property "version", project.version
 
