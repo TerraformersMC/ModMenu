@@ -8,5 +8,12 @@
   "modmenu.modIdToolTip": "模組 ID: %s",
   "modmenu.website": "網站",
   "modmenu.issues": "反饋",
-  "modmenu.authorPrefix": "作者: %s"
+  "modmenu.authorPrefix": "作者: %s",
+  "modmenu.search": "搜索模组",
+  "modmenu.clientsideOnly": "玩家端",
+  "modmenu.toggleFilterOptions": "切換過濾選項",
+  "modmenu.showLibraries.true": "顯示",
+  "modmenu.showLibraries.false": "隱藏",
+  "modmenu.showingMods": "隱藏 %s 個模組",
+  "modmenu.sorting": "排序方式: %s"
 }
