@@ -16,6 +16,6 @@
   "modmenu.showLibraries": "运行库: %s",
   "modmenu.showLibraries.true": "显示",
   "modmenu.showLibraries.false": "隐藏",
-  "modmenu.showingMods": "显示第 %s 个模组",
+  "modmenu.showingMods": "显示 %s 个模组",
   "modmenu.sorting": "排序方式: %s"
 }
