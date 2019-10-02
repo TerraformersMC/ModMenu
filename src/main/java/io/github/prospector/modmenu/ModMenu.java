@@ -102,6 +102,8 @@ public class ModMenu implements ClientModInitializer {
 	}
 
 	public static String getFormattedModCount() {
-		return NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size());
+		Collection<ModContainer> modContainers = FabricLoader.getInstance().getAllMods();
+		int actualModCount = modContainers.size()-libraryCount-1;
+		return NumberFormat.getInstance().format(actualModCount).concat("/")+NumberFormat.getInstance().format(modContainers.size());
 	}
 }
