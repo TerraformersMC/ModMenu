@@ -8,6 +8,18 @@ import java.util.Comparator;
 public class ModMenuConfig {
 	private boolean showLibraries = false;
 	private Sorting sorting = Sorting.ASCENDING;
+	private boolean showActualModCount = false;
+
+	public boolean showActualModCount()
+	{
+		return showActualModCount;
+	}
+
+	public void toggleActualModCount()
+	{
+		showActualModCount = !showActualModCount;
+		ModMenuConfigManager.save();
+	}
 
 	public void toggleShowLibraries() {
 		this.showLibraries = !this.showLibraries;

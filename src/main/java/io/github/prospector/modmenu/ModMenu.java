@@ -5,7 +5,9 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import io.github.prospector.modmenu.api.ModMenuApi;
+import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.fabricmc.api.ClientModInitializer;
@@ -103,7 +105,13 @@ public class ModMenu implements ClientModInitializer {
 
 	public static String getFormattedModCount() {
 		Collection<ModContainer> modContainers = FabricLoader.getInstance().getAllMods();
-		int actualModCount = modContainers.size()-libraryCount-1;
-		return NumberFormat.getInstance().format(actualModCount).concat("/")+NumberFormat.getInstance().format(modContainers.size());
+		if(ModMenuConfigManager.getConfig().showActualModCount())
+		{
+			int actualModCount = modContainers.size() - libraryCount - 1;
+			return NumberFormat.getInstance().format(actualModCount).concat("/") + NumberFormat.getInstance().format(modContainers.size());
+		}
+		else{
+			return NumberFormat.getInstance().format(modContainers.size());
+		}
 	}
 }

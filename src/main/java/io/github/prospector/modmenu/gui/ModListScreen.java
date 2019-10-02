@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.HardcodedUtil;
@@ -117,6 +118,7 @@ public class ModListScreen extends Screen {
 				super.renderButton(int_1, int_2, float_1);
 			}
 		};
+
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = urlButtonWidths > 200 ? 200 : urlButtonWidths;
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
@@ -154,7 +156,8 @@ public class ModListScreen extends Screen {
 			}
 		};
 		this.children.add(this.searchBox);
-		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> {
+		ButtonWidget toggleOptions;
+		this.addButton(toggleOptions=new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> {
 			filterOptionsShown = !filterOptionsShown;
 		}) {
 			@Override
@@ -165,6 +168,10 @@ public class ModListScreen extends Screen {
 				}
 			}
 		});
+
+		ButtonWidget toggleActualModCount=new ButtonWidget(toggleOptions.x+toggleOptions.getWidth(),toggleOptions.y,20,20,"AMC",buttonWidget -> ModMenuConfigManager.getConfig().toggleActualModCount());
+		addButton(toggleActualModCount);
+
 		String showLibrariesText = I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
 		String sortingText = I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
 		int showLibrariesWidth = font.getStringWidth(showLibrariesText) + 20;
