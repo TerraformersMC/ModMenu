@@ -157,7 +157,7 @@ public class ModListScreen extends Screen {
 		};
 		this.children.add(this.searchBox);
 		ButtonWidget toggleOptions;
-		this.addButton(toggleOptions=new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> {
+		this.addButton(toggleOptions = new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> {
 			filterOptionsShown = !filterOptionsShown;
 		}) {
 			@Override
@@ -169,7 +169,7 @@ public class ModListScreen extends Screen {
 			}
 		});
 
-		ButtonWidget toggleActualModCount=new ButtonWidget(toggleOptions.x+toggleOptions.getWidth(),toggleOptions.y,20,20,"AMC",buttonWidget -> ModMenuConfigManager.getConfig().toggleActualModCount());
+		ButtonWidget toggleActualModCount = new ButtonWidget(toggleOptions.x + toggleOptions.getWidth(), toggleOptions.y, 20, 20, "AMC", buttonWidget -> ModMenuConfigManager.getConfig().toggleActualModCount());
 		addButton(toggleActualModCount);
 
 		String showLibrariesText = I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
