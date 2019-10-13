@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 	id 'idea'
 	id 'eclipse'
-	id 'fabric-loom' version '0.2.4-SNAPSHOT'
+	id 'fabric-loom' version '0.2.5-SNAPSHOT'
 }
 
 sourceCompatibility = 1.8
@@ -64,7 +64,7 @@ publishing {
 			}
 
 			afterEvaluate {
-				artifact(remapJar.output) {
+				artifact(remapJar) {
 					builtBy remapJar
 				}
 			}
