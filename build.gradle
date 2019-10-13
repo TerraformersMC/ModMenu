@@ -11,7 +11,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = project.archive_name
-version = project.mod_version
+version = project.mod_version + "." + project.minecraft_version
 group = project.maven_group
 
 def ENV = System.getenv()
