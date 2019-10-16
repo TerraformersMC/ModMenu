@@ -29,8 +29,7 @@ public class BadgeRenderer {
 	public void draw(int mouseX, int mouseY) {
 		this.badgeX = startX;
 		this.badgeY = startY;
-		Boolean library = ModMenu.LIBRARY_MODS.get(metadata.getId());
-		if (library != null && library) {
+		if (ModMenu.LIBRARY_MODS.contains(metadata.getId())) {
 			drawBadge(I18n.translate("modmenu.library"), 0x8810d098, 0x88046146, mouseX, mouseY);
 		}
 		if (ModMenu.CLIENTSIDE_MODS.contains(metadata.getId())) {

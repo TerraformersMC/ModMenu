@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -38,7 +37,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private String selectedModId = null;
 	private boolean scrolling;
 
-	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, Supplier<String> searchTerm, ModListWidget list, ModListScreen parent) {
+	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, String searchTerm, ModListWidget list, ModListScreen parent) {
 		super(client, width, height, y1, y2, entryHeight);
 		this.parent = parent;
 		if (list != null) {
@@ -115,52 +114,61 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 
-	public void filter(Supplier<String> searchTerm, boolean refresh) {
+	public void filter(String searchTerm, boolean refresh) {
 		filter(searchTerm, refresh, true);
 	}
 
-	public void filter(Supplier<String> searchTerm, boolean refresh, boolean search) {
+	private void filter(String searchTerm, boolean refresh, boolean search) {
 		this.clearEntries();
 		addedMods.clear();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
+
 		if (DEBUG) {
 			mods = new ArrayList<>(mods);
 			mods.addAll(TestModContainer.getTestModContainers());
 		}
+
 		if (this.modContainerList == null || refresh) {
 			this.modContainerList = new ArrayList<>();
 			modContainerList.addAll(mods);
 			this.modContainerList.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
 		}
 
-		Set<String> terms = new HashSet<>(Arrays.asList(searchTerm.get().toLowerCase(Locale.ROOT).split(" ?\\| ?")));
-		for (ModContainer container : this.modContainerList) {
+		boolean validSearch = ModListSearch.validSearchQuery(searchTerm);
+		List<ModContainer> matched = ModListSearch.search(searchTerm, modContainerList);
+
+		for (ModContainer container : matched) {
 			ModMetadata metadata = container.getMetadata();
-			String id = metadata.getId();
-			for (String term : terms) {
-				if (passesFilters(container, term, search)) {
-					if (!ModMenu.PARENT_MAP.values().contains(container)) {
-						if (ModMenu.PARENT_MAP.keySet().contains(container)) {
-							List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
-							children.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
-							ParentEntry parent = new ParentEntry(container, children, this);
-							this.addEntry(parent);
-							if (this.parent.showModChildren.contains(id)) {
-								List<ModContainer> passed = new ArrayList<>();
-								for (ModContainer child : children) {
-									if (passesFilters(child, term, search)) {
-										passed.add(child);
-									}
-								}
-								for (ModContainer child : passed) {
-									this.addEntry(new ChildEntry(child, parent, this, passed.indexOf(child) == passed.size() - 1));
-								}
-							}
-						} else {
-							this.addEntry(new IndependentEntry(container, this));
+			String modId = metadata.getId();
+			boolean library = ModMenu.LIBRARY_MODS.contains(modId);
+
+			//Hide parent lib mods when not searching, and the config is set to hide
+			if(!validSearch && library && !ModMenuConfigManager.getConfig().showLibraries()){
+				continue;
+			}
+
+			if (!ModMenu.PARENT_MAP.values().contains(container)) {
+				if (ModMenu.PARENT_MAP.keySet().contains(container)) {
+					//A parent mod with children
+
+					List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
+					children.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
+					ParentEntry parent = new ParentEntry(container, children, this);
+					this.addEntry(parent);
+
+					//Add all the child mods when not searching
+					if (!validSearch && this.parent.showModChildren.contains(modId)) {
+						for (ModContainer child : children) {
+							this.addEntry(new ChildEntry(child, parent, this, children.indexOf(child) == children.size() - 1));
 						}
 					}
+				} else {
+					//A mod with no children
+					this.addEntry(new IndependentEntry(container, this));
 				}
+			} else if(validSearch) {
+				//A child mod that came up when searching
+				this.addEntry(new IndependentEntry(container, this));
 			}
 		}
 
@@ -181,25 +189,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		}
 	}
 
-	public boolean passesFilters(ModContainer container, String term, boolean search) {
-		ModMetadata metadata = container.getMetadata();
-		String id = metadata.getId();
-		boolean library = false;
-		if (ModMenu.LIBRARY_MODS.get(id) != null) {
-			library = ModMenu.LIBRARY_MODS.get(id);
-		}
-		if (ModMenu.PARENT_MAP.containsKey(container) && ModMenu.PARENT_MAP.get(container).stream().anyMatch(modContainer -> passesFilters(modContainer, term, search))) {
-			return true;
-		}
-		if (library && !ModMenuConfigManager.getConfig().showLibraries()) {
-			return false;
-		}
-		if (search) {
-			boolean clientside = ModMenu.CLIENTSIDE_MODS.contains(id);
-			return HardcodedUtil.formatFabricModuleName(metadata.getName()).toLowerCase(Locale.ROOT).contains(term) || id.toLowerCase(Locale.ROOT).contains(term) || metadata.getAuthors().stream().anyMatch(person -> person.getName().toLowerCase(Locale.ROOT).contains(term)) || (library && "api library".contains(term)) || ("clientside".contains(term) && clientside) || ("configurations configs configures configurable".contains(term) && ModMenu.hasFactory(id));
-		}
-		return true;
-	}
 
 	@Override
 	protected void renderList(int x, int y, int mouseX, int mouseY, float delta) {

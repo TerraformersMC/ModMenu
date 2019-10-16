@@ -46,7 +46,7 @@ public class HardcodedUtil {
 		HARDCODED_DESCRIPTIONS.put("fabric-resource-loader-v0", "Asset and data resource loading.");
 		HARDCODED_DESCRIPTIONS.put("fabric-tag-extensions-v0", "Hooks for tags.");
 		HARDCODED_DESCRIPTIONS.put("fabric-textures-v0", "Hooks for texture loading and registration.");
-		HARDCODED_DESCRIPTIONS.put("minecraft", "The unmodified base game.");
+		HARDCODED_DESCRIPTIONS.put("minecraft", "The base game.");
 	}
 
 	public static void hardcodeModuleMetadata(ModContainer mod, ModMetadata metadata, String id) {
@@ -57,17 +57,13 @@ public class HardcodedUtil {
 				Optional<ModContainer> parent = FabricLoader.getInstance().getModContainer("fabric");
 				parent.ifPresent(modContainer -> ModMenu.PARENT_MAP.put(modContainer, mod));
 			}
-			if (!ModMenu.LIBRARY_MODS.containsKey(id)) {
-				ModMenu.updateCacheLibraryValue(id, true);
-			}
+			ModMenu.addLibraryMod(id);
 			if (id.equals("fabric-keybindings-v0") || id.equals("fabric-models-v0") || id.equals("fabric-renderer-api-v1") || id.equals("fabric-renderer-indigo") || id.equals("fabric-rendering-fluids-v1") || id.equals("fabric-rendering-v0") || id.equals("fabric-textures-v0")) {
 				ModMenu.CLIENTSIDE_MODS.add(id);
 			}
 		}
 		if (id.equals("fabricloader") || id.equals("fabric") || metadata.getName().endsWith(" API")) {
-			if (!ModMenu.LIBRARY_MODS.containsKey(id)) {
-				ModMenu.updateCacheLibraryValue(id, true);
-			}
+			ModMenu.addLibraryMod(id);
 		}
 	}
 

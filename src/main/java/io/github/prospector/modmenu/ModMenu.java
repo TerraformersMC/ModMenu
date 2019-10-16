@@ -23,7 +23,7 @@ public class ModMenu implements ClientModInitializer {
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
 
 	private static final Map<String, Runnable> LEGACY_CONFIG_SCREEN_TASKS = new HashMap<>();
-	public static final Map<String, Boolean> LIBRARY_MODS = new HashMap<>();
+	public static final List<String> LIBRARY_MODS = new ArrayList<>();
 	public static final Set<String> CLIENTSIDE_MODS = new HashSet<>();
 	public static final LinkedListMultimap<ModContainer, ModContainer> PARENT_MAP = LinkedListMultimap.create();
 	private static ImmutableMap<String, Function<Screen, ? extends Screen>> configScreenFactories = ImmutableMap.of();
@@ -51,8 +51,10 @@ public class ModMenu implements ClientModInitializer {
 		return LEGACY_CONFIG_SCREEN_TASKS.containsKey(modid);
 	}
 
-	public static void updateCacheLibraryValue(String modid, boolean value) {
-		LIBRARY_MODS.put(modid, value);
+	public static void addLibraryMod(String modid) {
+		if(LIBRARY_MODS.contains(modid)) return;
+
+		LIBRARY_MODS.add(modid);
 	}
 
 	@Override
@@ -66,39 +68,23 @@ public class ModMenu implements ClientModInitializer {
 		for (ModContainer mod : mods) {
 			ModMetadata metadata = mod.getMetadata();
 			String id = metadata.getId();
-			try {
-				if (metadata.containsCustomValue("modmenu:api")) {
-					updateCacheLibraryValue(id, metadata.getCustomValue("modmenu:api").getAsBoolean());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (metadata.containsCustomValue("modmenu:api") && metadata.getCustomValue("modmenu:api").getAsBoolean()) {
+				addLibraryMod(id);
 			}
-			try {
-				if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
-					CLIENTSIDE_MODS.add(id);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
+				CLIENTSIDE_MODS.add(id);
 			}
-			try {
-				if (metadata.containsCustomValue("modmenu:parent")) {
-					String parentId = metadata.getCustomValue("modmenu:parent").getAsString();
-					if (parentId != null) {
-						Optional<ModContainer> parent = FabricLoader.getInstance().getModContainer(parentId);
-						parent.ifPresent(modContainer -> PARENT_MAP.put(modContainer, mod));
-					}
-				} else {
-					HardcodedUtil.hardcodeModuleMetadata(mod, metadata, id);
+			if (metadata.containsCustomValue("modmenu:parent")) {
+				String parentId = metadata.getCustomValue("modmenu:parent").getAsString();
+				if (parentId != null) {
+					Optional<ModContainer> parent = FabricLoader.getInstance().getModContainer(parentId);
+					parent.ifPresent(modContainer -> PARENT_MAP.put(modContainer, mod));
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} else {
+				HardcodedUtil.hardcodeModuleMetadata(mod, metadata, id);
 			}
 		}
-		LIBRARY_MODS.forEach((id, value) -> {
-			if (value != null && value) {
-				libraryCount++;
-			}
-		});
+		libraryCount = LIBRARY_MODS.size();
 	}
 
 	public static String getFormattedModCount() {

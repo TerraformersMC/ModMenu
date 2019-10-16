@@ -84,8 +84,8 @@ public class ModListScreen extends Screen {
 		int searchBoxWidth = paneWidth - 32 - 22;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - 22 / 2;
 		this.searchBox = new TextFieldWidget(this.font, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
-		this.searchBox.setChangedListener((string_1) -> this.modList.filter(() -> string_1, false));
-		this.modList = new ModListWidget(this.minecraft, paneWidth, this.height, paneY + 19, this.height - 36, 36, () -> this.searchBox.getText(), this.modList, this);
+		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
+		this.modList = new ModListWidget(this.minecraft, paneWidth, this.height, paneY + 19, this.height - 36, 36, this.searchBox.getText(), this.modList, this);
 		this.modList.setLeftPos(0);
 		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
@@ -328,8 +328,8 @@ public class ModListScreen extends Screen {
 		this.scrollPercent = scrollPercent;
 	}
 
-	public Supplier<String> getSearchInput() {
-		return () -> searchBox.getText();
+	public String getSearchInput() {
+		return searchBox.getText();
 	}
 
 	public boolean showingFilterOptions() {
