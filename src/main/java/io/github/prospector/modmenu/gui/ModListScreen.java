@@ -11,6 +11,7 @@ import io.github.prospector.modmenu.util.HardcodedUtil;
 import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
@@ -30,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class ModListScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
@@ -271,7 +271,13 @@ public class ModListScreen extends Screen {
 			font.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
 			String authors;
 			List<String> names = new ArrayList<>();
-			metadata.getAuthors().forEach(person -> names.add(person.getName()));
+
+			metadata.getAuthors().stream()
+				.filter(Objects::nonNull)
+				.map(Person::getName)
+				.filter(Objects::nonNull)
+				.forEach(names::add);
+
 			if (!names.isEmpty()) {
 				if (names.size() > 1) {
 					authors = Joiner.on(", ").join(names);
