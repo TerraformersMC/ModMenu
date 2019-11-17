@@ -24,7 +24,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.SystemUtil;
+import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -124,7 +124,7 @@ public class ModListScreen extends Screen {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
-					SystemUtil.getOperatingSystem().open(metadata.getContact().get("homepage").get());
+					Util.getOperatingSystem().open(metadata.getContact().get("homepage").get());
 				}
 				this.minecraft.openScreen(this);
 			}, metadata.getContact().get("homepage").get(), true));
@@ -141,7 +141,7 @@ public class ModListScreen extends Screen {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
-					SystemUtil.getOperatingSystem().open(metadata.getContact().get("issues").get());
+					Util.getOperatingSystem().open(metadata.getContact().get("issues").get());
 				}
 				this.minecraft.openScreen(this);
 			}, metadata.getContact().get("issues").get(), true));
@@ -205,7 +205,7 @@ public class ModListScreen extends Screen {
 		this.addButton(websiteButton);
 		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
-		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.modsFolder"), button -> SystemUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
+		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
 		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
 		this.setInitialFocus(this.searchBox);
 
@@ -295,10 +295,10 @@ public class ModListScreen extends Screen {
 
 	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBufferBuilder();
+		BufferBuilder buffer = tessellator.getBuffer();
 		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		buffer.begin(7, VertexFormats.POSITION_UV_COLOR);
+		buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y1, 0.0D).texture(x2 / 32.0F, y1 / 32.0F).color(red, green, blue, startAlpha).next();

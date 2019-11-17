@@ -194,7 +194,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	protected void renderList(int x, int y, int mouseX, int mouseY, float delta) {
 		int itemCount = this.getItemCount();
 		Tessellator tessellator_1 = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator_1.getBufferBuilder();
+		BufferBuilder buffer = tessellator_1.getBuffer();
 
 		for (int index = 0; index < itemCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
