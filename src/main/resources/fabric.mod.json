@@ -16,15 +16,17 @@
     "issues": "https://github.com/Prospector/ModMenu/issues"
   },
   "depends": {
-    "fabric": "*",
     "fabricloader": ">=0.6.1",
     "minecraft": ">=1.15-"
+  },
+  "recommends": {
+    "fabric": "*"
   },
   "authors": [
     "Prospector"
   ],
   "contributors": [
-    "Daniel She",
+    "shedaniel",
     "Draylar",
     "Mordna",
     "Madis0",
