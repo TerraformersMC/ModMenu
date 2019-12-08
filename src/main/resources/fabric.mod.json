@@ -17,10 +17,8 @@
   },
   "depends": {
     "fabricloader": ">=0.6.1",
+    "fabric-resource-loader-v0": "*",
     "minecraft": ">=1.15-"
-  },
-  "recommends": {
-    "fabric": "*"
   },
   "authors": [
     "Prospector"
