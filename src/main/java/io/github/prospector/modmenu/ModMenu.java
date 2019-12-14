@@ -29,7 +29,7 @@ public class ModMenu implements ClientModInitializer {
 	private static ImmutableMap<String, Function<Screen, ? extends Screen>> configScreenFactories = ImmutableMap.of();
 	private static int libraryCount = 0;
 
-	public static boolean hasFactory(String modid) {
+	public static boolean hasConfigScreenFactory(String modid) {
 		return configScreenFactories.containsKey(modid);
 	}
 
@@ -52,7 +52,7 @@ public class ModMenu implements ClientModInitializer {
 	}
 
 	public static void addLibraryMod(String modid) {
-		if(LIBRARY_MODS.contains(modid)) return;
+		if (LIBRARY_MODS.contains(modid)) return;
 
 		LIBRARY_MODS.add(modid);
 	}

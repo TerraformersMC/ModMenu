@@ -13,10 +13,11 @@
   },
   "contact": {
     "homepage": "https://minecraft.curseforge.com/projects/modmenu",
+    "sources": "https://github.com/Prospector/ModMenu",
     "issues": "https://github.com/Prospector/ModMenu/issues"
   },
   "depends": {
-    "fabric": "*",
+    "fabric-resource-loader-v0": "*",
     "fabricloader": ">=0.6.1",
     "minecraft": ">=1.15-"
   },
@@ -24,7 +25,7 @@
     "Prospector"
   ],
   "contributors": [
-    "Daniel She",
+    "shedaniel",
     "Draylar",
     "Mordna",
     "Madis0",
@@ -41,7 +42,10 @@
     "Lykrast",
     "Pyrofab",
     "UpcraftLP",
-    "swordglowsblue"
+    "swordglowsblue",
+    "hinataaki",
+    "LeonXu98",
+    "magneticflux"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [

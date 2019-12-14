@@ -103,7 +103,7 @@ public class ModListScreen extends Screen {
 			public void render(int mouseX, int mouseY, float delta) {
 				if (selected != null) {
 					String modid = selected.getMetadata().getId();
-					active = ModMenu.hasFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
+					active = ModMenu.hasConfigScreenFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
 				} else {
 					active = false;
 				}

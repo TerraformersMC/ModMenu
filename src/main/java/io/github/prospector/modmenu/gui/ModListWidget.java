@@ -7,6 +7,7 @@ import io.github.prospector.modmenu.gui.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.entries.IndependentEntry;
 import io.github.prospector.modmenu.gui.entries.ParentEntry;
 import io.github.prospector.modmenu.util.HardcodedUtil;
+import io.github.prospector.modmenu.util.ModListSearch;
 import io.github.prospector.modmenu.util.TestModContainer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -142,31 +143,31 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			String modId = metadata.getId();
 			boolean library = ModMenu.LIBRARY_MODS.contains(modId);
 
-			//Hide parent lib mods when not searching, and the config is set to hide
-			if(!validSearch && library && !ModMenuConfigManager.getConfig().showLibraries()){
+			//Hide parent lib mods when the config is set to hide
+			if (library && !ModMenuConfigManager.getConfig().showLibraries()) {
 				continue;
 			}
 
 			if (!ModMenu.PARENT_MAP.values().contains(container)) {
 				if (ModMenu.PARENT_MAP.keySet().contains(container)) {
-					//A parent mod with children
-
-					List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
-					children.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
-					ParentEntry parent = new ParentEntry(container, children, this);
-					this.addEntry(parent);
-
 					//Add all the child mods when not searching
 					if (!validSearch && this.parent.showModChildren.contains(modId)) {
+						//A parent mod with children
+						List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
+						children.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
+						ParentEntry parent = new ParentEntry(container, children, this);
+						this.addEntry(parent);
 						for (ModContainer child : children) {
 							this.addEntry(new ChildEntry(child, parent, this, children.indexOf(child) == children.size() - 1));
 						}
+					}else{
+						this.addEntry(new IndependentEntry(container, this));
 					}
 				} else {
 					//A mod with no children
 					this.addEntry(new IndependentEntry(container, this));
 				}
-			} else if(validSearch) {
+			} else if (validSearch) {
 				//A child mod that came up when searching
 				this.addEntry(new IndependentEntry(container, this));
 			}

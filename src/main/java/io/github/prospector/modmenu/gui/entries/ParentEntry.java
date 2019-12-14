@@ -3,7 +3,7 @@ package io.github.prospector.modmenu.gui.entries;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModListEntry;
-import io.github.prospector.modmenu.gui.ModListSearch;
+import io.github.prospector.modmenu.util.ModListSearch;
 import io.github.prospector.modmenu.gui.ModListWidget;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.font.TextRenderer;
@@ -13,7 +13,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class ParentEntry extends ModListEntry {
