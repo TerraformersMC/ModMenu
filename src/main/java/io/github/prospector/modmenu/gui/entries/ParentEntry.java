@@ -3,8 +3,8 @@ package io.github.prospector.modmenu.gui.entries;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModListEntry;
-import io.github.prospector.modmenu.util.ModListSearch;
 import io.github.prospector.modmenu.gui.ModListWidget;
+import io.github.prospector.modmenu.util.ModListSearch;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -33,7 +33,7 @@ public class ParentEntry extends ModListEntry {
 		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
-		int children = ModListSearch.search(list.getParent().getSearchInput(), getChildren()).size();
+		int children = ModListSearch.search(list.getParent(), list.getParent().getSearchInput(), getChildren()).size();
 		int childrenWidth = font.getStringWidth(Integer.toString(children)) - 1;
 		if (childrenBadgeWidth < childrenWidth + 4) {
 			childrenBadgeWidth = childrenWidth + 4;

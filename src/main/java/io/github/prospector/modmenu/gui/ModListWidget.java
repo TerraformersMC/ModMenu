@@ -136,7 +136,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		}
 
 		boolean validSearch = ModListSearch.validSearchQuery(searchTerm);
-		List<ModContainer> matched = ModListSearch.search(searchTerm, modContainerList);
+		List<ModContainer> matched = ModListSearch.search(parent, searchTerm, modContainerList);
 
 		for (ModContainer container : matched) {
 			ModMetadata metadata = container.getMetadata();
@@ -150,26 +150,22 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 			if (!ModMenu.PARENT_MAP.values().contains(container)) {
 				if (ModMenu.PARENT_MAP.keySet().contains(container)) {
-					//Add all the child mods when not searching
-					if (!validSearch && this.parent.showModChildren.contains(modId)) {
-						//A parent mod with children
-						List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
-						children.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
-						ParentEntry parent = new ParentEntry(container, children, this);
-						this.addEntry(parent);
-						for (ModContainer child : children) {
-							this.addEntry(new ChildEntry(child, parent, this, children.indexOf(child) == children.size() - 1));
+					//Add parent mods when not searching
+					List<ModContainer> children = ModMenu.PARENT_MAP.get(container);
+					children.sort(ModMenuConfigManager.getConfig().getSorting().getComparator());
+					ParentEntry parent = new ParentEntry(container, children, this);
+					this.addEntry(parent);
+					//Add children if they are meant to be shown
+					if (this.parent.showModChildren.contains(modId)) {
+						List<ModContainer> validChildren = ModListSearch.search(this.parent, searchTerm, children);
+						for (ModContainer child : validChildren) {
+							this.addEntry(new ChildEntry(child, parent, this, validChildren.indexOf(child) == validChildren.size() - 1));
 						}
-					}else{
-						this.addEntry(new IndependentEntry(container, this));
 					}
 				} else {
 					//A mod with no children
 					this.addEntry(new IndependentEntry(container, this));
 				}
-			} else if (validSearch) {
-				//A child mod that came up when searching
-				this.addEntry(new IndependentEntry(container, this));
 			}
 		}
 
