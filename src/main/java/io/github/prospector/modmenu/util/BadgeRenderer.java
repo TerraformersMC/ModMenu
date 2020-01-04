@@ -35,6 +35,9 @@ public class BadgeRenderer {
 		if (ModMenu.CLIENTSIDE_MODS.contains(metadata.getId())) {
 			drawBadge(I18n.translate("modmenu.clientsideOnly"), 0x884383E3, 0x880E4699, mouseX, mouseY);
 		}
+		if (ModMenu.PATCHWORK_FORGE_MODS.contains(metadata.getId())) {
+			drawBadge(I18n.translate("modmenu.forge"), 0x887C89A3, 0x88202C43, mouseX, mouseY);
+		}
 		if (metadata.getId().equals("minecraft")) {
 			drawBadge(I18n.translate("modmenu.minecraft"), 0x88BCBCBC, 0x88535353, mouseX, mouseY);
 		}
