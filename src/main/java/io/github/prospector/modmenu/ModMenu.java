@@ -11,6 +11,7 @@ import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screen.Screen;
 
@@ -25,6 +26,7 @@ public class ModMenu implements ClientModInitializer {
 	private static final Map<String, Runnable> LEGACY_CONFIG_SCREEN_TASKS = new HashMap<>();
 	public static final List<String> LIBRARY_MODS = new ArrayList<>();
 	public static final Set<String> CLIENTSIDE_MODS = new HashSet<>();
+	public static final Set<String> PATCHWORK_FORGE_MODS = new HashSet<>();
 	public static final LinkedListMultimap<ModContainer, ModContainer> PARENT_MAP = LinkedListMultimap.create();
 	private static ImmutableMap<String, Function<Screen, ? extends Screen>> configScreenFactories = ImmutableMap.of();
 	private static int libraryCount = 0;
@@ -73,6 +75,12 @@ public class ModMenu implements ClientModInitializer {
 			}
 			if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
 				CLIENTSIDE_MODS.add(id);
+			}
+			if (metadata.containsCustomValue("patchwork:source") && metadata.getCustomValue("patchwork:source").getAsObject() != null) {
+				CustomValue.CvObject object = metadata.getCustomValue("patchwork:source").getAsObject();
+				if ("forge".equals(object.get("loader").getAsString())) {
+					PATCHWORK_FORGE_MODS.add(id);
+				}
 			}
 			if (metadata.containsCustomValue("modmenu:parent")) {
 				String parentId = metadata.getCustomValue("modmenu:parent").getAsString();
