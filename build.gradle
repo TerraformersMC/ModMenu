@@ -89,7 +89,7 @@ curseforge {
 		id = '308702'
 		changelog = 'A changelog can be found at https://github.com/Prospector/ModMenu'
 		releaseType = 'release'
-		addGameVersion '1.15.1'
+		addGameVersion '1.15.2'
 		addGameVersion 'fabric'
 		mainArtifact(remapJar) {
 			displayName = "ModMenu v$version for $project.minecraft_version"
