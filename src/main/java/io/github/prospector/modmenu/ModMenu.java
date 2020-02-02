@@ -24,7 +24,12 @@ public class ModMenu implements ClientModInitializer {
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
 
 	private static final Map<String, Runnable> LEGACY_CONFIG_SCREEN_TASKS = new HashMap<>();
-	public static final List<String> LIBRARY_MODS = new ArrayList<>();
+	public static final Set<String> LIBRARY_MODS = new HashSet<>();
+	public static final Set<String> ROOT_LIBRARIES = new HashSet<>();
+	public static final Set<String> CHILD_LIBRARIES = new HashSet<>();
+	public static final Set<String> ALL_NONLIB_MODS = new HashSet<>();
+	public static final Set<String> ROOT_NONLIB_MODS = new HashSet<>();
+	public static final Set<String> CHILD_NONLIB_MODS = new HashSet<>();
 	public static final Set<String> CLIENTSIDE_MODS = new HashSet<>();
 	public static final Set<String> PATCHWORK_FORGE_MODS = new HashSet<>();
 	public static final LinkedListMultimap<ModContainer, ModContainer> PARENT_MAP = LinkedListMultimap.create();
@@ -54,8 +59,6 @@ public class ModMenu implements ClientModInitializer {
 	}
 
 	public static void addLibraryMod(String modid) {
-		if (LIBRARY_MODS.contains(modid)) return;
-
 		LIBRARY_MODS.add(modid);
 	}
 
@@ -70,7 +73,11 @@ public class ModMenu implements ClientModInitializer {
 		for (ModContainer mod : mods) {
 			ModMetadata metadata = mod.getMetadata();
 			String id = metadata.getId();
-			if (metadata.containsCustomValue("modmenu:api") && metadata.getCustomValue("modmenu:api").getAsBoolean()) {
+			if ("minecraft".equals(id)) {
+				continue;
+			}
+			boolean isLibrary = metadata.containsCustomValue("modmenu:api") && metadata.getCustomValue("modmenu:api").getAsBoolean();
+			if (isLibrary) {
 				addLibraryMod(id);
 			}
 			if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
@@ -82,20 +89,39 @@ public class ModMenu implements ClientModInitializer {
 					PATCHWORK_FORGE_MODS.add(id);
 				}
 			}
+			boolean hasParent = false;
 			if (metadata.containsCustomValue("modmenu:parent")) {
 				String parentId = metadata.getCustomValue("modmenu:parent").getAsString();
 				if (parentId != null) {
 					Optional<ModContainer> parent = FabricLoader.getInstance().getModContainer(parentId);
-					parent.ifPresent(modContainer -> PARENT_MAP.put(modContainer, mod));
+					if (parent.isPresent()) {
+						hasParent = true;
+						PARENT_MAP.put(parent.get(), mod);
+						if (isLibrary) {
+							CHILD_LIBRARIES.add(id);
+						} else {
+							CHILD_NONLIB_MODS.add(id);
+							ALL_NONLIB_MODS.add(id);
+						}
+					}
 				}
 			} else {
 				HardcodedUtil.hardcodeModuleMetadata(mod, metadata, id);
+				isLibrary = LIBRARY_MODS.contains(id);
+				hasParent = PARENT_MAP.containsValue(mod);
+			}
+
+			if (isLibrary) {
+				(hasParent ? CHILD_LIBRARIES : ROOT_LIBRARIES).add(id);
+			} else {
+				(hasParent ? CHILD_NONLIB_MODS : ROOT_NONLIB_MODS).add(id);
+				ALL_NONLIB_MODS.add(id);
 			}
 		}
 		libraryCount = LIBRARY_MODS.size();
 	}
 
 	public static String getFormattedModCount() {
-		return NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size());
+		return NumberFormat.getInstance().format(ROOT_NONLIB_MODS.size());
 	}
 }

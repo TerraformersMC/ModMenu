@@ -300,6 +300,16 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		return children().size();
 	}
 
+	public int getDisplayedCountFor(Set<String> set) {
+		int count = 0;
+		for (ModListEntry c : children()) {
+			if (set.contains(c.getMetadata().getId())) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	@Override
 	public void close() {
 		for (NativeImageBackedTexture tex : this.modIconsCache.values()) {

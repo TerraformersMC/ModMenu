@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.HardcodedUtil;
@@ -171,7 +172,7 @@ public class ModListScreen extends Screen {
 		int sortingWidth = font.getStringWidth(sortingText) + 20;
 		int filtersX;
 		int filtersWidth = showLibrariesWidth + sortingWidth + 2;
-		if ((filtersWidth + font.getStringWidth(I18n.translate("modmenu.showingMods", NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()) + "/" + NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size()))) + 20) >= searchBoxX + searchBoxWidth + 22) {
+		if ((filtersWidth + font.getStringWidth(computeModCountText(true)) + 20) >= searchBoxX + searchBoxWidth + 22) {
 			filtersX = paneWidth / 2 - filtersWidth / 2;
 			showModCount = false;
 		} else {
@@ -239,8 +240,14 @@ public class ModListScreen extends Screen {
 		RenderSystem.disableBlend();
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
-		if (showModCount || !filterOptionsShown) {
-			font.draw(I18n.translate("modmenu.showingMods", NumberFormat.getInstance().format(modList.getDisplayedCount()) + "/" + NumberFormat.getInstance().format(FabricLoader.getInstance().getAllMods().size())), searchBoxX, 52, 0xFFFFFF);
+		if (/* showModCount || */!filterOptionsShown) {
+			String full = computeModCountText(true);
+			if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(full) <= modList.getWidth() - 20) {
+				font.draw(full, searchBoxX, 52, 0xFFFFFF);
+			} else {
+				font.draw(computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
+				font.draw(computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
+			}
 		}
 		if (selectedEntry != null) {
 			ModMetadata metadata = selectedEntry.getMetadata();
@@ -291,6 +298,56 @@ public class ModListScreen extends Screen {
 			}
 		}
 
+	}
+
+	private String computeModCountText(boolean includeLibs) {
+		String rootMods = formatModCount(ModMenu.ROOT_NONLIB_MODS, false);
+		String childMods = formatModCount(ModMenu.CHILD_NONLIB_MODS, true);
+
+		if (includeLibs && ModMenuConfigManager.getConfig().showLibraries()) {
+			String rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
+			String childLibs = formatModCount(ModMenu.CHILD_LIBRARIES, true);
+			if (childMods == null) {
+				if (childLibs == null) {
+					return I18n.translate("modmenu.showingModsLibraries", rootMods, rootLibs);
+				} else {
+					return I18n.translate("modmenu.showingModsChildLibraries", rootMods, rootLibs, childLibs);
+				}
+			} else {
+				if (childLibs == null) {
+					return I18n.translate("modmenu.showingChildModsLibraries", rootMods, childMods, rootLibs);
+				} else {
+					return I18n.translate("modmenu.showingChildModsChildLibraries", rootMods, childMods, rootLibs, childLibs);
+				}
+			}
+		} else if (childMods == null) {
+			return I18n.translate("modmenu.showingMods", rootMods);
+		} else {
+			return I18n.translate("modmenu.showingChildMods", rootMods, childMods);
+		}
+	}
+
+	private String computeLibraryCountText() {
+		if (ModMenuConfigManager.getConfig().showLibraries()) {
+			String rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
+			String childLibs = formatModCount(ModMenu.CHILD_LIBRARIES, true);
+			if (childLibs == null) {
+				return I18n.translate("modmenu.showingLibraries", rootLibs);
+			} else {
+				return I18n.translate("modmenu.showingChildLibraries", rootLibs, childLibs);
+			}
+		} else {
+			return null;
+		}
+	}
+
+	private String formatModCount(Set<String> set, boolean nullIfEmpty) {
+		if (nullIfEmpty && set.isEmpty()) {
+			return null;
+		}
+		String shownCount = NumberFormat.getInstance().format((long) modList.getDisplayedCountFor(set));
+		String totalCount = NumberFormat.getInstance().format((long) set.size());
+		return shownCount + "/" + totalCount;
 	}
 
 	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
