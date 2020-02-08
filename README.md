@@ -8,7 +8,7 @@ A picture's worth 2 words
 ![](https://i.imgur.com/JKEatou.png "Mod Menu")
 
 ### Developers:
-- Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/ModMenu/
+- Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/
 - The icon comes from the icon specified in your fabric.mod.json (as per the spec)
 - Clientside-only and API badges are defined as custom objects in your fabric.mod.json as such:
 ```json
