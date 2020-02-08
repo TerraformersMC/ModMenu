@@ -1,7 +1,7 @@
 package io.github.prospector.modmenu.util;
 
 import io.github.prospector.modmenu.ModMenu;
-import io.github.prospector.modmenu.gui.ModListScreen;
+import io.github.prospector.modmenu.gui.ModsScreen;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
@@ -14,9 +14,9 @@ public class BadgeRenderer {
 	protected ModContainer container;
 	protected ModMetadata metadata;
 	protected MinecraftClient client;
-	protected final ModListScreen screen;
+	protected final ModsScreen screen;
 
-	public BadgeRenderer(int startX, int startY, int endX, ModContainer container, ModListScreen screen) {
+	public BadgeRenderer(int startX, int startY, int endX, ModContainer container, ModsScreen screen) {
 		this.startX = startX;
 		this.startY = startY;
 		this.badgeMax = endX;

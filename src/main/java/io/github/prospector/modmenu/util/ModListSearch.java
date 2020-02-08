@@ -1,7 +1,7 @@
 package io.github.prospector.modmenu.util;
 
 import io.github.prospector.modmenu.ModMenu;
-import io.github.prospector.modmenu.gui.ModListScreen;
+import io.github.prospector.modmenu.gui.ModsScreen;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
@@ -17,7 +17,7 @@ public class ModListSearch {
 		return query != null && !query.isEmpty();
 	}
 
-	public static List<ModContainer> search(ModListScreen screen, String query, List<ModContainer> candidates) {
+	public static List<ModContainer> search(ModsScreen screen, String query, List<ModContainer> candidates) {
 		if (!validSearchQuery(query)) {
 			return candidates;
 		}
@@ -26,7 +26,7 @@ public class ModListSearch {
 			.collect(Collectors.toList());
 	}
 
-	private static boolean passesFilters(ModListScreen screen, ModContainer container, String query) {
+	private static boolean passesFilters(ModsScreen screen, ModContainer container, String query) {
 		ModMetadata metadata = container.getMetadata();
 		String modId = metadata.getId();
 

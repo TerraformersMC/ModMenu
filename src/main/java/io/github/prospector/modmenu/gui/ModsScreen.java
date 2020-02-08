@@ -30,7 +30,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
 
-public class ModListScreen extends Screen {
+public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 	private final String textTitle;
@@ -53,7 +53,7 @@ public class ModListScreen extends Screen {
 	private int searchRowWidth;
 	public Set<String> showModChildren = new HashSet<>();
 
-	ModListScreen(Screen previousGui) {
+	public ModsScreen(Screen previousGui) {
 		super(new TranslatableText("modmenu.title"));
 		this.parent = previousGui;
 		this.textTitle = title.asFormattedString();
@@ -220,7 +220,7 @@ public class ModListScreen extends Screen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		ModListScreen.overlayBackground(paneWidth, 0, rightPaneX, height, 64, 64, 64, 255, 255);
+		ModsScreen.overlayBackground(paneWidth, 0, rightPaneX, height, 64, 64, 64, 255, 255);
 		this.tooltip = null;
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {

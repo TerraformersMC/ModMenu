@@ -2,6 +2,7 @@ package io.github.prospector.modmenu.api;
 
 import com.google.common.collect.ImmutableMap;
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.gui.ModsScreen;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.util.Map;
@@ -20,6 +21,17 @@ public interface ModMenuApi {
 	@Deprecated
 	static void addConfigOverride(String modid, Runnable action) {
 		ModMenu.addLegacyConfigScreenTask(modid, action);
+	}
+
+	/**
+	 * Used for creating a {@link Screen} instance for the Mod Menu
+	 * "Mods" screen
+	 *
+	 * @param previous The screen before opening
+	 * @return A "Mods" Screen
+	 */
+	static Screen createModsScreen(Screen previous) {
+		return new ModsScreen(previous);
 	}
 
 	/**

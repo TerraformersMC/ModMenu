@@ -32,13 +32,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
 
 	private final Map<Path, NativeImageBackedTexture> modIconsCache = new HashMap<>();
-	private final ModListScreen parent;
+	private final ModsScreen parent;
 	private List<ModContainer> modContainerList = null;
 	private Set<ModContainer> addedMods = new HashSet<>();
 	private String selectedModId = null;
 	private boolean scrolling;
 
-	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, String searchTerm, ModListWidget list, ModListScreen parent) {
+	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, String searchTerm, ModListWidget list, ModsScreen parent) {
 		super(client, width, height, y1, y2, entryHeight);
 		this.parent = parent;
 		if (list != null) {
@@ -287,7 +287,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		return this.top;
 	}
 
-	public ModListScreen getParent() {
+	public ModsScreen getParent() {
 		return parent;
 	}
 
