@@ -301,37 +301,80 @@ public class ModListScreen extends Screen {
 	}
 
 	private String computeModCountText(boolean includeLibs) {
-		String rootMods = formatModCount(ModMenu.ROOT_NONLIB_MODS, false);
+		int[] rootMods = formatModCount(ModMenu.ROOT_NONLIB_MODS, false);
 
 		if (includeLibs && ModMenuConfigManager.getConfig().showLibraries()) {
-			String rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
-			return I18n.translate("modmenu.showingModsLibraries", rootMods, rootLibs);
+			int[] rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
+			return translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
 		} else {
-			return I18n.translate("modmenu.showingMods", rootMods);
+			return translateNumeric("modmenu.showingMods", rootMods);
 		}
 	}
 
 	private String computeLibraryCountText() {
 		if (ModMenuConfigManager.getConfig().showLibraries()) {
-			String rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
-			return I18n.translate("modmenu.showingLibraries", rootLibs);
+			int[] rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
+			return translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
 			return null;
 		}
 	}
 
-	private String formatModCount(Set<String> set, boolean nullIfEmpty) {
+	private static String translateNumeric(String key, int[]... args) {
+		Object[] realArgs = new Object[args.length];
+		for (int i = 0; i < args.length; i++) {
+			NumberFormat nf = NumberFormat.getInstance();
+			if (args[i].length == 1) {
+				realArgs[i] = nf.format(args[i][0]);
+			} else {
+				assert args[i].length == 2;
+				realArgs[i] = nf.format(args[i][0]) + "/" + nf.format(args[i][1]);
+			}
+		}
+
+		int[] override = new int[args.length];
+		Arrays.fill(override, -1);
+		for (int i = 0; i < args.length; i++) {
+			int[] arg = args[i];
+			if (arg == null) {
+				throw new NullPointerException("args[" + i + "]");
+			}
+			if (arg.length == 1) {
+				override[i] = arg[0];
+			}
+		}
+
+		String lastKey = key;
+		for (int flags = (1 << args.length) - 1; flags >= 0 ; flags--) {
+			StringBuilder fullKey = new StringBuilder(key);
+			for (int i = 0; i < args.length; i++) {
+				fullKey.append('.');
+				if (((flags & (1 << i)) != 0) && override[i] != -1) {
+					fullKey.append(override[i]);
+				} else {
+					fullKey.append('a');
+				}
+			}
+			lastKey = fullKey.toString();
+			if (I18n.hasTranslation(lastKey)) {
+//				return lastKey + Arrays.toString(realArgs);
+				return I18n.translate(lastKey, realArgs);
+			}
+		}
+//		return lastKey + Arrays.toString(realArgs);
+		return I18n.translate(lastKey, realArgs);
+	}
+
+	private int[] formatModCount(Set<String> set, boolean nullIfEmpty) {
 		if (nullIfEmpty && set.isEmpty()) {
 			return null;
 		}
 		int visible = modList.getDisplayedCountFor(set);
 		int total = set.size();
 		if (visible == total) {
-			return NumberFormat.getInstance().format(total);
+			return new int[] { total };
 		}
-		String shownCount = NumberFormat.getInstance().format(visible);
-		String totalCount = NumberFormat.getInstance().format(total);
-		return shownCount + "/" + totalCount;
+		return new int[] { visible, total };
 	}
 
 	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
