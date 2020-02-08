@@ -22,7 +22,7 @@ public class MixinTitleScreen extends Screen {
 
 	@Inject(at = @At("RETURN"), method = "initWidgetsNormal(II)V")
 	public void drawMenuButton(CallbackInfo info) {
-		this.addButton(new ModMenuButtonWidget(this.width / 2 - 100, this.height / 4 + 48 + 24 * 3, 200, 20, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", ModMenu.getFormattedModCount()), this));
+		this.addButton(new ModMenuButtonWidget(this.width / 2 - 100, this.height / 4 + 48 + 24 * 3, 200, 20, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", ModMenu.getDisplayedModCount()), this));
 	}
 
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;init(Lnet/minecraft/client/MinecraftClient;II)V"), method = "init", index = 2)

@@ -121,7 +121,7 @@ public class ModMenu implements ClientModInitializer {
 		libraryCount = LIBRARY_MODS.size();
 	}
 
-	public static String getFormattedModCount() {
+	public static String getDisplayedModCount() {
 		return NumberFormat.getInstance().format(ROOT_NONLIB_MODS.size());
 	}
 }

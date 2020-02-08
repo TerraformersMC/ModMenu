@@ -5,7 +5,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
-import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.BadgeRenderer;
 import io.github.prospector.modmenu.util.HardcodedUtil;
@@ -26,8 +25,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.text.NumberFormat;
@@ -36,7 +33,6 @@ import java.util.*;
 public class ModListScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
-	private static final Logger LOGGER = LogManager.getLogger();
 	private final String textTitle;
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
@@ -46,16 +42,18 @@ public class ModListScreen extends Screen {
 	private ModListEntry selected;
 	private BadgeRenderer badgeRenderer;
 	private double scrollPercent = 0;
-	private boolean showModCount = false;
 	private boolean init = false;
 	private boolean filterOptionsShown = false;
 	private int paneY;
 	private int paneWidth;
 	private int rightPaneX;
 	private int searchBoxX;
+	private int filtersX;
+	private int filtersWidth;
+	private int searchRowWidth;
 	public Set<String> showModChildren = new HashSet<>();
 
-	public ModListScreen(Screen previousGui) {
+	ModListScreen(Screen previousGui) {
 		super(new TranslatableText("modmenu.title"));
 		this.parent = previousGui;
 		this.textTitle = title.asFormattedString();
@@ -99,9 +97,12 @@ public class ModListScreen extends Screen {
 				ModMenu.openConfigScreen(modid);
 			}
 		},
-			I18n.translate("modmenu.configure")) {
+				I18n.translate("modmenu.configure")) {
 			@Override
 			public void render(int mouseX, int mouseY, float delta) {
+				if (isHovered()) {
+					setTooltip(I18n.translate("modmenu.configure"));
+				}
 				if (selected != null) {
 					String modid = selected.getMetadata().getId();
 					active = ModMenu.hasConfigScreenFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
@@ -119,9 +120,9 @@ public class ModListScreen extends Screen {
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
-		int cappedButtonWidth = urlButtonWidths > 200 ? 200 : urlButtonWidths;
-		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
-			I18n.translate("modmenu.website"), button -> {
+		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
+		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
+				I18n.translate("modmenu.website"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -137,8 +138,8 @@ public class ModListScreen extends Screen {
 				super.render(var1, var2, var3);
 			}
 		};
-		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, urlButtonWidths > 200 ? 200 : urlButtonWidths, 20,
-			I18n.translate("modmenu.issues"), button -> {
+		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
+				I18n.translate("modmenu.issues"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -155,9 +156,7 @@ public class ModListScreen extends Screen {
 			}
 		};
 		this.children.add(this.searchBox);
-		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> {
-			filterOptionsShown = !filterOptionsShown;
-		}) {
+		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown) {
 			@Override
 			public void render(int int_1, int int_2, float float_1) {
 				super.render(int_1, int_2, float_1);
@@ -170,21 +169,16 @@ public class ModListScreen extends Screen {
 		String sortingText = I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
 		int showLibrariesWidth = font.getStringWidth(showLibrariesText) + 20;
 		int sortingWidth = font.getStringWidth(sortingText) + 20;
-		int filtersX;
-		int filtersWidth = showLibrariesWidth + sortingWidth + 2;
-		if ((filtersWidth + font.getStringWidth(computeModCountText(true)) + 20) >= searchBoxX + searchBoxWidth + 22) {
-			filtersX = paneWidth / 2 - filtersWidth / 2;
-			showModCount = false;
-		} else {
-			filtersX = searchBoxX + searchBoxWidth + 22 - filtersWidth + 1;
-			showModCount = true;
-		}
+		filtersWidth = showLibrariesWidth + sortingWidth + 2;
+		searchRowWidth = searchBoxX + searchBoxWidth + 22;
+		updateFiltersX();
 		this.addButton(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
 			ModMenuConfigManager.getConfig().toggleSortMode();
 			modList.reloadFilters();
 		}) {
 			@Override
 			public void render(int mouseX, int mouseY, float delta) {
+				RenderSystem.translated(0, 0, 1);
 				visible = filterOptionsShown;
 				this.setMessage(I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey())));
 				super.render(mouseX, mouseY, delta);
@@ -196,6 +190,7 @@ public class ModListScreen extends Screen {
 		}) {
 			@Override
 			public void render(int mouseX, int mouseY, float delta) {
+				RenderSystem.translated(0, 0, 1);
 				visible = filterOptionsShown;
 				this.setMessage(I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())));
 				super.render(mouseX, mouseY, delta);
@@ -211,10 +206,6 @@ public class ModListScreen extends Screen {
 		this.setInitialFocus(this.searchBox);
 
 		init = true;
-	}
-
-	public ModListWidget getModList() {
-		return modList;
 	}
 
 	@Override
@@ -240,13 +231,22 @@ public class ModListScreen extends Screen {
 		RenderSystem.disableBlend();
 		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
-		if (/* showModCount || */!filterOptionsShown) {
-			String full = computeModCountText(true);
-			if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(full) <= modList.getWidth() - 5) {
-				font.draw(full, 5, 52, 0xFFFFFF);
+		String fullModCount = computeModCountText(true);
+		if (updateFiltersX()) {
+			if (filterOptionsShown) {
+				if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(fullModCount) <= filtersX - 5) {
+					font.draw(fullModCount, searchBoxX, 52, 0xFFFFFF);
+				} else {
+					font.draw(computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
+					font.draw(computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
+				}
 			} else {
-				font.draw(computeModCountText(false), 5, 46, 0xFFFFFF);
-				font.draw(computeLibraryCountText(), 5, 57, 0xFFFFFF);
+				if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(fullModCount) <= modList.getWidth() - 5) {
+					drawCenteredString(font, fullModCount, this.modList.getWidth() / 2, 52, 0xFFFFFF);
+				} else {
+					drawCenteredString(font, computeModCountText(false), this.modList.getWidth() / 2, 46, 0xFFFFFF);
+					drawCenteredString(font, computeLibraryCountText(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
+				}
 			}
 		}
 		if (selectedEntry != null) {
@@ -280,10 +280,10 @@ public class ModListScreen extends Screen {
 			List<String> names = new ArrayList<>();
 
 			metadata.getAuthors().stream()
-				.filter(Objects::nonNull)
-				.map(Person::getName)
-				.filter(Objects::nonNull)
-				.forEach(names::add);
+					.filter(Objects::nonNull)
+					.map(Person::getName)
+					.filter(Objects::nonNull)
+					.forEach(names::add);
 
 			if (!names.isEmpty()) {
 				if (names.size() > 1) {
@@ -345,7 +345,7 @@ public class ModListScreen extends Screen {
 		}
 
 		String lastKey = key;
-		for (int flags = (1 << args.length) - 1; flags >= 0 ; flags--) {
+		for (int flags = (1 << args.length) - 1; flags >= 0; flags--) {
 			StringBuilder fullKey = new StringBuilder(key);
 			for (int i = 0; i < args.length; i++) {
 				fullKey.append('.');
@@ -369,12 +369,12 @@ public class ModListScreen extends Screen {
 		int visible = modList.getDisplayedCountFor(set);
 		int total = set.size();
 		if (visible == total) {
-			return new int[] { total };
+			return new int[]{total};
 		}
-		return new int[] { visible, total };
+		return new int[]{visible, total};
 	}
 
-	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
+	static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
@@ -393,25 +393,25 @@ public class ModListScreen extends Screen {
 		this.modList.close();
 	}
 
-	public void setTooltip(String tooltip) {
+	private void setTooltip(String tooltip) {
 		this.tooltip = tooltip;
 	}
 
-	public ModListEntry getSelectedEntry() {
+	ModListEntry getSelectedEntry() {
 		return selected;
 	}
 
-	public void updateSelectedEntry(ModListEntry entry) {
+	void updateSelectedEntry(ModListEntry entry) {
 		if (entry != null) {
 			this.selected = entry;
 		}
 	}
 
-	public double getScrollPercent() {
+	double getScrollPercent() {
 		return scrollPercent;
 	}
 
-	public void updateScrollPercent(double scrollPercent) {
+	void updateScrollPercent(double scrollPercent) {
 		this.scrollPercent = scrollPercent;
 	}
 
@@ -419,7 +419,13 @@ public class ModListScreen extends Screen {
 		return searchBox.getText();
 	}
 
-	public boolean showingFilterOptions() {
-		return filterOptionsShown;
+	private boolean updateFiltersX() {
+		if ((filtersWidth + font.getStringWidth(computeModCountText(true)) + 20) >= searchRowWidth && ((filtersWidth + font.getStringWidth(computeModCountText(false)) + 20) >= searchRowWidth || (filtersWidth + font.getStringWidth(computeLibraryCountText()) + 20) >= searchRowWidth)) {
+			filtersX = paneWidth / 2 - filtersWidth / 2;
+			return !filterOptionsShown;
+		} else {
+			filtersX = searchRowWidth - filtersWidth + 1;
+			return true;
+		}
 	}
 }
