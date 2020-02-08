@@ -5,6 +5,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.util.HardcodedUtil;
@@ -17,7 +18,6 @@ import net.minecraft.client.gui.screen.Screen;
 
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.function.Function;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
@@ -33,16 +33,15 @@ public class ModMenu implements ClientModInitializer {
 	public static final Set<String> CLIENTSIDE_MODS = new HashSet<>();
 	public static final Set<String> PATCHWORK_FORGE_MODS = new HashSet<>();
 	public static final LinkedListMultimap<ModContainer, ModContainer> PARENT_MAP = LinkedListMultimap.create();
-	private static ImmutableMap<String, Function<Screen, ? extends Screen>> configScreenFactories = ImmutableMap.of();
-	private static int libraryCount = 0;
+	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
 
 	public static boolean hasConfigScreenFactory(String modid) {
 		return configScreenFactories.containsKey(modid);
 	}
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
-		Function<Screen, ? extends Screen> factory = configScreenFactories.get(modid);
-		return factory != null ? factory.apply(menuScreen) : null;
+		ConfigScreenFactory<?> factory = configScreenFactories.get(modid);
+		return factory != null ? factory.create(menuScreen) : null;
 	}
 
 	public static void openConfigScreen(String modid) {
@@ -65,8 +64,10 @@ public class ModMenu implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
-		ImmutableMap.Builder<String, Function<Screen, ? extends Screen>> factories = ImmutableMap.builder();
-		FabricLoader.getInstance().getEntrypoints("modmenu", ModMenuApi.class).forEach(api -> factories.put(api.getModId(), api.getConfigScreenFactory()));
+		ImmutableMap.Builder<String, ConfigScreenFactory<?>> factories = ImmutableMap.builder();
+		FabricLoader.getInstance().getEntrypoints("modmenu", ModMenuApi.class).forEach(api -> {
+			factories.put(api.getModId(), api.getModConfigScreenFactory());
+		});
 		configScreenFactories = factories.build();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
 		HardcodedUtil.initializeHardcodings();
@@ -118,7 +119,6 @@ public class ModMenu implements ClientModInitializer {
 				ALL_NONLIB_MODS.add(id);
 			}
 		}
-		libraryCount = LIBRARY_MODS.size();
 	}
 
 	public static String getDisplayedModCount() {
