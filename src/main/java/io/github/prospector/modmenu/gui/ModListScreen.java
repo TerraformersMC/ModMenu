@@ -242,11 +242,11 @@ public class ModListScreen extends Screen {
 		super.render(mouseX, mouseY, delta);
 		if (/* showModCount || */!filterOptionsShown) {
 			String full = computeModCountText(true);
-			if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(full) <= modList.getWidth() - 20) {
-				font.draw(full, searchBoxX, 52, 0xFFFFFF);
+			if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(full) <= modList.getWidth() - 5) {
+				font.draw(full, 5, 52, 0xFFFFFF);
 			} else {
-				font.draw(computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
-				font.draw(computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
+				font.draw(computeModCountText(false), 5, 46, 0xFFFFFF);
+				font.draw(computeLibraryCountText(), 5, 57, 0xFFFFFF);
 			}
 		}
 		if (selectedEntry != null) {
@@ -302,40 +302,19 @@ public class ModListScreen extends Screen {
 
 	private String computeModCountText(boolean includeLibs) {
 		String rootMods = formatModCount(ModMenu.ROOT_NONLIB_MODS, false);
-		String childMods = formatModCount(ModMenu.CHILD_NONLIB_MODS, true);
 
 		if (includeLibs && ModMenuConfigManager.getConfig().showLibraries()) {
 			String rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
-			String childLibs = formatModCount(ModMenu.CHILD_LIBRARIES, true);
-			if (childMods == null) {
-				if (childLibs == null) {
-					return I18n.translate("modmenu.showingModsLibraries", rootMods, rootLibs);
-				} else {
-					return I18n.translate("modmenu.showingModsChildLibraries", rootMods, rootLibs, childLibs);
-				}
-			} else {
-				if (childLibs == null) {
-					return I18n.translate("modmenu.showingChildModsLibraries", rootMods, childMods, rootLibs);
-				} else {
-					return I18n.translate("modmenu.showingChildModsChildLibraries", rootMods, childMods, rootLibs, childLibs);
-				}
-			}
-		} else if (childMods == null) {
-			return I18n.translate("modmenu.showingMods", rootMods);
+			return I18n.translate("modmenu.showingModsLibraries", rootMods, rootLibs);
 		} else {
-			return I18n.translate("modmenu.showingChildMods", rootMods, childMods);
+			return I18n.translate("modmenu.showingMods", rootMods);
 		}
 	}
 
 	private String computeLibraryCountText() {
 		if (ModMenuConfigManager.getConfig().showLibraries()) {
 			String rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
-			String childLibs = formatModCount(ModMenu.CHILD_LIBRARIES, true);
-			if (childLibs == null) {
-				return I18n.translate("modmenu.showingLibraries", rootLibs);
-			} else {
-				return I18n.translate("modmenu.showingChildLibraries", rootLibs, childLibs);
-			}
+			return I18n.translate("modmenu.showingLibraries", rootLibs);
 		} else {
 			return null;
 		}
