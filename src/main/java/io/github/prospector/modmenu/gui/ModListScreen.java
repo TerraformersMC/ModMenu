@@ -301,10 +301,10 @@ public class ModListScreen extends Screen {
 	}
 
 	private String computeModCountText(boolean includeLibs) {
-		int[] rootMods = formatModCount(ModMenu.ROOT_NONLIB_MODS, false);
+		int[] rootMods = formatModCount(ModMenu.ROOT_NONLIB_MODS);
 
 		if (includeLibs && ModMenuConfigManager.getConfig().showLibraries()) {
-			int[] rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
+			int[] rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES);
 			return translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
 		} else {
 			return translateNumeric("modmenu.showingMods", rootMods);
@@ -313,7 +313,7 @@ public class ModListScreen extends Screen {
 
 	private String computeLibraryCountText() {
 		if (ModMenuConfigManager.getConfig().showLibraries()) {
-			int[] rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES, false);
+			int[] rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES);
 			return translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
 			return null;
@@ -365,10 +365,7 @@ public class ModListScreen extends Screen {
 		return I18n.translate(lastKey, realArgs);
 	}
 
-	private int[] formatModCount(Set<String> set, boolean nullIfEmpty) {
-		if (nullIfEmpty && set.isEmpty()) {
-			return null;
-		}
+	private int[] formatModCount(Set<String> set) {
 		int visible = modList.getDisplayedCountFor(set);
 		int total = set.size();
 		if (visible == total) {
