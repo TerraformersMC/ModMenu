@@ -324,8 +324,13 @@ public class ModListScreen extends Screen {
 		if (nullIfEmpty && set.isEmpty()) {
 			return null;
 		}
-		String shownCount = NumberFormat.getInstance().format((long) modList.getDisplayedCountFor(set));
-		String totalCount = NumberFormat.getInstance().format((long) set.size());
+		int visible = modList.getDisplayedCountFor(set);
+		int total = set.size();
+		if (visible == total) {
+			return NumberFormat.getInstance().format(total);
+		}
+		String shownCount = NumberFormat.getInstance().format(visible);
+		String totalCount = NumberFormat.getInstance().format(total);
 		return shownCount + "/" + totalCount;
 	}
 

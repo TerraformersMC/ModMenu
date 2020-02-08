@@ -34,7 +34,7 @@ public class ParentEntry extends ModListEntry {
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
 		int shownChildren = ModListSearch.search(list.getParent(), list.getParent().getSearchInput(), getChildren()).size();
-		String str = shownChildren + "/" + children.size();
+		String str = shownChildren == children.size() ? "" + shownChildren : shownChildren + "/" + children.size();
 		int childrenWidth = font.getStringWidth(str) - 1;
 		if (childrenBadgeWidth < childrenWidth + 4) {
 			childrenBadgeWidth = childrenWidth + 4;
