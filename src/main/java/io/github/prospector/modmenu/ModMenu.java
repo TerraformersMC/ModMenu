@@ -64,11 +64,12 @@ public class ModMenu implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
-		ImmutableMap.Builder<String, ConfigScreenFactory<?>> factories = ImmutableMap.builder();
+		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
 		FabricLoader.getInstance().getEntrypoints("modmenu", ModMenuApi.class).forEach(api -> {
 			factories.put(api.getModId(), api.getModConfigScreenFactory());
+			api.getProvidedConfigScreenFactories().forEach(factories::putIfAbsent);
 		});
-		configScreenFactories = factories.build();
+		configScreenFactories = new ImmutableMap.Builder<String, ConfigScreenFactory<?>>().putAll(factories).build();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
 		HardcodedUtil.initializeHardcodings();
 		for (ModContainer mod : mods) {

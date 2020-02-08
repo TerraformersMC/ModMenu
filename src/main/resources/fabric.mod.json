@@ -9,6 +9,9 @@
   "entrypoints": {
     "client": [
       "io.github.prospector.modmenu.ModMenu"
+    ],
+    "modmenu": [
+      "io.github.prospector.modmenu.VanillaModMenuCompat"
     ]
   },
   "contact": {
