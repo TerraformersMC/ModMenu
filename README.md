@@ -31,4 +31,5 @@ A picture's worth 2 words
   }
   ```
     - Features
-        - Mods can provide a Screen factory to provide a custom config screen to open with the config button. Implement the `getConfigScreenFactory` method in your API implementation.
+        - Mods can provide a Screen factory to provide a custom config screen to open with the config button. Implement the `getModConfigScreenFactory` method in your API implementation to do this.
+        - Mods can provide Screen factories to provide a custom config screens to open with the config buttons for other mods as well. Implement the `getProvidedConfigScreenFactories` method in your API implementation for this.
