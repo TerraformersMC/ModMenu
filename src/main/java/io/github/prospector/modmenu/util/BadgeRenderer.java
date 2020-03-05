@@ -1,7 +1,7 @@
 package io.github.prospector.modmenu.util;
 
 import io.github.prospector.modmenu.ModMenu;
-import io.github.prospector.modmenu.gui.ModListScreen;
+import io.github.prospector.modmenu.gui.ModsScreen;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
@@ -14,9 +14,9 @@ public class BadgeRenderer {
 	protected ModContainer container;
 	protected ModMetadata metadata;
 	protected MinecraftClient client;
-	protected final ModListScreen screen;
+	protected final ModsScreen screen;
 
-	public BadgeRenderer(int startX, int startY, int endX, ModContainer container, ModListScreen screen) {
+	public BadgeRenderer(int startX, int startY, int endX, ModContainer container, ModsScreen screen) {
 		this.startX = startX;
 		this.startY = startY;
 		this.badgeMax = endX;
@@ -29,12 +29,14 @@ public class BadgeRenderer {
 	public void draw(int mouseX, int mouseY) {
 		this.badgeX = startX;
 		this.badgeY = startY;
-		Boolean library = ModMenu.LIBRARY_MODS.get(metadata.getId());
-		if (library != null && library) {
+		if (ModMenu.LIBRARY_MODS.contains(metadata.getId())) {
 			drawBadge(I18n.translate("modmenu.library"), 0x8810d098, 0x88046146, mouseX, mouseY);
 		}
 		if (ModMenu.CLIENTSIDE_MODS.contains(metadata.getId())) {
 			drawBadge(I18n.translate("modmenu.clientsideOnly"), 0x884383E3, 0x880E4699, mouseX, mouseY);
+		}
+		if (ModMenu.PATCHWORK_FORGE_MODS.contains(metadata.getId())) {
+			drawBadge(I18n.translate("modmenu.forge"), 0x887C89A3, 0x88202C43, mouseX, mouseY);
 		}
 		if (metadata.getId().equals("minecraft")) {
 			drawBadge(I18n.translate("modmenu.minecraft"), 0x88BCBCBC, 0x88535353, mouseX, mouseY);

@@ -7,11 +7,11 @@ import net.minecraft.client.gui.widget.EntryListWidget;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
-	private final ModListScreen parent;
+	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
 
-	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModListScreen parent) {
+	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModsScreen parent) {
 		super(client, width, height, top, bottom, entryHeight);
 		this.parent = parent;
 		this.textRenderer = client.textRenderer;
@@ -56,7 +56,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	@Override
 	protected void renderHoleBackground(int y1, int y2, int startAlpha, int endAlpha) {
 		// Awful hack but it makes the background "seamless"
-		ModListScreen.overlayBackground(left, y1, right, y2, 64, 64, 64, startAlpha, endAlpha);
+		ModsScreen.overlayBackground(left, y1, right, y2, 64, 64, 64, startAlpha, endAlpha);
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {

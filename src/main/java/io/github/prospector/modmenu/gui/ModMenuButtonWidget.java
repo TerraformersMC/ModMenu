@@ -6,6 +6,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 
 public class ModMenuButtonWidget extends ButtonWidget {
 	public ModMenuButtonWidget(int x, int y, int width, int height, String text, Screen screen) {
-		super(x, y, width, height, text, button -> MinecraftClient.getInstance().openScreen(new ModListScreen(screen)));
+		super(x, y, width, height, text, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)));
 	}
 }

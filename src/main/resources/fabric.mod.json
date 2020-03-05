@@ -9,10 +9,14 @@
   "entrypoints": {
     "client": [
       "io.github.prospector.modmenu.ModMenu"
+    ],
+    "modmenu": [
+      "io.github.prospector.modmenu.VanillaModMenuCompat"
     ]
   },
   "contact": {
     "homepage": "https://minecraft.curseforge.com/projects/modmenu",
+    "sources": "https://github.com/Prospector/ModMenu",
     "issues": "https://github.com/Prospector/ModMenu/issues"
   },
   "depends": {
@@ -24,7 +28,7 @@
     "Prospector"
   ],
   "contributors": [
-    "Daniel She",
+    "shedaniel",
     "Draylar",
     "Mordna",
     "Madis0",
@@ -41,7 +45,10 @@
     "Lykrast",
     "Pyrofab",
     "UpcraftLP",
-    "swordglowsblue"
+    "swordglowsblue",
+    "hinataaki",
+    "LeonXu98",
+    "magneticflux"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [

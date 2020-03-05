@@ -3,7 +3,8 @@ plugins {
 	id 'maven-publish'
 	id 'idea'
 	id 'eclipse'
-	id 'fabric-loom' version '0.2.4-SNAPSHOT'
+	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+	id 'com.matthewprenger.cursegradle' version "1.1.2"
 }
 
 sourceCompatibility = 1.8
@@ -18,13 +19,9 @@ version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "c
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	project.fabric_modules.split(", ").each {
-		String module -> include "net.fabricmc.fabric-api:${module}"
-	}
 }
 
 minecraft {
@@ -64,7 +61,7 @@ publishing {
 			}
 
 			afterEvaluate {
-				artifact(remapJar.output) {
+				artifact(remapJar) {
 					builtBy remapJar
 				}
 			}
@@ -81,5 +78,26 @@ publishing {
 				}
 			}
 		}
+	}
+}
+
+curseforge {
+	if (project.hasProperty('curse_api_key')){
+		apiKey = project.getProperty('curse_api_key')
+	}
+	project {
+		id = '308702'
+		changelog = 'A changelog can be found at https://github.com/Prospector/ModMenu'
+		releaseType = 'release'
+		addGameVersion '1.15.2'
+		mainArtifact(remapJar) {
+			displayName = "ModMenu v$version for $project.minecraft_version"
+		}
+		afterEvaluate {
+			uploadTask.dependsOn("remapJar")
+		}
+	}
+	options{
+		forgeGradleIntegration = false
 	}
 }

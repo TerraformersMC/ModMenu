@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModListEntry;
 import io.github.prospector.modmenu.gui.ModListWidget;
+import io.github.prospector.modmenu.util.ModListSearch;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -12,7 +13,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class ParentEntry extends ModListEntry {
@@ -33,8 +33,9 @@ public class ParentEntry extends ModListEntry {
 		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
-		int children = (int) getChildren().stream().filter(child -> Arrays.stream(list.getParent().getSearchInput().get().toLowerCase(Locale.ROOT).split(" ?\\| ?")).anyMatch(term -> list.passesFilters(child, term, true))).count();
-		int childrenWidth = font.getStringWidth(Integer.toString(children)) - 1;
+		int shownChildren = ModListSearch.search(list.getParent(), list.getParent().getSearchInput(), getChildren()).size();
+		String str = shownChildren == children.size() ? "" + shownChildren : shownChildren + "/" + children.size();
+		int childrenWidth = font.getStringWidth(str) - 1;
 		if (childrenBadgeWidth < childrenWidth + 4) {
 			childrenBadgeWidth = childrenWidth + 4;
 		}
@@ -47,7 +48,7 @@ public class ParentEntry extends ModListEntry {
 		DrawableHelper.fill(childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + 1, childrenBadgeX + childrenBadgeWidth, childrenBadgeY + childrenBadgeHeight - 1, childrenOutlineColor);
 		DrawableHelper.fill(childrenBadgeX + 1, childrenBadgeY + 1, childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + childrenBadgeHeight - 1, childrenFillColor);
 		DrawableHelper.fill(childrenBadgeX + 1, childrenBadgeY + childrenBadgeHeight - 1, childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + childrenBadgeHeight, childrenOutlineColor);
-		font.draw(Integer.toString(children), childrenBadgeX + childrenBadgeWidth / 2 - childrenWidth / 2, childrenBadgeY + 1, 0xCACACA);
+		font.draw(str, childrenBadgeX + childrenBadgeWidth / 2 - childrenWidth / 2, childrenBadgeY + 1, 0xCACACA);
 		this.hoveringIcon = mouseX >= x - 1 && mouseX <= x - 1 + 32 && mouseY >= y - 1 && mouseY <= y - 1 + 32;
 		if (isMouseOver(mouseX, mouseY)) {
 			DrawableHelper.fill(x, y, x + 32, y + 32, 0xA0909090);

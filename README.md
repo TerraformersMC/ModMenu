@@ -8,7 +8,7 @@ A picture's worth 2 words
 ![](https://i.imgur.com/JKEatou.png "Mod Menu")
 
 ### Developers:
-- Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/ModMenu/
+- Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/
 - The icon comes from the icon specified in your fabric.mod.json (as per the spec)
 - Clientside-only and API badges are defined as custom objects in your fabric.mod.json as such:
 ```json
@@ -31,4 +31,5 @@ A picture's worth 2 words
   }
   ```
     - Features
-        - Mods can provide a Screen factory to provide a custom config screen to open with the config button. Implement the `getConfigScreenFactory` method in your API implementation.
+        - Mods can provide a Screen factory to provide a custom config screen to open with the config button. Implement the `getModConfigScreenFactory` method in your API implementation to do this.
+        - Mods can provide Screen factories to provide a custom config screens to open with the config buttons for other mods as well. Implement the `getProvidedConfigScreenFactories` method in your API implementation for this.
