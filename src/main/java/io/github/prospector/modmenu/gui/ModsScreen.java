@@ -75,24 +75,24 @@ public class ModsScreen extends Screen {
 
 	@Override
 	protected void init() {
-		Objects.requireNonNull(this.minecraft).keyboard.enableRepeatEvents(true);
+		Objects.requireNonNull(this.client).keyboard.enableRepeatEvents(true);
 		paneY = 48;
 		paneWidth = this.width / 2 - 8;
 		rightPaneX = width - paneWidth;
 
 		int searchBoxWidth = paneWidth - 32 - 22;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - 22 / 2;
-		this.searchBox = new TextFieldWidget(this.font, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
+		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
-		this.modList = new ModListWidget(this.minecraft, paneWidth, this.height, paneY + 19, this.height - 36, 36, this.searchBox.getText(), this.modList, this);
+		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY + 19, this.height - 36, 36, this.searchBox.getText(), this.modList, this);
 		this.modList.setLeftPos(0);
-		this.descriptionListWidget = new DescriptionListWidget(this.minecraft, paneWidth, this.height, paneY + 60, this.height - 36, font.fontHeight + 1, this);
+		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, paneY + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
 		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String modid = Objects.requireNonNull(selected).getMetadata().getId();
 			final Screen screen = ModMenu.getConfigScreen(modid, this);
 			if (screen != null) {
-				minecraft.openScreen(screen);
+				client.openScreen(screen);
 			} else {
 				ModMenu.openConfigScreen(modid);
 			}
@@ -124,11 +124,11 @@ public class ModsScreen extends Screen {
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
 				I18n.translate("modmenu.website"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
-			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
+			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
 					Util.getOperatingSystem().open(metadata.getContact().get("homepage").get());
 				}
-				this.minecraft.openScreen(this);
+				this.client.openScreen(this);
 			}, metadata.getContact().get("homepage").get(), true));
 		}) {
 			@Override
@@ -141,11 +141,11 @@ public class ModsScreen extends Screen {
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
 				I18n.translate("modmenu.issues"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
-			this.minecraft.openScreen(new ConfirmChatLinkScreen((bool) -> {
+			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
 					Util.getOperatingSystem().open(metadata.getContact().get("issues").get());
 				}
-				this.minecraft.openScreen(this);
+				this.client.openScreen(this);
 			}, metadata.getContact().get("issues").get(), true));
 		}) {
 			@Override
@@ -167,8 +167,8 @@ public class ModsScreen extends Screen {
 		});
 		String showLibrariesText = I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
 		String sortingText = I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
-		int showLibrariesWidth = font.getStringWidth(showLibrariesText) + 20;
-		int sortingWidth = font.getStringWidth(sortingText) + 20;
+		int showLibrariesWidth = textRenderer.getStringWidth(showLibrariesText) + 20;
+		int sortingWidth = textRenderer.getStringWidth(sortingText) + 20;
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
@@ -202,7 +202,7 @@ public class ModsScreen extends Screen {
 		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
 		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
-		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> minecraft.openScreen(parent)));
+		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> client.openScreen(parent)));
 		this.setInitialFocus(this.searchBox);
 
 		init = true;
@@ -229,23 +229,23 @@ public class ModsScreen extends Screen {
 		this.modList.render(mouseX, mouseY, delta);
 		this.searchBox.render(mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
-		this.drawCenteredString(this.font, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
+		this.drawCenteredString(this.textRenderer, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(mouseX, mouseY, delta);
 		String fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
-				if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(fullModCount) <= filtersX - 5) {
-					font.draw(fullModCount, searchBoxX, 52, 0xFFFFFF);
+				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= filtersX - 5) {
+					textRenderer.draw(fullModCount, searchBoxX, 52, 0xFFFFFF);
 				} else {
-					font.draw(computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
-					font.draw(computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
+					textRenderer.draw(computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
+					textRenderer.draw(computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
 				}
 			} else {
-				if (!ModMenuConfigManager.getConfig().showLibraries() || font.getStringWidth(fullModCount) <= modList.getWidth() - 5) {
-					drawCenteredString(font, fullModCount, this.modList.getWidth() / 2, 52, 0xFFFFFF);
+				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= modList.getWidth() - 5) {
+					drawCenteredString(textRenderer, fullModCount, this.modList.getWidth() / 2, 52, 0xFFFFFF);
 				} else {
-					drawCenteredString(font, computeModCountText(false), this.modList.getWidth() / 2, 46, 0xFFFFFF);
-					drawCenteredString(font, computeLibraryCountText(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
+					drawCenteredString(textRenderer, computeModCountText(false), this.modList.getWidth() / 2, 46, 0xFFFFFF);
+					drawCenteredString(textRenderer, computeLibraryCountText(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
 				}
 			}
 		}
@@ -257,25 +257,25 @@ public class ModsScreen extends Screen {
 			RenderSystem.enableBlend();
 			blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 			RenderSystem.disableBlend();
-			int lineSpacing = font.fontHeight + 1;
+			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			String name = metadata.getName();
 			name = HardcodedUtil.formatFabricModuleName(name);
 			String trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
-			if (font.getStringWidth(name) > maxNameWidth) {
-				trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth("...")) + "...";
+			if (textRenderer.getStringWidth(name) > maxNameWidth) {
+				trimmedName = textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getStringWidth("...")) + "...";
 			}
-			font.draw(trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
-			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + font.fontHeight && mouseX < x + imageOffset + font.getStringWidth(trimmedName)) {
+			textRenderer.draw(trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
+			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth(trimmedName)) {
 				setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
 			}
 			if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
-				badgeRenderer = new BadgeRenderer(x + imageOffset + Objects.requireNonNull(this.minecraft).textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
+				badgeRenderer = new BadgeRenderer(x + imageOffset + Objects.requireNonNull(this.client).textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
 				init = false;
 			}
 			badgeRenderer.draw(mouseX, mouseY);
-			font.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
+			textRenderer.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
 			String authors;
 			List<String> names = new ArrayList<>();
 
@@ -420,7 +420,7 @@ public class ModsScreen extends Screen {
 	}
 
 	private boolean updateFiltersX() {
-		if ((filtersWidth + font.getStringWidth(computeModCountText(true)) + 20) >= searchRowWidth && ((filtersWidth + font.getStringWidth(computeModCountText(false)) + 20) >= searchRowWidth || (filtersWidth + font.getStringWidth(computeLibraryCountText()) + 20) >= searchRowWidth)) {
+		if ((filtersWidth + textRenderer.getStringWidth(computeModCountText(true)) + 20) >= searchRowWidth && ((filtersWidth + textRenderer.getStringWidth(computeModCountText(false)) + 20) >= searchRowWidth || (filtersWidth + textRenderer.getStringWidth(computeLibraryCountText()) + 20) >= searchRowWidth)) {
 			filtersX = paneWidth / 2 - filtersWidth / 2;
 			return !filterOptionsShown;
 		} else {

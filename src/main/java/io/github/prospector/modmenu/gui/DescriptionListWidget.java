@@ -28,7 +28,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	protected int getScrollbarPosition() {
+	protected int getScrollbarPositionX() {
 		return this.width - 6 + left;
 	}
 
