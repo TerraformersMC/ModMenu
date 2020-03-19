@@ -47,7 +47,7 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 			adjustedV += this.height;
 		}
 
-		blit(this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
+		drawTexture(this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
 	}
 }

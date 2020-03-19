@@ -56,7 +56,7 @@ public class ParentEntry extends ModListEntry {
 			int xOffset = list.getParent().showModChildren.contains(getMetadata().getId()) ? 32 : 0;
 			int yOffset = hoveringIcon ? 32 : 0;
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			DrawableHelper.blit(x, y, xOffset, yOffset, 32 + xOffset, 32 + yOffset, 256, 256);
+			DrawableHelper.drawTexture(x, y, xOffset, yOffset, 32 + xOffset, 32 + yOffset, 256, 256);
 		}
 	}
 

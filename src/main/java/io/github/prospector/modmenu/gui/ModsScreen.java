@@ -255,7 +255,7 @@ public class ModsScreen extends Screen {
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.selected.bindIconTexture();
 			RenderSystem.enableBlend();
-			blit(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
+			drawTexture(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
@@ -377,7 +377,7 @@ public class ModsScreen extends Screen {
 	static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_LOCATION);
+		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_TEXTURE);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();

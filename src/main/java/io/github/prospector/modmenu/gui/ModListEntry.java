@@ -48,7 +48,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.bindIconTexture();
 		RenderSystem.enableBlend();
-		DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
+		DrawableHelper.drawTexture(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		RenderSystem.disableBlend();
 		String name = HardcodedUtil.formatFabricModuleName(metadata.getName());
 		String trimmedName = name;
