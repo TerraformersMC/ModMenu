@@ -95,7 +95,7 @@ task buildAndAttemptRelease {
 
 buildAndAttemptRelease {
 	def changes = StringBuilder.newInstance()
-	def proc = "git log --max-count=$project.changelog_max_commit_search --pretty=format:\"%B\"".execute()
+	def proc = "git log --max-count=$project.changelog_max_commit_search --pretty=format:\"%s\"".execute()
 	def latestCommit = true
 	def release = false
 	def cancel = false
