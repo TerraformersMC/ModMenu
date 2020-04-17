@@ -30,6 +30,7 @@ public class MixinTitleScreen extends Screen {
 		return height - 51;
 	}
 
+	@Override
 	protected <T extends AbstractButtonWidget> T addButton(T button) {
 		if (button.y <= this.height / 4 + 48 + 24 * 3) {
 			button.y -= 12;

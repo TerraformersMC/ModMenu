@@ -105,6 +105,7 @@ public class ParentEntry extends ModListEntry {
 		return children;
 	}
 
+	@Override
 	public boolean isMouseOver(double double_1, double double_2) {
 		return Objects.equals(this.list.getEntryAtPos(double_1, double_2), this);
 	}

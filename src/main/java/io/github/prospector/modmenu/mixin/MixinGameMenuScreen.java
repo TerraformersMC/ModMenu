@@ -31,6 +31,7 @@ public class MixinGameMenuScreen extends Screen {
 		children.add(tabOrder, button);
 	}
 
+	@Override
 	protected <T extends AbstractButtonWidget> T addButton(T button) {
 		if (button.y >= this.height / 4 - 16 + 24 * 4 - 1 && !(button instanceof ModMenuButtonWidget)) {
 			button.y += 24;
