@@ -1,8 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
@@ -22,6 +20,8 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -33,12 +33,11 @@ import java.util.*;
 public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
-	private final String textTitle;
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
 	private Screen parent;
 	private ModListWidget modList;
-	private String tooltip;
+	private Text tooltip;
 	private ModListEntry selected;
 	private BadgeRenderer badgeRenderer;
 	private double scrollPercent = 0;
@@ -56,7 +55,6 @@ public class ModsScreen extends Screen {
 	public ModsScreen(Screen previousGui) {
 		super(new TranslatableText("modmenu.title"));
 		this.parent = previousGui;
-		this.textTitle = title.asFormattedString();
 	}
 
 	@Override
@@ -82,7 +80,7 @@ public class ModsScreen extends Screen {
 
 		int searchBoxWidth = paneWidth - 32 - 22;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - 22 / 2;
-		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, I18n.translate("selectWorld.search"));
+		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, new TranslatableText("selectWorld.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
 		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY + 19, this.height - 36, 36, this.searchBox.getText(), this.modList, this);
 		this.modList.setLeftPos(0);
@@ -97,11 +95,11 @@ public class ModsScreen extends Screen {
 				ModMenu.openConfigScreen(modid);
 			}
 		},
-				I18n.translate("modmenu.configure")) {
+				new TranslatableText("modmenu.configure")) {
 			@Override
-			public void render(int mouseX, int mouseY, float delta) {
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				if (isHovered()) {
-					setTooltip(I18n.translate("modmenu.configure"));
+					setTooltip(new TranslatableText("modmenu.configure"));
 				}
 				if (selected != null) {
 					String modid = selected.getMetadata().getId();
@@ -110,19 +108,19 @@ public class ModsScreen extends Screen {
 					active = false;
 				}
 				visible = active;
-				super.render(mouseX, mouseY, delta);
+				super.render(matrices, mouseX, mouseY, delta);
 			}
 
 			@Override
-			public void renderButton(int int_1, int int_2, float float_1) {
+			public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				RenderSystem.color4f(1, 1, 1, 1f);
-				super.renderButton(int_1, int_2, float_1);
+				super.renderButton(matrices, mouseX, mouseY, delta);
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
-				I18n.translate("modmenu.website"), button -> {
+				new TranslatableText("modmenu.website"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -132,14 +130,14 @@ public class ModsScreen extends Screen {
 			}, metadata.getContact().get("homepage").get(), true));
 		}) {
 			@Override
-			public void render(int var1, int var2, float var3) {
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
 				active = visible && selected.getMetadata().getContact().get("homepage").isPresent();
-				super.render(var1, var2, var3);
+				super.render(matrices, mouseX, mouseY, delta);
 			}
 		};
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
-				I18n.translate("modmenu.issues"), button -> {
+				new TranslatableText("modmenu.issues"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -149,26 +147,26 @@ public class ModsScreen extends Screen {
 			}, metadata.getContact().get("issues").get(), true));
 		}) {
 			@Override
-			public void render(int var1, int var2, float var3) {
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
 				active = visible && selected.getMetadata().getContact().get("issues").isPresent();
-				super.render(var1, var2, var3);
+				super.render(matrices, mouseX, mouseY, delta);
 			}
 		};
 		this.children.add(this.searchBox);
 		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown) {
 			@Override
-			public void render(int int_1, int int_2, float float_1) {
-				super.render(int_1, int_2, float_1);
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+				super.render(matrices, mouseX, mouseY, delta);
 				if (isHovered()) {
-					setTooltip(I18n.translate("modmenu.toggleFilterOptions"));
+					setTooltip(new TranslatableText("modmenu.toggleFilterOptions"));
 				}
 			}
 		});
-		String showLibrariesText = I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
-		String sortingText = I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
-		int showLibrariesWidth = textRenderer.getStringWidth(showLibrariesText) + 20;
-		int sortingWidth = textRenderer.getStringWidth(sortingText) + 20;
+		Text showLibrariesText = new TranslatableText("modmenu.showLibraries", new TranslatableText("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
+		Text sortingText = new TranslatableText("modmenu.sorting", new TranslatableText(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
+		int showLibrariesWidth = textRenderer.method_27525(showLibrariesText) + 20;
+		int sortingWidth = textRenderer.method_27525(sortingText) + 20;
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
@@ -177,23 +175,23 @@ public class ModsScreen extends Screen {
 			modList.reloadFilters();
 		}) {
 			@Override
-			public void render(int mouseX, int mouseY, float delta) {
-				RenderSystem.translated(0, 0, 1);
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+				matrices.translate(0, 0, 1);
 				visible = filterOptionsShown;
-				this.setMessage(I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey())));
-				super.render(mouseX, mouseY, delta);
+				this.setMessage(new TranslatableText("modmenu.sorting", new TranslatableText(ModMenuConfigManager.getConfig().getSorting().getTranslationKey())));
+				super.render(matrices, mouseX, mouseY, delta);
 			}
 		});
-		this.addButton(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())), button -> {
+		this.addButton(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, new TranslatableText("modmenu.showLibraries", new TranslatableText("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())), button -> {
 			ModMenuConfigManager.getConfig().toggleShowLibraries();
 			modList.reloadFilters();
 		}) {
 			@Override
-			public void render(int mouseX, int mouseY, float delta) {
-				RenderSystem.translated(0, 0, 1);
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+				matrices.translate(0, 0, 1);
 				visible = filterOptionsShown;
-				this.setMessage(I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())));
-				super.render(mouseX, mouseY, delta);
+				this.setMessage(new TranslatableText("modmenu.showLibraries", new TranslatableText("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())));
+				super.render(matrices, mouseX, mouseY, delta);
 			}
 		});
 		this.children.add(this.modList);
@@ -201,8 +199,8 @@ public class ModsScreen extends Screen {
 		this.addButton(websiteButton);
 		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
-		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, I18n.translate("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
-		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, I18n.translate("gui.done"), button -> client.openScreen(parent)));
+		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
+		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, new TranslatableText("gui.done"), button -> client.openScreen(parent)));
 		this.setInitialFocus(this.searchBox);
 
 		init = true;
@@ -219,33 +217,33 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float delta) {
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		ModsScreen.overlayBackground(paneWidth, 0, rightPaneX, height, 64, 64, 64, 255, 255);
 		this.tooltip = null;
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
-			this.descriptionListWidget.render(mouseX, mouseY, delta);
+			this.descriptionListWidget.render(matrices, mouseX, mouseY, delta);
 		}
-		this.modList.render(mouseX, mouseY, delta);
-		this.searchBox.render(mouseX, mouseY, delta);
+		this.modList.render(matrices, mouseX, mouseY, delta);
+		this.searchBox.render(matrices, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
-		this.drawCenteredString(this.textRenderer, this.textTitle, this.modList.getWidth() / 2, 8, 16777215);
-		super.render(mouseX, mouseY, delta);
+		this.method_27534(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		super.render(matrices, mouseX, mouseY, delta);
 		String fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= filtersX - 5) {
-					textRenderer.draw(fullModCount, searchBoxX, 52, 0xFFFFFF);
+					textRenderer.draw(matrices, fullModCount, searchBoxX, 52, 0xFFFFFF);
 				} else {
-					textRenderer.draw(computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
-					textRenderer.draw(computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
+					textRenderer.draw(matrices, computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
+					textRenderer.draw(matrices, computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
 				}
 			} else {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= modList.getWidth() - 5) {
-					drawCenteredString(textRenderer, fullModCount, this.modList.getWidth() / 2, 52, 0xFFFFFF);
+					drawCenteredString(matrices, textRenderer, fullModCount, this.modList.getWidth() / 2, 52, 0xFFFFFF);
 				} else {
-					drawCenteredString(textRenderer, computeModCountText(false), this.modList.getWidth() / 2, 46, 0xFFFFFF);
-					drawCenteredString(textRenderer, computeLibraryCountText(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
+					drawCenteredString(matrices, textRenderer, computeModCountText(false), this.modList.getWidth() / 2, 46, 0xFFFFFF);
+					drawCenteredString(matrices, textRenderer, computeLibraryCountText(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
 				}
 			}
 		}
@@ -255,7 +253,7 @@ public class ModsScreen extends Screen {
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.selected.bindIconTexture();
 			RenderSystem.enableBlend();
-			drawTexture(x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
+			drawTexture(matrices, x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
@@ -264,18 +262,18 @@ public class ModsScreen extends Screen {
 			String trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getStringWidth(name) > maxNameWidth) {
-				trimmedName = textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getStringWidth("...")) + "...";
+				trimmedName = textRenderer.method_27523(name, maxNameWidth - textRenderer.getStringWidth("...")) + "...";
 			}
-			textRenderer.draw(trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
+			textRenderer.draw(matrices, trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth(trimmedName)) {
-				setTooltip(I18n.translate("modmenu.modIdToolTip", metadata.getId()));
+				setTooltip(new TranslatableText("modmenu.modIdToolTip", metadata.getId()));
 			}
 			if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
 				badgeRenderer = new BadgeRenderer(x + imageOffset + Objects.requireNonNull(this.client).textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
 				init = false;
 			}
-			badgeRenderer.draw(mouseX, mouseY);
-			textRenderer.draw("v" + metadata.getVersion().getFriendlyString(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
+			badgeRenderer.draw(matrices, mouseX, mouseY);
+			textRenderer.draw(matrices, "v" + metadata.getVersion().getFriendlyString(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
 			String authors;
 			List<String> names = new ArrayList<>();
 
@@ -291,10 +289,10 @@ public class ModsScreen extends Screen {
 				} else {
 					authors = names.get(0);
 				}
-				RenderUtils.drawWrappedString(I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
+				RenderUtils.drawWrappedString(matrices, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 			}
 			if (this.tooltip != null) {
-				this.renderTooltip(Lists.newArrayList(Splitter.on("\n").split(this.tooltip)), mouseX, mouseY);
+				this.renderTooltip(matrices, textRenderer.wrapStringToWidthAsList(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
 			}
 		}
 
@@ -393,7 +391,7 @@ public class ModsScreen extends Screen {
 		this.modList.close();
 	}
 
-	private void setTooltip(String tooltip) {
+	private void setTooltip(Text tooltip) {
 		this.tooltip = tooltip;
 	}
 
