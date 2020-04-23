@@ -14,6 +14,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
@@ -42,28 +43,28 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	}
 
 	@Override
-	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+	public void render(MatrixStack matrices, int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		x += getXOffset();
 		rowWidth -= getXOffset();
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.bindIconTexture();
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
+		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		RenderSystem.disableBlend();
 		String name = HardcodedUtil.formatFabricModuleName(metadata.getName());
 		String trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;
 		TextRenderer font = this.client.textRenderer;
 		if (font.getStringWidth(name) > maxNameWidth) {
-			trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth("...")) + "...";
+			trimmedName = font.method_27523(name, maxNameWidth - font.getStringWidth("...")) + "...";
 		}
-		font.draw(trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
-		new BadgeRenderer(x + 32 + 3 + font.getStringWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(mouseX, mouseY);
+		font.draw(matrices, trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
+		new BadgeRenderer(x + 32 + 3 + font.getStringWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(matrices, mouseX, mouseY);
 		String description = metadata.getDescription();
 		if (description.isEmpty() && HardcodedUtil.getHardcodedDescriptions().containsKey(metadata.getId())) {
 			description = HardcodedUtil.getHardcodedDescription(metadata.getId());
 		}
-		RenderUtils.drawWrappedString(description, (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 7, 2, 0x808080);
+		RenderUtils.drawWrappedString(matrices, description, (x + 32 + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - 32 - 7, 2, 0x808080);
 	}
 
 	private NativeImageBackedTexture createIcon() {

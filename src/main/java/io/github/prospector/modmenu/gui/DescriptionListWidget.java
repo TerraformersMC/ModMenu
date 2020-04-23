@@ -4,6 +4,9 @@ import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
@@ -33,7 +36,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float delta) {
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		ModListEntry selectedEntry = parent.getSelectedEntry();
 		if (selectedEntry != lastSelected) {
 			lastSelected = selectedEntry;
@@ -45,12 +48,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (String line : textRenderer.wrapStringToWidthAsList(description.replaceAll("\n", "\n\n"), getRowWidth())) {
+				for (Text line : textRenderer.wrapStringToWidthAsList(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
 					children().add(new DescriptionEntry(line));
 				}
 			}
 		}
-		super.render(mouseX, mouseY, delta);
+		super.render(matrices, mouseX, mouseY, delta);
 	}
 
 	@Override
@@ -60,15 +63,15 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
-		protected String text;
+		protected Text text;
 
-		public DescriptionEntry(String text) {
+		public DescriptionEntry(Text text) {
 			this.text = text;
 		}
 
 		@Override
-		public void render(int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
-			MinecraftClient.getInstance().textRenderer.drawWithShadow(text, x, y, 0xAAAAAA);
+		public void render(MatrixStack matrices, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+			MinecraftClient.getInstance().textRenderer.method_27517(matrices, text, x, y, 0xAAAAAA);
 		}
 	}
 
