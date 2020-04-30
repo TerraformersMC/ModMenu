@@ -11,6 +11,7 @@
   "modmenu.authorPrefix": "By %s",
   "modmenu.search": "Search for mods",
   "modmenu.clientsideOnly": "Client",
+  "modmenu.deprecated": "Deprecated",
   "modmenu.library": "Library",
   "modmenu.toggleFilterOptions": "Toggle Filter Options",
   "modmenu.showLibraries": "Libraries: %s",
