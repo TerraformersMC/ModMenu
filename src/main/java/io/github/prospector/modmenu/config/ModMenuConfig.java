@@ -28,7 +28,7 @@ public class ModMenuConfig {
 	}
 
 	public static enum Sorting {
-		ASCENDING(Comparator.comparing(modContainer -> HardcodedUtil.formatFabricModuleName(modContainer.getMetadata().getName())), "modmenu.sorting.ascending"),
+		ASCENDING(Comparator.comparing(modContainer -> HardcodedUtil.formatFabricModuleName(modContainer.getMetadata().getName()).asString()), "modmenu.sorting.ascending"),
 		DECENDING(ASCENDING.getComparator().reversed(), "modmenu.sorting.decending");
 
 		Comparator<ModContainer> comparator;

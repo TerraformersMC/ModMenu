@@ -21,6 +21,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -165,8 +166,8 @@ public class ModsScreen extends Screen {
 		});
 		Text showLibrariesText = new TranslatableText("modmenu.showLibraries", new TranslatableText("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
 		Text sortingText = new TranslatableText("modmenu.sorting", new TranslatableText(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
-		int showLibrariesWidth = textRenderer.method_27525(showLibrariesText) + 20;
-		int sortingWidth = textRenderer.method_27525(sortingText) + 20;
+		int showLibrariesWidth = textRenderer.getStringWidth(showLibrariesText) + 20;
+		int sortingWidth = textRenderer.getStringWidth(sortingText) + 20;
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
@@ -227,9 +228,9 @@ public class ModsScreen extends Screen {
 		this.modList.render(matrices, mouseX, mouseY, delta);
 		this.searchBox.render(matrices, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
-		this.method_27534(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		this.drawStringWithShadow(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(matrices, mouseX, mouseY, delta);
-		String fullModCount = computeModCountText(true);
+		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= filtersX - 5) {
@@ -240,10 +241,13 @@ public class ModsScreen extends Screen {
 				}
 			} else {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= modList.getWidth() - 5) {
-					drawCenteredString(matrices, textRenderer, fullModCount, this.modList.getWidth() / 2, 52, 0xFFFFFF);
+					drawCenteredString(matrices, textRenderer, fullModCount.asString(), this.modList.getWidth() / 2, 52, 0xFFFFFF);
 				} else {
-					drawCenteredString(matrices, textRenderer, computeModCountText(false), this.modList.getWidth() / 2, 46, 0xFFFFFF);
-					drawCenteredString(matrices, textRenderer, computeLibraryCountText(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
+					drawCenteredString(matrices, textRenderer, computeModCountText(false).asString(), this.modList.getWidth() / 2, 46, 0xFFFFFF);
+					Text libraryCountText = computeLibraryCountText();
+					if (libraryCountText != null) {
+						drawCenteredString(matrices, textRenderer, libraryCountText.asString(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
+					}
 				}
 			}
 		}
@@ -257,12 +261,13 @@ public class ModsScreen extends Screen {
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
-			String name = metadata.getName();
-			name = HardcodedUtil.formatFabricModuleName(name);
-			String trimmedName = name;
+			Text name = new LiteralText(metadata.getName());
+			name = HardcodedUtil.formatFabricModuleName(name.asString());
+			Text trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getStringWidth(name) > maxNameWidth) {
-				trimmedName = textRenderer.method_27523(name, maxNameWidth - textRenderer.getStringWidth("...")) + "...";
+				LiteralText ellipsis = new LiteralText("...");
+				trimmedName = textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getStringWidth(ellipsis)).append(ellipsis);
 			}
 			textRenderer.draw(matrices, trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth(trimmedName)) {
@@ -292,13 +297,13 @@ public class ModsScreen extends Screen {
 				RenderUtils.drawWrappedString(matrices, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 			}
 			if (this.tooltip != null) {
-				this.renderTooltip(matrices, textRenderer.wrapStringToWidthAsList(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
+				this.renderTooltip(matrices, textRenderer.wrapLines(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
 			}
 		}
 
 	}
 
-	private String computeModCountText(boolean includeLibs) {
+	private Text computeModCountText(boolean includeLibs) {
 		int[] rootMods = formatModCount(ModMenu.ROOT_NONLIB_MODS);
 
 		if (includeLibs && ModMenuConfigManager.getConfig().showLibraries()) {
@@ -309,16 +314,16 @@ public class ModsScreen extends Screen {
 		}
 	}
 
-	private String computeLibraryCountText() {
+	private Text computeLibraryCountText() {
 		if (ModMenuConfigManager.getConfig().showLibraries()) {
 			int[] rootLibs = formatModCount(ModMenu.ROOT_LIBRARIES);
 			return translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
-			return null;
+			return new LiteralText(null);
 		}
 	}
 
-	private static String translateNumeric(String key, int[]... args) {
+	private static Text translateNumeric(String key, int[]... args) {
 		Object[] realArgs = new Object[args.length];
 		for (int i = 0; i < args.length; i++) {
 			NumberFormat nf = NumberFormat.getInstance();
@@ -356,11 +361,11 @@ public class ModsScreen extends Screen {
 			lastKey = fullKey.toString();
 			if (I18n.hasTranslation(lastKey)) {
 //				return lastKey + Arrays.toString(realArgs);
-				return I18n.translate(lastKey, realArgs);
+				return new TranslatableText(lastKey, realArgs);
 			}
 		}
 //		return lastKey + Arrays.toString(realArgs);
-		return I18n.translate(lastKey, realArgs);
+		return new TranslatableText(lastKey, realArgs);
 	}
 
 	private int[] formatModCount(Set<String> set) {

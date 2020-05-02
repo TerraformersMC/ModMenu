@@ -48,7 +48,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (Text line : textRenderer.wrapStringToWidthAsList(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
+				for (Text line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
 					children().add(new DescriptionEntry(line));
 				}
 			}
@@ -71,7 +71,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		@Override
 		public void render(MatrixStack matrices, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
-			MinecraftClient.getInstance().textRenderer.method_27517(matrices, text, x, y, 0xAAAAAA);
+				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
 		}
 	}
 
