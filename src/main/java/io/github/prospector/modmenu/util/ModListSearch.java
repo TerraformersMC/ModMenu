@@ -32,7 +32,7 @@ public class ModListSearch {
 
 
 		//Some basic search, could do with something more advanced but this will do for now
-		if (HardcodedUtil.formatFabricModuleName(metadata.getName()).toLowerCase(Locale.ROOT).contains(query) //Search mod name
+		if (HardcodedUtil.formatFabricModuleName(metadata.getName()).asString().toLowerCase(Locale.ROOT).contains(query) //Search mod name
 			|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod name
 			|| authorMatches(container, query) //Search via author
 			|| (ModMenu.LIBRARY_MODS.contains(modId) && "api library".contains(query)) //Search for lib mods

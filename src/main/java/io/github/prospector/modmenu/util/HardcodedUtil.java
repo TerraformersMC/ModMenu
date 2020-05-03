@@ -4,6 +4,8 @@ import io.github.prospector.modmenu.ModMenu;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.HashMap;
@@ -67,7 +69,7 @@ public class HardcodedUtil {
 		}
 	}
 
-	public static String formatFabricModuleName(String name) {
+	public static Text formatFabricModuleName(String name) {
 		Matcher matcher = FABRIC_PATTERN.matcher(name);
 		if (matcher.matches() || name.equals("fabric-renderer-indigo") || name.equals("fabric-api-base")) {
 			if (matcher.matches()) {
@@ -80,7 +82,7 @@ public class HardcodedUtil {
 			name = name.replace("Api", "API");
 			name = name.replace("Blockentity", "BlockEntity");
 		}
-		return name;
+		return new LiteralText(name);
 	}
 
 	public static String getHardcodedDescription(String id) {

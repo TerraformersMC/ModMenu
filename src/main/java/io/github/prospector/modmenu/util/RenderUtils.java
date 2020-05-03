@@ -18,7 +18,7 @@ public class RenderUtils {
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
-		List<Text> strings = CLIENT.textRenderer.wrapStringToWidthAsList(new LiteralText(string), wrapWidth);
+		List<Text> strings = CLIENT.textRenderer.wrapLines(new LiteralText(string), wrapWidth);
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
 				break;
@@ -29,14 +29,14 @@ public class RenderUtils {
 			}
 			int x1 = x;
 			if (CLIENT.textRenderer.isRightToLeft()) {
-				int width = CLIENT.textRenderer.getStringWidth(CLIENT.textRenderer.mirror(line));
+				int width = CLIENT.textRenderer.getStringWidth(new LiteralText(CLIENT.textRenderer.mirror(line)));
 				x1 += (float) (wrapWidth - width);
 			}
 			CLIENT.textRenderer.draw(matrices, line, x1, y + i * CLIENT.textRenderer.fontHeight, color);
 		}
 	}
 
-	public static void drawBadge(MatrixStack matrices, int x, int y, int tagWidth, String text, int outlineColor, int fillColor, int textColor) {
+	public static void drawBadge(MatrixStack matrices, int x, int y, int tagWidth, Text text, int outlineColor, int fillColor, int textColor) {
 		DrawableHelper.fill(matrices, x + 1, y - 1, x + tagWidth, y, outlineColor);
 		DrawableHelper.fill(matrices, x, y, x + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
 		DrawableHelper.fill(matrices, x + 1, y + 1 + CLIENT.textRenderer.fontHeight - 1, x + tagWidth, y + CLIENT.textRenderer.fontHeight + 1, outlineColor);
