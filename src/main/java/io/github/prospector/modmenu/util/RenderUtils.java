@@ -29,7 +29,7 @@ public class RenderUtils {
 			}
 			int x1 = x;
 			if (CLIENT.textRenderer.isRightToLeft()) {
-				int width = CLIENT.textRenderer.getStringWidth(new LiteralText(CLIENT.textRenderer.mirror(line)));
+				int width = CLIENT.textRenderer.getWidth(new LiteralText(CLIENT.textRenderer.mirror(line)));
 				x1 += (float) (wrapWidth - width);
 			}
 			CLIENT.textRenderer.draw(matrices, line, x1, y + i * CLIENT.textRenderer.fontHeight, color);
@@ -42,6 +42,6 @@ public class RenderUtils {
 		DrawableHelper.fill(matrices, x + 1, y + 1 + CLIENT.textRenderer.fontHeight - 1, x + tagWidth, y + CLIENT.textRenderer.fontHeight + 1, outlineColor);
 		DrawableHelper.fill(matrices, x + tagWidth, y, x + tagWidth + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
 		DrawableHelper.fill(matrices, x + 1, y, x + tagWidth, y + CLIENT.textRenderer.fontHeight, fillColor);
-		CLIENT.textRenderer.draw(matrices, text, (x + 1 + (tagWidth - CLIENT.textRenderer.getStringWidth(text)) / (float) 2), y + 1, textColor);
+		CLIENT.textRenderer.draw(matrices, text, (x + 1 + (tagWidth - CLIENT.textRenderer.getWidth(text)) / (float) 2), y + 1, textColor);
 	}
 }

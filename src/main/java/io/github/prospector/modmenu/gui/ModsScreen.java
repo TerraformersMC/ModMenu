@@ -166,8 +166,8 @@ public class ModsScreen extends Screen {
 		});
 		Text showLibrariesText = new TranslatableText("modmenu.showLibraries", new TranslatableText("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
 		Text sortingText = new TranslatableText("modmenu.sorting", new TranslatableText(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
-		int showLibrariesWidth = textRenderer.getStringWidth(showLibrariesText) + 20;
-		int sortingWidth = textRenderer.getStringWidth(sortingText) + 20;
+		int showLibrariesWidth = textRenderer.getWidth(showLibrariesText) + 20;
+		int sortingWidth = textRenderer.getWidth(sortingText) + 20;
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
@@ -228,19 +228,19 @@ public class ModsScreen extends Screen {
 		this.modList.render(matrices, mouseX, mouseY, delta);
 		this.searchBox.render(matrices, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
-		this.drawStringWithShadow(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		this.drawTextWithShadow(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
 		super.render(matrices, mouseX, mouseY, delta);
 		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
-				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= filtersX - 5) {
+				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getWidth(fullModCount) <= filtersX - 5) {
 					textRenderer.draw(matrices, fullModCount, searchBoxX, 52, 0xFFFFFF);
 				} else {
 					textRenderer.draw(matrices, computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
 					textRenderer.draw(matrices, computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
 				}
 			} else {
-				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getStringWidth(fullModCount) <= modList.getWidth() - 5) {
+				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
 					drawCenteredString(matrices, textRenderer, fullModCount.asString(), this.modList.getWidth() / 2, 52, 0xFFFFFF);
 				} else {
 					drawCenteredString(matrices, textRenderer, computeModCountText(false).asString(), this.modList.getWidth() / 2, 46, 0xFFFFFF);
@@ -265,16 +265,16 @@ public class ModsScreen extends Screen {
 			name = HardcodedUtil.formatFabricModuleName(name.asString());
 			Text trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
-			if (textRenderer.getStringWidth(name) > maxNameWidth) {
+			if (textRenderer.getWidth(name) > maxNameWidth) {
 				LiteralText ellipsis = new LiteralText("...");
-				trimmedName = textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getStringWidth(ellipsis)).append(ellipsis);
+				trimmedName = textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)).append(ellipsis);
 			}
 			textRenderer.draw(matrices, trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
-			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth(trimmedName)) {
+			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				setTooltip(new TranslatableText("modmenu.modIdToolTip", metadata.getId()));
 			}
 			if (init || badgeRenderer == null || badgeRenderer.getMetadata() != metadata) {
-				badgeRenderer = new BadgeRenderer(x + imageOffset + Objects.requireNonNull(this.client).textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
+				badgeRenderer = new BadgeRenderer(x + imageOffset + Objects.requireNonNull(this.client).textRenderer.getWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.container, this);
 				init = false;
 			}
 			badgeRenderer.draw(matrices, mouseX, mouseY);
@@ -423,7 +423,7 @@ public class ModsScreen extends Screen {
 	}
 
 	private boolean updateFiltersX() {
-		if ((filtersWidth + textRenderer.getStringWidth(computeModCountText(true)) + 20) >= searchRowWidth && ((filtersWidth + textRenderer.getStringWidth(computeModCountText(false)) + 20) >= searchRowWidth || (filtersWidth + textRenderer.getStringWidth(computeLibraryCountText()) + 20) >= searchRowWidth)) {
+		if ((filtersWidth + textRenderer.getWidth(computeModCountText(true)) + 20) >= searchRowWidth && ((filtersWidth + textRenderer.getWidth(computeModCountText(false)) + 20) >= searchRowWidth || (filtersWidth + textRenderer.getWidth(computeLibraryCountText()) + 20) >= searchRowWidth)) {
 			filtersX = paneWidth / 2 - filtersWidth / 2;
 			return !filterOptionsShown;
 		} else {
