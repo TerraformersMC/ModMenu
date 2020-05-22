@@ -57,12 +57,12 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		Text trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;
 		TextRenderer font = this.client.textRenderer;
-		if (font.getStringWidth(name) > maxNameWidth) {
+		if (font.getWidth(name) > maxNameWidth) {
 			LiteralText ellipsis = new LiteralText("...");
-			trimmedName = font.trimToWidth(name, maxNameWidth - font.getStringWidth(ellipsis)).append(ellipsis);
+			trimmedName = font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)).append(ellipsis);
 		}
 		font.draw(matrices, trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
-		new BadgeRenderer(x + 32 + 3 + font.getStringWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(matrices, mouseX, mouseY);
+		new BadgeRenderer(x + 32 + 3 + font.getWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(matrices, mouseX, mouseY);
 		String description = metadata.getDescription();
 		if (description.isEmpty() && HardcodedUtil.getHardcodedDescriptions().containsKey(metadata.getId())) {
 			description = HardcodedUtil.getHardcodedDescription(metadata.getId());

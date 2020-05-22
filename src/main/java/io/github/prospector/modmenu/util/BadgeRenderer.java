@@ -63,7 +63,7 @@ public class BadgeRenderer {
 	}
 
 	public void drawBadge(MatrixStack matrices, Text text, int outlineColor, int fillColor, int mouseX, int mouseY) {
-		int width = client.textRenderer.getStringWidth(text) + 6;
+		int width = client.textRenderer.getWidth(text) + 6;
 		if (badgeX + width < badgeMax) {
 			RenderUtils.drawBadge(matrices, badgeX, badgeY, width, text, outlineColor, fillColor, 0xCACACA);
 			badgeX += width + 3;
