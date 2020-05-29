@@ -1,6 +1,7 @@
 package io.github.prospector.modmenu.gui;
 
 import io.github.prospector.modmenu.util.HardcodedUtil;
+import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
@@ -48,7 +49,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (Text line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
+				for (class_5348 line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
 					children().add(new DescriptionEntry(line));
 				}
 			}
@@ -56,16 +57,10 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 
-	@Override
-	protected void renderHoleBackground(int y1, int y2, int startAlpha, int endAlpha) {
-		// Awful hack but it makes the background "seamless"
-		ModsScreen.overlayBackground(left, y1, right, y2, 64, 64, 64, startAlpha, endAlpha);
-	}
-
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
-		protected Text text;
+		protected class_5348 text;
 
-		public DescriptionEntry(Text text) {
+		public DescriptionEntry(class_5348 text) {
 			this.text = text;
 		}
 
