@@ -2,6 +2,7 @@ package io.github.prospector.modmenu.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
@@ -9,6 +10,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class RenderUtils {
@@ -18,15 +20,20 @@ public class RenderUtils {
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
-		List<Text> strings = CLIENT.textRenderer.wrapLines(new LiteralText(string), wrapWidth);
+		List<class_5348> strings = CLIENT.textRenderer.wrapLines(new LiteralText(string), wrapWidth);
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
 				break;
 			}
-			String line = strings.get(i).getString();
+			StringBuilder lineBuilder = new StringBuilder();
+			strings.get(i).visit((part) -> {
+				lineBuilder.append(part);
+				return Optional.empty();
+			});
 			if (i == lines - 1 && strings.size() > lines) {
-				line += "...";
+				lineBuilder.append("...");
 			}
+			String line = lineBuilder.toString();
 			int x1 = x;
 			if (CLIENT.textRenderer.isRightToLeft()) {
 				int width = CLIENT.textRenderer.getWidth(new LiteralText(CLIENT.textRenderer.mirror(line)));

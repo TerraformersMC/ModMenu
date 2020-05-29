@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 	id 'idea'
 	id 'eclipse'
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'fabric-loom' version '0.4.3'
 	id 'com.matthewprenger.cursegradle' version "1.4.0"
 }
 
