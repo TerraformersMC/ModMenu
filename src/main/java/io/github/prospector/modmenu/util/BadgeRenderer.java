@@ -5,7 +5,6 @@ import io.github.prospector.modmenu.gui.ModsScreen;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -34,16 +33,16 @@ public class BadgeRenderer {
 		this.badgeX = startX;
 		this.badgeY = startY;
 		if (ModMenu.LIBRARY_MODS.contains(metadata.getId())) {
-			drawBadge(matrices, new TranslatableText("modmenu.library"), 0x8810d098, 0x88046146, mouseX, mouseY);
+			drawBadge(matrices, new TranslatableText("modmenu.library"), 0xff107454, 0xff093929, mouseX, mouseY);
 		}
 		if (ModMenu.CLIENTSIDE_MODS.contains(metadata.getId())) {
-			drawBadge(matrices, new TranslatableText("modmenu.clientsideOnly"), 0x884383E3, 0x880E4699, mouseX, mouseY);
+			drawBadge(matrices, new TranslatableText("modmenu.clientsideOnly"), 0xff2b4b7c, 0xff0e2a55, mouseX, mouseY);
 		}
 		if (ModMenu.PATCHWORK_FORGE_MODS.contains(metadata.getId())) {
-			drawBadge(matrices, new TranslatableText("modmenu.forge"), 0x887C89A3, 0x88202C43, mouseX, mouseY);
+			drawBadge(matrices, new TranslatableText("modmenu.forge"), 0xff1f2d42, 0xff101721, mouseX, mouseY);
 		}
 		if (metadata.getId().equals("minecraft")) {
-			drawBadge(matrices, new TranslatableText("modmenu.minecraft"), 0x88BCBCBC, 0x88535353, mouseX, mouseY);
+			drawBadge(matrices, new TranslatableText("modmenu.minecraft"), 0xff6f6c6a, 0xff31302f, mouseX, mouseY);
 		}
 		//noinspection MagicConstant
 		if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {

@@ -8,7 +8,6 @@ import io.github.prospector.modmenu.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -17,6 +16,7 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.Validate;
@@ -55,12 +55,12 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		RenderSystem.disableBlend();
 		Text name = HardcodedUtil.formatFabricModuleName(metadata.getName());
-		class_5348 trimmedName = name;
+		StringRenderable trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;
 		TextRenderer font = this.client.textRenderer;
 		if (font.getWidth(name) > maxNameWidth) {
 			LiteralText ellipsis = new LiteralText("...");
-			trimmedName = class_5348.method_29433(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
+			trimmedName = StringRenderable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
 		}
 		font.draw(matrices, trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
 		new BadgeRenderer(x + 32 + 3 + font.getWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(matrices, mouseX, mouseY);

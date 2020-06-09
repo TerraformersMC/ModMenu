@@ -14,6 +14,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.text.NumberFormat;
@@ -36,7 +37,7 @@ public class ModMenu implements ClientModInitializer {
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
 
 	public static boolean hasConfigScreenFactory(String modid) {
-		return configScreenFactories.containsKey(modid);
+		return configScreenFactories.containsKey(modid) && configScreenFactories.get(modid).create(MinecraftClient.getInstance().currentScreen) != null;
 	}
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
@@ -65,8 +66,9 @@ public class ModMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
-		FabricLoader.getInstance().getEntrypoints("modmenu", ModMenuApi.class).forEach(api -> {
-			factories.put(api.getModId(), api.getModConfigScreenFactory());
+		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(entrypoint -> {
+			ModMenuApi api = entrypoint.getEntrypoint();
+			factories.put(entrypoint.getProvider().getMetadata().getId(), api.getModConfigScreenFactory());
 			api.getProvidedConfigScreenFactories().forEach(factories::putIfAbsent);
 		});
 		configScreenFactories = new ImmutableMap.Builder<String, ConfigScreenFactory<?>>().putAll(factories).build();

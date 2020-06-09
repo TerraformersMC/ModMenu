@@ -2,11 +2,11 @@ package io.github.prospector.modmenu.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class RenderUtils {
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
-		List<class_5348> strings = CLIENT.textRenderer.wrapLines(new LiteralText(string), wrapWidth);
+		List<StringRenderable> strings = CLIENT.textRenderer.wrapLines(new LiteralText(string), wrapWidth);
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
 				break;

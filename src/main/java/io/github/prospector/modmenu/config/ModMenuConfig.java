@@ -7,6 +7,7 @@ import java.util.Comparator;
 
 public class ModMenuConfig {
 	private boolean showLibraries = false;
+	private TitleScreenLayout titleScreenLayout = TitleScreenLayout.CLASSIC;
 	private Sorting sorting = Sorting.ASCENDING;
 
 	public void toggleShowLibraries() {
@@ -19,6 +20,11 @@ public class ModMenuConfig {
 		ModMenuConfigManager.save();
 	}
 
+	public void toggleTitleScreenLayout() {
+		this.titleScreenLayout = TitleScreenLayout.values()[(titleScreenLayout.ordinal() + 1) % TitleScreenLayout.values().length];
+		ModMenuConfigManager.save();
+	}
+
 	public boolean showLibraries() {
 		return showLibraries;
 	}
@@ -27,7 +33,11 @@ public class ModMenuConfig {
 		return sorting;
 	}
 
-	public static enum Sorting {
+	public TitleScreenLayout getTitleScreenLayout() {
+		return titleScreenLayout;
+	}
+
+	public enum Sorting {
 		ASCENDING(Comparator.comparing(modContainer -> HardcodedUtil.formatFabricModuleName(modContainer.getMetadata().getName()).asString()), "modmenu.sorting.ascending"),
 		DECENDING(ASCENDING.getComparator().reversed(), "modmenu.sorting.decending");
 
@@ -45,6 +55,19 @@ public class ModMenuConfig {
 
 		public String getTranslationKey() {
 			return translationKey;
+		}
+	}
+
+	public enum TitleScreenLayout {
+		CLASSIC(false),
+		HIDE_REALMS(false),
+		SHRINK_REALMS(true),
+		SIMPLE(true);
+
+		boolean shrinkRealms;
+
+		TitleScreenLayout(boolean shrinkRealms) {
+			this.shrinkRealms = shrinkRealms;
 		}
 	}
 }

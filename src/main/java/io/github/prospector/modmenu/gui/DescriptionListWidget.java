@@ -1,13 +1,12 @@
 package io.github.prospector.modmenu.gui;
 
 import io.github.prospector.modmenu.util.HardcodedUtil;
-import net.minecraft.class_5348;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.text.StringRenderable;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
@@ -49,7 +48,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (class_5348 line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
+				for (StringRenderable line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
 					children().add(new DescriptionEntry(line));
 				}
 			}
@@ -58,15 +57,15 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
-		protected class_5348 text;
+		protected StringRenderable text;
 
-		public DescriptionEntry(class_5348 text) {
+		public DescriptionEntry(StringRenderable text) {
 			this.text = text;
 		}
 
 		@Override
 		public void render(MatrixStack matrices, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
-				MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
+			MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
 		}
 	}
 
