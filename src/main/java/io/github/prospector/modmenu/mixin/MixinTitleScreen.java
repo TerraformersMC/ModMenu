@@ -44,12 +44,4 @@ public class MixinTitleScreen extends Screen {
 		}
 		return super.addButton(button);
 	}
-
-	@Inject(at = @At("HEAD"), method = "areRealmsNotificationsEnabled", cancellable = true)
-	private void onAreRealmsNotificationsEnabled(CallbackInfoReturnable<Boolean> info) {
-		info.setReturnValue(true);
-		if (ModMenuConfigManager.getConfig().getTitleScreenLayout() == ModMenuConfig.TitleScreenLayout.HIDE_REALMS) {
-			info.setReturnValue(false);
-		}
-	}
 }
