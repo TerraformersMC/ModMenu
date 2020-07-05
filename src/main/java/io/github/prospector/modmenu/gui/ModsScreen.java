@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -20,6 +21,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.StringRenderable;
@@ -27,14 +29,22 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
+	private static final Logger LOGGER = LogManager.getLogger();
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
 	private Screen parent;
@@ -430,6 +440,54 @@ public class ModsScreen extends Screen {
 		} else {
 			filtersX = searchRowWidth - filtersWidth + 1;
 			return true;
+		}
+	}
+
+	public void method_29638(List<Path> paths) {
+		Path modsDirectory = FabricLoader.getInstance().getGameDirectory().toPath().resolve("mods");
+
+		// Filter out none mods
+		List<Path> mods = paths.stream()
+				.filter(ModsScreen::isFabricMod)
+				.collect(Collectors.toList());
+
+		if (mods.isEmpty()) {
+			return;
+		}
+
+		String modList = mods.stream()
+				.map(Path::getFileName)
+				.map(Path::toString)
+				.collect(Collectors.joining(", "));
+
+		this.client.openScreen(new ConfirmScreen((value) -> {
+			if (value) {
+				boolean allSuccessful = true;
+
+				for (Path path : mods) {
+					try {
+						Files.copy(path, modsDirectory.resolve(path.getFileName()));
+					} catch (IOException e) {
+						LOGGER.warn("Failed to copy mod from {} to {}", path, modsDirectory.resolve(path.getFileName()));
+						SystemToast.method_29627(client, path.toString());
+						allSuccessful = false;
+						break;
+					}
+				}
+
+				if (allSuccessful) {
+					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, new TranslatableText("modmenu.dropSuccessful.line1"), new TranslatableText("modmenu.dropSuccessful.line2"));
+				}
+ 			}
+			this.client.openScreen(this);
+		}, new TranslatableText("modmenu.dropConfirm"), new LiteralText(modList)));
+	}
+
+	private static boolean isFabricMod(Path mod) {
+		try (JarFile jarFile = new JarFile(mod.toFile())) {
+			return jarFile.getEntry("fabric.mod.json") != null;
+		} catch (IOException e) {
+			return false;
 		}
 	}
 }
