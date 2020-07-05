@@ -443,6 +443,7 @@ public class ModsScreen extends Screen {
 		}
 	}
 
+	@Override
 	public void method_29638(List<Path> paths) {
 		Path modsDirectory = FabricLoader.getInstance().getGameDirectory().toPath().resolve("mods");
 
