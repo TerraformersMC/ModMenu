@@ -93,6 +93,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		int k = this.getRowLeft();
 		int l = this.top + 4 - (int)this.getScrollAmount();
 		this.renderList(matrices, k, l, mouseX, mouseY, delta);
+
+		RenderSystem.enableTexture();
+		RenderSystem.shadeModel(7424);
+		RenderSystem.enableAlphaTest();
+		RenderSystem.disableBlend();
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
