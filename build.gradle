@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 	id 'idea'
 	id 'eclipse'
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'fabric-loom' version '0.4-SNAPSHOT'
 	id 'com.matthewprenger.cursegradle' version "1.4.0"
 }
 
@@ -91,8 +91,8 @@ curseforge {
 	project {
 		id = '308702'
 		changelog = 'A changelog can be found at https://github.com/Prospector/ModMenu'
-		releaseType = 'beta'
-		addGameVersion '1.16-Snapshot'
+		releaseType = 'release'
+		addGameVersion '1.16.1'
 		addGameVersion 'Fabric'
 		mainArtifact(remapJar) {
 			displayName = "ModMenu v$version for $project.minecraft_version"

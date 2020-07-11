@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -20,20 +21,30 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
+	private static final Logger LOGGER = LogManager.getLogger();
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
 	private Screen parent;
@@ -219,7 +230,7 @@ public class ModsScreen extends Screen {
 
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		ModsScreen.overlayBackground(paneWidth, 0, rightPaneX, height, 64, 64, 64, 255, 255);
+		this.renderBackground(matrices);
 		this.tooltip = null;
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
@@ -263,11 +274,11 @@ public class ModsScreen extends Screen {
 			int imageOffset = 36;
 			Text name = new LiteralText(metadata.getName());
 			name = HardcodedUtil.formatFabricModuleName(name.asString());
-			Text trimmedName = name;
+			StringRenderable trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getWidth(name) > maxNameWidth) {
 				LiteralText ellipsis = new LiteralText("...");
-				trimmedName = textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)).append(ellipsis);
+				trimmedName = StringRenderable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
 			textRenderer.draw(matrices, trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
@@ -377,6 +388,11 @@ public class ModsScreen extends Screen {
 		return new int[]{visible, total};
 	}
 
+	@Override
+	public void renderBackground(MatrixStack matrices) {
+		ModsScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, 255);
+	}
+
 	static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
@@ -429,6 +445,55 @@ public class ModsScreen extends Screen {
 		} else {
 			filtersX = searchRowWidth - filtersWidth + 1;
 			return true;
+		}
+	}
+
+	@Override
+	public void method_29638(List<Path> paths) {
+		Path modsDirectory = FabricLoader.getInstance().getGameDirectory().toPath().resolve("mods");
+
+		// Filter out none mods
+		List<Path> mods = paths.stream()
+				.filter(ModsScreen::isFabricMod)
+				.collect(Collectors.toList());
+
+		if (mods.isEmpty()) {
+			return;
+		}
+
+		String modList = mods.stream()
+				.map(Path::getFileName)
+				.map(Path::toString)
+				.collect(Collectors.joining(", "));
+
+		this.client.openScreen(new ConfirmScreen((value) -> {
+			if (value) {
+				boolean allSuccessful = true;
+
+				for (Path path : mods) {
+					try {
+						Files.copy(path, modsDirectory.resolve(path.getFileName()));
+					} catch (IOException e) {
+						LOGGER.warn("Failed to copy mod from {} to {}", path, modsDirectory.resolve(path.getFileName()));
+						SystemToast.method_29627(client, path.toString());
+						allSuccessful = false;
+						break;
+					}
+				}
+
+				if (allSuccessful) {
+					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, new TranslatableText("modmenu.dropSuccessful.line1"), new TranslatableText("modmenu.dropSuccessful.line2"));
+				}
+ 			}
+			this.client.openScreen(this);
+		}, new TranslatableText("modmenu.dropConfirm"), new LiteralText(modList)));
+	}
+
+	private static boolean isFabricMod(Path mod) {
+		try (JarFile jarFile = new JarFile(mod.toFile())) {
+			return jarFile.getEntry("fabric.mod.json") != null;
+		} catch (IOException e) {
+			return false;
 		}
 	}
 }

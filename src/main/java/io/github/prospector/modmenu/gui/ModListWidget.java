@@ -6,6 +6,7 @@ import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.gui.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.entries.IndependentEntry;
 import io.github.prospector.modmenu.gui.entries.ParentEntry;
+import io.github.prospector.modmenu.mixin.EntryListWidgetAccessor;
 import io.github.prospector.modmenu.util.HardcodedUtil;
 import io.github.prospector.modmenu.util.ModListSearch;
 import io.github.prospector.modmenu.util.TestModContainer;
@@ -203,7 +204,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				ModListEntry entry = this.getEntry(index);
 				int rowWidth = this.getRowWidth();
 				int entryLeft;
-				if (this.renderSelection && this.isSelectedItem(index)) {
+				if (((EntryListWidgetAccessor) this).isRenderSelection() && this.isSelectedItem(index)) {
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
 					int selectionRight = x + rowWidth + 2;
 					RenderSystem.disableTexture();

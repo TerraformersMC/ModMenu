@@ -1,7 +1,6 @@
 package io.github.prospector.modmenu.api;
 
 import com.google.common.collect.ImmutableMap;
-import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModsScreen;
 import net.minecraft.client.gui.screen.Screen;
 
@@ -11,18 +10,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface ModMenuApi {
-	/**
-	 * Replaced with {@link ModMenuApi#getConfigScreen(Screen)}, with
-	 * the ModMenuApi implemented onto a class that is added as an
-	 * entry point to your fabric mod metadata.
-	 *
-	 * @deprecated Will be removed in 1.16 snapshots.
-	 */
-	@Deprecated
-	static void addConfigOverride(String modid, Runnable action) {
-		ModMenu.addLegacyConfigScreenTask(modid, action);
-	}
-
 	/**
 	 * Used for creating a {@link Screen} instance for the Mod Menu
 	 * "Mods" screen
@@ -38,19 +25,13 @@ public interface ModMenuApi {
 	 * Used to determine the owner of this API implementation.
 	 * Will be deprecated and removed once Fabric has support
 	 * for providing ownership information about entry points.
-	 */
-	String getModId();
-
-	/**
-	 * Replaced with {@link ModMenuApi#getConfigScreenFactory()}, which
-	 * now allows ModMenu to open the screen for you, rather than depending
-	 * on you to open it, and gets rid of the messy Optional->Supplier wrapping.
 	 *
-	 * @deprecated Will be removed in 1.16 snapshots.
+	 * @deprecated No longer needed, mod id is now automatically
+	 * pulled from Loader. Will be removed in 1.17 snapshots.
 	 */
 	@Deprecated
-	default Optional<Supplier<Screen>> getConfigScreen(Screen screen) {
-		return Optional.empty();
+	default String getModId() {
+		return null;
 	}
 
 	/**
@@ -62,7 +43,7 @@ public interface ModMenuApi {
 	 */
 	@Deprecated
 	default Function<Screen, ? extends Screen> getConfigScreenFactory() {
-		return screen -> getConfigScreen(screen).map(Supplier::get).orElse(null);
+		return screen -> null;
 	}
 
 	/**
