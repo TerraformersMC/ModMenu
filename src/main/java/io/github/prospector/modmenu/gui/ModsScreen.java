@@ -230,7 +230,7 @@ public class ModsScreen extends Screen {
 
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		ModsScreen.overlayBackground(paneWidth, 0, rightPaneX, height, 64, 64, 64, 255, 255);
+		this.renderBackground(matrices);
 		this.tooltip = null;
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
@@ -386,6 +386,11 @@ public class ModsScreen extends Screen {
 			return new int[]{total};
 		}
 		return new int[]{visible, total};
+	}
+
+	@Override
+	public void renderBackground(MatrixStack matrices) {
+		ModsScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, 255);
 	}
 
 	static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
