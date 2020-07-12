@@ -23,5 +23,8 @@
   "modmenu.sorting.ascending": "A-Z",
   "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
-  "modmenu.forge": "Forge"
+  "modmenu.forge": "Forge",
+  "modmenu.dropConfirm": "Kas soovid kindlasti kopeerida järgnevad modid kausta \"mods\"?",
+  "modmenu.dropSuccessful.line1": "Modid edukalt kopeeritud",
+  "modmenu.dropSuccessful.line2": "Modide laadimiseks taaskäivita mäng"
 }
