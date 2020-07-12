@@ -32,6 +32,7 @@ public class ModMenu implements ClientModInitializer {
 	public static final Set<String> ROOT_NONLIB_MODS = new HashSet<>();
 	public static final Set<String> CHILD_NONLIB_MODS = new HashSet<>();
 	public static final Set<String> CLIENTSIDE_MODS = new HashSet<>();
+	public static final Set<String> DEPRECATED_MODS = new HashSet<>();
 	public static final Set<String> PATCHWORK_FORGE_MODS = new HashSet<>();
 	public static final LinkedListMultimap<ModContainer, ModContainer> PARENT_MAP = LinkedListMultimap.create();
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
@@ -86,6 +87,9 @@ public class ModMenu implements ClientModInitializer {
 			}
 			if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
 				CLIENTSIDE_MODS.add(id);
+			}
+			if (metadata.containsCustomValue("modmenu:deprecated") && metadata.getCustomValue("modmenu:deprecated").getAsBoolean()) {
+				DEPRECATED_MODS.add(id);
 			}
 			if (metadata.containsCustomValue("patchwork:source") && metadata.getCustomValue("patchwork:source").getAsObject() != null) {
 				CustomValue.CvObject object = metadata.getCustomValue("patchwork:source").getAsObject();
