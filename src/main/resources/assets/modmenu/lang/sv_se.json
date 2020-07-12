@@ -29,4 +29,7 @@
   "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge"
+  "modmenu.dropConfirm": "Vill du kopiera följande moddar till din mod-mapp?",
+  "modmenu.dropSuccessful.line1": "Kopierade samtliga moddar",
+  "modmenu.dropSuccessful.line2": "Starta om spelet för att ladda in moddar"
 }
