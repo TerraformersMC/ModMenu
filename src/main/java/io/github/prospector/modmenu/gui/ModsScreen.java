@@ -15,6 +15,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.BufferBuilder;
@@ -44,7 +45,12 @@ import java.util.stream.Collectors;
 public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
+
+	private static final TranslatableText TOGGLE_FILTER_OPTIONS = new TranslatableText("modmenu.toggleFilterOptions");
+	private static final TranslatableText CONFIGURE = new TranslatableText("modmenu.configure");
+
 	private static final Logger LOGGER = LogManager.getLogger();
+
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
 	private Screen parent;
@@ -71,10 +77,12 @@ public class ModsScreen extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double double_1, double double_2, double double_3) {
-		if (modList.isMouseOver(double_1, double_2))
+		if (modList.isMouseOver(double_1, double_2)) {
 			return this.modList.mouseScrolled(double_1, double_2, double_3);
-		if (descriptionListWidget.isMouseOver(double_1, double_2))
+		}
+		if (descriptionListWidget.isMouseOver(double_1, double_2)) {
 			return this.descriptionListWidget.mouseScrolled(double_1, double_2, double_3);
+		}
 		return false;
 	}
 
@@ -107,12 +115,16 @@ public class ModsScreen extends Screen {
 				ModMenu.openConfigScreen(modid);
 			}
 		},
-				new TranslatableText("modmenu.configure")) {
+				CONFIGURE, (buttonWidget, matrices, mouseX, mouseY) -> {
+			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
+			if (button.isJustHovered()) {
+				this.renderTooltip(matrices, CONFIGURE, mouseX, mouseY);
+			} else if (button.isFocusedButNotHovered()) {
+				this.renderTooltip(matrices, CONFIGURE, button.x, button.y);
+			}
+		}) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				if (isHovered()) {
-					setTooltip(new TranslatableText("modmenu.configure"));
-				}
 				if (selected != null) {
 					String modid = selected.getMetadata().getId();
 					active = ModMenu.hasConfigScreenFactory(modid) || ModMenu.hasLegacyConfigScreenTask(modid);
@@ -166,15 +178,14 @@ public class ModsScreen extends Screen {
 			}
 		};
 		this.children.add(this.searchBox);
-		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown) {
-			@Override
-			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				super.render(matrices, mouseX, mouseY, delta);
-				if (isHovered()) {
-					setTooltip(new TranslatableText("modmenu.toggleFilterOptions"));
-				}
+		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS, (buttonWidget, matrices, mouseX, mouseY) -> {
+			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
+			if (button.isJustHovered()) {
+				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, mouseX, mouseY);
+			} else if (button.isFocusedButNotHovered()) {
+				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, button.x, button.y);
 			}
-		});
+		}));
 		Text showLibrariesText = new TranslatableText("modmenu.showLibraries", new TranslatableText("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()));
 		Text sortingText = new TranslatableText("modmenu.sorting", new TranslatableText(ModMenuConfigManager.getConfig().getSorting().getTranslationKey()));
 		int showLibrariesWidth = textRenderer.getWidth(showLibrariesText) + 20;
@@ -212,7 +223,7 @@ public class ModsScreen extends Screen {
 		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
 		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
-		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, new TranslatableText("gui.done"), button -> client.openScreen(parent)));
+		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(parent)));
 		this.setInitialFocus(this.searchBox);
 
 		init = true;
@@ -252,13 +263,10 @@ public class ModsScreen extends Screen {
 				}
 			} else {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-					drawCenteredString(matrices, textRenderer, fullModCount.asString(), this.modList.getWidth() / 2, 52, 0xFFFFFF);
+					textRenderer.draw(matrices, fullModCount, searchBoxX, 52, 0xFFFFFF);
 				} else {
-					drawCenteredString(matrices, textRenderer, computeModCountText(false).asString(), this.modList.getWidth() / 2, 46, 0xFFFFFF);
-					Text libraryCountText = computeLibraryCountText();
-					if (libraryCountText != null) {
-						drawCenteredString(matrices, textRenderer, libraryCountText.asString(), this.modList.getWidth() / 2, 57, 0xFFFFFF);
-					}
+					textRenderer.draw(matrices, computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
+					textRenderer.draw(matrices, computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
 				}
 			}
 		}
@@ -484,7 +492,7 @@ public class ModsScreen extends Screen {
 				if (allSuccessful) {
 					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, new TranslatableText("modmenu.dropSuccessful.line1"), new TranslatableText("modmenu.dropSuccessful.line2"));
 				}
- 			}
+			}
 			this.client.openScreen(this);
 		}, new TranslatableText("modmenu.dropConfirm"), new LiteralText(modList)));
 	}

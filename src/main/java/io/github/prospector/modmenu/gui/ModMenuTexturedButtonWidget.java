@@ -24,7 +24,11 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message) {
-		super(x, y, width, height, message, onPress);
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, EMPTY);
+	}
+
+	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, TooltipSupplier tooltipSupplier) {
+		super(x, y, width, height, message, onPress, tooltipSupplier);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
 		this.u = u;
@@ -52,5 +56,17 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 
 		drawTexture(matrices, this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
+
+		if (this.isHovered()) {
+			this.renderToolTip(matrices, mouseX, mouseY);
+		}
+	}
+
+	public boolean isJustHovered() {
+		return hovered;
+	}
+
+	public boolean isFocusedButNotHovered() {
+		return !hovered && isFocused();
 	}
 }
