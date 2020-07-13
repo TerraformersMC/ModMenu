@@ -11,6 +11,7 @@
   "modmenu.authorPrefix": "Создатели: %s",
   "modmenu.search": "Поиск модов",
   "modmenu.clientsideOnly": "Клиент",
+  "modmenu.deprecated": "Устарел",
   "modmenu.library": "Библиотека",
   "modmenu.toggleFilterOptions": "Фильтры",
   "modmenu.showLibraries": "Библиотеки: %s",
@@ -28,5 +29,8 @@
   "modmenu.sorting.ascending": "A-Z",
   "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
-  "modmenu.forge": "Forge"
+  "modmenu.forge": "Forge",
+  "modmenu.dropConfirm" : "Скопировать эти моды в каталог модов?",
+  "modmenu.dropSuccessful.line1" : "Моды успешно скопированы",
+  "modmenu.dropSuccessful.line2" : "Чтобы моды заработали, перезапустите игру"
 }
