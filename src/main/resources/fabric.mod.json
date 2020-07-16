@@ -21,8 +21,8 @@
   },
   "depends": {
     "fabric-resource-loader-v0": "*",
-    "fabricloader": ">=0.6.1",
-    "minecraft": ">=1.15-"
+    "fabricloader": ">=0.9.0",
+    "minecraft": ">=1.16-"
   },
   "authors": [
     "Prospector"
@@ -48,13 +48,17 @@
     "swordglowsblue",
     "hinataaki",
     "LeonXu98",
-    "magneticflux"
+    "magneticflux",
+    "vanja-san",
+    "AlexIIL",
+    "masoncook16",
+    "el97",
+    "Hephaestus-Dev",
+    "zabi94",
+    "dexman545"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
     "mixins.modmenu.json"
-  ],
-  "custom": {
-    "modmenu:clientsideOnly": true
-  }
+  ]
 }

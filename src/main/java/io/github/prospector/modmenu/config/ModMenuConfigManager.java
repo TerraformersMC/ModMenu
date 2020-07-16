@@ -9,7 +9,7 @@ public class ModMenuConfigManager {
 	private static File file;
 	private static ModMenuConfig config;
 
-	private static void prepareBiomeConfigFile() {
+	private static void prepareConfigFile() {
 		if (file != null) {
 			return;
 		}
@@ -28,7 +28,7 @@ public class ModMenuConfigManager {
 	}
 
 	private static void load() {
-		prepareBiomeConfigFile();
+		prepareConfigFile();
 
 		try {
 			if (!file.exists()) {
@@ -46,7 +46,7 @@ public class ModMenuConfigManager {
 	}
 
 	public static void save() {
-		prepareBiomeConfigFile();
+		prepareConfigFile();
 
 		String jsonString = ModMenu.GSON.toJson(config);
 

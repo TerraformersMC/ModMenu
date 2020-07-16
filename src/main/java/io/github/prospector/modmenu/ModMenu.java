@@ -13,9 +13,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
+import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -23,6 +26,7 @@ import java.util.*;
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final Map<String, Runnable> LEGACY_CONFIG_SCREEN_TASKS = new HashMap<>();
 	public static final Set<String> LIBRARY_MODS = new HashSet<>();
@@ -85,7 +89,13 @@ public class ModMenu implements ClientModInitializer {
 			if (isLibrary) {
 				addLibraryMod(id);
 			}
-			if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
+			boolean hasClientValue = metadata.containsCustomValue("modmenu:clientsideOnly");
+			boolean clientEnvironmentOnly = metadata.getEnvironment() == ModEnvironment.CLIENT;
+			boolean clientsideOnlyValue = hasClientValue && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean();
+			if (clientEnvironmentOnly && !hasClientValue || hasClientValue && clientsideOnlyValue) {
+				if (clientEnvironmentOnly && clientsideOnlyValue) {
+					LOGGER.info("Mod '" + metadata.getId() + "' uses the modmenu:clientsideOnly custom value unnecessarily, as it can be inferred from the mod's declared environment.");
+				}
 				CLIENTSIDE_MODS.add(id);
 			}
 			if (metadata.containsCustomValue("modmenu:deprecated") && metadata.getCustomValue("modmenu:deprecated").getAsBoolean()) {

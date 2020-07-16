@@ -53,7 +53,7 @@ public class ModsScreen extends Screen {
 
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
-	private Screen parent;
+	private final Screen previousScreen;
 	private ModListWidget modList;
 	private Text tooltip;
 	private ModListEntry selected;
@@ -68,11 +68,11 @@ public class ModsScreen extends Screen {
 	private int filtersX;
 	private int filtersWidth;
 	private int searchRowWidth;
-	public Set<String> showModChildren = new HashSet<>();
+	public final Set<String> showModChildren = new HashSet<>();
 
-	public ModsScreen(Screen previousGui) {
+	public ModsScreen(Screen previousScreen) {
 		super(new TranslatableText("modmenu.title"));
-		this.parent = previousGui;
+		this.previousScreen = previousScreen;
 	}
 
 	@Override
@@ -218,12 +218,14 @@ public class ModsScreen extends Screen {
 			}
 		});
 		this.children.add(this.modList);
-		this.addButton(configureButton);
+		if (!ModMenuConfigManager.getConfig().isHidingConfigurationButtons()) {
+			this.addButton(configureButton);
+		}
 		this.addButton(websiteButton);
 		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);
 		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
-		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(parent)));
+		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen)));
 		this.setInitialFocus(this.searchBox);
 
 		init = true;
@@ -418,6 +420,7 @@ public class ModsScreen extends Screen {
 	public void onClose() {
 		super.onClose();
 		this.modList.close();
+		this.client.openScreen(this.previousScreen);
 	}
 
 	private void setTooltip(Text tooltip) {

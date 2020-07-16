@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.config;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.fabricmc.loader.api.ModContainer;
 
@@ -7,6 +8,7 @@ import java.util.Comparator;
 
 public class ModMenuConfig {
 	private boolean showLibraries = false;
+	private boolean hideConfigButtons = false;
 	private Sorting sorting = Sorting.ASCENDING;
 
 	public void toggleShowLibraries() {
@@ -23,13 +25,19 @@ public class ModMenuConfig {
 		return showLibraries;
 	}
 
+	public boolean isHidingConfigurationButtons() {
+		return hideConfigButtons;
+	}
+
 	public Sorting getSorting() {
 		return sorting;
 	}
 
 	public enum Sorting {
+		@SerializedName("ascending")
 		ASCENDING(Comparator.comparing(modContainer -> HardcodedUtil.formatFabricModuleName(modContainer.getMetadata().getName()).asString()), "modmenu.sorting.ascending"),
-		DECENDING(ASCENDING.getComparator().reversed(), "modmenu.sorting.decending");
+		@SerializedName("descending")
+		DESCENDING(ASCENDING.getComparator().reversed(), "modmenu.sorting.decending");
 
 		Comparator<ModContainer> comparator;
 		String translationKey;
