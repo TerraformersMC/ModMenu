@@ -37,7 +37,10 @@ public class ModMenuConfigManager {
 			if (file.exists()) {
 				BufferedReader br = new BufferedReader(new FileReader(file));
 
-				config = ModMenu.GSON.fromJson(br, ModMenuConfig.class);
+				ModMenuConfig parsed = ModMenu.GSON.fromJson(br, ModMenuConfig.class);
+				if (parsed != null) {
+					config = parsed;
+				}
 			}
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load Mod Menu configuration file; reverting to defaults");
@@ -59,6 +62,9 @@ public class ModMenuConfigManager {
 	}
 
 	public static ModMenuConfig getConfig() {
+		if (config == null) {
+			config = new ModMenuConfig();
+		}
 		return config;
 	}
 }
