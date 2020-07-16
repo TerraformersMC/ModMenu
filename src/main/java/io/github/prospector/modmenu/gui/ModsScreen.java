@@ -100,7 +100,7 @@ public class ModsScreen extends Screen {
 
 		int searchBoxWidth = paneWidth - 32 - 22;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - 22 / 2;
-		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, new TranslatableText("selectWorld.search"));
+		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, new TranslatableText("modmenu.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
 		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY + 19, this.height - 36, 36, this.searchBox.getText(), this.modList, this);
 		this.modList.setLeftPos(0);
