@@ -30,7 +30,7 @@ public class ModMenuConfig {
 	}
 
 	public Sorting getSorting() {
-		return sorting;
+		return sorting != null ? sorting : Sorting.ASCENDING;
 	}
 
 	public enum Sorting {
