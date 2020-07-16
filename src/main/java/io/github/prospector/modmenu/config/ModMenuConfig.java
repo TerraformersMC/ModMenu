@@ -17,7 +17,7 @@ public class ModMenuConfig {
 	}
 
 	public void toggleSortMode() {
-		this.sorting = Sorting.values()[(sorting.ordinal() + 1) % Sorting.values().length];
+		this.sorting = Sorting.values()[(getSorting().ordinal() + 1) % Sorting.values().length];
 		ModMenuConfigManager.save();
 	}
 
