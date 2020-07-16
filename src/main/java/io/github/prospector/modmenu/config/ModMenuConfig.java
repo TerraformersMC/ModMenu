@@ -17,7 +17,7 @@ public class ModMenuConfig {
 	}
 
 	public void toggleSortMode() {
-		this.sorting = Sorting.values()[(sorting.ordinal() + 1) % Sorting.values().length];
+		this.sorting = Sorting.values()[(getSorting().ordinal() + 1) % Sorting.values().length];
 		ModMenuConfigManager.save();
 	}
 
@@ -30,7 +30,7 @@ public class ModMenuConfig {
 	}
 
 	public Sorting getSorting() {
-		return sorting != null ? sorting : Sorting.ASCENDING;
+		return sorting == null ? Sorting.ASCENDING : sorting;
 	}
 
 	public enum Sorting {
