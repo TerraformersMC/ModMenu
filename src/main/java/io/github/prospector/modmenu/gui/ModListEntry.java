@@ -19,6 +19,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Language;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,10 +60,10 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		int maxNameWidth = rowWidth - 32 - 3;
 		TextRenderer font = this.client.textRenderer;
 		if (font.getWidth(name) > maxNameWidth) {
-			LiteralText ellipsis = new LiteralText("...");
+			StringRenderable ellipsis = StringRenderable.plain("...");
 			trimmedName = StringRenderable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
 		}
-		font.draw(matrices, trimmedName, x + 32 + 3, y + 1, 0xFFFFFF);
+		font.draw(matrices, Language.getInstance().method_30934(trimmedName), x + 32 + 3, y + 1, 0xFFFFFF);
 		new BadgeRenderer(x + 32 + 3 + font.getWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(matrices, mouseX, mouseY);
 		String description = metadata.getDescription();
 		if (description.isEmpty() && HardcodedUtil.getHardcodedDescriptions().containsKey(metadata.getId())) {

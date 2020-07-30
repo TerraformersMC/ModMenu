@@ -3,6 +3,7 @@ package io.github.prospector.modmenu.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.util.HardcodedUtil;
+import net.minecraft.class_5481;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
@@ -55,7 +56,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (StringRenderable line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
+				for (class_5481 line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
 					children().add(new DescriptionEntry(line));
 				}
 			}
@@ -101,9 +102,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
-		protected StringRenderable text;
+		protected class_5481 text;
 
-		public DescriptionEntry(StringRenderable text) {
+		public DescriptionEntry(class_5481 text) {
 			this.text = text;
 		}
 
