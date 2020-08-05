@@ -29,6 +29,7 @@ import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Language;
 import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -258,17 +259,17 @@ public class ModsScreen extends Screen {
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getWidth(fullModCount) <= filtersX - 5) {
-					textRenderer.draw(matrices, fullModCount, searchBoxX, 52, 0xFFFFFF);
+					textRenderer.draw(matrices, fullModCount.method_30937(), searchBoxX, 52, 0xFFFFFF);
 				} else {
-					textRenderer.draw(matrices, computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
-					textRenderer.draw(matrices, computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
+					textRenderer.draw(matrices, computeModCountText(false).method_30937(), searchBoxX, 46, 0xFFFFFF);
+					textRenderer.draw(matrices, computeLibraryCountText().method_30937(), searchBoxX, 57, 0xFFFFFF);
 				}
 			} else {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-					textRenderer.draw(matrices, fullModCount, searchBoxX, 52, 0xFFFFFF);
+					textRenderer.draw(matrices, fullModCount.method_30937(), searchBoxX, 52, 0xFFFFFF);
 				} else {
-					textRenderer.draw(matrices, computeModCountText(false), searchBoxX, 46, 0xFFFFFF);
-					textRenderer.draw(matrices, computeLibraryCountText(), searchBoxX, 57, 0xFFFFFF);
+					textRenderer.draw(matrices, computeModCountText(false).method_30937(), searchBoxX, 46, 0xFFFFFF);
+					textRenderer.draw(matrices, computeLibraryCountText().method_30937(), searchBoxX, 57, 0xFFFFFF);
 				}
 			}
 		}
@@ -287,10 +288,10 @@ public class ModsScreen extends Screen {
 			StringRenderable trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getWidth(name) > maxNameWidth) {
-				LiteralText ellipsis = new LiteralText("...");
+				StringRenderable ellipsis = StringRenderable.plain("...");
 				trimmedName = StringRenderable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
-			textRenderer.draw(matrices, trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
+			textRenderer.draw(matrices, Language.getInstance().method_30934(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				setTooltip(new TranslatableText("modmenu.modIdToolTip", metadata.getId()));
 			}
@@ -460,8 +461,8 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void method_29638(List<Path> paths) {
-		Path modsDirectory = FabricLoader.getInstance().getGameDirectory().toPath().resolve("mods");
+	public void filesDragged(List<Path> paths) {
+		Path modsDirectory = FabricLoader.getInstance().getGameDir().resolve("mods");
 
 		// Filter out none mods
 		List<Path> mods = paths.stream()
@@ -486,7 +487,7 @@ public class ModsScreen extends Screen {
 						Files.copy(path, modsDirectory.resolve(path.getFileName()));
 					} catch (IOException e) {
 						LOGGER.warn("Failed to copy mod from {} to {}", path, modsDirectory.resolve(path.getFileName()));
-						SystemToast.method_29627(client, path.toString());
+						SystemToast.addPackCopyFailure(client, path.toString());
 						allSuccessful = false;
 						break;
 					}
