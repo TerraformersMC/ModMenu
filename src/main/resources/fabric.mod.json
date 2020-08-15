@@ -60,5 +60,12 @@
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
     "mixins.modmenu.json"
-  ]
+  ],
+  "custom": {
+    "modupdater": {
+      "strategy": "curseforge",
+      "projectID": 308702,
+      "strict": false
+    }
+  }	
 }
