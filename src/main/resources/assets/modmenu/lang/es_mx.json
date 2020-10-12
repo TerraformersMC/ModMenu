@@ -1,6 +1,6 @@
 {
   "modmenu.title": "Mods",
-  "modmenu.loaded": "(%s cargada)",
+  "modmenu.loaded": "(%s cargadas)",
   "modmenu.config": "Editar configuración",
   "modmenu.modsFolder": "Abrir carpeta de mods",
   "modmenu.configsFolder": "Abrir carpeta de configuraciones",
@@ -13,7 +13,7 @@
   "modmenu.clientsideOnly": "Cliente",
   "modmenu.deprecated": "Obsoleta",
   "modmenu.library": "Librería",
-  "modmenu.toggleFilterOptions": "Alternar opciones de filtro",
+  "modmenu.toggleFilterOptions": "Alternar opciones de filtros",
   "modmenu.showLibraries": "Librerías: %s",
   "modmenu.showLibraries.true": "Mostrar",
   "modmenu.showLibraries.false": "Ocultar",
