@@ -1,5 +1,9 @@
 # ModMenu
-Enriches the standard Minecraft menu with an interface displaying a one-dimensional array of modifications
+Enriches the standard Minecraft menu with an interface displaying the list of installed Fabric mods. 
+* The menu is searchable and sortable, libraries can be hidden. 
+* Client-side and API mods are marked with a special tag in the list.
+* When clicking a mod in the list, its homepage, issues link and description are displayed.
+* The mod details page also lets the user configure the mod, if available (can be disabled for modpacks via config).
 
 ![](https://i.imgur.com/JKEatou.png "Mod Menu")
 
