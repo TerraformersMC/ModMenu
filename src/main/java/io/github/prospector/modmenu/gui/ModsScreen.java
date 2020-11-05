@@ -20,12 +20,13 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -94,7 +95,7 @@ public class ModsScreen extends Screen {
 
 	@Override
 	protected void init() {
-		Objects.requireNonNull(this.client).keyboard.enableRepeatEvents(true);
+		Objects.requireNonNull(this.client).keyboard.setRepeatEvents(true);
 		paneY = 48;
 		paneWidth = this.width / 2 - 8;
 		rightPaneX = width - paneWidth;
@@ -259,17 +260,17 @@ public class ModsScreen extends Screen {
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getWidth(fullModCount) <= filtersX - 5) {
-					textRenderer.draw(matrices, fullModCount.method_30937(), searchBoxX, 52, 0xFFFFFF);
+					textRenderer.draw(matrices, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF);
 				} else {
-					textRenderer.draw(matrices, computeModCountText(false).method_30937(), searchBoxX, 46, 0xFFFFFF);
-					textRenderer.draw(matrices, computeLibraryCountText().method_30937(), searchBoxX, 57, 0xFFFFFF);
+					textRenderer.draw(matrices, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF);
+					textRenderer.draw(matrices, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF);
 				}
 			} else {
 				if (!ModMenuConfigManager.getConfig().showLibraries() || textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-					textRenderer.draw(matrices, fullModCount.method_30937(), searchBoxX, 52, 0xFFFFFF);
+					textRenderer.draw(matrices, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF);
 				} else {
-					textRenderer.draw(matrices, computeModCountText(false).method_30937(), searchBoxX, 46, 0xFFFFFF);
-					textRenderer.draw(matrices, computeLibraryCountText().method_30937(), searchBoxX, 57, 0xFFFFFF);
+					textRenderer.draw(matrices, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF);
+					textRenderer.draw(matrices, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF);
 				}
 			}
 		}
@@ -285,13 +286,13 @@ public class ModsScreen extends Screen {
 			int imageOffset = 36;
 			Text name = new LiteralText(metadata.getName());
 			name = HardcodedUtil.formatFabricModuleName(name.asString());
-			StringRenderable trimmedName = name;
+			StringVisitable trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getWidth(name) > maxNameWidth) {
-				StringRenderable ellipsis = StringRenderable.plain("...");
-				trimmedName = StringRenderable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
+				StringVisitable ellipsis = StringVisitable.plain("...");
+				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
-			textRenderer.draw(matrices, Language.getInstance().method_30934(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
+			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				setTooltip(new TranslatableText("modmenu.modIdToolTip", metadata.getId()));
 			}
@@ -319,7 +320,7 @@ public class ModsScreen extends Screen {
 				RenderUtils.drawWrappedString(matrices, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 			}
 			if (this.tooltip != null) {
-				this.renderTooltip(matrices, textRenderer.wrapLines(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
+				this.renderOrderedTooltip(matrices, textRenderer.wrapLines(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
 			}
 		}
 
@@ -407,9 +408,9 @@ public class ModsScreen extends Screen {
 	static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_TEXTURE);
+		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
+		buffer.begin(VertexFormat.class_5596.field_27382, VertexFormats.POSITION_TEXTURE_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y1, 0.0D).texture(x2 / 32.0F, y1 / 32.0F).color(red, green, blue, startAlpha).next();

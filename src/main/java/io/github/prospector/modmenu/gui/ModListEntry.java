@@ -15,8 +15,7 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
@@ -56,14 +55,14 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, 32, 32, 32, 32);
 		RenderSystem.disableBlend();
 		Text name = HardcodedUtil.formatFabricModuleName(metadata.getName());
-		StringRenderable trimmedName = name;
+		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - 32 - 3;
 		TextRenderer font = this.client.textRenderer;
 		if (font.getWidth(name) > maxNameWidth) {
-			StringRenderable ellipsis = StringRenderable.plain("...");
-			trimmedName = StringRenderable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
+			StringVisitable ellipsis = StringVisitable.plain("...");
+			trimmedName = StringVisitable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
 		}
-		font.draw(matrices, Language.getInstance().method_30934(trimmedName), x + 32 + 3, y + 1, 0xFFFFFF);
+		font.draw(matrices, Language.getInstance().reorder(trimmedName), x + 32 + 3, y + 1, 0xFFFFFF);
 		new BadgeRenderer(x + 32 + 3 + font.getWidth(name) + 2, y, x + rowWidth, container, list.getParent()).draw(matrices, mouseX, mouseY);
 		String description = metadata.getDescription();
 		if (description.isEmpty() && HardcodedUtil.getHardcodedDescriptions().containsKey(metadata.getId())) {
