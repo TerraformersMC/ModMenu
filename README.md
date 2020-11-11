@@ -1,4 +1,4 @@
-![](https://i.imgur.com/dMYWAjn.png "Mod Menu")
+![Mod Menu](https://i.imgur.com/dMYWAjn.png)
 
 Adds a screen for viewing a list of installed mods. 
 * The menu is searchable and sortable, libraries can be hidden. 
@@ -6,11 +6,21 @@ Adds a screen for viewing a list of installed mods.
 * When clicking a mod in the list, its homepage, issues link and description are displayed.
 * The mod details page also lets the user configure the mod, if available (can be disabled for modpacks via config).
 
-Mod Menu requires: [Fabric Loader](https://fabricmc.net/use/) and [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)'s Fabric Resource Loader (v0) [embedded]
+<h4 align="center">
+Mod Menu requires <a href="https://fabricmc.net/use/">Fabric Loader</a> and <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api">Fabric API</a>*
+</h4>
+<h4 align="center">
+Check out the <a href="https://discord.gg/jEGF5fb">Terraformers Discord Server</a> to chat about Mod Menu and other Fabric mods!
+</h4>
+<h4 align="center">
+Visit the <a href="https://github.com/TerraformersMC/ModMenu/wiki">Mod Menu Wiki</a> to learn more about the features
+</h4>
 
-Check out the [Terraformers Discord Server](https://discord.gg/jEGF5fb) to chat about Mod Menu and other Fabric mods!
+\*Mod Menu includes the one Fabric API module that it depends on, Fabric Resource Loader (v0). This does not need to be installed separately.
 
-Visit the [Mod Menu Wiki](https://github.com/TerraformersMC/ModMenu/wiki) to learn more about the features
+### Features
+![Screenshot of the Mods screen](https://camo.githubusercontent.com/3fb56ac264de3a3be29bf2da68f93d667cd773d8285c7b152f1ae8db2cfaffbb/68747470733a2f2f692e696d6775722e636f6d2f79794f6d564d322e706e67)
+You can view the features more in-depth on the [Mod Menu wiki](https://github.com/TerraformersMC/ModMenu/wiki/API)
 
 ### Developers
 If you are a developer and would like to see what metadata Mod Menu will make use of, how to add Library or Client-side only badges to your mod, or how to make your Config screens accessible via Mod Menu, check out [the API documentation on the Mod Menu wiki](https://github.com/TerraformersMC/ModMenu/wiki/API)
