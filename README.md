@@ -1,34 +1,18 @@
-# ModMenu
-Enriches the standard Minecraft menu with an interface displaying the list of installed Fabric mods. 
+![](https://i.imgur.com/dMYWAjn.png "Mod Menu")
+
+Adds a screen for viewing a list of installed mods. 
 * The menu is searchable and sortable, libraries can be hidden. 
-* Client-side and API mods are marked with a special tag in the list.
+* Client-side and API mods are marked with a special badge in the list.
 * When clicking a mod in the list, its homepage, issues link and description are displayed.
 * The mod details page also lets the user configure the mod, if available (can be disabled for modpacks via config).
 
-![](https://i.imgur.com/JKEatou.png "Mod Menu")
+Mod Menu requires: [Fabric Loader](https://fabricmc.net/use/) and [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)'s Fabric Resource Loader (v0) [embedded]
 
-### Developers:
-- Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/
-- The icon comes from the icon specified in your fabric.mod.json (as per the spec)
-- API badges are defined as custom objects in your fabric.mod.json as such:
-```json
-"custom": {
-    "modmenu:api": true
-}
-```
-- Mod parenting is used to display a mod as a child of another one. This is meant to be used for mods divided into different modules. The following element in a fabric.mod.json will define the mod as a child of the mod 'flamingo':
-```json
-"custom": {
-    "modmenu:parent": "flamingo"
-}
-```
-- ModMenuAPI
-    - To use the API, implement the ModMenuApi interface on a class and add that as an entry point of type "modmenu" in your fabric.mod.json as such:
-  ```json
-  "entrypoints": {
-	"modmenu": [ "com.example.mod.ExampleModMenuApiImpl" ]
-  }
-  ```
-    - Features
-        - Mods can provide a Screen factory to provide a custom config screen to open with the config button. Implement the `getModConfigScreenFactory` method in your API implementation to do this.
-        - Mods can provide Screen factories to provide a custom config screens to open with the config buttons for other mods as well. Implement the `getProvidedConfigScreenFactories` method in your API implementation for this.
+Check out the [Terraformers Discord Server](https://discord.gg/jEGF5fb) to chat about Mod Menu and other Fabric mods!
+
+Visit the [Mod Menu Wiki](https://github.com/TerraformersMC/ModMenu/wiki) to learn more about the features
+
+### Developers
+If you are a developer and would like to see what metadata Mod Menu will make use of, how to add Library or Client-side only badges to your mod, or how to make your Config screens accessible via Mod Menu, check out [the API documentation on the Mod Menu wiki](https://github.com/TerraformersMC/ModMenu/wiki/API)
+
+### Mod Menu is a mod for Fabric, and there are no plans to port this mod to Forge.
