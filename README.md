@@ -20,6 +20,7 @@ Visit the <a href="https://github.com/TerraformersMC/ModMenu/wiki">Mod Menu Wiki
 
 ### Features
 ![Screenshot of the Mods screen](https://camo.githubusercontent.com/3fb56ac264de3a3be29bf2da68f93d667cd773d8285c7b152f1ae8db2cfaffbb/68747470733a2f2f692e696d6775722e636f6d2f79794f6d564d322e706e67)
+
 You can view the features more in-depth on the [Mod Menu wiki](https://github.com/TerraformersMC/ModMenu/wiki/API)
 
 ### Developers
