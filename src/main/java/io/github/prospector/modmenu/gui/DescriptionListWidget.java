@@ -3,18 +3,15 @@ package io.github.prospector.modmenu.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.prospector.modmenu.util.HardcodedUtil;
-import net.minecraft.class_5481;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.text.OrderedText;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
@@ -56,7 +53,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (class_5481 line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
+				for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
 					children().add(new DescriptionEntry(line));
 				}
 			}
@@ -102,9 +99,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
-		protected class_5481 text;
+		protected OrderedText text;
 
-		public DescriptionEntry(class_5481 text) {
+		public DescriptionEntry(OrderedText text) {
 			this.text = text;
 		}
 

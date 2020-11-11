@@ -278,7 +278,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	@Override
-	protected int getRowLeft() {
+	public int getRowLeft() {
 		return left + 6;
 	}
 
