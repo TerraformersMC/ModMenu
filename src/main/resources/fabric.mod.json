@@ -25,7 +25,7 @@
     "minecraft": ">=1.16-"
   },
   "authors": [
-    "Prospector"
+    "Prospector", "TerraformersMC"
   ],
   "contributors": [
     "shedaniel",
@@ -55,7 +55,13 @@
     "el97",
     "Hephaestus-Dev",
     "zabi94",
-    "dexman545"
+    "dexman545",
+    "dhouck",
+    "Hambaka",
+    "po-stulate",
+    "FlashyReese",
+    "egeesin",
+    "TheGlitch76"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
