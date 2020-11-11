@@ -85,7 +85,7 @@ public class ModMenu implements ClientModInitializer {
 			if ("minecraft".equals(id)) {
 				continue;
 			}
-			boolean isLibrary = metadata.containsCustomValue("modmenu:api") && metadata.getCustomValue("modmenu:api").getAsBoolean();
+			boolean isLibrary = (metadata.containsCustomValue("modmenu:api") && metadata.getCustomValue("modmenu:api").getAsBoolean()) || (metadata.containsCustomValue("fabric-loom:generated") && metadata.getCustomValue("fabric-loom:generated").getAsBoolean());
 			if (isLibrary) {
 				addLibraryMod(id);
 			}
