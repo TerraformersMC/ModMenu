@@ -410,7 +410,7 @@ public class ModsScreen extends Screen {
 		BufferBuilder buffer = tessellator.getBuffer();
 		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		buffer.begin(VertexFormat.class_5596.field_27382, VertexFormats.POSITION_TEXTURE_COLOR);
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y1, 0.0D).texture(x2 / 32.0F, y1 / 32.0F).color(red, green, blue, startAlpha).next();

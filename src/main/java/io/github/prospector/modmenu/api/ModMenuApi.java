@@ -22,31 +22,6 @@ public interface ModMenuApi {
 	}
 
 	/**
-	 * Used to determine the owner of this API implementation.
-	 * Will be deprecated and removed once Fabric has support
-	 * for providing ownership information about entry points.
-	 *
-	 * @deprecated No longer needed, mod id is now automatically
-	 * pulled from Loader. Will be removed in 1.17 snapshots.
-	 */
-	@Deprecated
-	default String getModId() {
-		return null;
-	}
-
-	/**
-	 * Replaced with {@link ModMenuApi#getModConfigScreenFactory()} ()}, which uses its
-	 * own factory type.
-	 *
-	 * @return A factory function for constructing config screen instances.
-	 * @deprecated Will be removed in 1.17 snapshots.
-	 */
-	@Deprecated
-	default Function<Screen, ? extends Screen> getConfigScreenFactory() {
-		return screen -> null;
-	}
-
-	/**
 	 * Used to construct a new config screen instance when your mod's
 	 * configuration button is selected on the mod menu screen. The
 	 * screen instance parameter is the active mod menu screen.
@@ -54,7 +29,8 @@ public interface ModMenuApi {
 	 * @return A factory for constructing config screen instances.
 	 */
 	default ConfigScreenFactory<?> getModConfigScreenFactory() {
-		return screen -> getConfigScreenFactory().apply(screen);
+		Function<Screen, ? extends Screen> nullFactory = screen -> null;
+		return nullFactory::apply;
 	}
 
 	/**

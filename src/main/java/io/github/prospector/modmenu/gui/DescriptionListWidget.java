@@ -8,6 +8,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -70,7 +71,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		RenderSystem.shadeModel(7425);
 		RenderSystem.disableTexture();
 
-		bufferBuilder.begin(VertexFormat.class_5596.field_27382, VertexFormats.POSITION_TEXTURE_COLOR);
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 		bufferBuilder.vertex(this.left, (this.top + 4), 0.0D).texture(0.0F, 1.0F).color(0, 0, 0, 0).next();
 		bufferBuilder.vertex(this.right, (this.top + 4), 0.0D).texture(1.0F, 1.0F).color(0, 0, 0, 0).next();
 		bufferBuilder.vertex(this.right, this.top, 0.0D).texture(1.0F, 0.0F).color(0, 0, 0, 255).next();
@@ -81,7 +82,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		bufferBuilder.vertex(this.left, (this.bottom - 4), 0.0D).texture(0.0F, 0.0F).color(0, 0, 0, 0).next();
 		tessellator.draw();
 
-		bufferBuilder.begin(VertexFormat.class_5596.field_27382, VertexFormats.POSITION_COLOR);
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		bufferBuilder.vertex(this.left, this.bottom, 0.0D).color(0, 0, 0, 128).next();
 		bufferBuilder.vertex(this.right, this.bottom, 0.0D).color(0, 0, 0, 128).next();
 		bufferBuilder.vertex(this.right, this.top, 0.0D).color(0, 0, 0, 128).next();
