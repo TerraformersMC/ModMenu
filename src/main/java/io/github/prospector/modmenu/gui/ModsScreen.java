@@ -254,7 +254,6 @@ public class ModsScreen extends Screen {
 		this.searchBox.render(matrices, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
 		this.drawTextWithShadow(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
-		super.render(matrices, mouseX, mouseY, delta);
 		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
@@ -318,11 +317,11 @@ public class ModsScreen extends Screen {
 				}
 				RenderUtils.drawWrappedString(matrices, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 			}
-			if (this.tooltip != null) {
-				this.renderOrderedTooltip(matrices, textRenderer.wrapLines(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
-			}
 		}
-
+		super.render(matrices, mouseX, mouseY, delta);
+		if (this.tooltip != null) {
+			this.renderOrderedTooltip(matrices, textRenderer.wrapLines(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
+		}
 	}
 
 	private Text computeModCountText(boolean includeLibs) {
