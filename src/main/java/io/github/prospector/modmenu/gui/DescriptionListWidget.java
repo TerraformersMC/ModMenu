@@ -54,7 +54,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
 				for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
-					children().add(new DescriptionEntry(line));
+					children().add(new DescriptionEntry(line, this));
 				}
 			}
 		}
@@ -99,15 +99,20 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
+		private final DescriptionListWidget widget;
 		protected OrderedText text;
 
-		public DescriptionEntry(OrderedText text) {
+		public DescriptionEntry(OrderedText text, DescriptionListWidget widget) {
 			this.text = text;
+			this.widget = widget;
 		}
 
 		@Override
 		public void render(MatrixStack matrices, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
-			MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
+			if (widget.top > y || widget.bottom - textRenderer.fontHeight < y) {
+				return;
+			}
+			textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
 		}
 	}
 
