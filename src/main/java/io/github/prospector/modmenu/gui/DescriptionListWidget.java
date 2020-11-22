@@ -12,6 +12,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
+import net.minecraft.util.math.MathHelper;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
@@ -53,7 +54,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
 			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth())) {
+				for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 					children().add(new DescriptionEntry(line, this));
 				}
 			}
@@ -89,13 +90,44 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		tessellator.draw();
 
 		int k = this.getRowLeft();
-		int l = this.top + 4 - (int)this.getScrollAmount();
+		int l = this.top + 4 - (int) this.getScrollAmount();
 		this.renderList(matrices, k, l, mouseX, mouseY, delta);
+		this.renderScrollBar(bufferBuilder, tessellator);
 
 		RenderSystem.enableTexture();
 		RenderSystem.shadeModel(7424);
 		RenderSystem.enableAlphaTest();
 		RenderSystem.disableBlend();
+	}
+
+	public void renderScrollBar(BufferBuilder bufferBuilder, Tessellator tessellator) {
+		int scrollbarStartX = this.getScrollbarPositionX();
+		int scrollbarEndX = scrollbarStartX + 6;
+		int maxScroll = this.getMaxScroll();
+		if (maxScroll > 0) {
+			RenderSystem.disableTexture();
+			int p = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top)) / (float) this.getMaxPosition());
+			p = MathHelper.clamp(p, 32, this.bottom - this.top - 8);
+			int q = (int) this.getScrollAmount() * (this.bottom - this.top - p) / maxScroll + this.top;
+			if (q < this.top) {
+				q = this.top;
+			}
+
+			bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
+			bufferBuilder.vertex(scrollbarStartX, this.bottom, 0.0D).texture(0.0F, 1.0F).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, this.bottom, 0.0D).texture(1.0F, 1.0F).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, this.top, 0.0D).texture(1.0F, 0.0F).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, this.top, 0.0D).texture(0.0F, 0.0F).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0D).texture(0.0F, 1.0F).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0D).texture(1.0F, 1.0F).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, q, 0.0D).texture(1.0F, 0.0F).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).texture(0.0F, 0.0F).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q + p - 1, 0.0D).texture(0.0F, 1.0F).color(192, 192, 192, 255).next();
+			bufferBuilder.vertex(scrollbarEndX - 1, q + p - 1, 0.0D).texture(1.0F, 1.0F).color(192, 192, 192, 255).next();
+			bufferBuilder.vertex(scrollbarEndX - 1, q, 0.0D).texture(1.0F, 0.0F).color(192, 192, 192, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).texture(0.0F, 0.0F).color(192, 192, 192, 255).next();
+			tessellator.draw();
+		}
 	}
 
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
