@@ -32,5 +32,7 @@
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm" : "Do you want to copy the following mods into the mods directory?",
   "modmenu.dropSuccessful.line1" : "Successfully copied mods",
-  "modmenu.dropSuccessful.line2" : "Restart game to load mods"
+  "modmenu.dropSuccessful.line2" : "Restart game to load mods",
+  "modmenu.dropInfo.1": "Drag and drop files into",
+  "modmenu.dropInfo.2": "this window to add mods"
 }

@@ -28,6 +28,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.Util;
@@ -49,6 +50,7 @@ public class ModsScreen extends Screen {
 
 	private static final TranslatableText TOGGLE_FILTER_OPTIONS = new TranslatableText("modmenu.toggleFilterOptions");
 	private static final TranslatableText CONFIGURE = new TranslatableText("modmenu.configure");
+	private static final Text DROP = new TranslatableText("modmenu.dropInfo").formatted(Formatting.GRAY);
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -253,7 +255,9 @@ public class ModsScreen extends Screen {
 		this.modList.render(matrices, mouseX, mouseY, delta);
 		this.searchBox.render(matrices, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
-		this.drawTextWithShadow(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		drawCenteredText(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 16777215);
+		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 16777215);
 		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
