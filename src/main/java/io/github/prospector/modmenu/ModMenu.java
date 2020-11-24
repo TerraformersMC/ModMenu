@@ -12,7 +12,6 @@ import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
@@ -42,7 +41,13 @@ public class ModMenu implements ClientModInitializer {
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
 
 	public static boolean hasConfigScreenFactory(String modid) {
-		return configScreenFactories.containsKey(modid) && configScreenFactories.get(modid).create(MinecraftClient.getInstance().currentScreen) != null;
+		try {
+			return configScreenFactories.containsKey(modid) && configScreenFactories.get(modid).create(MinecraftClient.getInstance().currentScreen) != null;
+		} catch (Throwable e) {
+			LOGGER.error("Caught exception from " + modid + " on ModMenu.hasConfigScreenFactory");
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
