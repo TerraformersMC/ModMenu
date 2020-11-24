@@ -85,11 +85,8 @@ public class ModMenu implements ClientModInitializer {
 			if (metadata.containsCustomValue("modmenu:clientsideOnly") && metadata.getCustomValue("modmenu:clientsideOnly").getAsBoolean()) {
 				CLIENTSIDE_MODS.add(id);
 			}
-			if (metadata.containsCustomValue("patchwork:source") && metadata.getCustomValue("patchwork:source").getAsObject() != null) {
-				CustomValue.CvObject object = metadata.getCustomValue("patchwork:source").getAsObject();
-				if ("forge".equals(object.get("loader").getAsString())) {
-					PATCHWORK_FORGE_MODS.add(id);
-				}
+			if (metadata.containsCustomValue("patchwork:patcherMeta")) {
+				PATCHWORK_FORGE_MODS.add(id);
 			}
 			boolean hasParent = false;
 			if (metadata.containsCustomValue("modmenu:parent")) {
