@@ -1,3 +1,4 @@
+/*
 package io.github.prospector.modmenu.util;
 
 import com.google.gson.JsonElement;
@@ -152,3 +153,4 @@ public class TestModContainer implements ModContainer {
 		}
 	}
 }
+*/
