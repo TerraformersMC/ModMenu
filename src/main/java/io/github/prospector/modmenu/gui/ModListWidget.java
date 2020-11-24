@@ -7,7 +7,6 @@ import io.github.prospector.modmenu.gui.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.entries.IndependentEntry;
 import io.github.prospector.modmenu.gui.entries.ParentEntry;
 import io.github.prospector.modmenu.util.HardcodedUtil;
-import io.github.prospector.modmenu.util.TestModContainer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -125,7 +124,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 		if (DEBUG) {
 			mods = new ArrayList<>(mods);
-			mods.addAll(TestModContainer.getTestModContainers());
+//			mods.addAll(TestModContainer.getTestModContainers());
 		}
 
 		if (this.modContainerList == null || refresh) {

@@ -1,107 +1,13 @@
 plugins {
-	id 'java'
-	id 'maven-publish'
-	id 'idea'
-	id 'eclipse'
-	id 'fabric-loom' version '0.2.5-SNAPSHOT'
-	id 'com.matthewprenger.cursegradle' version "1.1.2"
+	id 'fabric-loom' version '0.5-SNAPSHOT'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-archivesBaseName = project.archive_name
-version = project.mod_version + "." + project.minecraft_version
-group = project.maven_group
-
-def ENV = System.getenv()
-version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "custom")
+apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/1.1/ferry.gradle'
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
-	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	minecraft "com.mojang:minecraft:$project.minecraft_version"
+	mappings "net.fabricmc:yarn:$project.yarn_mappings"
 
-	project.fabric_modules.split(", ").each {
-		String module -> include "net.fabricmc.fabric-api:${module}"
-	}
-}
-
-minecraft {
-	refmapName = 'modmenu.refmap.json'
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
-		expand "version": project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
-	}
-}
-tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
-}
-
-jar {
-	from "LICENSE"
-}
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-
-			afterEvaluate {
-				artifact(remapJar) {
-					builtBy remapJar
-				}
-			}
-		}
-	}
-
-	repositories {
-		if (project.hasProperty('mavenPass')) {
-			maven {
-				url = "http://mavenupload.modmuss50.me/"
-				credentials {
-					username = "buildslave"
-					password = project.getProperty('mavenPass')
-				}
-			}
-		}
-	}
-}
-
-curseforge {
-	if (project.hasProperty('curse_api_key')){
-		apiKey = project.getProperty('curse_api_key')
-	}
-	project {
-		id = '308702'
-		changelog = 'A changelog can be found at https://github.com/Prospector/ModMenu'
-		releaseType = 'beta'
-		addGameVersion '1.15-Snapshot'
-		mainArtifact(remapJar) {
-			displayName = "ModMenu v$version for $project.minecraft_version"
-		}
-		afterEvaluate {
-			uploadTask.dependsOn("remapJar")
-		}
-	}
-	options{
-		forgeGradleIntegration = false
-	}
+	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
+	includeMod "fabric-api", fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
 }
