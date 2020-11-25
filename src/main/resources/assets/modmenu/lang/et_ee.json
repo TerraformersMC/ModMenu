@@ -26,5 +26,7 @@
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm": "Kas soovid kindlasti kopeerida järgnevad modid kausta \"mods\"?",
   "modmenu.dropSuccessful.line1": "Modid edukalt kopeeritud",
-  "modmenu.dropSuccessful.line2": "Modide laadimiseks taaskäivita mäng"
+  "modmenu.dropSuccessful.line2": "Modide laadimiseks taaskäivita mäng",
+  "modmenu.dropInfo.1": "Sikuta modide lisamiseks",
+  "modmenu.dropInfo.2": "nende failid siia aknasse"
 }
