@@ -32,5 +32,7 @@
   "modmenu.forge": "فورج",
   "modmenu.dropConfirm" : "آیا می خواهید این ماد ها را به پوشۀ ماد ها کپی کنید؟",
   "modmenu.dropSuccessful.line1" : "کپی کردن ماد ها با موفقیت انجام شد",
-  "modmenu.dropSuccessful.line2" : "بازی را دوباره اجرا کنید تا ماد ها اجرا شوند"
+  "modmenu.dropSuccessful.line2" : "بازی را دوباره اجرا کنید تا ماد ها اجرا شوند",
+  "modmenu.dropInfo.1": "برای اضافه کردن ماد ها، فایل های",
+  "modmenu.dropInfo.2": "آنها را به داخل این پنجره بکشید"
 }
