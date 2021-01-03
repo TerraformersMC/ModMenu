@@ -4,5 +4,10 @@
   "modmenu.config": "Ändere Konfiguration",
   "modmenu.modsFolder": "Öffne Mods-Ordner",
   "modmenu.configsFolder": "Öffne Konfigurationen-Ordner",
-  "modmenu.configure": "Konfiguriere..."
+  "modmenu.configure": "Konfiguriere...",
+  "modmenu.removeModConfirm": "Sind sie sicher, dass sie die folgende Mod entfernen wollen?",
+  "modmenu.removeModFailure": "Mod konnte nicht entfernt werden",
+  "modmenu.removeModSuccessful.line1" : "Mod erfolgreich entfernt",
+  "modmenu.removeModSuccessful.line2" : "Starten sie das Spiel neu",
+  "modmenu.remove": "Entfernen"
 }

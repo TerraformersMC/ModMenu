@@ -32,13 +32,16 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.Util;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.jar.JarFile;
@@ -47,9 +50,11 @@ import java.util.stream.Collectors;
 public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
+	private static final Identifier REMOVE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/remove_button.png");
 
 	private static final TranslatableText TOGGLE_FILTER_OPTIONS = new TranslatableText("modmenu.toggleFilterOptions");
 	private static final TranslatableText CONFIGURE = new TranslatableText("modmenu.configure");
+	private static final TranslatableText REMOVE = new TranslatableText("modmenu.remove");
 	private static final Text DROP = new TranslatableText("modmenu.dropInfo").formatted(Formatting.GRAY);
 
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -144,9 +149,53 @@ public class ModsScreen extends Screen {
 				super.renderButton(matrices, mouseX, mouseY, delta);
 			}
 		};
-		int urlButtonWidths = paneWidth / 2 - 2;
-		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
-		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
+		final boolean showRemoveButton = !SystemUtils.IS_OS_WINDOWS;
+		ButtonWidget removeButton = new ModMenuTexturedButtonWidget(rightPaneX, paneY + 36, 20, 20, 0, 0, REMOVE_BUTTON_LOCATION, 32, 64, button -> {
+			String name = selected.getMetadata().getName();
+			this.client.openScreen(new ConfirmScreen((value) -> {
+				if (value) {
+					try {
+						Files.delete(Paths.get(selected.source.toURI()));
+						SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, new TranslatableText("modmenu.removeModSuccessful.line1"), new TranslatableText("modmenu.removeModSuccessful.line2"));
+					} catch (IOException | URISyntaxException e) {
+						e.printStackTrace();
+						LOGGER.warn("Failed to remove mod {}", name);
+						SystemToast.add(client.getToastManager(), SystemToast.Type.PACK_COPY_FAILURE, new TranslatableText("modmenu.removeModFailure"), new LiteralText("Failed to remove " + name));
+					}
+				}
+				this.client.openScreen(this);
+			}, new TranslatableText("modmenu.removeModConfirm"), new LiteralText(name)));
+		}, REMOVE, (buttonWidget, matrices, mouseX, mouseY) -> {
+			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
+			if (button.isJustHovered()) {
+				this.renderTooltip(matrices, REMOVE, mouseX, mouseY);
+			} else if (button.isFocusedButNotHovered()) {
+				this.renderTooltip(matrices, REMOVE, button.x, button.y);
+			}
+		}) {
+			@Override
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+				visible = selected != null;
+				try {
+					active = visible
+							&& !Objects.requireNonNull(selected)
+							.getMetadata().containsCustomValue("modmenu:no_remove")
+							&& !"minecraft".equals(selected.getMetadata().getId())
+							&& !"fabricloader".equals(selected.getMetadata().getId())
+							&& "file".equals(selected.source.getProtocol())
+							&& Files.exists(Paths.get(selected.source.toURI()))
+							&& Files.isRegularFile(Paths.get(selected.source.toURI()));
+				} catch (URISyntaxException e) {
+					active = false;
+					e.printStackTrace();
+				}
+				super.render(matrices, mouseX, mouseY, delta);
+			}
+		};
+		final int offsetLeft = showRemoveButton ? 22 : 0;
+		final int urlButtonWidths = paneWidth / 2 - 2 - offsetLeft / 2;
+		final int cappedButtonWidth = Math.min(urlButtonWidths, 200);
+		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2) + offsetLeft, paneY + 36, cappedButtonWidth, 20,
 				new TranslatableText("modmenu.website"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
@@ -163,7 +212,7 @@ public class ModsScreen extends Screen {
 				super.render(matrices, mouseX, mouseY, delta);
 			}
 		};
-		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
+		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2) + offsetLeft, paneY + 36, cappedButtonWidth, 20,
 				new TranslatableText("modmenu.issues"), button -> {
 			final ModMetadata metadata = Objects.requireNonNull(selected).getMetadata();
 			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
@@ -224,6 +273,8 @@ public class ModsScreen extends Screen {
 		if (!ModMenuConfigManager.getConfig().isHidingConfigurationButtons()) {
 			this.addButton(configureButton);
 		}
+		if (showRemoveButton)
+			this.addButton(removeButton);
 		this.addButton(websiteButton);
 		this.addButton(issuesButton);
 		this.children.add(this.descriptionListWidget);

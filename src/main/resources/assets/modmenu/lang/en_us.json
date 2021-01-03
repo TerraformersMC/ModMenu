@@ -33,6 +33,11 @@
   "modmenu.dropConfirm" : "Do you want to copy the following mods into the mods directory?",
   "modmenu.dropSuccessful.line1" : "Successfully copied mods",
   "modmenu.dropSuccessful.line2" : "Restart game to load mods",
+  "modmenu.removeModConfirm": "Are you sure you want to remove the following mod?",
+  "modmenu.removeModFailure": "Failed to remove mod",
+  "modmenu.removeModSuccessful.line1" : "Successfully removed mod",
+  "modmenu.removeModSuccessful.line2" : "Restart game to unload",
   "modmenu.dropInfo.1": "Drag and drop files into",
-  "modmenu.dropInfo.2": "this window to add mods"
+  "modmenu.dropInfo.2": "this window to add mods",
+  "modmenu.remove": "Remove"
 }

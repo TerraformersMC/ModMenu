@@ -24,6 +24,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -36,12 +38,22 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	protected final ModContainer container;
 	protected final ModMetadata metadata;
 	protected final ModListWidget list;
+	protected URL source;
 	protected Identifier iconLocation;
 
 	public ModListEntry(ModContainer container, ModListWidget list) {
 		this.container = container;
 		this.list = list;
 		this.metadata = container.getMetadata();
+		if (container instanceof net.fabricmc.loader.ModContainer)
+			source = ((net.fabricmc.loader.ModContainer) container).getOriginUrl();
+		else {
+			try {
+				source = new URL("null", "", "/");
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
 		this.client = MinecraftClient.getInstance();
 	}
 
