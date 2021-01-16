@@ -8,8 +8,9 @@ public enum BadgeType {
 	CLIENTSIDE(new TranslatableText("modmenu.clientsideOnly"), 0xff2b4b7c, 0xff0e2a55),
 	DEPRECATED(new TranslatableText("modmenu.deprecated"), 0xffff3333, 0xffb30000),
 	PATCHWORK_FORGE(new TranslatableText("modmenu.forge"), 0xff1f2d42, 0xff101721),
-	MINECRAFT(new TranslatableText("modmenu.minecraft"), 0xff6f6c6a, 0xff31302f);
-	
+	MINECRAFT(new TranslatableText("modmenu.minecraft"), 0xff6f6c6a, 0xff31302f),
+	JAVA(new TranslatableText("modmenu.java"), 0xfff80000, 0xff520000);
+
 	private Text text;
 	private int outlineColor;
 	private int fillColor;
