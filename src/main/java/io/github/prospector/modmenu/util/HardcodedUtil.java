@@ -51,6 +51,9 @@ public class HardcodedUtil {
 		if (id.equals("fabricloader") || id.equals("fabric") || metadata.getName().endsWith(" API")) {
 			ModMenu.addLibraryMod(id);
 		}
+		if (id.equals("java")) {
+			ModMenu.addLibraryMod(id);
+		}
 	}
 
 	public static Text formatFabricModuleName(String name) {
