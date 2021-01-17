@@ -32,6 +32,7 @@ public class HardcodedUtil {
 		ModContainer modMenu = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(IllegalAccessError::new);
 		HARDCODED_ICONS.put(mod -> getFabricMods().contains(mod.getId()), modMenu.getPath("assets/" + ModMenu.MOD_ID + "/fabric_icon.png"));
 		HARDCODED_ICONS.put(mod -> mod.getId().equals("minecraft"), modMenu.getPath("assets/" + ModMenu.MOD_ID + "/mc_icon.png"));
+		HARDCODED_ICONS.put(mod -> mod.getId().equals("java"), modMenu.getPath("assets/" + ModMenu.MOD_ID + "/duke_icon.png"));
 	}
 
 	public static void hardcodeModuleMetadata(ModContainer mod, ModMetadata metadata, String id) {
