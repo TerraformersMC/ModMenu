@@ -1,7 +1,3 @@
-plugins {
-	id 'fabric-loom' version '0.5-SNAPSHOT'
-}
-
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.0/ferry.gradle'
 
 dependencies {
