@@ -38,8 +38,14 @@ public interface ModMenuApi {
 	 * Used to determine the owner of this API implementation.
 	 * Will be deprecated and removed once Fabric has support
 	 * for providing ownership information about entry points.
+	 *
+	 * @deprecated No longer needed, mod id is now automatically
+	 * pulled from Loader. Will be removed in 1.17 snapshots.
 	 */
-	String getModId();
+	@Deprecated
+	default String getModId() {
+		return null;
+	}
 
 	/**
 	 * Replaced with {@link ModMenuApi#getConfigScreenFactory()}, which
