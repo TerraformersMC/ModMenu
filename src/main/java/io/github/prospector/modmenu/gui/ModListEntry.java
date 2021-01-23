@@ -80,10 +80,8 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			}
 			if (!Files.exists(path)) {
 				ModContainer modMenu = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(IllegalAccessError::new);
-				if (HardcodedUtil.getFabricMods().contains(metadata.getId())) {
-					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/fabric_icon.png");
-				} else if (metadata.getId().equals("minecraft")) {
-					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/mc_icon.png");
+				if (HardcodedUtil.modHasHardcodedIcon(metadata)) {
+					path = HardcodedUtil.getHardcodedIcon(metadata);
 				} else {
 					path = modMenu.getPath("assets/" + ModMenu.MOD_ID + "/grey_fabric_icon.png");
 				}

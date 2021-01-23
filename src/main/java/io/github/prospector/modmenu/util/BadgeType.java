@@ -9,7 +9,7 @@ public enum BadgeType {
 	DEPRECATED(new TranslatableText("modmenu.deprecated"), 0xffff3333, 0xffb30000),
 	PATCHWORK_FORGE(new TranslatableText("modmenu.forge"), 0xff1f2d42, 0xff101721),
 	MINECRAFT(new TranslatableText("modmenu.minecraft"), 0xff6f6c6a, 0xff31302f);
-	
+
 	private Text text;
 	private int outlineColor;
 	private int fillColor;
