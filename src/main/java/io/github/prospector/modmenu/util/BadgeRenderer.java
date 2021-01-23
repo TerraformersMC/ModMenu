@@ -46,9 +46,6 @@ public class BadgeRenderer {
 		if (metadata.getId().equals("minecraft")) {
 			drawBadge(matrices, BadgeType.MINECRAFT, mouseX, mouseY);
 		}
-		if (metadata.getId().equals("java")) {
-			drawBadge(matrices, BadgeType.JAVA, mouseX, mouseY);
-		}
 		//noinspection MagicConstant
 		if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {
 			if (metadata.getId().equals(new String(new byte[]{109, 111, 100, 109, 101, 110, 117}))) {
