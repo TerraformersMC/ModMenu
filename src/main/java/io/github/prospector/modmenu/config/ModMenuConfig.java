@@ -35,7 +35,7 @@ public class ModMenuConfig {
 
 	public enum Sorting {
 		@SerializedName("ascending")
-		ASCENDING(Comparator.comparing(modContainer -> HardcodedUtil.formatFabricModuleName(modContainer.getMetadata().getName()).asString()), "modmenu.sorting.ascending"),
+		ASCENDING(Comparator.comparing(modContainer -> HardcodedUtil.formatFabricModuleName(modContainer.getMetadata().getName()).asString().toLowerCase()), "modmenu.sorting.ascending"),
 		@SerializedName("descending")
 		DESCENDING(ASCENDING.getComparator().reversed(), "modmenu.sorting.decending");
 
