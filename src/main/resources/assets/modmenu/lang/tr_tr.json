@@ -32,5 +32,7 @@
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm" : "Seçili mod veya modları mod dizinine kopyalamak istiyor musun?",
   "modmenu.dropSuccessful.line1" : "Başarıyla modlar kopyalandı.",
-  "modmenu.dropSuccessful.line2" : "Modları yüklemek için oyunu yeniden başlat."
+  "modmenu.dropSuccessful.line2" : "Modları yüklemek için oyunu yeniden başlat.",
+  "modmenu.dropInfo.1": "Modları eklemek için bu pencereye", 
+  "modmenu.dropInfo.2": "dosyaları sürükleyip bırakın"
 }
