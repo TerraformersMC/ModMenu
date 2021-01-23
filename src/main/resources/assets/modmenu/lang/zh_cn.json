@@ -32,5 +32,7 @@
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm" : "是否将下列模组复制到模组文件夹？",
   "modmenu.dropSuccessful.line1" : "复制完毕！",
-  "modmenu.dropSuccessful.line2" : "重启游戏以加载新安装的模组。"
+  "modmenu.dropSuccessful.line2" : "重启游戏以加载新安装的模组。",
+  "modmenu.dropInfo.1": "将文件拖放至",
+  "modmenu.dropInfo.2": "此窗口以添加模组"
 }
