@@ -30,7 +30,6 @@
   "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge",
-  "modmenu.java": "Java",
   "modmenu.dropConfirm" : "Do you want to copy the following mods into the mods directory?",
   "modmenu.dropSuccessful.line1" : "Successfully copied mods",
   "modmenu.dropSuccessful.line2" : "Restart game to load mods",
