@@ -3,8 +3,8 @@
 # certain platforms or Java versions, and provides a first line of defence
 # against bad commits.
 
-name: build
-on: [pull_request, push]
+name: Check Build
+on: [push, pull_request]
 
 jobs:
   build:
@@ -12,12 +12,11 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
-          1.8,  # Minimum supported by Minecraft
-          11,   # Current Java LTS
-          15    # Latest version
+          1.8,  # Minimum
+          11,   # LTS
+          15    # Latest
         ]
-        # and run on both Linux and Windows
-        os: [ubuntu-20.04, windows-latest]
+        os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
@@ -32,7 +31,7 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew build
+        run: ./gradlew build --stacktrace --parallel
       - name: capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '11' }} # Only upload artifacts built from LTS java on one OS
         uses: actions/upload-artifact@v2
