@@ -14,10 +14,7 @@
   "modmenu.deprecated": "Устарел",
   "modmenu.library": "Библиотека",
   "modmenu.toggleFilterOptions": "Фильтры",
-  "modmenu.showLibraries": "Библиотеки: %s",
-  "modmenu.showLibraries.true": "Показаны",
-  "modmenu.showLibraries.false": "Скрыты",
-  "modmenu.showingMods": "Показано: модов - %s",
+  "modmenu.showingMods.a": "Показано: модов - %s",
   "modmenu.showingMods.1": "Показан %s мод",
   "modmenu.showingLibraries.a": "Показано: библиотек - %s",
   "modmenu.showingLibraries.1": "Показана %s библиотека",
@@ -25,12 +22,16 @@
   "modmenu.showingModsLibraries.a.1": "Показано: модов - %s и %s библиотека",
   "modmenu.showingModsLibraries.1.a": "Показано: %s мод и библиотек - %s",
   "modmenu.showingModsLibraries.1.1": "Показано: %s мод и %s библиотека",
-  "modmenu.sorting": "Сортировка: %s",
-  "modmenu.sorting.ascending": "A-Z",
-  "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm" : "Скопировать эти моды в каталог модов?",
   "modmenu.dropSuccessful.line1" : "Моды успешно скопированы",
-  "modmenu.dropSuccessful.line2" : "Чтобы моды заработали, перезапустите игру"
+  "modmenu.dropSuccessful.line2" : "Чтобы моды заработали, перезапустите игру",
+
+  "option.modmenu.sorting": "Сортировка: %s",
+  "option.modmenu.sorting.ascending": "A-Z",
+  "option.modmenu.sorting.descending": "Z-A",
+  "option.modmenu.show_libraries": "Библиотеки: %s",
+  "option.modmenu.show_libraries.true": "Показаны",
+  "option.modmenu.show_libraries.false": "Скрыты"
 }

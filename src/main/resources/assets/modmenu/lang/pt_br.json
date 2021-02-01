@@ -1,5 +1,6 @@
 {
   "modmenu.title": "Mods",
+  "modmenu.descriptionTranslation.modmenu": "Adiciona um menu de mods para ver a lista de mods instalados",
   "modmenu.loaded": "(%s Carregados)",
   "modmenu.config": "Editar Config",
   "modmenu.modsFolder": "Abrir pasta de mods",

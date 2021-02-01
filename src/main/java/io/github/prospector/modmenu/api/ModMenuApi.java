@@ -1,27 +1,39 @@
 package io.github.prospector.modmenu.api;
 
 import com.google.common.collect.ImmutableMap;
-import io.github.prospector.modmenu.gui.ModsScreen;
+import com.terraformersmc.modmenu.gui.ModsScreen;
+import com.terraformersmc.modmenu.util.ModMenuApiMarker;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public interface ModMenuApi {
+/**
+ * Deprecated API, switch to {@link com.terraformersmc.modmenu.api.ModMenuApi} instead
+ *
+ * Will be removed in 1.18 snapshots
+ */
+@Deprecated
+public interface ModMenuApi extends ModMenuApiMarker {
 	/**
+	 * THIS ENTIRE API IS DEPRECATED. MOVE TO {@link com.terraformersmc.modmenu.api.ModMenuApi}
+	 * This API will be removed in 1.18 snapshots
+	 *
 	 * Used for creating a {@link Screen} instance for the Mod Menu
 	 * "Mods" screen
 	 *
 	 * @param previous The screen before opening
 	 * @return A "Mods" Screen
 	 */
+	@Deprecated
 	static Screen createModsScreen(Screen previous) {
-		return new ModsScreen(previous);
+		return com.terraformersmc.modmenu.api.ModMenuApi.createModsScreen(previous);
 	}
 
 	/**
+	 * THIS ENTIRE API IS DEPRECATED. MOVE TO {@link com.terraformersmc.modmenu.api.ModMenuApi}
+	 * This API will be removed in 1.18 snapshots
+	 *
 	 * Used to determine the owner of this API implementation.
 	 * Will be deprecated and removed once Fabric has support
 	 * for providing ownership information about entry points.
@@ -35,6 +47,9 @@ public interface ModMenuApi {
 	}
 
 	/**
+	 * THIS ENTIRE API IS DEPRECATED. MOVE TO {@link com.terraformersmc.modmenu.api.ModMenuApi}
+	 * This API will be removed in 1.18 snapshots
+	 *
 	 * Replaced with {@link ModMenuApi#getModConfigScreenFactory()} ()}, which uses its
 	 * own factory type.
 	 *
@@ -47,6 +62,9 @@ public interface ModMenuApi {
 	}
 
 	/**
+	 * THIS ENTIRE API IS DEPRECATED. MOVE TO {@link com.terraformersmc.modmenu.api.ModMenuApi}
+	 * This API will be removed in 1.18 snapshots
+	 *
 	 * Used to construct a new config screen instance when your mod's
 	 * configuration button is selected on the mod menu screen. The
 	 * screen instance parameter is the active mod menu screen.
@@ -58,6 +76,9 @@ public interface ModMenuApi {
 	}
 
 	/**
+	 * THIS ENTIRE API IS DEPRECATED. MOVE TO {@link com.terraformersmc.modmenu.api.ModMenuApi}
+	 * This API will be removed in 1.18 snapshots
+	 *
 	 * Used to provide config screen factories for other mods. This takes second
 	 * priority to a mod's own config screen factory provider. For example, if
 	 * mod `xyz` supplies a config screen factory, mod `abc` providing a config

@@ -8,24 +8,29 @@
   "icon": "assets/modmenu/icon.png",
   "entrypoints": {
     "client": [
-      "io.github.prospector.modmenu.ModMenu"
+      "com.terraformersmc.modmenu.ModMenu"
     ],
     "modmenu": [
-      "io.github.prospector.modmenu.VanillaModMenuCompat"
+      "com.terraformersmc.modmenu.ModMenuModMenuCompat"
     ]
   },
   "contact": {
     "homepage": "https://minecraft.curseforge.com/projects/modmenu",
-    "sources": "https://github.com/Prospector/ModMenu",
-    "issues": "https://github.com/Prospector/ModMenu/issues"
+    "sources": "https://github.com/TerraformersMC/ModMenu",
+    "issues": "https://github.com/TerraformersMC/ModMenu/issues"
   },
   "depends": {
     "fabric-resource-loader-v0": "*",
-    "fabricloader": ">=0.9.0",
+    "fabric-screen-api-v1": "*",
+    "fabricloader": ">=0.11.1",
     "minecraft": ">=1.16-"
   },
+  "breaks" : {
+    "fabric": "<0.30.0"
+  },
   "authors": [
-    "Prospector", "TerraformersMC"
+    "Prospector",
+    "TerraformersMC"
   ],
   "contributors": [
     "shedaniel",
@@ -39,7 +44,7 @@
     "geniiii",
     "thiagokenis",
     "Juuxel",
-    "InsomniaKitten",
+    "Chloe Dawn",
     "modmuss50",
     "Patbox",
     "Lykrast",
@@ -61,7 +66,16 @@
     "po-stulate",
     "FlashyReese",
     "egeesin",
-    "TheGlitch76"
+    "TheGlitch76",
+    "ludg1e",
+    "williambl",
+    "PepperCode1",
+    "ThatTrollzer",
+    "ToffeeMax",
+    "kalucky0",
+    "Maaster",
+    "MartrixX",
+    "NotSteven"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
@@ -72,6 +86,11 @@
       "strategy": "curseforge",
       "projectID": 308702,
       "strict": false
+    },
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/jEGF5fb"
+      }
     }
-  }	
+  }
 }

@@ -1,5 +1,6 @@
 {
   "modmenu.title": "spoW",
+  "modmenu.descriptionTranslation.modmenu": "pǝʃʃɐʇsuı ǝʌɐɥ noʎ spoɯ ɟo ʇsıʃ ǝɥʇ ʍǝıʌ oʇ nuǝɯ poɯ ɐ spp∀",
   "modmenu.loaded": "(pǝpɐo˥ %s)",
   "modmenu.config": "ƃıɟuoϽ ʇıpƎ",
   "modmenu.modsFolder": "ɹǝpןoℲ spoW uǝdO",
@@ -14,9 +15,6 @@
   "modmenu.deprecated": "pǝʇɐɔǝɹdǝᗡ",
   "modmenu.library": "ʎɹɐɹqı˥",
   "modmenu.toggleFilterOptions": "suoıʇdO ɹǝʇןıℲ ǝןƃƃo⊥",
-  "modmenu.showLibraries": "%s :sǝıɹɐɹqı˥",
-  "modmenu.showLibraries.true": "uʍoɥS",
-  "modmenu.showLibraries.false": "uǝppıH",
   "modmenu.showingMods.a": "spoɯ %s ƃuıʍoɥS",
   "modmenu.showingMods.1": "poɯ %s ƃuıʍoɥS",
   "modmenu.showingLibraries.a": "sǝıɹɐɹqıן %s ƃuıʍoɥS",
@@ -25,14 +23,18 @@
   "modmenu.showingModsLibraries.a.1": "spoɯ %s puɐ ʎɹɐɹqıן s% ƃuıʍoɥS",
   "modmenu.showingModsLibraries.1.a": "poɯ %s puɐ sǝıɹɐɹqıן s% ƃuıʍoɥS",
   "modmenu.showingModsLibraries.1.1": "poɯ %s puɐ ʎɹɐɹqıן s% ƃuıʍoɥS",
-  "modmenu.sorting": "%s :ʇɹoS",
-  "modmenu.sorting.ascending": "Z-∀",
-  "modmenu.sorting.decending": "∀-Z",
   "modmenu.minecraft": "ʇɟɐɹɔǝuıW",
   "modmenu.forge": "ǝƃɹoℲ",
   "modmenu.dropConfirm" : "¿ʎɹoʇɔǝɹıp spoɯ ǝɥʇ oʇuı spoɯ ƃuıʍoןןoɟ ǝɥʇ ʎdoɔ oʇ ʇuɐʍ noʎ oᗡ",
   "modmenu.dropSuccessful.line1" : "spoɯ pǝıdoɔ ʎןןnɟssǝɔɔnS",
   "modmenu.dropSuccessful.line2" : "spoɯ pɐoן oʇ ǝɯɐƃ ʇɹɐʇsǝᴚ",
   "modmenu.dropInfo.1": "oʇuı sǝןıɟ doɹp puɐ ƃɐɹᗡ",
-  "modmenu.dropInfo.2": "spoɯ ppɐ oʇ ʍopuıʍ sıɥʇ"
+  "modmenu.dropInfo.2": "spoɯ ppɐ oʇ ʍopuıʍ sıɥʇ",
+
+  "option.modmenu.sorting": "%s :ʇɹoS",
+  "option.modmenu.sorting.ascending": "Z-∀",
+  "option.modmenu.sorting.descending": "∀-Z",
+  "option.modmenu.show_libraries": "%s :sǝıɹɐɹqı˥",
+  "option.modmenu.show_libraries.true": "uʍoɥS",
+  "option.modmenu.show_libraries.false": "uǝppıH"
 }

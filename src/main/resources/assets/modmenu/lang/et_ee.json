@@ -13,20 +13,21 @@
   "modmenu.clientsideOnly": "Klient",
   "modmenu.library": "Teek",
   "modmenu.toggleFilterOptions": "Lülita filtreerimisvalikuid",
-  "modmenu.showLibraries": "Teegid: %s",
-  "modmenu.showLibraries.true": "kuvatud",
-  "modmenu.showLibraries.false": "peidetud",
   "modmenu.showingMods.a": "Kuvan %s modi",
   "modmenu.showingLibraries.a": "Kuvan %s teeki",
   "modmenu.showingModsLibraries.a.a": "Kuvan %s modi ja %s teeki",
-  "modmenu.sorting": "Jrk: %s",
-  "modmenu.sorting.ascending": "A-Z",
-  "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm": "Kas soovid kindlasti kopeerida järgnevad modid kausta \"mods\"?",
   "modmenu.dropSuccessful.line1": "Modid edukalt kopeeritud",
   "modmenu.dropSuccessful.line2": "Modide laadimiseks taaskäivita mäng",
   "modmenu.dropInfo.1": "Sikuta modide lisamiseks",
-  "modmenu.dropInfo.2": "nende failid siia aknasse"
+  "modmenu.dropInfo.2": "nende failid siia aknasse",
+
+  "option.modmenu.sorting": "Jrk: %s",
+  "option.modmenu.sorting.ascending": "A-Z",
+  "option.modmenu.sorting.descending": "Z-A",
+  "option.modmenu.show_libraries": "Teegid: %s",
+  "option.modmenu.show_libraries.true": "kuvatud",
+  "option.modmenu.show_libraries.false": "peidetud"
 }
