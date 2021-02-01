@@ -86,6 +86,6 @@
   "option.modmenu.mods_button_style": "Mods Button: %s",
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
-  "option.modmenu.mods_button_style.shrink": "Shrink Realms",
-  "option.modmenu.mods_button_style.fabric_icon": "Fabric Icon"
+  "option.modmenu.mods_button_style.shrink": "Adjacent",
+  "option.modmenu.mods_button_style.icon": "Icon"
 }
