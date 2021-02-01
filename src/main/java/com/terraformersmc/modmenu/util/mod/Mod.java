@@ -59,7 +59,7 @@ public interface Mod {
 
 	enum Badge {
 		LIBRARY("modmenu.library", 0xff107454, 0xff093929, "library"),
-		CLIENT("modmenu.clientsideOnly", 0xff2b4b7c, 0xff0e2a55, "client"),
+		CLIENT("modmenu.clientsideOnly", 0xff2b4b7c, 0xff0e2a55, null),
 		DEPRECATED("modmenu.deprecated", 0xff841426, 0xff530C17, "deprecated"),
 		PATCHWORK_FORGE("modmenu.forge", 0xff1f2d42, 0xff101721, null),
 		MINECRAFT("modmenu.minecraft", 0xff6f6c6a, 0xff31302f, null);

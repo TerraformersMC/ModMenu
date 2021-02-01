@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.event;
 
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
@@ -47,7 +48,7 @@ public class ModMenuEventHandler {
 				}
 				if (buttonHasText(button, "menu.online")) {
 					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS) {
-						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), getModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 							button.setWidth(98);
@@ -58,11 +59,11 @@ public class ModMenuEventHandler {
 			}
 			if (modsButtonIndex != -1) {
 				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
-					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 100, buttonsY + spacing * 3 - (spacing / 2), 200, 20, getModsButtonText(), screen));
+					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 100, buttonsY + spacing * 3 - (spacing / 2), 200, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 + 2, buttonsY + spacing * 2, 98, 20, getModsButtonText(), screen));
+					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 + 2, buttonsY + spacing * 2, 98, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 104, buttonsY + spacing * 2, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), getModsButtonText()));
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 104, buttonsY + spacing * 2, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
 				}
 			}
 		}
@@ -83,7 +84,7 @@ public class ModMenuEventHandler {
 				if (buttonHasText(button, "menu.reportBugs")) {
 					modsButtonIndex = i + 1;
 					if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
-						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), getModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						modsButtonIndex = i + 1;
 					}
@@ -91,9 +92,9 @@ public class ModMenuEventHandler {
 			}
 			if (modsButtonIndex != -1) {
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
-					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing * 3 - (spacing / 2), 204, 20, getModsButtonText(), screen));
+					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing * 3 - (spacing / 2), 204, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), getModsButtonText()));
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
 				}
 			}
 		}
@@ -110,17 +111,5 @@ public class ModMenuEventHandler {
 		} else {
 			button.y += spacing - (spacing / 2);
 		}
-	}
-
-	private static Text getModsButtonText() {
-		TranslatableText modsText = new TranslatableText("modmenu.title");
-		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
-			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", ModMenu.getDisplayedModCount()));
-			} else {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded", ModMenu.getDisplayedModCount()));
-			}
-		}
-		return modsText;
 	}
 }

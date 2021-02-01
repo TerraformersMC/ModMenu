@@ -18,6 +18,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -107,5 +110,17 @@ public class ModMenu implements ClientModInitializer {
 			).count());
 		}
 		return NumberFormat.getInstance().format(cachedDisplayedModCount);
+	}
+
+	public static Text createModsButtonText() {
+		TranslatableText modsText = new TranslatableText("modmenu.title");
+		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
+			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
+				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", ModMenu.getDisplayedModCount()));
+			} else {
+				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded", ModMenu.getDisplayedModCount()));
+			}
+		}
+		return modsText;
 	}
 }
