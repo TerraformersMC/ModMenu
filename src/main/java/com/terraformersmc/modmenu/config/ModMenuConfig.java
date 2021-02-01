@@ -97,8 +97,8 @@ public class ModMenuConfig {
 		REPLACE_REALMS(true),
 		@SerializedName("shrink")
 		SHRINK(false),
-		@SerializedName("fabric_icon")
-		FABRIC_ICON(false);
+		@SerializedName("icon")
+		ICON(false);
 
 		private final boolean titleScreenOnly;
 
