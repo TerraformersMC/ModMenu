@@ -311,7 +311,7 @@ public class ModsScreen extends Screen {
 				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
 			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
-			if (mod.isReal() && mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
+			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				setTooltip(new TranslatableText("modmenu.modIdToolTip", mod.getId()));
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {

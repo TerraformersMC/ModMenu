@@ -2,17 +2,15 @@ package com.terraformersmc.modmenu.api;
 
 import com.google.common.collect.ImmutableMap;
 import com.terraformersmc.modmenu.ModMenu;
-import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.ModMenuApiMarker;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.Map;
 
 public interface ModMenuApi extends ModMenuApiMarker {
+
 	/**
 	 * Used for creating a {@link Screen} instance of the Mod Menu
 	 * "Mods" screen
