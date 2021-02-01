@@ -14,9 +14,6 @@
   "modmenu.deprecated": "منسوخ",
   "modmenu.library": "کتابخانه",
   "modmenu.toggleFilterOptions": "تنظیمات فیلتر جستجو",
-  "modmenu.showLibraries": "کتابخانه ها: %s",
-  "modmenu.showLibraries.true": "نمایان",
-  "modmenu.showLibraries.false": "پنهان",
   "modmenu.showingMods.a": "%s ماد نمایان است",
   "modmenu.showingMods.1": "%s ماد نمایان است",
   "modmenu.showingLibraries.a": "%s کتابخانه نمایان است",
@@ -25,14 +22,18 @@
   "modmenu.showingModsLibraries.a.1": "%s ماد و %s کتابخانه نمایان است",
   "modmenu.showingModsLibraries.1.a": "%s ماد و %s کتابخانه نمایان است",
   "modmenu.showingModsLibraries.1.1": "%s ماد و %s کتابخانه نمایان است",
-  "modmenu.sorting": "مرتب سازی: %s",
-  "modmenu.sorting.ascending": "A-Z",
-  "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "ماینکرفت",
   "modmenu.forge": "فورج",
   "modmenu.dropConfirm" : "آیا می خواهید این ماد ها را به پوشۀ ماد ها کپی کنید؟",
   "modmenu.dropSuccessful.line1" : "کپی کردن ماد ها با موفقیت انجام شد",
   "modmenu.dropSuccessful.line2" : "بازی را دوباره اجرا کنید تا ماد ها اجرا شوند",
   "modmenu.dropInfo.1": "برای اضافه کردن ماد ها، فایل های",
-  "modmenu.dropInfo.2": "آنها را به داخل این پنجره بکشید"
+  "modmenu.dropInfo.2": "آنها را به داخل این پنجره بکشید",
+
+  "option.modmenu.sorting": "مرتب سازی: %s",
+  "option.modmenu.sorting.ascending": "A-Z",
+  "option.modmenu.sorting.descending": "Z-A",
+  "option.modmenu.show_libraries": "کتابخانه ها: %s",
+  "option.modmenu.show_libraries.true": "نمایان",
+  "option.modmenu.show_libraries.false": "پنهان"
 }
