@@ -113,12 +113,17 @@ public class FabricDummyParentMod implements Mod {
 	}
 
 	@Override
-	public @Nullable Set<String> getLicense() {
+	public @NotNull Set<String> getLicense() {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Map<String, String> getLinks() {
+	public @NotNull Map<String, String> getLinks() {
 		return new HashMap<>();
+	}
+
+	@Override
+	public boolean isReal() {
+		return false;
 	}
 }

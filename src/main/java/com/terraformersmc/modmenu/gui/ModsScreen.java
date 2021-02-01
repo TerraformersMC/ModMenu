@@ -311,7 +311,7 @@ public class ModsScreen extends Screen {
 				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
 			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
-			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
+			if (mod.isReal() && mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				setTooltip(new TranslatableText("modmenu.modIdToolTip", mod.getId()));
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
@@ -321,7 +321,9 @@ public class ModsScreen extends Screen {
 			if (!ModMenuConfig.HIDE_BADGES.getValue()) {
 				modBadgeRenderer.draw(matrices, mouseX, mouseY);
 			}
-			textRenderer.draw(matrices, "v" + mod.getVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
+			if (mod.isReal()) {
+				textRenderer.draw(matrices, "v" + mod.getVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
+			}
 			String authors;
 			List<String> names = mod.getAuthors();
 

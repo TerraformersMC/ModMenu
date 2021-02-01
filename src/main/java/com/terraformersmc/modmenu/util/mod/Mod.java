@@ -49,9 +49,13 @@ public interface Mod {
 	@Nullable
 	String getParent();
 
+	@NotNull
 	Set<String> getLicense();
 
+	@NotNull
 	Map<String, String> getLinks();
+
+	boolean isReal();
 
 	enum Badge {
 		LIBRARY("modmenu.library", 0xff107454, 0xff093929, "library"),
