@@ -61,7 +61,7 @@ public class ModMenuEventHandler {
 					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 100, buttonsY + spacing * 3 - (spacing / 2), 200, 20, getModsButtonText(), screen));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 + 2, buttonsY + spacing * 2, 98, 20, getModsButtonText(), screen));
-				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.FABRIC_ICON) {
+				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.ICON) {
 					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 104, buttonsY + spacing * 2, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), getModsButtonText()));
 				}
 			}
@@ -92,7 +92,7 @@ public class ModMenuEventHandler {
 			if (modsButtonIndex != -1) {
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing * 3 - (spacing / 2), 204, 20, getModsButtonText(), screen));
-				} else if (style == ModMenuConfig.ModsButtonStyle.FABRIC_ICON) {
+				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
 					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), getModsButtonText()));
 				}
 			}
@@ -114,7 +114,7 @@ public class ModMenuEventHandler {
 
 	private static Text getModsButtonText() {
 		TranslatableText modsText = new TranslatableText("modmenu.title");
-		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.FABRIC_ICON) {
+		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
 			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", ModMenu.getDisplayedModCount()));
 			} else {
