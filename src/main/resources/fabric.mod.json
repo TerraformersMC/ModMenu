@@ -77,7 +77,8 @@
     "MartrixX",
     "NotSteven",
     "Dolphin 2.1",
-    "ENDERZOMBI102"
+    "ENDERZOMBI102",
+    "anatom3000"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
