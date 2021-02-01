@@ -58,7 +58,7 @@ public class FabricMod implements Mod {
 								CustomValueUtil.getString("name", parentObj),
 								CustomValueUtil.getString("description", parentObj),
 								CustomValueUtil.getString("icon", parentObj),
-								CustomValueUtil.getStringSet("modmenu:badges", parentObj).orElse(new HashSet<>())
+								CustomValueUtil.getStringSet("badges", parentObj).orElse(new HashSet<>())
 						);
 					} catch (Throwable t) {
 						LOGGER.error("Error loading parent data from mod: " + metadata.getId(), t);
@@ -243,7 +243,7 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @Nullable Set<String> getLicense() {
+	public @NotNull Set<String> getLicense() {
 		if ("minecraft".equals(getId())) {
 			return Sets.newHashSet("All Rights Reserved");
 		}
@@ -251,8 +251,13 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @Nullable Map<String, String> getLinks() {
+	public @NotNull Map<String, String> getLinks() {
 		return links;
+	}
+
+	@Override
+	public boolean isReal() {
+		return true;
 	}
 
 	public ModMenuData getModMenuData() {
