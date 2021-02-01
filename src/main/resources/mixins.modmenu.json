@@ -3,12 +3,10 @@
   "package": "com.terraformersmc.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinEntryListWidgetEntries"
+    "MixinEntryListWidgetEntries",
+    "MixinTitleScreen"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "MixinTitleScreen"
-  ]
+  }
 }
