@@ -153,16 +153,13 @@ public class FabricMod implements Mod {
 	@Override
 	public @NotNull NativeImageBackedTexture getIcon(ModIconHandler iconHandler, int i) {
 		String iconSourceId = getId();
-		String iconPath = metadata.getIconPath(i).orElse(null);
+		String iconPath = metadata.getIconPath(i).orElse("assets/" + getId() + "/icon.png");
 		if ("minecraft".equals(getId())) {
 			iconSourceId = ModMenu.MOD_ID;
 			iconPath = "assets/" + ModMenu.MOD_ID + "/minecraft_icon.png";
 		} else if ("java".equals(getId())) {
 			iconSourceId = ModMenu.MOD_ID;
 			iconPath = "assets/" + ModMenu.MOD_ID + "/java_icon.png";
-		} else if (iconPath == null) {
-			iconSourceId = ModMenu.MOD_ID;
-			iconPath = "assets/" + ModMenu.MOD_ID + "/unknown_icon.png";
 		}
 		final String finalIconSourceId = iconSourceId;
 		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));

@@ -1,5 +1,7 @@
 package com.terraformersmc.modmenu.util.mod;
 
+import com.terraformersmc.modmenu.ModMenu;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -22,6 +24,10 @@ public class ModIconHandler {
 	public NativeImageBackedTexture createIcon(ModContainer iconSource, String iconPath) {
 		try {
 			Path path = iconSource.getPath(iconPath);
+			if (!Files.exists(path)) {
+				iconSource = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Mod Menu!"));
+				iconPath = "assets/" + ModMenu.MOD_ID + "/unknown_icon.png";
+			}
 			NativeImageBackedTexture cachedIcon = getCachedModIcon(path);
 			if (cachedIcon != null) {
 				return cachedIcon;
