@@ -7,7 +7,7 @@ Adds a screen for viewing a list of installed mods.
 * The mod details page also lets the user configure the mod, if available (can be disabled for modpacks via config).
 
 <h4 align="center">
-Mod Menu requires <a href="https://fabricmc.net/use/">Fabric Loader</a> and <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api">Fabric API</a>*
+Mod Menu requires <a href="https://fabricmc.net/use/">Fabric Loader</a>
 </h4>
 <h4 align="center">
 Check out the <a href="https://discord.gg/jEGF5fb">Terraformers Discord Server</a> to chat about Mod Menu and other Fabric mods!
@@ -15,8 +15,6 @@ Check out the <a href="https://discord.gg/jEGF5fb">Terraformers Discord Server</
 <h4 align="center">
 Visit the <a href="https://github.com/TerraformersMC/ModMenu/wiki">Mod Menu Wiki</a> to learn more about the features
 </h4>
-
-\*Mod Menu includes the one Fabric API module that it depends on, Fabric Resource Loader (v0). This does not need to be installed separately.
 
 ### Features
 ![Screenshot of the Mods screen](https://camo.githubusercontent.com/3fb56ac264de3a3be29bf2da68f93d667cd773d8285c7b152f1ae8db2cfaffbb/68747470733a2f2f692e696d6775722e636f6d2f79794f6d564d322e706e67)
