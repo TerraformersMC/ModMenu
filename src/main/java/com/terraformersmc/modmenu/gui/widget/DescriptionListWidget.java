@@ -90,6 +90,16 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					});
 				}
 
+				Set<String> licenses = mod.getLicense();
+				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
+					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
+					children().add(new DescriptionEntry(new TranslatableText("modmenu.license").asOrderedText(), this));
+
+					for (String license : licenses) {
+						children().add(new DescriptionEntry(new LiteralText("  " + license).asOrderedText(), this));
+					}
+				}
+
 				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
 					if ("minecraft".equals(mod.getId())) {
 						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
@@ -107,16 +117,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 								children().add(new DescriptionEntry(new LiteralText("  " + contributor).asOrderedText(), this));
 							}
 						}
-					}
-				}
-
-				Set<String> licenses = mod.getLicense();
-				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
-					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-					children().add(new DescriptionEntry(new TranslatableText("modmenu.license").asOrderedText(), this));
-
-					for (String license : licenses) {
-						children().add(new DescriptionEntry(new LiteralText("  " + license).asOrderedText(), this));
 					}
 				}
 			}
