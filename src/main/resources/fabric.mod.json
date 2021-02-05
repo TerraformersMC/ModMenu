@@ -26,7 +26,8 @@
     "minecraft": ">=1.16-"
   },
   "breaks" : {
-    "fabric": "<0.30.0"
+    "fabric": "<0.30.0",
+    "better_mod_button": "*"
   },
   "authors": [
     "Prospector",
