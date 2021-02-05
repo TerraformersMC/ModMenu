@@ -115,7 +115,12 @@ public class ModsScreen extends Screen {
 
 		for (Mod mod : ModMenu.MODS.values()) {
 			if (!configScreenCache.containsKey(mod.getId())) {
-				configScreenCache.put(mod.getId(), ModMenu.getConfigScreen(mod.getId(), this));
+				try {
+					Screen configScreen = ModMenu.getConfigScreen(mod.getId(), this);
+					configScreenCache.put(mod.getId(), configScreen);
+				} catch (Throwable e) {
+					LOGGER.error("Error from mod '" + mod.getId() + "'", e);
+				}
 			}
 		}
 
