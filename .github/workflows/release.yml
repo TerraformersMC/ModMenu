@@ -3,10 +3,10 @@ on:
   workflow_dispatch:
     inputs:
       previousVersion:
-        description: 'Previous Version (Do not include v prefix, must be same as the last version tag! Ex: 1.4.1)'
+        description: 'Previous Version (Do not include v prefix, must be same as the last version tag! Example: 1.4.1)'
         required: true
       version:
-        description: 'Version (Do not include v prefix! Ex: 1.4.2)'
+        description: 'Version (Do not include v prefix! Example: 1.4.2)'
         required: true
 jobs:
   release:
