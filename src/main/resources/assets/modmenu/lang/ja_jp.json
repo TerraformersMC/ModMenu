@@ -13,12 +13,13 @@
   "modmenu.clientsideOnly": "クライアント",
   "modmenu.library": "前提mod",
   "modmenu.toggleFilterOptions": "フィルター設定の切り替え",
-  "modmenu.showLibraries": "前提mod: %s",
-  "modmenu.showLibraries.true": "表示",
-  "modmenu.showLibraries.false": "非表示",
-  "modmenu.showingMods": "%s個のmodを表示中",
-  "modmenu.sorting": "表示順: %s",
-  "modmenu.sorting.ascending": "昇順(A-Z)",
-  "modmenu.sorting.decending": "降順(Z-A)",
-  "modmenu.minecraft": "Minecraft"
+  "modmenu.minecraft": "Minecraft",
+  "modmenu.showingMods.a": "%s個のmodを表示中",
+
+  "option.modmenu.sorting": "表示順",
+  "option.modmenu.sorting.ascending": "昇順(A-Z)",
+  "option.modmenu.sorting.descending": "降順(Z-A)",
+  "option.modmenu.show_libraries": "前提mod",
+  "option.modmenu.show_libraries.true": "表示",
+  "option.modmenu.show_libraries.false": "非表示"
 }

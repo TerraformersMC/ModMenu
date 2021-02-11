@@ -13,9 +13,6 @@
   "modmenu.clientsideOnly": "Klient",
   "modmenu.library": "Tillägg",
   "modmenu.toggleFilterOptions": "Akrivera filter alternativ",
-  "modmenu.showLibraries": "Tillägg: %s",
-  "modmenu.showLibraries.true": "Visas",
-  "modmenu.showLibraries.false": "Gömd",
   "modmenu.showingMods.a": "Visar %s moddar",
   "modmenu.showingMods.1": "Visar %s mod",
   "modmenu.showingLibraries.a": "Visar %s Tillägg",
@@ -24,12 +21,16 @@
   "modmenu.showingModsLibraries.a.1": "Visar %s moddar och %s Tillägg",
   "modmenu.showingModsLibraries.1.a": "Visar %s mod och %s Tillägg",
   "modmenu.showingModsLibraries.1.1": "Visar %s mod och %s Tillägg",
-  "modmenu.sorting": "Sortera: %s",
-  "modmenu.sorting.ascending": "A-Z",
-  "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm": "Vill du kopiera följande moddar till din mod-mapp?",
   "modmenu.dropSuccessful.line1": "Kopierade samtliga moddar",
-  "modmenu.dropSuccessful.line2": "Starta om spelet för att ladda in moddar"
+  "modmenu.dropSuccessful.line2": "Starta om spelet för att ladda in moddar",
+
+  "option.modmenu.sorting": "Sortera",
+  "option.modmenu.sorting.ascending": "A-Z",
+  "option.modmenu.sorting.descending": "Z-A",
+  "option.modmenu.show_libraries": "Tillägg",
+  "option.modmenu.show_libraries.true": "Visas",
+  "option.modmenu.show_libraries.false": "Gömd"
 }

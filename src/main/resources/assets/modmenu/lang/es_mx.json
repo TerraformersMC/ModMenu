@@ -1,5 +1,6 @@
 {
   "modmenu.title": "Mods",
+  "modmenu.descriptionTranslation.modmenu": "Añade un menú para ver la lista de mods que tienes instalados",
   "modmenu.loaded": "(%s cargadas)",
   "modmenu.config": "Editar configuración",
   "modmenu.modsFolder": "Abrir carpeta de mods",
@@ -14,9 +15,6 @@
   "modmenu.deprecated": "Obsoleta",
   "modmenu.library": "Librería",
   "modmenu.toggleFilterOptions": "Alternar opciones de filtros",
-  "modmenu.showLibraries": "Librerías: %s",
-  "modmenu.showLibraries.true": "Mostrar",
-  "modmenu.showLibraries.false": "Ocultar",
   "modmenu.showingMods.a": "Mostrando %s mods",
   "modmenu.showingMods.1": "Mostrando %s mod",
   "modmenu.showingLibraries.a": "Mostrando %s librerías",
@@ -25,12 +23,16 @@
   "modmenu.showingModsLibraries.a.1": "Mostrando %s mods y %s librería",
   "modmenu.showingModsLibraries.1.a": "Mostrando %s mod y %s librerías",
   "modmenu.showingModsLibraries.1.1": "Mostrando %s mod y %s librería",
-  "modmenu.sorting": "Ordenar: %s",
-  "modmenu.sorting.ascending": "A-Z",
-  "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm" : "¿Quieres copiar las siguientes mods en el directorio de mods?",
   "modmenu.dropSuccessful.line1" : "Mods copiados con éxito",
-  "modmenu.dropSuccessful.line2" : "Reinicia el juego para cargar mods"
+  "modmenu.dropSuccessful.line2" : "Reinicia el juego para cargar mods",
+
+  "option.modmenu.sorting": "Ordenar",
+  "option.modmenu.sorting.ascending": "A-Z",
+  "option.modmenu.sorting.descending": "Z-A",
+  "option.modmenu.show_libraries": "Librerías",
+  "option.modmenu.show_libraries.true": "Mostrar",
+  "option.modmenu.show_libraries.false": "Ocultar"
 }

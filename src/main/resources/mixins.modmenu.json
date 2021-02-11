@@ -1,11 +1,9 @@
 {
   "required": true,
-  "package": "io.github.prospector.modmenu.mixin",
+  "package": "com.terraformersmc.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "EntryListWidgetAccessor",
     "MixinEntryListWidgetEntries",
-    "MixinGameMenuScreen",
     "MixinTitleScreen"
   ],
   "injectors": {

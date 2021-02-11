@@ -1,5 +1,6 @@
 {
   "modmenu.title": "Mody",
+  "modmenu.descriptionTranslation.modmenu": "Dodaje menu modów umożliwiające wyświetlenie listy z zainstalowanymi modami",
   "modmenu.loaded": "(%s Załadowanych)",
   "modmenu.config": "Edytuj konfigurację",
   "modmenu.modsFolder": "Otwórz folder z modyfikacjami",
@@ -14,9 +15,6 @@
   "modmenu.deprecated": "Porzucone",
   "modmenu.library": "Biblioteka",
   "modmenu.toggleFilterOptions": "Zmień ustawienia filtrów",
-  "modmenu.showLibraries": "Biblioteki: %s",
-  "modmenu.showLibraries.true": "Pokaż",
-  "modmenu.showLibraries.false": "Ukryj",
   "modmenu.showingMods.a": "Pokazuję %s modyfikacji",
   "modmenu.showingMods.1": "Pokazuję %s modyfikację",
   "modmenu.showingLibraries.a": "Pokazuję %s bibliotek",
@@ -25,12 +23,16 @@
   "modmenu.showingModsLibraries.a.1": "Pokazuję %s modyfikacji oraz %s bibliotekę",
   "modmenu.showingModsLibraries.1.a": "Pokazuję %s modyfikację oraz %s bibliotek",
   "modmenu.showingModsLibraries.1.1": "Pokazuję %s modyfikację oraz %s bibliotekę",
-  "modmenu.sorting": "Sortuj: %s",
-  "modmenu.sorting.ascending": "A-Z",
-  "modmenu.sorting.decending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge",
   "modmenu.dropConfirm" : "Czy chcesz skopiować wybrane modyfikacje do folderu z modyfikacjami?",
   "modmenu.dropSuccessful.line1" : "Mody zostały pomyślnie skopiowane",
-  "modmenu.dropSuccessful.line2" : "Zrestartuj grę, aby załadować mody"
+  "modmenu.dropSuccessful.line2" : "Zrestartuj grę, aby załadować mody",
+
+  "option.modmenu.sorting": "Sortuj",
+  "option.modmenu.sorting.ascending": "A-Z",
+  "option.modmenu.sorting.descending": "Z-A",
+  "option.modmenu.show_libraries": "Biblioteki",
+  "option.modmenu.show_libraries.true": "Pokaż",
+  "option.modmenu.show_libraries.false": "Ukryj"
 }

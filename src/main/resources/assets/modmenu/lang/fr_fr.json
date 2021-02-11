@@ -1,5 +1,6 @@
 {
   "modmenu.title": "Mods",
+  "modmenu.descriptionTranslation.modmenu": "Ajoutez un menu de mods pour voir votre liste de mods installés.",
   "modmenu.loaded": "(%s chargés)",
   "modmenu.config": "Modifier la config",
   "modmenu.modsFolder": "Ouvrir le dossier des mods",
@@ -14,8 +15,9 @@
   "modmenu.deprecated": "Obsolète",
   "modmenu.library": "Librairie",
   "modmenu.toggleFilterOptions": "Basculer les options de filtre",
-  "modmenu.showLibraries": "Librairies : %s",
-  "modmenu.showLibraries.true": "montrées",
-  "modmenu.showLibraries.false": "cachées",
-  "modmenu.showingMods": "%s mods affichés"
+
+  "option.modmenu.show_libraries": "Librairies ",
+  "option.modmenu.show_libraries.true": "montrées",
+  "option.modmenu.show_libraries.false": "cachées",
+  "modmenu.showingMods.a": "%s mods affichés"
 }

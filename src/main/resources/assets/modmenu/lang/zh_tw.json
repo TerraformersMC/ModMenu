@@ -14,8 +14,6 @@
   "modmenu.deprecated": "已棄用",
   "modmenu.library": "函式庫",
   "modmenu.toggleFilterOptions": "檢視",
-  "modmenu.showLibraries.true": "已顯示",
-  "modmenu.showLibraries.false": "已隱藏",
   "modmenu.showingMods.a": "已顯示 %s 個模組",
   "modmenu.showingMods.1": "已顯示 %s 個模組",
   "modmenu.showingLibraries.a": "已顯示 %s 個函式庫",
@@ -24,10 +22,13 @@
   "modmenu.showingModsLibraries.a.1": "已顯示 %s 個模組和 %s 個函式庫",
   "modmenu.showingModsLibraries.1.a": "已顯示 %s 個模組和 %s 個函式庫",
   "modmenu.showingModsLibraries.1.1": "已顯示 %s 個模組和 %s 個函式庫",
-  "modmenu.sorting": "排序: %s",
-  "modmenu.sorting.ascending": "升冪",
-  "modmenu.sorting.decending": "降冪",
   "modmenu.dropConfirm" : "確定要複製下列模組到模組資料夾嗎?",
   "modmenu.dropSuccessful.line1" : "複製完成",
-  "modmenu.dropSuccessful.line2" : "請重啟遊戲以重新載入模組"
+  "modmenu.dropSuccessful.line2" : "請重啟遊戲以重新載入模組",
+
+  "option.modmenu.sorting": "排序",
+  "option.modmenu.sorting.ascending": "升冪",
+  "option.modmenu.sorting.descending": "降冪",
+  "option.modmenu.show_libraries.true": "已顯示",
+  "option.modmenu.show_libraries.false": "已隱藏"
 }
