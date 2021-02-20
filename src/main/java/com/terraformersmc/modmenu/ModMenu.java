@@ -17,10 +17,13 @@ import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -28,6 +31,7 @@ import java.util.Map;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
+	public static final Logger LOGGER = LogManager.getLogger();
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
 
 	public static final Map<String, Mod> MODS = new HashMap<>();
@@ -48,19 +52,25 @@ public class ModMenu implements ClientModInitializer {
 		ModMenuConfigManager.initializeConfig();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApiMarker.class).forEach(entrypoint -> {
-			ModMenuApiMarker marker = entrypoint.getEntrypoint();
-			if (marker instanceof ModMenuApi) {
-				/* Current API */
-				ModMenuApi api = (ModMenuApi) marker;
-				factories.put(entrypoint.getProvider().getMetadata().getId(), api.getModConfigScreenFactory());
-				api.getProvidedConfigScreenFactories().forEach(factories::putIfAbsent);
-			} else if (marker instanceof io.github.prospector.modmenu.api.ModMenuApi) {
-				/* Legacy API */
-				io.github.prospector.modmenu.api.ModMenuApi api = (io.github.prospector.modmenu.api.ModMenuApi) entrypoint.getEntrypoint();
-				factories.put(entrypoint.getProvider().getMetadata().getId(), screen -> api.getModConfigScreenFactory().create(screen));
-				api.getProvidedConfigScreenFactories().forEach((id, legacyFactory) -> factories.put(id, legacyFactory::create));
-			} else {
-				throw new RuntimeException(entrypoint.getProvider().getMetadata().getId() + " is providing an invalid ModMenuApi implementation");
+			ModMetadata metadata = entrypoint.getProvider().getMetadata();
+			String modId = metadata.getId();
+			try {
+				ModMenuApiMarker marker = entrypoint.getEntrypoint();
+				if (marker instanceof ModMenuApi) {
+					/* Current API */
+					ModMenuApi api = (ModMenuApi) marker;
+					factories.put(modId, api.getModConfigScreenFactory());
+					api.getProvidedConfigScreenFactories().forEach(factories::putIfAbsent);
+				} else if (marker instanceof io.github.prospector.modmenu.api.ModMenuApi) {
+					/* Legacy API */
+					io.github.prospector.modmenu.api.ModMenuApi api = (io.github.prospector.modmenu.api.ModMenuApi) entrypoint.getEntrypoint();
+					factories.put(modId, screen -> api.getModConfigScreenFactory().create(screen));
+					api.getProvidedConfigScreenFactories().forEach((id, legacyFactory) -> factories.put(id, legacyFactory::create));
+				} else {
+					throw new RuntimeException(modId + " is providing an invalid ModMenuApi implementation");
+				}
+			} catch (Throwable e) {
+				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
 			}
 		});
 		configScreenFactories = new ImmutableMap.Builder<String, ConfigScreenFactory<?>>().putAll(factories).build();
