@@ -10,7 +10,7 @@
   "modmenu.modIdToolTip": "ID мода: %s",
   "modmenu.website": "Сайт мода",
   "modmenu.issues": "Сообщить об ошибке",
-  "modmenu.authorPrefix": "Автор: %s",
+  "modmenu.authorPrefix": "Авторы: %s",
   "modmenu.search": "Поиск модов",
   "modmenu.clientsideOnly": "Клиент",
   "modmenu.deprecated": "Устарел",
