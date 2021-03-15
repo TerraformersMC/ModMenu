@@ -26,8 +26,8 @@ public class MixinTitleScreen {
 			String count = ModMenu.getDisplayedModCount();
 			String newString = I18n.translate("modmenu.mods.a", count);
 			String countKey = "modmenu.mods." + count;
-			if ("69".equals(count) && ModMenuConfig.EASTER_EGGS.getValue()) {
-				newString = I18n.translate(countKey + ".nice", count);
+			if (("69".equals(count) || "420".equals(count)) && ModMenuConfig.EASTER_EGGS.getValue()) {
+				newString = I18n.translate("modmenu.mods.69.nice", count);
 			} else if (I18n.hasTranslation(countKey)) {
 				newString = I18n.translate(countKey, count);
 			}
