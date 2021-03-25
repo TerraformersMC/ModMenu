@@ -154,7 +154,6 @@ public class FabricMod implements Mod {
 
 	private void hasUpdateCallback(AvailableUpdate update) {
 		if(update != null) {
-			this.badges.add(Badge.OUTDATED);
 			LOGGER.warn("An update is available for {}. ({} -> {})", this.getName(), this.getVersion(), update.getVersion());
 			this.availableUpdate = update;
 		}

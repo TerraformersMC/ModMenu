@@ -69,8 +69,7 @@ public interface Mod {
 		CLIENT("modmenu.badge.clientsideOnly", 0xff2b4b7c, 0xff0e2a55, null),
 		DEPRECATED("modmenu.badge.deprecated", 0xff841426, 0xff530C17, "deprecated"),
 		PATCHWORK_FORGE("modmenu.badge.forge", 0xff1f2d42, 0xff101721, null),
-		MINECRAFT("modmenu.badge.minecraft", 0xff6f6c6a, 0xff31302f, null),
-		OUTDATED("modmenu.badge.outdated", 0xfff2984e, 0xffbf5600, null);
+		MINECRAFT("modmenu.badge.minecraft", 0xff6f6c6a, 0xff31302f, null);
 
 		private final Text text;
 		private final int outlineColor, fillColor;
