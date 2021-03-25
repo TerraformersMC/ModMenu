@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.updates;
 
+import com.terraformersmc.modmenu.updates.providers.GithubUpdateProvider;
 import com.terraformersmc.modmenu.updates.providers.ModrinthUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import net.minecraft.MinecraftVersion;
@@ -29,6 +30,7 @@ public abstract class ModUpdateProvider {
 	public static void initializeProviders() {
 		String gameVersion = MinecraftVersion.field_25319.getName();
 		ModUpdateProvider.PROVIDERS.put("modrinth", new ModrinthUpdateProvider(gameVersion));
+		ModUpdateProvider.PROVIDERS.put("github", new GithubUpdateProvider(gameVersion));
 	}
 
 	public static Optional<ModUpdateProvider> fromKey(String provider) {
