@@ -37,7 +37,6 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 		Thread thead = new Thread(String.format("Update Checker (%s@modrinth)", modId)) {
 			@Override
 			public void run() {
-				// @TODO: only run param code once, reuse for each mod.
 				Map<String, String> filterParams = new HashMap<>();
 				filterParams.put("game_versions", String.format("[\"%s\"]", gameVersion));
 				filterParams.put("loaders", "[\"fabric\"]");
