@@ -16,7 +16,6 @@
   "modmenu.search": "Search for mods",
   "modmenu.clientsideOnly": "Client",
   "modmenu.deprecated": "Deprecated",
-  "modmenu.outdated": "Outdated",
   "modmenu.updateAvailable": "An update is available. (v%s -> v%s)",
   "modmenu.downloadFrom": "Download v%s from:",
   "modmenu.changelog": "Changes in v%s:",

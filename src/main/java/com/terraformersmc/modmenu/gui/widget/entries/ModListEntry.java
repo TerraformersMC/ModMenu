@@ -14,9 +14,8 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import org.apache.logging.log4j.LogManager;
@@ -58,6 +57,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
 		Text name = new LiteralText(mod.getName());
+		if(mod.getAvailableUpdate() != null) {
+			name = new LiteralText("").append(new LiteralText("\u2193 ").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.RED))).append(new LiteralText(mod.getName()).setStyle(Style.EMPTY));
+		}
 		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;
 		TextRenderer font = this.client.textRenderer;
