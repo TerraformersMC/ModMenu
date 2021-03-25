@@ -97,7 +97,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						children().add(new DescriptionEntry(line, this));
 					}
 
-					if(update.getProvider() != null) {
+					if(update.getProvider() != null && update.getUrl() != null) {
 						children().add(new DescriptionEntry(new TranslatableText("modmenu.downloadFrom", update.getVersion()).asOrderedText(), this));
 						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu." + update.getProvider()).formatted(Formatting.BLUE, Formatting.UNDERLINE)).asOrderedText(), update.getUrl(), this));
 					}
