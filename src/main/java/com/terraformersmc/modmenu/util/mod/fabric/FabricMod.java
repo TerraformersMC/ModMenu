@@ -401,29 +401,6 @@ public class FabricMod implements Mod {
 		}
 	}
 
-	/*
-	 * just here to help me (joe) visualize what i need.
-	 * {
-	 *     "provider": "modrinth|curseforge",
-	 *     "projectId": "0",
-	 *     "channel": "release|beta|alpha"
-	 * }
-	 *
-	 * {
-	 *     "provider": "maven",
-	 *     "repository": "https://maven.example.com/",
-	 *     "group": "com.example",
-	 *     "artifact": "ExampleMod",
-	 *     "versionRegEx": "([a-zA-Z0-9]\S+)(\+mc1\.16\.5)"
-	 * }
-	 *
-	 * {
-	 *     "provider": "github",
-	 *     "repository": "owner/repo",
-	 *     "allowPrerelease": false,
-	 *     "versionRegEx": "([a-zA-Z0-9]\S+)(\+mc1\.16\.5)"
-	 * }
-	 */
 	public static class ModUpdateData {
 		private final ModUpdateProvider provider;
 		private final Optional<String> projectId;
