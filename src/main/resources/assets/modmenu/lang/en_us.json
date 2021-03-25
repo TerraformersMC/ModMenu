@@ -16,6 +16,10 @@
   "modmenu.search": "Search for mods",
   "modmenu.clientsideOnly": "Client",
   "modmenu.deprecated": "Deprecated",
+  "modmenu.outdated": "Outdated",
+  "modmenu.updateAvailable": "An update is available. (v%s -> v%s)",
+  "modmenu.downloadFrom": "Download v%s from:",
+  "modmenu.changelog": "Changes in v%s:",
   "modmenu.library": "Library",
   "modmenu.toggleFilterOptions": "Toggle Filter Options",
   "modmenu.showingMods.a": "Showing %s mods",
@@ -54,6 +58,9 @@
   "modmenu.mods.69.secret": " (%s Mods...nice)",
   "modmenu.mods.420.secret": " (%s Mods...blaze it)",
   "modmenu.mods.a": " (%s Mods)",
+  "modmenu.mods.1.outdated": " (%s Mod, %s Outdated)",
+  "modmenu.mods.69.nice.outdated": " (%s Mods...nice, %s Outdated)",
+  "modmenu.mods.a.outdated": " (%s Mods, %s Outdated)",
 
   "modmenu.options": "Mod Menu Options",
   "option.modmenu.sorting": "Sort",
@@ -101,5 +108,8 @@
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
-  "option.modmenu.mods_button_style.icon": "Icon"
+  "option.modmenu.mods_button_style.icon": "Icon",
+  "option.modmenu.disable_update_checks": "Update Checks: %s",
+  "option.modmenu.disable_update_checks.false": "Enabled",
+  "option.modmenu.disable_update_checks.true": "Disabled"
 }

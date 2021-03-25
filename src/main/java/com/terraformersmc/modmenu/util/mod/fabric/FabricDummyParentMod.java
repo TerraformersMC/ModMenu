@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
 import net.fabricmc.loader.api.FabricLoader;
@@ -90,6 +91,11 @@ public class FabricDummyParentMod implements Mod {
 			return parentData.getBadges();
 		}
 		return new HashSet<>();
+	}
+
+	@Override
+	public @Nullable AvailableUpdate getAvailableUpdate() {
+		return null;
 	}
 
 	@Override

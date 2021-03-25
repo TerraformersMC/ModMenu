@@ -10,6 +10,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
+import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.ModMenuApiMarker;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
@@ -64,6 +65,7 @@ public class ModMenu implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
+		ModUpdateProvider.initializeProviders();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApiMarker.class).forEach(entrypoint -> {
 			ModMetadata metadata = entrypoint.getProvider().getMetadata();

@@ -3,6 +3,9 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.updates.AvailableUpdate;
+import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
@@ -12,6 +15,7 @@ import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +37,8 @@ public class FabricMod implements Mod {
 
 	private final Map<String, String> links = new HashMap<>();
 
+	private AvailableUpdate availableUpdate = null;
+
 	public FabricMod(ModContainer modContainer) {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
@@ -41,11 +47,13 @@ public class FabricMod implements Mod {
 		boolean usesModernParent = false;
 		Optional<String> parentId = Optional.empty();
 		ModMenuData.DummyParentData parentData = null;
+		ModUpdateData updateData = null;
 		Set<String> badgeNames = new HashSet<>();
 		CustomValue modMenuValue = metadata.getCustomValue("modmenu");
 		if (modMenuValue != null && modMenuValue.getType() == CustomValue.CvType.OBJECT) {
 			CustomValue.CvObject modMenuObject = modMenuValue.getAsObject();
 			CustomValue parentCv = modMenuObject.get("parent");
+			CustomValue updatesCv = modMenuObject.get("updates");
 			if (parentCv != null) {
 				if (parentCv.getType() == CustomValue.CvType.STRING) {
 					parentId = Optional.of(parentCv.getAsString());
@@ -65,6 +73,30 @@ public class FabricMod implements Mod {
 					}
 				}
 			}
+			if(updatesCv != null) {
+				if(updatesCv.getType() == CustomValue.CvType.OBJECT) {
+					try {
+						CustomValue.CvObject updatesObj = updatesCv.getAsObject();
+						String providerKey = CustomValueUtil.getString("provider", updatesObj)
+								.orElseThrow(() -> new RuntimeException("Updates object lacks provider"));
+						ModUpdateProvider provider = ModUpdateProvider.fromKey(providerKey)
+								.orElseThrow(() -> new RuntimeException("Update provider not found."));
+						ModUpdateData tempUpdateData = new ModUpdateData(
+								provider,
+								CustomValueUtil.getString("projectId", updatesObj),
+								CustomValueUtil.getString("repository", updatesObj),
+								CustomValueUtil.getString("group", updatesObj),
+								CustomValueUtil.getString("artifact", updatesObj),
+								CustomValueUtil.getBoolean("allowPrerelease", updatesObj),
+								CustomValueUtil.getString("versionRegEx", updatesObj)
+						);
+						provider.validateData(tempUpdateData);
+						updateData = tempUpdateData;
+					} catch (Throwable t) {
+						LOGGER.error("Error loading updates data from mod: " + metadata.getId(), t);
+					}
+				}
+			}
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 			usesModernParent = modMenuObject.containsKey("parent");
@@ -72,7 +104,8 @@ public class FabricMod implements Mod {
 		this.modMenuData = new ModMenuData(
 				badgeNames,
 				parentId,
-				parentData
+				parentData,
+				updateData
 		);
 
 		/* Load legacy mod menu custom value data */
@@ -137,6 +170,22 @@ public class FabricMod implements Mod {
 		}
 		if ("minecraft".equals(getId())) {
 			badges.add(Badge.MINECRAFT);
+		}
+
+		// check for updates
+		if(!ModMenuConfig.DISABLE_UPDATE_CHECKS.getValue() && modMenuData.updateData != null) {
+			modMenuData.updateData.getProvider().check(
+					this.getId(),
+					MinecraftClient.getInstance().getGameVersion(),
+					modMenuData.updateData, this::hasUpdateCallback);
+		}
+	}
+
+	private void hasUpdateCallback(AvailableUpdate update) {
+		if(update != null) {
+			this.badges.add(Badge.OUTDATED);
+			LOGGER.warn("An update is available for {}. ({} -> {})", this.getName(), this.getVersion(), update.getVersion());
+			this.availableUpdate = update;
 		}
 	}
 
@@ -214,6 +263,11 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
+	public @Nullable AvailableUpdate getAvailableUpdate() {
+		return availableUpdate;
+	}
+
+	@Override
 	public @Nullable String getWebsite() {
 		if ("minecraft".equals(getId())) {
 			return "https://www.minecraft.net/";
@@ -266,11 +320,14 @@ public class FabricMod implements Mod {
 		private Optional<String> parent;
 		private @Nullable
 		final DummyParentData dummyParentData;
+		private @Nullable
+		final FabricMod.ModUpdateData updateData;
 
-		public ModMenuData(Set<String> badges, Optional<String> parent, DummyParentData dummyParentData) {
+		public ModMenuData(Set<String> badges, Optional<String> parent, DummyParentData dummyParentData, ModUpdateData updateData) {
 			this.badges = Badge.convert(badges);
 			this.parent = parent;
 			this.dummyParentData = dummyParentData;
+			this.updateData = updateData;
 		}
 
 		public Set<Badge> getBadges() {
@@ -283,6 +340,10 @@ public class FabricMod implements Mod {
 
 		public @Nullable DummyParentData getDummyParentData() {
 			return dummyParentData;
+		}
+
+		public @Nullable FabricMod.ModUpdateData getUpdateData() {
+			return updateData;
 		}
 
 		public void addClientBadge(boolean add) {
@@ -337,6 +398,83 @@ public class FabricMod implements Mod {
 			public Set<Badge> getBadges() {
 				return badges;
 			}
+		}
+	}
+
+	/*
+	 * just here to help me (joe) visualize what i need.
+	 * {
+	 *     "provider": "modrinth|curseforge",
+	 *     "projectId": "0",
+	 *     "channel": "release|beta|alpha"
+	 * }
+	 *
+	 * {
+	 *     "provider": "maven",
+	 *     "repository": "https://maven.example.com/",
+	 *     "group": "com.example",
+	 *     "artifact": "ExampleMod",
+	 *     "versionRegEx": "([a-zA-Z0-9]\S+)(\+mc1\.16\.5)"
+	 * }
+	 *
+	 * {
+	 *     "provider": "github",
+	 *     "repository": "owner/repo",
+	 *     "allowPrerelease": false,
+	 *     "versionRegEx": "([a-zA-Z0-9]\S+)(\+mc1\.16\.5)"
+	 * }
+	 */
+	public static class ModUpdateData {
+		private final ModUpdateProvider provider;
+		private final Optional<String> projectId;
+		private final Optional<String> repository;
+		private final Optional<String> group;
+		private final Optional<String> artifact;
+		private final Optional<Boolean> allowPrerelease;
+		private final Optional<String> versionRegEx;
+
+		public ModUpdateData(ModUpdateProvider provider,
+							 Optional<String> projectId,
+							 Optional<String> repository,
+							 Optional<String> group,
+							 Optional<String> artifact,
+							 Optional<Boolean> allowPrerelease,
+							 Optional<String> versionRegEx) {
+			this.provider = provider;
+			this.projectId = projectId;
+			this.repository = repository;
+			this.group = group;
+			this.artifact = artifact;
+			this.allowPrerelease = allowPrerelease;
+			this.versionRegEx = versionRegEx;
+		}
+
+		public ModUpdateProvider getProvider() {
+			return provider;
+		}
+
+		public Optional<String> getProjectId() {
+			return projectId;
+		}
+
+		public Optional<String> getRepository() {
+			return repository;
+		}
+
+		public Optional<String> getGroup() {
+			return group;
+		}
+
+		public Optional<String> getArtifact() {
+			return artifact;
+		}
+
+		public Optional<Boolean> getAllowPrerelease() {
+			return allowPrerelease;
+		}
+
+		public Optional<String> getVersionRegEx() {
+			return versionRegEx;
 		}
 	}
 }
