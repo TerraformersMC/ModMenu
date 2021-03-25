@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 
 public class GithubUpdateProvider extends ModUpdateProvider {
 
-	private static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 	private static final Gson gson = new GsonBuilder().create();
 
 	public GithubUpdateProvider(String gameVersion) {
@@ -77,15 +76,6 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 		&& !data.getAllowPrerelease().isPresent()
 		&& !data.getVersionRegEx().isPresent()) {
 			throw new RuntimeException("Github update provider must have one of each repository, allowPrerelease, and versionRegex.");
-		}
-	}
-
-	@Override
-	public void dispose() {
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

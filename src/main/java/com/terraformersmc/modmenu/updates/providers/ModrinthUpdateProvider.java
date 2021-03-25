@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 public class ModrinthUpdateProvider extends ModUpdateProvider {
 
-	private static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 	private static final Gson gson = new GsonBuilder().create();
 
 	public ModrinthUpdateProvider(String gameVersion) {
@@ -84,15 +83,6 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 	public void validateData(FabricMod.ModUpdateData data) throws RuntimeException {
 		if(!data.getProjectId().isPresent()) {
 			throw new RuntimeException("The modrinth update provider requires a single \"projectId\" field.");
-		}
-	}
-
-	@Override
-	public void dispose() {
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
