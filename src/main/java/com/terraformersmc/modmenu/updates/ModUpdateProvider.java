@@ -6,6 +6,8 @@ import com.terraformersmc.modmenu.updates.providers.ModrinthUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import net.minecraft.MinecraftVersion;
 import net.minecraft.client.MinecraftClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +19,7 @@ public abstract class ModUpdateProvider {
 	public final String gameVersion;
 	public static final Map<String, ModUpdateProvider> PROVIDERS = new HashMap<>();
 	public static int availableUpdates = 0;
+	public static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 	public ModUpdateProvider(String gameVersion) {
 		this.gameVersion = gameVersion;
@@ -25,8 +28,6 @@ public abstract class ModUpdateProvider {
 	public abstract void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback);
 
 	public abstract void validateData(FabricMod.ModUpdateData data) throws RuntimeException;
-
-	public abstract void dispose();
 
 	public static void initializeProviders() {
 		String gameVersion = MinecraftVersion.field_25319.getName();

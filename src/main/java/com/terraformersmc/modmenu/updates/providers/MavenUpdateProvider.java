@@ -5,11 +5,8 @@ import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -25,7 +22,6 @@ import java.util.function.Consumer;
 
 public class MavenUpdateProvider extends ModUpdateProvider {
 
-	private static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 	DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder builder = null;
 
@@ -90,15 +86,6 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 		|| !data.getArtifact().isPresent()
 		|| !data.getVersionRegEx().isPresent()) {
 			throw new RuntimeException("Maven update provider must have one of each repository, group, artifact, and versionRegex.");
-		}
-	}
-
-	@Override
-	public void dispose() {
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }
