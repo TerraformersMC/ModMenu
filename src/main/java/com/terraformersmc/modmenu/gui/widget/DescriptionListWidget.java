@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
+import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -24,11 +25,13 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,6 +86,31 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				if (!description.isEmpty()) {
 					for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
+					}
+				}
+
+				// update info
+				if(mod.getAvailableUpdate() != null) {
+					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
+					AvailableUpdate update = mod.getAvailableUpdate();
+					TranslatableText updateText = new TranslatableText("modmenu.updateAvailable", mod.getVersion(), update.getVersion());
+
+					for (OrderedText line : textRenderer.wrapLines(updateText, getRowWidth() - 5)) {
+						children().add(new DescriptionEntry(line, this));
+					}
+
+					if(update.getProvider() != null) {
+						children().add(new DescriptionEntry(new TranslatableText("modmenu.downloadFrom", update.getVersion()).asOrderedText(), this));
+						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu." + update.getProvider()).formatted(Formatting.BLUE, Formatting.UNDERLINE)).asOrderedText(), update.getUrl(), this));
+					}
+
+					if(update.getChangeLog() != null) {
+						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
+						children().add(new DescriptionEntry(new TranslatableText("modmenu.changelog", update.getVersion()).asOrderedText(), this));
+						String changelog = "  " + update.getChangeLog().replaceAll("\n", "\n  ");
+						for (OrderedText line : textRenderer.wrapLines(new LiteralText(changelog), getRowWidth() - 5)) {
+							children().add(new DescriptionEntry(line, this));
+						}
 					}
 				}
 

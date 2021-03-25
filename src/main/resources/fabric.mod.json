@@ -97,6 +97,11 @@
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/jEGF5fb"
+      },
+      "updates": {
+        "provider": "modrinth",
+        "projectId": "mOgUt4GM",
+        "channel": "release"
       }
     }
   }

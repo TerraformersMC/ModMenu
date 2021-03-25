@@ -8,8 +8,15 @@
   "modmenu.loaded.420.secret": "(%s Loaded...blaze it)",
   "modmenu.mods.n": " (%s Mods)",
   "modmenu.mods.1": " (%s Mod)",
+  "modmenu.mods.n.outdated": " (%s Mods, %s Outdated)",
+  "modmenu.mods.1.outdated": " (%s Mod, %s Outdated)",
   "modmenu.mods.69.secret": " (%s Mods...nice)",
   "modmenu.mods.420.secret": " (%s Mods...blaze it)",
+  "modmenu.mods.69.secret.outdated": " (%s Mods...nice, %s Outdated)",
+  "modmenu.mods.420.secret.outdated": " (%s Mods...blaze it, %s Outdated)",
+  "modmenu.updateAvailable": "An update is available. (v%s -> v%s)",
+  "modmenu.downloadFrom": "Download v%s from:",
+  "modmenu.changelog": "Changes in v%s:",
 
   "modmenu.search": "Search for mods",
   "modmenu.searchTerms.library": "api library",
@@ -33,6 +40,7 @@
   "modmenu.badge.deprecated": "Deprecated",
   "modmenu.badge.forge": "Forge",
   "modmenu.badge.minecraft": "Minecraft",
+  "modmenu.badge.outdated": "Outdated",
 
   "modmenu.dropInfo.line1": "Drag and drop files into",
   "modmenu.dropInfo.line2": "this window to add mods",
