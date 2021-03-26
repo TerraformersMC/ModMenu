@@ -89,7 +89,7 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void validateData(FabricMod.ModUpdateData data) throws RuntimeException {
+	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
 		if(!data.getRepository().isPresent()
 		|| !data.getGroup().isPresent()
 		|| !data.getArtifact().isPresent()

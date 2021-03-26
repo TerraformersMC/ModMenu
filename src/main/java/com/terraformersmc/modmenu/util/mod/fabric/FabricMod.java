@@ -94,7 +94,7 @@ public class FabricMod implements Mod {
 								CustomValueUtil.getBoolean("allowPrerelease", updatesObj),
 								CustomValueUtil.getString("versionRegEx", updatesObj)
 						);
-						provider.validateData(tempUpdateData);
+						provider.validateProviderConfig(tempUpdateData);
 						updateData = tempUpdateData;
 					} catch (Throwable t) {
 						LOGGER.error("Error loading updates data from mod: " + metadata.getId(), t);

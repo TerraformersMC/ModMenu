@@ -1,5 +1,8 @@
 package com.terraformersmc.modmenu.updates;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class AvailableUpdate {
 	private String version;
 	private String url;
@@ -13,19 +16,35 @@ public class AvailableUpdate {
 		this.provider = provider;
 	}
 
-	public String getVersion() {
+	/**
+	 *
+	 * @return the new version available
+	 */
+	public @NotNull String getVersion() {
 		return version;
 	}
 
-	public String getUrl() {
+	/**
+	 *
+	 * @return the url where the user can download the update.
+	 */
+	public @Nullable String getUrl() {
 		return url;
 	}
 
-	public String getChangeLog() {
+	/**
+	 *
+	 * @return changelog for this update.
+	 */
+	public @Nullable String getChangeLog() {
 		return changeLog;
 	}
 
-	public String getProvider() {
+	/**
+	 *
+	 * @return where there update is from
+	 */
+	public @NotNull String getProvider() {
 		return provider;
 	}
 }
