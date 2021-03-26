@@ -38,6 +38,7 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 
 	@Override
 	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+		beginUpdateCheck();
 		String url = String.format("%s%s/%s/maven-metadata.xml",
 				(data.getRepository().get().endsWith("/") ? data.getRepository().get() : data.getRepository().get() + "/"),
 				data.getGroup().get().replaceAll("\\.", "/"),
@@ -80,6 +81,7 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				completeUpdateCheck();
 				this.interrupt();
 			}
 		};

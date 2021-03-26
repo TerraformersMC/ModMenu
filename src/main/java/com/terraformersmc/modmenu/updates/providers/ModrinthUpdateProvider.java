@@ -33,6 +33,7 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 
 	@Override
 	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+		beginUpdateCheck();
 		Thread thead = new Thread(String.format("Update Checker (%s@modrinth)", modId)) {
 			@Override
 			public void run() {
@@ -72,6 +73,7 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				completeUpdateCheck();
 				this.interrupt();
 			}
 		};

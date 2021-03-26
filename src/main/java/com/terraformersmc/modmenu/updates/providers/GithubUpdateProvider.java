@@ -27,6 +27,7 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 
 	@Override
 	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+		beginUpdateCheck();
 		Thread thread = new Thread(String.format("Update Checker %s@Github", modId)) {
 			@Override
 			public void run() {
@@ -63,7 +64,7 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
+				completeUpdateCheck();
 				this.interrupt();
 			}
 		};
