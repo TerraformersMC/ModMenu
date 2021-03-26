@@ -46,37 +46,44 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 		HttpGet request = new HttpGet(url);
 		request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (MavenUpdateProvider)");
 
-		try(CloseableHttpResponse response = httpClient.execute(request)) {
-			if(response.getStatusLine().getStatusCode() == 200) {
+		Thread thread = new Thread(String.format("Update Checker (%s@maven)", modId)) {
+			@Override
+			public void run() {
+				try(CloseableHttpResponse response = httpClient.execute(request)) {
+					if(response.getStatusLine().getStatusCode() == 200) {
 
-				HttpEntity entity = response.getEntity();
-				if(entity != null) {
-					try {
-						ByteArrayInputStream stream = new ByteArrayInputStream(EntityUtils.toString(entity).getBytes(StandardCharsets.UTF_8));
-						Document document = builder.parse(stream);
-						document.getDocumentElement().normalize();
-						NodeList versions = document.getElementsByTagName("version");
-						for (int i = 0; i < versions.getLength(); i++) {
-							String newVersion = versions.item(i).getTextContent();
-							if(newVersion.matches(data.getVersionRegEx().get())) {
-								AvailableUpdate update = new AvailableUpdate(
-										newVersion,
-										null,
-										null,
-										"maven"
-								);
-								callback.accept(update);
-								break;
+						HttpEntity entity = response.getEntity();
+						if(entity != null) {
+							try {
+								ByteArrayInputStream stream = new ByteArrayInputStream(EntityUtils.toString(entity).getBytes(StandardCharsets.UTF_8));
+								Document document = builder.parse(stream);
+								document.getDocumentElement().normalize();
+								NodeList versions = document.getElementsByTagName("version");
+								for (int i = 0; i < versions.getLength(); i++) {
+									String newVersion = versions.item(i).getTextContent();
+									if(newVersion.matches(data.getVersionRegEx().get())) {
+										AvailableUpdate update = new AvailableUpdate(
+												newVersion,
+												null,
+												null,
+												"maven"
+										);
+										callback.accept(update);
+										break;
+									}
+								}
+							} catch (SAXException | IOException e) {
+								e.printStackTrace();
 							}
 						}
-					} catch (SAXException | IOException e) {
-						e.printStackTrace();
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+				this.interrupt();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		};
+		thread.start();
 	}
 
 	@Override
