@@ -5,10 +5,10 @@ import com.terraformersmc.modmenu.updates.providers.MavenUpdateProvider;
 import com.terraformersmc.modmenu.updates.providers.ModrinthUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import net.minecraft.MinecraftVersion;
-import net.minecraft.client.MinecraftClient;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +19,7 @@ public abstract class ModUpdateProvider {
 	public final String gameVersion;
 	public static final Map<String, ModUpdateProvider> PROVIDERS = new HashMap<>();
 	public static int availableUpdates = 0;
+	private static int runningChecks = 0;
 	public static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 	public ModUpdateProvider(String gameVersion) {
@@ -40,5 +41,19 @@ public abstract class ModUpdateProvider {
 		return Optional.ofNullable(PROVIDERS.get(provider));
 	}
 
+	public static void beginUpdateCheck() {
+		runningChecks++;
+	}
+
+	public static void completeUpdateCheck() {
+		runningChecks--;
+		if(runningChecks == 0) {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
 
