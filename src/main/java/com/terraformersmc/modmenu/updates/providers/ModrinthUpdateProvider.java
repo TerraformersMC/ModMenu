@@ -82,7 +82,7 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 
 
 	@Override
-	public void validateData(FabricMod.ModUpdateData data) throws RuntimeException {
+	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
 		if(!data.getProjectId().isPresent()) {
 			throw new RuntimeException("The modrinth update provider requires a single \"projectId\" field.");
 		}

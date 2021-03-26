@@ -72,7 +72,7 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void validateData(FabricMod.ModUpdateData data) throws RuntimeException {
+	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
 		if(!data.getRepository().isPresent()
 		&& !data.getAllowPrerelease().isPresent()
 		&& !data.getVersionRegEx().isPresent()) {

@@ -28,7 +28,7 @@ public abstract class ModUpdateProvider {
 
 	public abstract void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback);
 
-	public abstract void validateData(FabricMod.ModUpdateData data) throws RuntimeException;
+	public abstract void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException;
 
 	public static void initializeProviders() {
 		String gameVersion = MinecraftVersion.field_25319.getName();
