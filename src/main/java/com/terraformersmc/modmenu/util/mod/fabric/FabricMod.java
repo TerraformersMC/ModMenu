@@ -104,6 +104,20 @@ public class FabricMod implements Mod {
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 		}
+
+		// update data for fabric loader
+		if(this.getId().equals("fabricloader")) {
+			updateData = new ModUpdateData(
+					ModUpdateProvider.fromKey("loader").get(),
+					Optional.empty(),
+					Optional.empty(),
+					Optional.empty(),
+					Optional.empty(),
+					Optional.empty(),
+					Optional.empty()
+			);
+		}
+
 		this.modMenuData = new ModMenuData(
 				badgeNames,
 				parentId,
