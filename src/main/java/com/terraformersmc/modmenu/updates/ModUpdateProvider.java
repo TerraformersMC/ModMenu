@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.updates;
 
 import com.terraformersmc.modmenu.updates.providers.GithubUpdateProvider;
+import com.terraformersmc.modmenu.updates.providers.LoaderMetaUpdateProvider;
 import com.terraformersmc.modmenu.updates.providers.MavenUpdateProvider;
 import com.terraformersmc.modmenu.updates.providers.ModrinthUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
@@ -35,6 +36,7 @@ public abstract class ModUpdateProvider {
 		ModUpdateProvider.PROVIDERS.put("modrinth", new ModrinthUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("github", new GithubUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("maven", new MavenUpdateProvider(gameVersion));
+		ModUpdateProvider.PROVIDERS.put("loader", new LoaderMetaUpdateProvider(gameVersion));
 	}
 
 	public static Optional<ModUpdateProvider> fromKey(String provider) {
