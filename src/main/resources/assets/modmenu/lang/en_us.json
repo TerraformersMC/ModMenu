@@ -6,7 +6,6 @@
   "modmenu.loaded.420.secret": "(%s Loaded...blaze it)",
   "modmenu.loaded.short": "(%s)",
   "modmenu.loaded.outdated": "(%s Loaded, %s Outdated)",
-  "modmenu.loaded.short.outdated": "(%s,%s)",
   "modmenu.config": "Edit Config",
   "modmenu.modsFolder": "Open Mods Folder",
   "modmenu.configsFolder": "Open Configs Folder",

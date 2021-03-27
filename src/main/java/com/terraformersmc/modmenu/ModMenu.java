@@ -144,7 +144,7 @@ public class ModMenu implements ClientModInitializer {
 			int outdated = ModUpdateProvider.availableUpdates;
 			String outdatedKey = (outdated > 0) ? ".outdated" : "";
 			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short" + outdatedKey, ModMenu.getDisplayedModCount(), outdated));
+				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", ModMenu.getDisplayedModCount()));
 			} else {
 				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded" + outdatedKey, ModMenu.getDisplayedModCount(), outdated));
 			}
