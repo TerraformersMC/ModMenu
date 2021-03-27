@@ -46,7 +46,7 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 											metaVersion.loader.version,
 											"https://fabricmc.net/use/",
 											null,
-											"fabricmc-net"
+											"fabricmcNet"
 									);
 									availableUpdates++;
 									callback.accept(update);
