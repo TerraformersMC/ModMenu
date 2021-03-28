@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.updates.providers;
 import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
+import net.minecraft.util.Util;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -39,53 +40,48 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 	@Override
 	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
-		String url = String.format("%s%s/%s/maven-metadata.xml",
-				(data.getRepository().get().endsWith("/") ? data.getRepository().get() : data.getRepository().get() + "/"),
-				data.getGroup().get().replaceAll("\\.", "/"),
-				data.getArtifact().get());
+		Util.getMainWorkerExecutor().execute(() -> {
+			String url = String.format("%s%s/%s/maven-metadata.xml",
+					(data.getRepository().get().endsWith("/") ? data.getRepository().get() : data.getRepository().get() + "/"),
+					data.getGroup().get().replaceAll("\\.", "/"),
+					data.getArtifact().get());
 
-		HttpGet request = new HttpGet(url);
-		request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (MavenUpdateProvider)");
+			HttpGet request = new HttpGet(url);
+			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (MavenUpdateProvider)");
 
-		Thread thread = new Thread(String.format("Update Checker (%s@maven)", modId)) {
-			@Override
-			public void run() {
-				try(CloseableHttpResponse response = httpClient.execute(request)) {
-					if(response.getStatusLine().getStatusCode() == 200) {
+			try(CloseableHttpResponse response = httpClient.execute(request)) {
+				if(response.getStatusLine().getStatusCode() == 200) {
 
-						HttpEntity entity = response.getEntity();
-						if(entity != null) {
-							try {
-								ByteArrayInputStream stream = new ByteArrayInputStream(EntityUtils.toString(entity).getBytes(StandardCharsets.UTF_8));
-								Document document = builder.parse(stream);
-								document.getDocumentElement().normalize();
-								NodeList versions = document.getElementsByTagName("version");
-								for (int i = 0; i < versions.getLength(); i++) {
-									String newVersion = versions.item(i).getTextContent();
-									if(newVersion.matches(data.getVersionRegEx().get())) {
-										AvailableUpdate update = new AvailableUpdate(
-												newVersion,
-												null,
-												null,
-												"maven"
-										);
-										callback.accept(update);
-										break;
-									}
+					HttpEntity entity = response.getEntity();
+					if(entity != null) {
+						try {
+							ByteArrayInputStream stream = new ByteArrayInputStream(EntityUtils.toString(entity).getBytes(StandardCharsets.UTF_8));
+							Document document = builder.parse(stream);
+							document.getDocumentElement().normalize();
+							NodeList versions = document.getElementsByTagName("version");
+							for (int i = 0; i < versions.getLength(); i++) {
+								String newVersion = versions.item(i).getTextContent();
+								if(newVersion.matches(data.getVersionRegEx().get())) {
+									AvailableUpdate update = new AvailableUpdate(
+											newVersion,
+											null,
+											null,
+											"maven"
+									);
+									callback.accept(update);
+									break;
 								}
-							} catch (SAXException | IOException e) {
-								e.printStackTrace();
 							}
+						} catch (SAXException | IOException e) {
+							e.printStackTrace();
 						}
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
-				completeUpdateCheck();
-				this.interrupt();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		};
-		thread.start();
+			completeUpdateCheck();
+		});
 	}
 
 	@Override
