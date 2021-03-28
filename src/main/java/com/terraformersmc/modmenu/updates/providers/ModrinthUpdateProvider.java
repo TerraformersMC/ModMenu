@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
+import net.minecraft.util.Util;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -32,50 +33,45 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 	@Override
 	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
-		Thread thead = new Thread(String.format("Update Checker (%s@modrinth)", modId)) {
-			@Override
-			public void run() {
-				Map<String, String> filterParams = new HashMap<>();
-				filterParams.put("game_versions", String.format("[\"%s\"]", gameVersion));
-				filterParams.put("loaders", "[\"fabric\"]");
+		Util.getMainWorkerExecutor().execute(() -> {
+			Map<String, String> filterParams = new HashMap<>();
+			filterParams.put("game_versions", String.format("[\"%s\"]", gameVersion));
+			filterParams.put("loaders", "[\"fabric\"]");
 
-				String url = filterParams.keySet().stream()
-						.map(key -> key + "=" + encodeString(filterParams.get(key)))
-						.collect(Collectors.joining("&",
-								String.format("https://api.modrinth.com/api/v1/mod/%s/version?", data.getProjectId().get()),
-								""));
+			String url = filterParams.keySet().stream()
+					.map(key -> key + "=" + encodeString(filterParams.get(key)))
+					.collect(Collectors.joining("&",
+							String.format("https://api.modrinth.com/api/v1/mod/%s/version?", data.getProjectId().get()),
+							""));
 
-				HttpGet request = new HttpGet(url);
-				request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (ModrinthUpdateProvider)");
+			HttpGet request = new HttpGet(url);
+			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (ModrinthUpdateProvider)");
 
-				try (CloseableHttpResponse response = httpClient.execute(request)) {
-					if(response.getStatusLine().getStatusCode() == 200) {
-						HttpEntity entity = response.getEntity();
-						if(entity != null) {
-							ModrinthVersion[] versions = gson.fromJson(EntityUtils.toString(entity), ModrinthVersion[].class);
-							if(versions.length > 0) {
-								ModrinthVersion latest = versions[0];
-								if(!latest.versionNumber.equalsIgnoreCase(version)) {
-									AvailableUpdate update = new AvailableUpdate(
-											latest.versionNumber,
-											String.format("https://modrinth.com/mod/%s/version/%s", data.getProjectId().get(), latest.versionId),
-											(latest.changeLog == null || latest.changeLog.isEmpty()) ? null : latest.changeLog,
-											"modrinth"
-									);
-									availableUpdates++;
-									callback.accept(update);
-								}
+			try (CloseableHttpResponse response = httpClient.execute(request)) {
+				if(response.getStatusLine().getStatusCode() == 200) {
+					HttpEntity entity = response.getEntity();
+					if(entity != null) {
+						ModrinthVersion[] versions = gson.fromJson(EntityUtils.toString(entity), ModrinthVersion[].class);
+						if(versions.length > 0) {
+							ModrinthVersion latest = versions[0];
+							if(!latest.versionNumber.equalsIgnoreCase(version)) {
+								AvailableUpdate update = new AvailableUpdate(
+										latest.versionNumber,
+										String.format("https://modrinth.com/mod/%s/version/%s", data.getProjectId().get(), latest.versionId),
+										(latest.changeLog == null || latest.changeLog.isEmpty()) ? null : latest.changeLog,
+										"modrinth"
+								);
+								availableUpdates++;
+								callback.accept(update);
 							}
 						}
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
-				completeUpdateCheck();
-				this.interrupt();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		};
-		thead.start();
+			completeUpdateCheck();
+		});
 	}
 
 

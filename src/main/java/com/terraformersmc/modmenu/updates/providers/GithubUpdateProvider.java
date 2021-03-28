@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
+import net.minecraft.util.Util;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -26,47 +27,42 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 	@Override
 	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
-		Thread thread = new Thread(String.format("Update Checker %s@Github", modId)) {
-			@Override
-			public void run() {
-				String url = String.format("https://api.github.com/repos/%s/releases?per_page=25", data.getRepository().get());
+		Util.getMainWorkerExecutor().execute(() -> {
+			String url = String.format("https://api.github.com/repos/%s/releases?per_page=25", data.getRepository().get());
 
-				HttpGet request = new HttpGet(url);
-				request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (GithubUpdateProvider)");
-				request.addHeader(HttpHeaders.ACCEPT, "application/vnd.github.v3+json");
+			HttpGet request = new HttpGet(url);
+			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (GithubUpdateProvider)");
+			request.addHeader(HttpHeaders.ACCEPT, "application/vnd.github.v3+json");
 
-				try(CloseableHttpResponse response = httpClient.execute(request)) {
-					if(response.getStatusLine().getStatusCode() == 200) {
-						HttpEntity entity = response.getEntity();
-						if(entity != null) {
-							GithubResponse[] versions = gson.fromJson(EntityUtils.toString(entity), GithubResponse[].class);
+			try(CloseableHttpResponse response = httpClient.execute(request)) {
+				if(response.getStatusLine().getStatusCode() == 200) {
+					HttpEntity entity = response.getEntity();
+					if(entity != null) {
+						GithubResponse[] versions = gson.fromJson(EntityUtils.toString(entity), GithubResponse[].class);
 
-							for (GithubResponse githubVersion : versions) {
-								if(!githubVersion.draft
-								&& (data.getAllowPrerelease().get() || !githubVersion.prerelease)
-								&& (githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag)
-										.matches(data.getVersionRegEx().get())) {
-									AvailableUpdate update = new AvailableUpdate(
-											(githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag),
-											githubVersion.url,
-											(githubVersion.body != null && !githubVersion.body.isEmpty()) ? githubVersion.body : null,
-											"github_releases"
-									);
-									availableUpdates++;
-									callback.accept(update);
-									break;
-								}
+						for (GithubResponse githubVersion : versions) {
+							if(!githubVersion.draft
+									&& (data.getAllowPrerelease().get() || !githubVersion.prerelease)
+									&& (githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag)
+									.matches(data.getVersionRegEx().get())) {
+								AvailableUpdate update = new AvailableUpdate(
+										(githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag),
+										githubVersion.url,
+										(githubVersion.body != null && !githubVersion.body.isEmpty()) ? githubVersion.body : null,
+										"github_releases"
+								);
+								availableUpdates++;
+								callback.accept(update);
+								break;
 							}
 						}
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
-				completeUpdateCheck();
-				this.interrupt();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		};
-		thread.start();
+			completeUpdateCheck();
+		});
 	}
 
 	@Override
