@@ -18,10 +18,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -122,13 +122,13 @@ public class ModMenu implements ClientModInitializer {
 		return NumberFormat.getInstance().format(cachedDisplayedModCount);
 	}
 
-	public static Text createModsButtonText() {
-		TranslatableText modsText = new TranslatableText("modmenu.title");
+	public static Component createModsButtonText() {
+		TranslatableComponent modsText = new TranslatableComponent("modmenu.title");
 		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
 			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", ModMenu.getDisplayedModCount()));
+				modsText.append(new TextComponent(" ")).append(new TranslatableComponent("modmenu.loaded.short", ModMenu.getDisplayedModCount()));
 			} else {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded", ModMenu.getDisplayedModCount()));
+				modsText.append(new TextComponent(" ")).append(new TranslatableComponent("modmenu.loaded", ModMenu.getDisplayedModCount()));
 			}
 		}
 		return modsText;

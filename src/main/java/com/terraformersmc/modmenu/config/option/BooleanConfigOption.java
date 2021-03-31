@@ -1,10 +1,10 @@
 package com.terraformersmc.modmenu.config.option;
 
 import com.terraformersmc.modmenu.util.TranslationUtil;
-import net.minecraft.client.options.BooleanOption;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.BooleanOption;
+import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class BooleanConfigOption extends BooleanOption {
 	private final String key, translationKey;
@@ -35,8 +35,8 @@ public class BooleanConfigOption extends BooleanOption {
 	}
 
 	@Override
-	public Text getDisplayString(GameOptions options) {
-		return new TranslatableText(translationKey, new TranslatableText(translationKey + "." + ConfigOptionStorage.getBoolean(key)));
+	public Component getMessage(Options options) {
+		return new TranslatableComponent(translationKey, new TranslatableComponent(translationKey + "." + ConfigOptionStorage.getBoolean(key)));
 	}
 
 	public boolean getDefaultValue() {

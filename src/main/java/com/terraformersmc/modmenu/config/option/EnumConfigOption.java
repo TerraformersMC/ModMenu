@@ -1,14 +1,14 @@
 package com.terraformersmc.modmenu.config.option;
 
 import com.terraformersmc.modmenu.util.TranslationUtil;
-import net.minecraft.client.options.CyclingOption;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.CycleOption;
+import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Locale;
 
-public class EnumConfigOption<E extends Enum<E>> extends CyclingOption {
+public class EnumConfigOption<E extends Enum<E>> extends CycleOption {
 	private final String key, translationKey;
 	private final Class<E> enumClass;
 	private final E defaultValue;
@@ -43,8 +43,8 @@ public class EnumConfigOption<E extends Enum<E>> extends CyclingOption {
 	}
 
 	@Override
-	public Text getMessage(GameOptions options) {
-		return new TranslatableText(translationKey, new TranslatableText(translationKey + "." + ConfigOptionStorage.getEnum(key, enumClass).name().toLowerCase(Locale.ROOT)));
+	public Component getMessage(Options options) {
+		return new TranslatableComponent(translationKey, new TranslatableComponent(translationKey + "." + ConfigOptionStorage.getEnum(key, enumClass).name().toLowerCase(Locale.ROOT)));
 	}
 
 	public E getDefaultValue() {

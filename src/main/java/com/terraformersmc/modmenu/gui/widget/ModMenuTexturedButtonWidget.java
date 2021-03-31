@@ -1,33 +1,33 @@
 package com.terraformersmc.modmenu.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.NarratorManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.chat.NarratorChatListener;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-public class ModMenuTexturedButtonWidget extends ButtonWidget {
-	private final Identifier texture;
+public class ModMenuTexturedButtonWidget extends Button {
+	private final ResourceLocation texture;
 	private final int u;
 	private final int v;
 	private final int uWidth;
 	private final int vHeight;
 
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, ResourceLocation texture, OnPress onPress) {
 		this(x, y, width, height, u, v, texture, 256, 256, onPress);
 	}
 
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, NarratorManager.EMPTY);
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, ResourceLocation texture, int uWidth, int vHeight, OnPress onPress) {
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, NarratorChatListener.NO_TITLE);
 	}
 
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, EMPTY);
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, ResourceLocation texture, int uWidth, int vHeight, OnPress onPress, Component message) {
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, NO_TOOLTIP);
 	}
 
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, TooltipSupplier tooltipSupplier) {
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, ResourceLocation texture, int uWidth, int vHeight, OnPress onPress, Component message, OnTooltip tooltipSupplier) {
 		super(x, y, width, height, message, onPress, tooltipSupplier);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
@@ -42,9 +42,9 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		MinecraftClient client = MinecraftClient.getInstance();
-		client.getTextureManager().bindTexture(this.texture);
+	public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
+		Minecraft client = Minecraft.getInstance();
+		client.getTextureManager().bind(this.texture);
 		RenderSystem.color4f(1, 1, 1, 1f);
 		RenderSystem.disableDepthTest();
 		int adjustedV = this.v;
@@ -54,7 +54,7 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 			adjustedV += this.height;
 		}
 
-		drawTexture(matrices, this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
+		blit(matrices, this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
 
 		if (this.isHovered()) {
@@ -63,10 +63,10 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	public boolean isJustHovered() {
-		return hovered;
+		return isHovered;
 	}
 
 	public boolean isFocusedButNotHovered() {
-		return !hovered && isFocused();
+		return !isHovered && isFocused();
 	}
 }

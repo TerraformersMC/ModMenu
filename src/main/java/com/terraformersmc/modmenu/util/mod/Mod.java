@@ -1,8 +1,8 @@
 package com.terraformersmc.modmenu.util.mod;
 
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +17,7 @@ public interface Mod {
 	String getName();
 
 	@NotNull
-	NativeImageBackedTexture getIcon(ModIconHandler iconHandler, int i);
+	DynamicTexture getIcon(ModIconHandler iconHandler, int i);
 
 	@NotNull
 	String getSummary();
@@ -64,19 +64,19 @@ public interface Mod {
 		PATCHWORK_FORGE("modmenu.forge", 0xff1f2d42, 0xff101721, null),
 		MINECRAFT("modmenu.minecraft", 0xff6f6c6a, 0xff31302f, null);
 
-		private final Text text;
+		private final Component text;
 		private final int outlineColor, fillColor;
 		private final String key;
 		private static final Map<String, Badge> KEY_MAP = new HashMap<>();
 
 		Badge(String translationKey, int outlineColor, int fillColor, String key) {
-			this.text = new TranslatableText(translationKey);
+			this.text = new TranslatableComponent(translationKey);
 			this.outlineColor = outlineColor;
 			this.fillColor = fillColor;
 			this.key = key;
 		}
 
-		public Text getText() {
+		public Component getText() {
 			return this.text;
 		}
 

@@ -12,7 +12,7 @@ import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -151,7 +151,7 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @NotNull NativeImageBackedTexture getIcon(ModIconHandler iconHandler, int i) {
+	public @NotNull DynamicTexture getIcon(ModIconHandler iconHandler, int i) {
 		String iconSourceId = getId();
 		String iconPath = metadata.getIconPath(i).orElse("assets/" + getId() + "/icon.png");
 		if ("minecraft".equals(getId())) {
@@ -163,7 +163,7 @@ public class FabricMod implements Mod {
 		}
 		final String finalIconSourceId = iconSourceId;
 		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
-		NativeImageBackedTexture icon = iconHandler.createIcon(iconSource, iconPath);
+		DynamicTexture icon = iconHandler.createIcon(iconSource, iconPath);
 		if (icon == null) {
 			LOGGER.warn("Warning! Mod {} has a broken icon, loading default icon", metadata.getId());
 			return iconHandler.createIcon(FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + ModMenu.MOD_ID)), "assets/" + ModMenu.MOD_ID + "/unknown_icon.png");

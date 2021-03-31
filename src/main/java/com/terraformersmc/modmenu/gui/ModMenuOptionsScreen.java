@@ -1,48 +1,48 @@
 package com.terraformersmc.modmenu.gui;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
-import net.minecraft.client.gui.screen.options.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonListWidget;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.List;
 
-public class ModMenuOptionsScreen extends GameOptionsScreen {
+public class ModMenuOptionsScreen extends OptionsSubScreen {
 
 	private Screen previous;
-	private ButtonListWidget list;
+	private OptionsList list;
 
 	public ModMenuOptionsScreen(Screen previous) {
-		super(previous, MinecraftClient.getInstance().options, new TranslatableText("modmenu.options"));
+		super(previous, Minecraft.getInstance().options, new TranslatableComponent("modmenu.options"));
 		this.previous = previous;
 	}
 
 
 	protected void init() {
-		this.list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-		this.list.addAll(ModMenuConfig.asOptions());
+		this.list = new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
+		this.list.addSmall(ModMenuConfig.asOptions());
 		this.children.add(this.list);
-		this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, (button) -> {
+		this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, CommonComponents.GUI_DONE, (button) -> {
 			ModMenuConfigManager.save();
-			this.client.openScreen(this.previous);
+			this.minecraft.setScreen(this.previous);
 		}));
 	}
 
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
 		this.list.render(matrices, mouseX, mouseY, delta);
-		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+		drawCenteredString(matrices, this.font, this.title, this.width / 2, 5, 0xffffff);
 		super.render(matrices, mouseX, mouseY, delta);
-		List<OrderedText> list = getHoveredButtonTooltip(this.list, mouseX, mouseY);
+		List<FormattedCharSequence> list = tooltipAt(this.list, mouseX, mouseY);
 		if (list != null) {
-			this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
+			this.renderTooltip(matrices, list, mouseX, mouseY);
 		}
 
 	}
