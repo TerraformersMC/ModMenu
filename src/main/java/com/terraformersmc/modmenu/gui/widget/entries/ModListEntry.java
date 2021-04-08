@@ -47,7 +47,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		if ("java".equals(mod.getId())) {
 			DrawingUtil.drawRandomVersionBackground(mod, matrices, x, y, iconSize, iconSize);
 		}
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		this.bindIconTexture();
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
@@ -99,7 +99,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				this.iconLocation = UNKNOWN_ICON;
 			}
 		}
-		this.client.getTextureManager().bindTexture(this.iconLocation);
+		RenderSystem._setShaderTexture(0, this.iconLocation);
 	}
 
 	public int getXOffset() {

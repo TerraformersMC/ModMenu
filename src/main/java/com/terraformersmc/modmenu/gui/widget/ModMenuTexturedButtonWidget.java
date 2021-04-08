@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.gui.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -44,8 +45,9 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	@Override
 	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		MinecraftClient client = MinecraftClient.getInstance();
-		client.getTextureManager().bindTexture(this.texture);
-		RenderSystem.color4f(1, 1, 1, 1f);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShaderColor(1, 1, 1, 1f);
+		RenderSystem._setShaderTexture(0, this.texture);
 		RenderSystem.disableDepthTest();
 		int adjustedV = this.v;
 		if (!active) {
