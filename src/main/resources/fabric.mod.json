@@ -79,7 +79,8 @@
     "NotSteven",
     "Dolphin 2.1",
     "ENDERZOMBI102",
-    "anatom3000"
+    "anatom3000",
+    "OroArmor"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
