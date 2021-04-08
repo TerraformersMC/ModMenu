@@ -305,8 +305,8 @@ public class ModsScreen extends Screen {
 			if ("java".equals(mod.getId())) {
 				DrawingUtil.drawRandomVersionBackground(mod, matrices, x, paneY, 32, 32);
 			}
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			this.selected.bindIconTexture();
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			RenderSystem.enableBlend();
 			drawTexture(matrices, x, paneY, 0.0F, 0.0F, 32, 32, 32, 32);
 			RenderSystem.disableBlend();
@@ -390,7 +390,7 @@ public class ModsScreen extends Screen {
 		BufferBuilder buffer = tessellator.getBuffer();
 		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.0F);
-		RenderSystem._setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+		RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
