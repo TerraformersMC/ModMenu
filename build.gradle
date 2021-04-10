@@ -11,3 +11,10 @@ dependencies {
 	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
 	includeMod "fabric-api", fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
 }
+
+repositories {
+	maven {
+		name = 'TerraformersMC'
+		url = 'https://maven.terraformersmc.com/'
+	}
+}

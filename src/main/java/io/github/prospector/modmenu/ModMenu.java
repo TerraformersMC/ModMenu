@@ -65,9 +65,10 @@ public class ModMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
-		FabricLoader.getInstance().getEntrypoints("modmenu", ModMenuApi.class).forEach(api -> {
-			factories.put(api.getModId(), api.getModConfigScreenFactory());
-			api.getProvidedConfigScreenFactories().forEach(factories::putIfAbsent);
+		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(provider -> {
+			ModMenuApi entrypoint = provider.getEntrypoint();
+			factories.put(provider.getProvider().getMetadata().getId(), entrypoint.getModConfigScreenFactory());
+			entrypoint.getProvidedConfigScreenFactories().forEach(factories::putIfAbsent);
 		});
 		configScreenFactories = new ImmutableMap.Builder<String, ConfigScreenFactory<?>>().putAll(factories).build();
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
