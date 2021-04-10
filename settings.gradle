@@ -1,12 +1,15 @@
 pluginManagement {
 	repositories {
-
 		maven {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
 		gradlePluginPortal()
 	}
+}
+
+if (JavaVersion.current().ordinal() + 1 < 16) {
+	throw new IllegalStateException("Please run gradle with Java 16+!")
 }
 
 rootProject.name = "modmenu"

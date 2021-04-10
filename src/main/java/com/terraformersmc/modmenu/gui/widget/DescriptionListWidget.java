@@ -9,8 +9,10 @@ import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.CreditsScreen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
@@ -55,6 +57,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	@Override
 	protected int getScrollbarPositionX() {
 		return this.width - 6 + left;
+	}
+
+	@Override
+	public void appendNarrations(NarrationMessageBuilder builder) {
+		// TODO let's not read the whole thing
 	}
 
 	@Override
@@ -127,103 +134,72 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
 
+		{
+			RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+			RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			float f = 32.0F;
+			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+			bufferBuilder.vertex(this.left, this.bottom, 0.0D).texture(this.left / 32.0F, (this.bottom + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			bufferBuilder.vertex(this.right, this.bottom, 0.0D).texture(this.right / 32.0F, (this.bottom + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			bufferBuilder.vertex(this.right, this.top, 0.0D).texture(this.right / 32.0F, (this.top + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			bufferBuilder.vertex(this.left, this.top, 0.0D).texture(this.left / 32.0F, (this.top + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			tessellator.draw();
+		}
+
 		RenderSystem.depthFunc(515);
 		RenderSystem.disableDepthTest();
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-		RenderSystem.disableTexture();
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		bufferBuilder.vertex(this.left, (this.top + 4), 0.0D).
-
-				texture(0.0F, 1.0F).
 
 				color(0, 0, 0, 0).
 
 				next();
 		bufferBuilder.vertex(this.right, (this.top + 4), 0.0D).
 
-				texture(1.0F, 1.0F).
-
 				color(0, 0, 0, 0).
 
 				next();
 		bufferBuilder.vertex(this.right, this.top, 0.0D).
-
-				texture(1.0F, 0.0F).
 
 				color(0, 0, 0, 255).
 
 				next();
 		bufferBuilder.vertex(this.left, this.top, 0.0D).
 
-				texture(0.0F, 0.0F).
-
 				color(0, 0, 0, 255).
 
 				next();
 		bufferBuilder.vertex(this.left, this.bottom, 0.0D).
 
-				texture(0.0F, 1.0F).
-
 				color(0, 0, 0, 255).
 
 				next();
 		bufferBuilder.vertex(this.right, this.bottom, 0.0D).
-
-				texture(1.0F, 1.0F).
 
 				color(0, 0, 0, 255).
 
 				next();
 		bufferBuilder.vertex(this.right, (this.bottom - 4), 0.0D).
 
-				texture(1.0F, 0.0F).
-
 				color(0, 0, 0, 0).
 
 				next();
 		bufferBuilder.vertex(this.left, (this.bottom - 4), 0.0D).
 
-				texture(0.0F, 0.0F).
-
 				color(0, 0, 0, 0).
-
-				next();
-		tessellator.draw();
-
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-		bufferBuilder.vertex(this.left, this.bottom, 0.0D).
-
-				color(0, 0, 0, 128).
-
-				next();
-		bufferBuilder.vertex(this.right, this.bottom, 0.0D).
-
-				color(0, 0, 0, 128).
-
-				next();
-		bufferBuilder.vertex(this.right, this.top, 0.0D).
-
-				color(0, 0, 0, 128).
-
-				next();
-		bufferBuilder.vertex(this.left, this.top, 0.0D).
-
-				color(0, 0, 0, 128).
 
 				next();
 		tessellator.draw();
 
 		int k = this.getRowLeft();
 		int l = this.top + 4 - (int) this.getScrollAmount();
-		this.
-
-				renderList(matrices, k, l, mouseX, mouseY, delta);
-		this.
-
-				renderScrollBar(bufferBuilder, tessellator);
+		this.renderList(matrices, k, l, mouseX, mouseY, delta);
+		this.renderScrollBar(bufferBuilder, tessellator);
 
 		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();

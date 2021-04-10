@@ -40,6 +40,11 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	}
 
 	@Override
+	public Text method_37006() {
+		return new LiteralText(mod.getName());
+	}
+
+	@Override
 	public void render(MatrixStack matrices, int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 		x += getXOffset();
 		rowWidth -= getXOffset();

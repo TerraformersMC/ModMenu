@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "MixinEntryListWidgetEntries",
-    "MixinTitleScreen"
+    "MixinTitleScreen",
+    "ScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

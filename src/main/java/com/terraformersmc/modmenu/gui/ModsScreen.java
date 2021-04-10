@@ -201,8 +201,8 @@ public class ModsScreen extends Screen {
 				super.render(matrices, mouseX, mouseY, delta);
 			}
 		};
-		this.children.add(this.searchBox);
-		this.addButton(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS, (buttonWidget, matrices, mouseX, mouseY) -> {
+		this.addSelectableChild(this.searchBox);
+		this.addDrawableChild(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS, (buttonWidget, matrices, mouseX, mouseY) -> {
 			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
 			if (button.isJustHovered()) {
 				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, mouseX, mouseY);
@@ -217,7 +217,7 @@ public class ModsScreen extends Screen {
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
-		this.addButton(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
+		this.addDrawableChild(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
 			ModMenuConfig.SORTING.cycleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
@@ -230,7 +230,7 @@ public class ModsScreen extends Screen {
 				super.render(matrices, mouseX, mouseY, delta);
 			}
 		});
-		this.addButton(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
+		this.addDrawableChild(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
 			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
@@ -243,15 +243,15 @@ public class ModsScreen extends Screen {
 				super.render(matrices, mouseX, mouseY, delta);
 			}
 		});
-		this.children.add(this.modList);
+		this.addSelectableChild(this.modList);
 		if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
-			this.addButton(configureButton);
+			this.addDrawableChild(configureButton);
 		}
-		this.addButton(websiteButton);
-		this.addButton(issuesButton);
-		this.children.add(this.descriptionListWidget);
-		this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
-		this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen)));
+		this.addDrawableChild(websiteButton);
+		this.addDrawableChild(issuesButton);
+		this.addSelectableChild(this.descriptionListWidget);
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen)));
 		this.setInitialFocus(this.searchBox);
 
 		init = true;
