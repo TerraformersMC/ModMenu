@@ -99,7 +99,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				this.iconLocation = UNKNOWN_ICON;
 			}
 		}
-		RenderSystem._setShaderTexture(0, this.iconLocation);
+		RenderSystem.setShaderTexture(0, this.iconLocation);
 	}
 
 	public int getXOffset() {

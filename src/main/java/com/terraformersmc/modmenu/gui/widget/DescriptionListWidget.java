@@ -242,19 +242,20 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				q = this.top;
 			}
 
-			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-			bufferBuilder.vertex(scrollbarStartX, this.bottom, 0.0D).texture(0.0F, 1.0F).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, this.bottom, 0.0D).texture(1.0F, 1.0F).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, this.top, 0.0D).texture(1.0F, 0.0F).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, this.top, 0.0D).texture(0.0F, 0.0F).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0D).texture(0.0F, 1.0F).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0D).texture(1.0F, 1.0F).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, q, 0.0D).texture(1.0F, 0.0F).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).texture(0.0F, 0.0F).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q + p - 1, 0.0D).texture(0.0F, 1.0F).color(192, 192, 192, 255).next();
-			bufferBuilder.vertex(scrollbarEndX - 1, q + p - 1, 0.0D).texture(1.0F, 1.0F).color(192, 192, 192, 255).next();
-			bufferBuilder.vertex(scrollbarEndX - 1, q, 0.0D).texture(1.0F, 0.0F).color(192, 192, 192, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).texture(0.0F, 0.0F).color(192, 192, 192, 255).next();
+			RenderSystem.setShader(GameRenderer::getPositionColorShader);
+			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+			bufferBuilder.vertex(scrollbarStartX, this.bottom, 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, this.bottom, 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, this.top, 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, this.top, 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0D).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0D).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, q, 0.0D).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).color(128, 128, 128, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q + p - 1, 0.0D).color(192, 192, 192, 255).next();
+			bufferBuilder.vertex(scrollbarEndX - 1, q + p - 1, 0.0D).color(192, 192, 192, 255).next();
+			bufferBuilder.vertex(scrollbarEndX - 1, q, 0.0D).color(192, 192, 192, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).color(192, 192, 192, 255).next();
 			tessellator.draw();
 		}
 	}
