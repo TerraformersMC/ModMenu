@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         # Use these Java versions
-        java: [11]
+        java: [16]
         # and run on both Linux and Windows
         os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
