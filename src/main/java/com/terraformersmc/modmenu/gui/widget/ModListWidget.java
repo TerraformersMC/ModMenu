@@ -78,12 +78,12 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	public void setSelected(ModListEntry entry) {
 		super.setSelected(entry);
 		selectedModId = entry.getMod().getId();
-		parent.updateSelectedEntry(getSelected());
+		parent.updateSelectedEntry(getSelectedOrNull());
 	}
 
 	@Override
 	protected boolean isSelectedEntry(int index) {
-		ModListEntry selected = getSelected();
+		ModListEntry selected = getSelectedOrNull();
 		return selected != null && selected.getMod().getId().equals(getEntry(index).getMod().getId());
 	}
 
@@ -168,14 +168,14 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			}
 		}
 
-		if (parent.getSelectedEntry() != null && !children().isEmpty() || this.getSelected() != null && getSelected().getMod() != parent.getSelectedEntry().getMod()) {
+		if (parent.getSelectedEntry() != null && !children().isEmpty() || this.getSelectedOrNull() != null && getSelectedOrNull().getMod() != parent.getSelectedEntry().getMod()) {
 			for (ModListEntry entry : children()) {
 				if (entry.getMod().equals(parent.getSelectedEntry().getMod())) {
 					setSelected(entry);
 				}
 			}
 		} else {
-			if (getSelected() == null && !children().isEmpty() && getEntry(0) != null) {
+			if (getSelectedOrNull() == null && !children().isEmpty() && getEntry(0) != null) {
 				setSelected(getEntry(0));
 			}
 		}

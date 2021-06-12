@@ -45,7 +45,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public DescriptionEntry getSelected() {
+	public DescriptionEntry getSelectedOrNull() {
 		return null;
 	}
 
