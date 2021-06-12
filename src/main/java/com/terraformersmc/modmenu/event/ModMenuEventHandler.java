@@ -6,7 +6,6 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
-import com.terraformersmc.modmenu.mixin.ScreenAccessor;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
@@ -36,27 +35,19 @@ public class ModMenuEventHandler {
 	}
 
 	private static void afterTitleScreenInit(Screen screen) {
-		// TODO someone fix this, I don't have time
-		// TODO this is such a hack, fabric api's screen list is incorrect, it never updated to the new system - shedaniel
-		afterTitleScreenInit(screen, ((ScreenAccessor) screen).getSelectables(), false);
-		afterTitleScreenInit(screen, ((ScreenAccessor) screen).getDrawables(), false);
-		afterTitleScreenInit(screen, ((ScreenAccessor) screen).getChildren(), true);
-	}
-
-	private static <T> void afterTitleScreenInit(Screen screen, List<T> buttons, boolean shift) {
+		final List<ClickableWidget> buttons = Screens.getButtons(screen);
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;
 			final int buttonsY = screen.height / 4 + 48;
 			for (int i = 0; i < buttons.size(); i++) {
-				T widget = buttons.get(i);
-				if (!(widget instanceof ClickableWidget button)) continue;
-				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC && shift) {
+				ClickableWidget button = buttons.get(i);
+				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					shiftButtons(button, modsButtonIndex == -1, spacing);
 				}
 				if (buttonHasText(button, "menu.online")) {
 					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS) {
-						buttons.set(i, (T) new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 							button.setWidth(98);
@@ -67,40 +58,32 @@ public class ModMenuEventHandler {
 			}
 			if (modsButtonIndex != -1) {
 				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
-					buttons.add(modsButtonIndex, (T) new ModMenuButtonWidget(screen.width / 2 - 100, buttonsY + spacing * 3 - (spacing / 2), 200, 20, ModMenuApi.createModsButtonText(), screen));
+					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 100, buttonsY + spacing * 3 - (spacing / 2), 200, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-					buttons.add(modsButtonIndex, (T) new ModMenuButtonWidget(screen.width / 2 + 2, buttonsY + spacing * 2, 98, 20, ModMenuApi.createModsButtonText(), screen));
+					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 + 2, buttonsY + spacing * 2, 98, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, (T) new ModMenuTexturedButtonWidget(screen.width / 2 + 104, buttonsY + spacing * 2, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 104, buttonsY + spacing * 2, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
 				}
 			}
 		}
 	}
 
 	private static void afterGameMenuScreenInit(Screen screen) {
-		// TODO someone fix this, I don't have time
-		// TODO this is such a hack, fabric api's screen list is incorrect, it never updated to the new system - shedaniel
-		afterGameMenuScreenInit(screen, ((ScreenAccessor) screen).getSelectables(), false);
-		afterGameMenuScreenInit(screen, ((ScreenAccessor) screen).getDrawables(), false);
-		afterGameMenuScreenInit(screen, ((ScreenAccessor) screen).getChildren(), true);
-	}
-
-	private static <T> void afterGameMenuScreenInit(Screen screen, List<T> buttons, boolean shift) {
+		final List<ClickableWidget> buttons = Screens.getButtons(screen);
 		if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;
 			final int buttonsY = screen.height / 4 + 8;
 			ModMenuConfig.ModsButtonStyle style = ModMenuConfig.MODS_BUTTON_STYLE.getValue().forGameMenu();
 			for (int i = 0; i < buttons.size(); i++) {
-				T widget = buttons.get(i);
-				if (!(widget instanceof ClickableWidget button)) continue;
-				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC && shift) {
+				ClickableWidget button = buttons.get(i);
+				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					shiftButtons(button, modsButtonIndex == -1, spacing);
 				}
 				if (buttonHasText(button, "menu.reportBugs")) {
 					modsButtonIndex = i + 1;
 					if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
-						buttons.set(i, (T) new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						modsButtonIndex = i + 1;
 					}
@@ -108,9 +91,9 @@ public class ModMenuEventHandler {
 			}
 			if (modsButtonIndex != -1) {
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
-					buttons.add(modsButtonIndex, (T) new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing * 3 - (spacing / 2), 204, 20, ModMenuApi.createModsButtonText(), screen));
+					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing * 3 - (spacing / 2), 204, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, (T) new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
 				}
 			}
 		}

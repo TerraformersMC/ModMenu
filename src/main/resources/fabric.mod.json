@@ -21,7 +21,7 @@
   },
   "depends": {
     "fabric-resource-loader-v0": "*",
-    "fabric-screen-api-v1": "*",
+    "fabric-screen-api-v1": ">=1.0.4",
     "fabricloader": ">=0.11.3",
     "minecraft": ">=1.17-"
   },
@@ -80,7 +80,8 @@
     "Dolphin 2.1",
     "ENDERZOMBI102",
     "anatom3000",
-    "OroArmor"
+    "OroArmor",
+    "jackassmc"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
