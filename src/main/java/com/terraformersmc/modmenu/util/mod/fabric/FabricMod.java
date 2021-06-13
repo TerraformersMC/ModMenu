@@ -9,6 +9,7 @@ import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
+import jdk.nio.zipfs.ZipFileSystemProvider;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
@@ -17,11 +18,13 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,6 +45,10 @@ public class FabricMod implements Mod {
 	public FabricMod(ModContainer modContainer) {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
+
+		String modFileName = this.container instanceof net.fabricmc.loader.ModContainer ?
+			FilenameUtils.getBaseName(((net.fabricmc.loader.ModContainer) this.container).getOriginUrl().toString()) :
+			null;
 
 		/* Load modern mod menu custom value data */
 		boolean usesModernParent = false;
@@ -83,7 +90,9 @@ public class FabricMod implements Mod {
 								.orElseThrow(() -> new RuntimeException("Update provider not found."));
 						ModUpdateData tempUpdateData = new ModUpdateData(
 								provider,
+								modFileName,
 								CustomValueUtil.getString("projectId", updatesObj),
+								CustomValueUtil.getString("projectSlug", updatesObj),
 								CustomValueUtil.getString("repository", updatesObj),
 								CustomValueUtil.getString("group", updatesObj),
 								CustomValueUtil.getString("artifact", updatesObj),
@@ -106,6 +115,8 @@ public class FabricMod implements Mod {
 		if(this.getId().equals("fabricloader")) {
 			updateData = new ModUpdateData(
 					ModUpdateProvider.fromKey("loader").get(),
+					modFileName,
+					Optional.empty(),
 					Optional.empty(),
 					Optional.empty(),
 					Optional.empty(),
@@ -416,7 +427,9 @@ public class FabricMod implements Mod {
 
 	public static class ModUpdateData {
 		private final ModUpdateProvider provider;
+		private final String modFileName;
 		private final Optional<String> projectId;
+		private final Optional<String> projectSlug;
 		private final Optional<String> repository;
 		private final Optional<String> group;
 		private final Optional<String> artifact;
@@ -424,14 +437,18 @@ public class FabricMod implements Mod {
 		private final Optional<String> versionRegEx;
 
 		public ModUpdateData(ModUpdateProvider provider,
+							 String modFileName,
 							 Optional<String> projectId,
+							 Optional<String> projectSlug,
 							 Optional<String> repository,
 							 Optional<String> group,
 							 Optional<String> artifact,
 							 Optional<Boolean> allowPrerelease,
 							 Optional<String> versionRegEx) {
 			this.provider = provider;
+			this.modFileName = modFileName;
 			this.projectId = projectId;
+			this.projectSlug = projectSlug;
 			this.repository = repository;
 			this.group = group;
 			this.artifact = artifact;
@@ -443,8 +460,16 @@ public class FabricMod implements Mod {
 			return provider;
 		}
 
+		public String getModFileName() {
+			return modFileName;
+		}
+
 		public Optional<String> getProjectId() {
 			return projectId;
+		}
+
+		public Optional<String> getProjectSlug() {
+			return projectSlug;
 		}
 
 		public Optional<String> getRepository() {

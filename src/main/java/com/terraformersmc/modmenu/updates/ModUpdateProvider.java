@@ -1,9 +1,6 @@
 package com.terraformersmc.modmenu.updates;
 
-import com.terraformersmc.modmenu.updates.providers.GithubUpdateProvider;
-import com.terraformersmc.modmenu.updates.providers.LoaderMetaUpdateProvider;
-import com.terraformersmc.modmenu.updates.providers.MavenUpdateProvider;
-import com.terraformersmc.modmenu.updates.providers.ModrinthUpdateProvider;
+import com.terraformersmc.modmenu.updates.providers.*;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import net.minecraft.MinecraftVersion;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -37,6 +34,7 @@ public abstract class ModUpdateProvider {
 		ModUpdateProvider.PROVIDERS.put("github", new GithubUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("maven", new MavenUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("loader", new LoaderMetaUpdateProvider(gameVersion));
+		ModUpdateProvider.PROVIDERS.put("curseforge", new CurseforgeUpdateProvider(gameVersion));
 	}
 
 	public static Optional<ModUpdateProvider> fromKey(String provider) {
