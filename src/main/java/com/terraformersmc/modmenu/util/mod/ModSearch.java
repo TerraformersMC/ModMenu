@@ -33,7 +33,7 @@ public class ModSearch {
 				|| ("patchwork forge".contains(query) && mod.getBadges().contains(Mod.Badge.PATCHWORK_FORGE)) // Search for patchwork mods
 				|| ("deprecated".contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED)) // Search for deprecated mods
 				|| ("clientside client-side".contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT)) // Search for clientside mods
-				|| ("configurations configs configures configurable".contains(query) && screen.getConfigScreenCache().get(modId) != null) // Search for mods that can be configured
+				|| ("configurations configs configures configurable".contains(query) && screen.getModHasConfigScreen().get(modId)) // Search for mods that can be configured
 		) {
 			return true;
 		}
