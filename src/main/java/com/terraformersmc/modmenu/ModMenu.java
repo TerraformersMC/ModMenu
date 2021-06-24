@@ -26,8 +26,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
@@ -39,12 +42,22 @@ public class ModMenu implements ClientModInitializer {
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
 
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
+	private static List<Supplier<Map<String, ConfigScreenFactory<?>>>> dynamicScreenFactories = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
 		ConfigScreenFactory<?> factory = configScreenFactories.get(modid);
-		return factory != null ? factory.create(menuScreen) : null;
+		if (factory != null) {
+			return factory.create(menuScreen);
+		}
+		for (Supplier<Map<String, ConfigScreenFactory<?>>> dynamicFactoriesSupplier : dynamicScreenFactories) {
+			factory = dynamicFactoriesSupplier.get().get(modid);
+			if (factory != null) {
+				return factory.create(menuScreen);
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -60,7 +73,7 @@ public class ModMenu implements ClientModInitializer {
 					/* Current API */
 					ModMenuApi api = (ModMenuApi) marker;
 					factories.put(modId, api.getModConfigScreenFactory());
-					api.getProvidedConfigScreenFactories().forEach(factories::putIfAbsent);
+					dynamicScreenFactories.add(api::getProvidedConfigScreenFactories);
 				} else if (marker instanceof io.github.prospector.modmenu.api.ModMenuApi) {
 					/* Legacy API */
 					io.github.prospector.modmenu.api.ModMenuApi api = (io.github.prospector.modmenu.api.ModMenuApi) entrypoint.getEntrypoint();
@@ -73,7 +86,7 @@ public class ModMenu implements ClientModInitializer {
 				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
 			}
 		});
-		configScreenFactories = new ImmutableMap.Builder<String, ConfigScreenFactory<?>>().putAll(factories).build();
+		configScreenFactories = ImmutableMap.copyOf(factories);
 
 
 		// Fill mods map

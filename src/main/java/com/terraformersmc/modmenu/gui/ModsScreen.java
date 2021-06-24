@@ -75,7 +75,7 @@ public class ModsScreen extends Screen {
 	private int searchRowWidth;
 	public final Set<String> showModChildren = new HashSet<>();
 
-	public final Map<String, Screen> configScreenCache = new HashMap<>();
+	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
 
 	public ModsScreen(Screen previousScreen) {
 		super(new TranslatableText("modmenu.title"));
@@ -114,10 +114,10 @@ public class ModsScreen extends Screen {
 		modList.reloadFilters();
 
 		for (Mod mod : ModMenu.MODS.values()) {
-			if (!configScreenCache.containsKey(mod.getId())) {
+			if (!modHasConfigScreen.containsKey(mod.getId())) {
 				try {
 					Screen configScreen = ModMenu.getConfigScreen(mod.getId(), this);
-					configScreenCache.put(mod.getId(), configScreen);
+					modHasConfigScreen.put(mod.getId(), configScreen != null);
 				} catch (Throwable e) {
 					LOGGER.error("Error from mod '" + mod.getId() + "'", e);
 				}
@@ -128,9 +128,9 @@ public class ModsScreen extends Screen {
 		this.descriptionListWidget.setLeftPos(rightPaneX);
 		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String modid = Objects.requireNonNull(selected).getMod().getId();
-			final Screen screen = configScreenCache.get(modid);
-			if (screen != null) {
-				client.openScreen(screen);
+			if (modHasConfigScreen.get(modid)) {
+				Screen configScreen = ModMenu.getConfigScreen(modid, this);
+				client.openScreen(configScreen);
 			} else {
 				button.active = false;
 			}
@@ -147,7 +147,7 @@ public class ModsScreen extends Screen {
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				if (selected != null) {
 					String modid = selected.getMod().getId();
-					active = configScreenCache.get(modid) != null;
+					active = modHasConfigScreen.get(modid);
 				} else {
 					active = false;
 				}
@@ -486,7 +486,7 @@ public class ModsScreen extends Screen {
 		}
 	}
 
-	public Map<String, Screen> getConfigScreenCache() {
-		return configScreenCache;
+	public Map<String, Boolean> getModHasConfigScreen() {
+		return modHasConfigScreen;
 	}
 }

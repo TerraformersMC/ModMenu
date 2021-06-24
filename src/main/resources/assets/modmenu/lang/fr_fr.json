@@ -2,7 +2,7 @@
   "modmenu.title": "Mods",
   "modmenu.descriptionTranslation.modmenu": "Ajoutez un menu de mods pour voir votre liste de mods installés.",
   "modmenu.loaded": "(%s chargés)",
-  "modmenu.config": "Modifier la config",
+  "modmenu.config": "Modifier la configuration",
   "modmenu.modsFolder": "Ouvrir le dossier des mods",
   "modmenu.configsFolder": "Ouvrir le dossier des configs",
   "modmenu.configure": "Configurer...",
@@ -16,7 +16,7 @@
   "modmenu.library": "Librairie",
   "modmenu.toggleFilterOptions": "Basculer les options de filtre",
 
-  "option.modmenu.show_libraries": "Librairies : %s",
+  "option.modmenu.show_libraries": "Bibliothèques : %s",
   "option.modmenu.show_libraries.true": "montrées",
   "option.modmenu.show_libraries.false": "cachées",
   "modmenu.showingMods.a": "%s mods affichés"
