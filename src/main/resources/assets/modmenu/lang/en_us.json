@@ -86,7 +86,7 @@
   "option.modmenu.count_hidden_mods": "Hidden Mods: %s",
   "option.modmenu.count_hidden_mods.true": "Counted",
   "option.modmenu.count_hidden_mods.false": "Not Counted",
-  "option.modmenu.mod_count_location": "Mod Count: %s",
+  "option.modmenu.mod_count_location": "Mod Counter: %s",
   "option.modmenu.mod_count_location.title_screen": "Title Corner",
   "option.modmenu.mod_count_location.mods_button": "Mods Button",
   "option.modmenu.mod_count_location.title_screen_and_mods_button": "Both",
