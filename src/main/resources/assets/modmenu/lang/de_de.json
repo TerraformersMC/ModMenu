@@ -40,7 +40,7 @@
   "option.modmenu.show_libraries": "Bibliotheken: %s",
   "option.modmenu.show_libraries.true": "Zeigen",
   "option.modmenu.show_libraries.false": "Verstecken",
-  "option.modmenu.hide_config_buttons": "Config Buttons: %s",
+  "option.modmenu.hide_config_buttons": "Einstellungsschaltfläche: %s",
   "option.modmenu.hide_config_buttons.true": "Versteckt",
   "option.modmenu.hide_config_buttons.false": "Angezeigt",
   "option.modmenu.hide_badges": "Mod Label: %s",
