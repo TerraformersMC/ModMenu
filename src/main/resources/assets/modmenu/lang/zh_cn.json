@@ -49,7 +49,7 @@
   "modmenu.crowdin": "Crowdin",
   "modmenu.kofi": "Ko-fi",
   "modmenu.mods.1": "（已加载%s个模组）",
-  "modmenu.mods.69.nice": " （%s 个模组……Nice）",
+  "modmenu.mods.69.secret": " （%s 个模组……Nice）",
   "modmenu.mods.a": "（已加载%s个模组）",
 
   "modmenu.options": "模组菜单选项",
