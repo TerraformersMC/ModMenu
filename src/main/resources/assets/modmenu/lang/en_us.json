@@ -2,6 +2,8 @@
   "modmenu.title": "Mods",
   "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods you have installed.",
   "modmenu.loaded": "(%s Loaded)",
+  "modmenu.loaded.69.secret": "(%s Loaded...nice)",
+  "modmenu.loaded.420.secret": "(%s Loaded...blaze it)",
   "modmenu.loaded.short": "(%s)",
   "modmenu.config": "Edit Config",
   "modmenu.modsFolder": "Open Mods Folder",
@@ -49,7 +51,8 @@
   "modmenu.crowdin": "Crowdin",
   "modmenu.kofi": "Ko-fi",
   "modmenu.mods.1": " (%s Mod)",
-  "modmenu.mods.69.nice": " (%s Mods...nice)",
+  "modmenu.mods.69.secret": " (%s Mods...nice)",
+  "modmenu.mods.420.secret": " (%s Mods...blaze it)",
   "modmenu.mods.a": " (%s Mods)",
 
   "modmenu.options": "Mod Menu Options",
