@@ -24,14 +24,12 @@ public class MixinTitleScreen {
 	private String onRender(String string) {
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnTitleScreen()) {
 			String count = ModMenu.getDisplayedModCount();
-			String newString = I18n.translate("modmenu.mods.a", count);
-			String countKey = "modmenu.mods." + count;
-			if ("69".equals(count) && ModMenuConfig.EASTER_EGGS.getValue()) {
-				newString = I18n.translate(countKey + ".nice", count);
-			} else if (I18n.hasTranslation(countKey)) {
-				newString = I18n.translate(countKey, count);
+			String specificKey = "modmenu.mods." + count;
+			String replacementKey = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.mods.a";
+			if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
+				replacementKey = specificKey + ".secret";
 			}
-			return string.replace(I18n.translate(I18n.translate("menu.modded")), newString);
+			return string.replace(I18n.translate(I18n.translate("menu.modded")), I18n.translate(replacementKey, count));
 		}
 		return string;
 	}

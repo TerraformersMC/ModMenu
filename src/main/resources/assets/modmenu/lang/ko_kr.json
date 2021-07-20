@@ -49,7 +49,7 @@
   "modmenu.crowdin": "Crowdin",
   "modmenu.kofi": "Ko-fi",
   "modmenu.mods.1": " (모드 %s개)",
-  "modmenu.mods.69.nice": " (모드 %s개...nice)",
+  "modmenu.mods.69.secret": " (모드 %s개...nice)",
   "modmenu.mods.a": " (모드 %s개)",
 
   "modmenu.options": "모드 메뉴 옵션",

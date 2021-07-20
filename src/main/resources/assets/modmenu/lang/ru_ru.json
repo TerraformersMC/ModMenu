@@ -49,7 +49,7 @@
   "modmenu.crowdin": "Crowdin",
   "modmenu.kofi": "Ko-fi",
   "modmenu.mods.1": " (%s мод)",
-  "modmenu.mods.69.nice": " (%s модов... прикольно ☺)",
+  "modmenu.mods.69.secret": " (%s модов... прикольно ☺)",
   "modmenu.mods.a": " (%s модов)",
 
   "modmenu.options": "Настройки Mod Menu",

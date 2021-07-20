@@ -19,6 +19,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -138,10 +139,16 @@ public class ModMenu implements ClientModInitializer {
 	public static Text createModsButtonText() {
 		TranslatableText modsText = new TranslatableText("modmenu.title");
 		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
+			String count = ModMenu.getDisplayedModCount();
 			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", ModMenu.getDisplayedModCount()));
+				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", count));
 			} else {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded", ModMenu.getDisplayedModCount()));
+				String specificKey = "modmenu.loaded." + count;
+				String key = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.loaded";
+				if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
+					key = specificKey + ".secret";
+				}
+				modsText.append(new LiteralText(" ")).append(new TranslatableText(key, count));
 			}
 		}
 		return modsText;

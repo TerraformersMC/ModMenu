@@ -38,7 +38,7 @@
   "modmenu.source": "Kaynak",
   "modmenu.discord": "Discord",
   "modmenu.mods.1": " (%s Mod)",
-  "modmenu.mods.69.nice": " (%s Mod...güzel)",
+  "modmenu.mods.69.secret": " (%s Mod...güzel)",
   "modmenu.mods.a": " (%s Mod)",
 
   "modmenu.options": "Mod Menü Ayarları",
