@@ -1,9 +1,16 @@
 {
-  "modmenu.title": "Mods",
-  "modmenu.descriptionTranslation.modmenu": "Fügt ein Mod-Menü hinzu, dass die installierten Mods auflistet",
-  "modmenu.loaded": "(%s geladen)",
-  "modmenu.config": "Ändere Konfiguration",
-  "modmenu.modsFolder": "Öffne Mods-Ordner",
-  "modmenu.configsFolder": "Öffne Konfigurationen-Ordner",
-  "modmenu.configure": "Konfiguriere..."
+    "modmenu.title": "Mods",
+    "modmenu.descriptionTranslation.modmenu": "Fügt ein Mod-Menü hinzu, dass die installierten Mods auflistet",
+    "modmenu.loaded": "(%s geladen)",
+    "modmenu.config": "Ändere Konfiguration",
+    "modmenu.modsFolder": "Öffne Mods-Ordner",
+    "modmenu.configsFolder": "Öffne Konfigurationen-Ordner",
+    "modmenu.configure": "Konfiguriere …",
+    "modmenu.library": "Bibliothek",
+    "modmenu.clientsideOnly": "Client",
+    "modmenu.search": "Nach Mods suchen",
+    "modmenu.authorPrefix": "Von %s",
+    "modmenu.issues": "Probleme",
+    "modmenu.website": "Website",
+    "modmenu.modIdToolTip": "Mod-ID: %s"
 }
