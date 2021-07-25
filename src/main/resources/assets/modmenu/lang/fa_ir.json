@@ -2,6 +2,8 @@
   "modmenu.title": "ماد ها",
   "modmenu.descriptionTranslation.modmenu": "فهرستی اضافه می کند که ماد ها را نشان می دهد.",
   "modmenu.loaded": "(%s ماد در حال اجرا)",
+  "modmenu.loaded.69.secret": "(%s ماد در حال اجرا...nice)",
+  "modmenu.loaded.420.secret": "(%s ماد در حال اجرا...blaze it)",
   "modmenu.loaded.short": "(%s)",
   "modmenu.config": "ویرایش تنظیمات",
   "modmenu.modsFolder": "باز کردن پوشۀ ماد ها",
@@ -50,6 +52,7 @@
   "modmenu.kofi": "کوفی (Ko-fi)",
   "modmenu.mods.1": " (%s ماد)",
   "modmenu.mods.69.secret": " (%s ماد...nice)",
+  "modmenu.mods.420.secret": " (%s ماد...blaze it)",
   "modmenu.mods.a": " (%s ماد)",
 
   "modmenu.options": "تنظیمات منوی ماد ها",
