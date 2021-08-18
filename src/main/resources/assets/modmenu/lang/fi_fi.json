@@ -84,21 +84,12 @@
     "option.modmenu.mods_button_style.replace_realms": "Korvaa Realmsin",
     "option.modmenu.mods_button_style.shrink": "Vieressä",
     "option.modmenu.mods_button_style.icon": "Kuvake",
-    "modmenu.crowdin": "",
     "modmenu.github_releases": "",
-    "modmenu.twitch": "",
     "modmenu.wiki": "",
-    "modmenu.discord": "",
     "modmenu.youtube": "",
-    "modmenu.curseforge": "",
     "modmenu.kofi": "",
-    "modmenu.loaded.420.secret": "",
     "modmenu.twitter": "",
-    "modmenu.modrinth": "",
     "modmenu.minecraft": "",
-    "modmenu.forge": "",
     "modmenu.mods.420.secret": "",
-    "modmenu.reddit": "",
-    "modmenu.loaded.69.secret": "",
-    "modmenu.patreon": ""
+    "modmenu.loaded.69.secret": ""
 }
