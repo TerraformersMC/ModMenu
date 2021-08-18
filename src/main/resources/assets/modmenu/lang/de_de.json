@@ -13,15 +13,9 @@
     "modmenu.issues": "Probleme",
     "modmenu.website": "Website",
     "modmenu.modIdToolTip": "Mod-ID: %s",
-    "option.modmenu.count_children": "",
     "option.modmenu.hide_mod_links.false": "",
-    "option.modmenu.count_hidden_mods.true": "",
     "option.modmenu.mods_button_style.replace_realms": "",
-    "modmenu.forge": "",
     "option.modmenu.hide_mod_credits.true": "",
-    "option.modmenu.hide_mod_links.true": "",
     "modmenu.mods.69.secret": "",
-    "option.modmenu.mods_button_style.icon": "",
-    "modmenu.mods.420.secret": "",
-    "modmenu.showingMods.1": ""
+    "modmenu.mods.420.secret": ""
 }

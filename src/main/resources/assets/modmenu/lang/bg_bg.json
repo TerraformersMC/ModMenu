@@ -9,15 +9,9 @@
     "modmenu.website": "Уебсайт",
     "modmenu.issues": "Проблеми",
     "modmenu.authorPrefix": "От %s",
-    "option.modmenu.show_libraries.true": "",
     "modmenu.license": "",
-    "option.modmenu.hide_mod_links.true": "",
     "option.modmenu.hide_mod_links": "",
-    "modmenu.options": "",
     "modmenu.github_releases": "",
-    "modmenu.curseforge": "",
     "option.modmenu.mod_count_location.none": "",
-    "modmenu.patreon": "",
-    "modmenu.links": "",
-    "modmenu.dropSuccessful.line1": ""
+    "modmenu.links": ""
 }

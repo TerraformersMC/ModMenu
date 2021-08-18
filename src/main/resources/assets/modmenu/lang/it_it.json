@@ -34,12 +34,8 @@
     "option.modmenu.show_libraries": "Librerie",
     "option.modmenu.show_libraries.true": "Visualizzate",
     "option.modmenu.show_libraries.false": "Nascoste",
-    "option.modmenu.compact_list.false": "",
     "option.modmenu.mod_count_location.title_screen_and_mods_button": "",
-    "option.modmenu.easter_eggs.true": "",
     "option.modmenu.hide_mod_credits": "",
-    "modmenu.discord": "",
     "modmenu.patreon": "",
-    "option.modmenu.mod_count_location.mods_button": "",
     "option.modmenu.hide_config_buttons": ""
 }

@@ -1,15 +1,9 @@
 {
     "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods you have installed",
-    "option.modmenu.easter_eggs.false": "",
     "modmenu.showingModsLibraries.1.a": "",
-    "modmenu.reddit": "",
     "modmenu.links": "",
-    "modmenu.mods.a": "",
     "modmenu.credits": "",
-    "modmenu.dropInfo.2": "",
     "option.modmenu.hide_badges.false": "",
-    "option.modmenu.mod_count_location": "",
     "option.modmenu.count_libraries.true": "",
-    "option.modmenu.mods_button_style.classic": "",
     "modmenu.options": ""
 }

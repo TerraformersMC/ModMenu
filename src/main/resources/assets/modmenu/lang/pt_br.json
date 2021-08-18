@@ -10,15 +10,9 @@
     "modmenu.website": "Website",
     "modmenu.issues": "Problemas",
     "modmenu.authorPrefix": "Por %s",
-    "option.modmenu.sorting.descending": "",
     "modmenu.deprecated": "",
-    "modmenu.modrinth": "",
     "modmenu.dropInfo.2": "",
-    "option.modmenu.compact_list": "",
     "modmenu.options": "",
-    "modmenu.dropSuccessful.line1": "",
     "modmenu.library": "",
-    "option.modmenu.show_libraries": "",
-    "modmenu.discord": "",
-    "modmenu.kofi": ""
+    "modmenu.discord": ""
 }
