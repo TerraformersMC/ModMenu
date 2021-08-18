@@ -1,6 +1,4 @@
 {
     "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods you have installed",
-    "modmenu.links": "",
-    "option.modmenu.hide_badges.false": "",
-    "modmenu.options": ""
+    "option.modmenu.hide_badges.false": ""
 }

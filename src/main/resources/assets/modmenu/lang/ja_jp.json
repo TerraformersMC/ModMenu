@@ -21,6 +21,5 @@
     "option.modmenu.show_libraries": "前提mod",
     "option.modmenu.show_libraries.true": "表示",
     "option.modmenu.show_libraries.false": "非表示",
-    "option.modmenu.compact_list.false": "",
     "option.modmenu.count_libraries.false": ""
 }
