@@ -33,6 +33,5 @@
     "option.modmenu.sorting.descending": "Z-A",
     "option.modmenu.show_libraries": "Librerie",
     "option.modmenu.show_libraries.true": "Visualizzate",
-    "option.modmenu.show_libraries.false": "Nascoste",
-    "option.modmenu.hide_config_buttons": ""
+    "option.modmenu.show_libraries.false": "Nascoste"
 }

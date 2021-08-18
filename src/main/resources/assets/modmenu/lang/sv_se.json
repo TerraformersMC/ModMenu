@@ -31,6 +31,5 @@
     "option.modmenu.sorting.descending": "Z-A",
     "option.modmenu.show_libraries": "Tillägg",
     "option.modmenu.show_libraries.true": "Visas",
-    "option.modmenu.show_libraries.false": "Gömd",
-    "modmenu.source": ""
+    "option.modmenu.show_libraries.false": "Gömd"
 }

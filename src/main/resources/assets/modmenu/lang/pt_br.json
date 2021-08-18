@@ -9,6 +9,5 @@
     "modmenu.modIdToolTip": "Mod ID: %s",
     "modmenu.website": "Website",
     "modmenu.issues": "Problemas",
-    "modmenu.authorPrefix": "Por %s",
-    "modmenu.library": ""
+    "modmenu.authorPrefix": "Por %s"
 }

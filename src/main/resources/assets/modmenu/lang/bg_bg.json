@@ -8,6 +8,5 @@
     "modmenu.modIdToolTip": "ID на модификацията: %s",
     "modmenu.website": "Уебсайт",
     "modmenu.issues": "Проблеми",
-    "modmenu.authorPrefix": "От %s",
-    "option.modmenu.mod_count_location.none": ""
+    "modmenu.authorPrefix": "От %s"
 }

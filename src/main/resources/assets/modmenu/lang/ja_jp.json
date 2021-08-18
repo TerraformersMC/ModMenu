@@ -20,6 +20,5 @@
     "option.modmenu.sorting.descending": "降順(Z-A)",
     "option.modmenu.show_libraries": "前提mod",
     "option.modmenu.show_libraries.true": "表示",
-    "option.modmenu.show_libraries.false": "非表示",
-    "option.modmenu.count_libraries.false": ""
+    "option.modmenu.show_libraries.false": "非表示"
 }
