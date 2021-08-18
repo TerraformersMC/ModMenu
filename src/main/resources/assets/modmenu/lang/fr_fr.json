@@ -87,11 +87,7 @@
     "modmenu.showingLibraries.a": "%s bibliothèques affichées",
     "modmenu.showingMods.1": "%s mod affiché",
     "modmenu.loaded.short": "(%s)",
-    "option.modmenu.mods_button_style.classic": "",
     "option.modmenu.count_children": "",
-    "option.modmenu.hide_mod_credits": "",
     "option.modmenu.compact_list": "",
-    "option.modmenu.hide_config_buttons": "",
-    "modmenu.mods.420.secret": "",
-    "modmenu.loaded.420.secret": ""
+    "modmenu.mods.420.secret": ""
 }
