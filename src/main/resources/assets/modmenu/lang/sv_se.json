@@ -32,21 +32,12 @@
     "option.modmenu.show_libraries": "Tillägg",
     "option.modmenu.show_libraries.true": "Visas",
     "option.modmenu.show_libraries.false": "Gömd",
-    "option.modmenu.count_hidden_mods": "",
     "option.modmenu.mod_count_location.title_screen_and_mods_button": "",
-    "modmenu.youtube": "",
     "option.modmenu.mods_button_style": "",
-    "option.modmenu.compact_list": "",
     "option.modmenu.compact_list.false": "",
-    "modmenu.options": "",
     "option.modmenu.hide_mod_credits.false": "",
-    "option.modmenu.hide_badges.true": "",
     "option.modmenu.mod_count_location.title_screen": "",
-    "option.modmenu.hide_mod_license.true": "",
     "option.modmenu.hide_mod_credits.true": "",
-    "option.modmenu.mods_button_style.shrink": "",
     "option.modmenu.hide_config_buttons.false": "",
-    "modmenu.crowdin": "",
-    "modmenu.source": "",
-    "modmenu.credits": ""
+    "modmenu.source": ""
 }

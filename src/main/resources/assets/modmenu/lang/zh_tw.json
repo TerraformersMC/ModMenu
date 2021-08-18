@@ -30,21 +30,12 @@
     "option.modmenu.sorting.descending": "降冪",
     "option.modmenu.show_libraries.true": "已顯示",
     "option.modmenu.show_libraries.false": "已隱藏",
-    "option.modmenu.hide_mod_credits.true": "",
     "modmenu.minecraft": "",
-    "modmenu.dropInfo.1": "",
     "option.modmenu.hide_config_buttons.false": "",
-    "option.modmenu.mods_button_style": "",
     "option.modmenu.compact_list": "",
-    "option.modmenu.hide_config_buttons": "",
     "modmenu.forge": "",
-    "option.modmenu.hide_badges": "",
     "option.modmenu.hide_mod_license.false": "",
-    "option.modmenu.hide_mod_links.true": "",
     "modmenu.credits": "",
-    "option.modmenu.mods_button_style.icon": "",
     "option.modmenu.easter_eggs.true": "",
-    "option.modmenu.mod_count_location.mods_button": "",
-    "modmenu.mods.a": "",
-    "modmenu.youtube": ""
+    "modmenu.mods.a": ""
 }
