@@ -34,8 +34,6 @@
     "option.modmenu.show_libraries": "Librerie",
     "option.modmenu.show_libraries.true": "Visualizzate",
     "option.modmenu.show_libraries.false": "Nascoste",
-    "option.modmenu.mod_count_location.title_screen_and_mods_button": "",
     "option.modmenu.hide_mod_credits": "",
-    "modmenu.patreon": "",
     "option.modmenu.hide_config_buttons": ""
 }

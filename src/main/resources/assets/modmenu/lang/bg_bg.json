@@ -9,9 +9,6 @@
     "modmenu.website": "Уебсайт",
     "modmenu.issues": "Проблеми",
     "modmenu.authorPrefix": "От %s",
-    "modmenu.license": "",
     "option.modmenu.hide_mod_links": "",
-    "modmenu.github_releases": "",
-    "option.modmenu.mod_count_location.none": "",
-    "modmenu.links": ""
+    "option.modmenu.mod_count_location.none": ""
 }

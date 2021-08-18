@@ -32,8 +32,6 @@
     "option.modmenu.show_libraries": "Tillägg",
     "option.modmenu.show_libraries.true": "Visas",
     "option.modmenu.show_libraries.false": "Gömd",
-    "option.modmenu.mods_button_style": "",
     "option.modmenu.hide_mod_credits.false": "",
-    "option.modmenu.hide_mod_credits.true": "",
     "modmenu.source": ""
 }

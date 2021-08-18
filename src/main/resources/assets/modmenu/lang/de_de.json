@@ -13,9 +13,6 @@
     "modmenu.issues": "Probleme",
     "modmenu.website": "Website",
     "modmenu.modIdToolTip": "Mod-ID: %s",
-    "option.modmenu.hide_mod_links.false": "",
     "option.modmenu.mods_button_style.replace_realms": "",
-    "option.modmenu.hide_mod_credits.true": "",
-    "modmenu.mods.69.secret": "",
-    "modmenu.mods.420.secret": ""
+    "modmenu.mods.69.secret": ""
 }

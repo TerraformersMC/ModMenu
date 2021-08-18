@@ -34,8 +34,6 @@
     "option.modmenu.show_libraries": "%s Jars o' Knowledge",
     "option.modmenu.show_libraries.true": "Revealing",
     "option.modmenu.show_libraries.false": "Burying",
-    "option.modmenu.mod_count_location.title_screen_and_mods_button": "",
     "modmenu.source": "",
-    "modmenu.license": "",
     "modmenu.youtube": ""
 }

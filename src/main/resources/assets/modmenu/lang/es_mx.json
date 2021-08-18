@@ -34,8 +34,6 @@
     "option.modmenu.show_libraries": "Librerías",
     "option.modmenu.show_libraries.true": "Mostrar",
     "option.modmenu.show_libraries.false": "Ocultar",
-    "option.modmenu.count_children.true": "",
     "option.modmenu.easter_eggs.false": "",
-    "option.modmenu.compact_list.false": "",
     "modmenu.mods.420.secret": ""
 }

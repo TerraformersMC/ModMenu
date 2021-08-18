@@ -21,9 +21,6 @@
     "option.modmenu.show_libraries": "前提mod",
     "option.modmenu.show_libraries.true": "表示",
     "option.modmenu.show_libraries.false": "非表示",
-    "modmenu.loaded.420.secret": "",
     "option.modmenu.compact_list.false": "",
-    "option.modmenu.mod_count_location.title_screen_and_mods_button": "",
-    "option.modmenu.count_libraries.false": "",
-    "modmenu.showingMods.1": ""
+    "option.modmenu.count_libraries.false": ""
 }
