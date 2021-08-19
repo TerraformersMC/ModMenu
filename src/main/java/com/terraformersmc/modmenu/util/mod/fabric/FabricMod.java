@@ -69,6 +69,11 @@ public class FabricMod implements Mod {
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 			usesModernParent = modMenuObject.containsKey("parent");
 		}
+		if (parentId.orElse("").equals(this.metadata.getId())) {
+			LOGGER.warn("WARNING! Mod " + metadata.getId() + " declared itself as its own parent! This parent declaration is ignored.");
+			parentId = Optional.empty();
+			parentData = null;
+		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
 				parentId,
