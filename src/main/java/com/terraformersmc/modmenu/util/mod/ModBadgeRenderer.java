@@ -33,11 +33,11 @@ public class ModBadgeRenderer {
 			//noinspection MagicConstant
 			if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {
 				if (mod.getId().equals(new String(new byte[]{109, 111, 100, 109, 101, 110, 117}))) {
-					drawBadge(matrices, new LiteralText(new String(new byte[]{-30, -100, -104, 32, 86, 105, 114, 117, 115, 32, 68, 101, 116, 101, 99, 116, 101, 100})).asOrderedText(), 0b10001000111111110010001000100010, 0b10001000011111110000100000001000, mouseX, mouseY);
+					drawBadge(matrices, new LiteralText(new String(new byte[]{-30, -100, -104, 32, 86, 105, 114, 117, 115, 32, 68, 101, 116, 101, 99, 116, 101, 100})).asOrderedText(), 0x88FF2222, 0x887F0808, mouseX, mouseY);
 				} else if (mod.getId().contains(new String(new byte[]{116, 97, 116, 101, 114}))) {
-					drawBadge(matrices, new LiteralText(new String(new byte[]{116, 97, 116, 101, 114})).asOrderedText(), 0b10001000111010111011001100101011, 0b10001000100110010111000100010010, mouseX, mouseY);
+					drawBadge(matrices, new LiteralText(new String(new byte[]{116, 97, 116, 101, 114})).asOrderedText(), 0x88EBB32B, 0x88997112, mouseX, mouseY);
 				} else {
-					drawBadge(matrices, new LiteralText(new String(new byte[]{-30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101})).asOrderedText(), 0b10001000000111011111111101001000, 0b10001000000001110110100100001110, mouseX, mouseY);
+					drawBadge(matrices, new LiteralText(new String(new byte[]{-30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101})).asOrderedText(), 0x881DFF48, 0x8807690E, mouseX, mouseY);
 				}
 			}
 		}
