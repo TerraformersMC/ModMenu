@@ -29,7 +29,7 @@ public class CurseForgeUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
 			String url = String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s/files", data.getProjectId().get());
@@ -42,7 +42,7 @@ public class CurseForgeUpdateProvider extends ModUpdateProvider {
 					if (entity != null) {
 						CurseForgeResponse[] responses = gson.fromJson(EntityUtils.toString(entity), CurseForgeResponse[].class);
 						List<CurseForgeResponse> versions = Arrays.stream(responses)
-								.filter(r -> r.gameVersion.contains(gameVersion) && !r.gameVersion.contains("Forge"))
+								.filter(r -> r.gameVersion.contains(this.gameVersion) && !r.gameVersion.contains("Forge"))
 								.sorted(Comparator.comparing(r -> r.fileDate))
 								.collect(Collectors.toList());
 

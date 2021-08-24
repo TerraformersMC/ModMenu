@@ -24,7 +24,7 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
 			String url = String.format("https://api.github.com/repos/%s/releases?per_page=25", data.getRepository().get());
@@ -41,7 +41,8 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 
 						for (GithubResponse githubVersion : versions) {
 							String githubVersionTag = githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag;
-							if (!githubVersion.draft
+							if (!githubVersionTag.equalsIgnoreCase(data.getCurrentVersion().getFriendlyString())
+									&& !githubVersion.draft
 									&& (data.getAllowPrerelease().get() || !githubVersion.preRelease)
 									&& githubVersionTag
 									.matches(data.getVersionRegEx().get())) {

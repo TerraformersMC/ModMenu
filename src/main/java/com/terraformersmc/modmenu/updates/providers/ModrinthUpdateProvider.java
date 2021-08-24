@@ -30,11 +30,11 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
 			Map<String, String> filterParams = new HashMap<>();
-			filterParams.put("game_versions", String.format("[\"%s\"]", gameVersion));
+			filterParams.put("game_versions", String.format("[\"%s\"]", this.gameVersion));
 			filterParams.put("loaders", "[\"fabric\"]");
 
 			String url = filterParams.keySet().stream()
@@ -53,7 +53,7 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 						ModrinthVersion[] versions = gson.fromJson(EntityUtils.toString(entity), ModrinthVersion[].class);
 						if (versions.length > 0) {
 							ModrinthVersion latest = versions[0];
-							if (!latest.versionNumber.equalsIgnoreCase(version)) {
+							if (!latest.versionNumber.equalsIgnoreCase(data.getCurrentVersion().getFriendlyString())) {
 								AvailableUpdate update = new AvailableUpdate(
 										latest.versionNumber,
 										String.format("https://modrinth.com/mod/%s/version/%s", data.getProjectId().get(), latest.versionId),

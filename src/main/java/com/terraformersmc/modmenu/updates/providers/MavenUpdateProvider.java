@@ -37,7 +37,7 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
 			String url = String.format("%s%s/%s/maven-metadata.xml",
@@ -60,7 +60,7 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 							NodeList versions = document.getElementsByTagName("version");
 							for (int i = 0; i < versions.getLength(); i++) {
 								String newVersion = versions.item(i).getTextContent();
-								if (newVersion.matches(data.getVersionRegEx().get())) {
+								if (newVersion.matches(data.getVersionRegEx().get()) && !newVersion.equalsIgnoreCase(data.getCurrentVersion().getFriendlyString())) {
 									AvailableUpdate update = new AvailableUpdate(
 											newVersion,
 											null,

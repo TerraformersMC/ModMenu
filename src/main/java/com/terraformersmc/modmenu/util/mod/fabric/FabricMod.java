@@ -11,6 +11,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -94,6 +95,7 @@ public class FabricMod implements Mod {
 								.orElseThrow(() -> new RuntimeException("Update provider not found."));
 						ModUpdateData tempUpdateData = new ModUpdateData(
 								provider,
+								metadata.getVersion(),
 								modFileName,
 								CustomValueUtil.getString("projectId", updatesObj),
 								CustomValueUtil.getString("projectSlug", updatesObj),
@@ -122,6 +124,7 @@ public class FabricMod implements Mod {
 
 					ModUpdateData tempUpdateData = new ModUpdateData(
 							provider,
+							metadata.getVersion(),
 							modFileName,
 							CustomValueUtil.getString("projectID", updatesObj),
 							CustomValueUtil.getString("projectSlug", updatesObj),
@@ -149,6 +152,7 @@ public class FabricMod implements Mod {
 		if (this.getId().equals("fabricloader")) {
 			updateData = new ModUpdateData(
 					ModUpdateProvider.fromKey("loader").get(),
+					metadata.getVersion(),
 					modFileName,
 					Optional.empty(),
 					Optional.empty(),
@@ -203,7 +207,6 @@ public class FabricMod implements Mod {
 		if (!ModMenuConfig.DISABLE_UPDATE_CHECKS.getValue() && modMenuData.updateData != null) {
 			modMenuData.updateData.getProvider().check(
 					this.getId(),
-					MinecraftClient.getInstance().getGameVersion(),
 					modMenuData.updateData, this::hasUpdateCallback);
 		}
 	}
@@ -445,6 +448,7 @@ public class FabricMod implements Mod {
 
 	public static class ModUpdateData {
 		private final ModUpdateProvider provider;
+		private final Version currentVersion;
 		private final String modFileName;
 		private final Optional<String> projectId;
 		private final Optional<String> projectSlug;
@@ -455,6 +459,7 @@ public class FabricMod implements Mod {
 		private final Optional<String> versionRegEx;
 
 		public ModUpdateData(ModUpdateProvider provider,
+							 Version currentVersion,
 							 String modFileName,
 							 Optional<String> projectId,
 							 Optional<String> projectSlug,
@@ -464,6 +469,7 @@ public class FabricMod implements Mod {
 							 Optional<Boolean> allowPrerelease,
 							 Optional<String> versionRegEx) {
 			this.provider = provider;
+			this.currentVersion = currentVersion;
 			this.modFileName = modFileName;
 			this.projectId = projectId;
 			this.projectSlug = projectSlug;
@@ -476,6 +482,10 @@ public class FabricMod implements Mod {
 
 		public ModUpdateProvider getProvider() {
 			return provider;
+		}
+
+		public Version getCurrentVersion() {
+			return this.currentVersion;
 		}
 
 		public String getModFileName() {

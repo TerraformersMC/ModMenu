@@ -52,7 +52,7 @@ public abstract class ModUpdateProvider {
 		}
 	}
 
-	public abstract void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback);
+	public abstract void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback);
 
 	public abstract void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException;
 }

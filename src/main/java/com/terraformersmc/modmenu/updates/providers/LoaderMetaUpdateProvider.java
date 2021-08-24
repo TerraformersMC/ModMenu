@@ -26,10 +26,10 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
-			HttpGet request = new HttpGet(String.format("https://meta.fabricmc.net/v1/versions/loader/%s", gameVersion));
+			HttpGet request = new HttpGet(String.format("https://meta.fabricmc.net/v1/versions/loader/%s", this.gameVersion));
 			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (LoaderMetaUpdateProvider)");
 
 			try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -39,7 +39,7 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 						MetaResponse[] versions = gson.fromJson(EntityUtils.toString(entity), MetaResponse[].class);
 
 						for (MetaResponse metaVersion : versions) {
-							if (metaVersion.loader.stable && !version.equalsIgnoreCase(metaVersion.loader.version)) {
+							if (metaVersion.loader.stable && !data.getCurrentVersion().getFriendlyString().equalsIgnoreCase(metaVersion.loader.version)) {
 								AvailableUpdate update = new AvailableUpdate(
 										metaVersion.loader.version,
 										"https://fabricmc.net/use/",
