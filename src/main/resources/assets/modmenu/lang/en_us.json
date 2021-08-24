@@ -14,9 +14,9 @@
   "modmenu.mods.420.secret": " (%s Mods...blaze it)",
   "modmenu.mods.69.secret.outdated": " (%s Mods...nice, %s Outdated)",
   "modmenu.mods.420.secret.outdated": " (%s Mods...blaze it, %s Outdated)",
-  "modmenu.updateAvailable": "An update is available. (v%s -> v%s)",
-  "modmenu.downloadFrom": "Download v%s from:",
-  "modmenu.changelog": "Changes in v%s:",
+  "modmenu.updateAvailable": "An update is available. (%s -> %s)",
+  "modmenu.downloadFrom": "Download %s from:",
+  "modmenu.changelog": "Changes in %s:",
 
   "modmenu.search": "Search for mods",
   "modmenu.searchTerms.library": "api library",
