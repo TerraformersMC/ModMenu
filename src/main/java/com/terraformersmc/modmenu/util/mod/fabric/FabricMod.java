@@ -7,6 +7,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.updates.providers.LoaderMetaUpdateProvider;
+import com.terraformersmc.modmenu.updates.providers.ModrinthUpdateProvider;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
@@ -124,6 +125,10 @@ public class FabricMod implements Mod {
 		if (this.getId().equals("fabricloader")) {
 			updateProvider = ModUpdateProvider.fromKey("loader").get();
 			updateData = new LoaderMetaUpdateProvider.LoaderMetaUpdateData(metadata, modFileName);
+		} else if (this.getId().equals("fabric")) {
+			// Hardcoded Fabric-API update data from modrinth.
+			updateProvider = ModUpdateProvider.fromKey("modrinth").get();
+			updateData = new ModrinthUpdateProvider.ModrinthUpdateData(metadata, modFileName, "P7dR8mSH", "release");
 		}
 
 		this.modMenuData = new ModMenuData(
