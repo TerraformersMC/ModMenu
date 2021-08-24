@@ -32,7 +32,7 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider<LoaderMetaUpdate
 	public void check(String modId, LoaderMetaUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
-			HttpGet request = new HttpGet(String.format("https://meta.fabricmc.net/v1/versions/loader/%s", this.gameVersion));
+			HttpGet request = new HttpGet(String.format("https://meta.fabricmc.net/v2/versions/loader/%s", this.gameVersion));
 			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (LoaderMetaUpdateProvider)");
 
 			try (CloseableHttpResponse response = httpClient.execute(request)) {
