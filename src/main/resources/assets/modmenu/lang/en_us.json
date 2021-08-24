@@ -46,6 +46,9 @@
   "modmenu.dropConfirm": "Do you want to copy the following mods into the mods directory?",
   "modmenu.dropSuccessful.line1": "Successfully copied mods",
   "modmenu.dropSuccessful.line2": "Restart game to load mods",
+  "modmenu.updatesAvailableToast.title": "Updates available!",
+  "modmenu.updatesAvailableToast.description.1": "%s mod can be updated",
+  "modmenu.updatesAvailableToast.description.a": "%s mods can be updated",
 
   "modmenu.modIdToolTip": "Mod ID: %s",
   "modmenu.authorPrefix": "By %s",
@@ -128,5 +131,11 @@
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
-  "option.modmenu.mods_button_style.icon": "Icon"
+  "option.modmenu.mods_button_style.icon": "Icon",
+  "option.modmenu.disable_update_checks": "Update Checks: %s",
+  "option.modmenu.disable_update_checks.false": "Enabled",
+  "option.modmenu.disable_update_checks.true": "Disabled",
+  "option.modmenu.disable_update_notification": "Update Notification",
+  "option.modmenu.disable_update_notification.false": "Enabled",
+  "option.modmenu.disable_update_notification.true": "Disabled"
 }

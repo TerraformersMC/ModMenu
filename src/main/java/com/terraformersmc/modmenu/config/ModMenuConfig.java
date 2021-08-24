@@ -34,6 +34,7 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption HIDE_CONFIG_BUTTONS = new BooleanConfigOption("hide_config_buttons", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
 	public static final BooleanConfigOption DISABLE_UPDATE_CHECKS = new BooleanConfigOption("disable_update_checks", false);
+	public static final BooleanConfigOption DISABLE_UPDATE_NOTIFICATION = new BooleanConfigOption("disable_update_notification", false);
 
 	public static Option[] asOptions() {
 		ArrayList<Option> options = new ArrayList<>();

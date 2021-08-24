@@ -3,14 +3,31 @@ package com.terraformersmc.modmenu.mixin;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
 
 @Mixin(TitleScreen.class)
-public class MixinTitleScreen {
+public abstract class MixinTitleScreen extends Screen {
+	private boolean hasShownUpdateToast = false;
+
+	protected MixinTitleScreen(Text title) {
+		super(title);
+	}
+
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;init(Lnet/minecraft/client/MinecraftClient;II)V"), method = "init", index = 2)
 	private int adjustRealmsHeight(int height) {
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
@@ -38,5 +55,22 @@ public class MixinTitleScreen {
 			return string.replace(I18n.translate(I18n.translate("menu.modded")), newString);
 		}
 		return string;
+	}
+
+	@Inject(at = @At("TAIL"), method = "render")
+	public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+		if (hasShownUpdateToast || client == null || ModMenuConfig.DISABLE_UPDATE_NOTIFICATION.getValue()) return;
+		hasShownUpdateToast = true;
+		if (ModUpdateProvider.availableUpdates == 0) {
+			return;
+		}
+
+		String descriptionKey = ModUpdateProvider.availableUpdates == 1
+				? "modmenu.updatesAvailableToast.description.1"
+				: "modmenu.updatesAvailableToast.description.a";
+		SystemToast.add(client.getToastManager(),
+				SystemToast.Type.TUTORIAL_HINT,
+				new TranslatableText("modmenu.updatesAvailableToast.title"),
+				new TranslatableText(descriptionKey, ModUpdateProvider.availableUpdates));
 	}
 }
