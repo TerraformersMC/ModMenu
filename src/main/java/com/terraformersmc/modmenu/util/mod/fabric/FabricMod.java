@@ -9,7 +9,6 @@ import com.terraformersmc.modmenu.updates.ModUpdateProvider;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
-import jdk.nio.zipfs.ZipFileSystemProvider;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
