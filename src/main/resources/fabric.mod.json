@@ -99,9 +99,9 @@
         "modmenu.discord": "https://discord.gg/jEGF5fb"
       },
       "updates": {
-        "provider": "curseforge",
-        "projectSlug": "modmenu",
-        "projectId": "308702"
+        "provider": "modrinth",
+        "projectId": "mOgUt4GM",
+        "channel": "release"
       }
     }
   }
