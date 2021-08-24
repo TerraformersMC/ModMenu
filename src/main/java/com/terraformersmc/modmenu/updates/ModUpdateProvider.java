@@ -29,7 +29,7 @@ public abstract class ModUpdateProvider {
 	public abstract void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException;
 
 	public static void initializeProviders() {
-		String gameVersion = MinecraftVersion.field_25319.getName();
+		String gameVersion = MinecraftVersion.GAME_VERSION.getName();
 		ModUpdateProvider.PROVIDERS.put("modrinth", new ModrinthUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("github", new GithubUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("maven", new MavenUpdateProvider(gameVersion));
