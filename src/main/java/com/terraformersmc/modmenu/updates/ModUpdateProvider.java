@@ -13,13 +13,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public abstract class ModUpdateProvider<T extends ModUpdateData> {
 	public static final Map<String, ModUpdateProvider<? extends ModUpdateData>> PROVIDERS = new HashMap<>();
 	public static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-	public static int availableUpdates = 0;
-	private static int runningChecks = 0;
+	public static AtomicInteger availableUpdates = new AtomicInteger();
+	private static AtomicInteger runningChecks = new AtomicInteger();
 
 	public final String gameVersion;
 
@@ -41,12 +42,11 @@ public abstract class ModUpdateProvider<T extends ModUpdateData> {
 	}
 
 	public static void beginUpdateCheck() {
-		runningChecks++;
+		runningChecks.incrementAndGet();
 	}
 
 	public static void completeUpdateCheck() {
-		runningChecks--;
-		if (runningChecks == 0) {
+		if (runningChecks.decrementAndGet() == 0) {
 			try {
 				httpClient.close();
 			} catch (IOException e) {

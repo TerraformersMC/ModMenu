@@ -49,7 +49,7 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider<LoaderMetaUpdate
 										null,
 										"fabricmcNet"
 								);
-								availableUpdates++;
+								availableUpdates.incrementAndGet();
 								callback.accept(update);
 							}
 						}

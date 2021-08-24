@@ -65,7 +65,7 @@ public class ModrinthUpdateProvider extends ModUpdateProvider<ModrinthUpdateProv
 										(latest.changeLog == null || latest.changeLog.isEmpty()) ? null : latest.changeLog,
 										"modrinth"
 								);
-								availableUpdates++;
+								availableUpdates.incrementAndGet();
 								callback.accept(update);
 							}
 						}

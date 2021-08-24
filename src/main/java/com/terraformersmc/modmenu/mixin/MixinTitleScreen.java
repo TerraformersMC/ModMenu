@@ -42,7 +42,7 @@ public abstract class MixinTitleScreen extends Screen {
 	private String onRender(String string) {
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnTitleScreen()) {
 			String count = ModMenu.getDisplayedModCount();
-			String outdated =  (ModUpdateProvider.availableUpdates > 0 ? ".outdated" : "");
+			String outdated =  (ModUpdateProvider.availableUpdates.get() > 0 ? ".outdated" : "");
 			String outdatedCount = ModUpdateProvider.availableUpdates + "";
 			String newString = I18n.translate("modmenu.mods.n" + outdated, count, outdatedCount);
 			String countKey = "modmenu.mods." + count + outdated;
@@ -61,16 +61,16 @@ public abstract class MixinTitleScreen extends Screen {
 	public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (hasShownUpdateToast || client == null || ModMenuConfig.DISABLE_UPDATE_NOTIFICATION.getValue()) return;
 		hasShownUpdateToast = true;
-		if (ModUpdateProvider.availableUpdates == 0) {
+		if (ModUpdateProvider.availableUpdates.get() == 0) {
 			return;
 		}
 
-		String descriptionKey = ModUpdateProvider.availableUpdates == 1
+		String descriptionKey = ModUpdateProvider.availableUpdates.get() == 1
 				? "modmenu.updatesAvailableToast.description.1"
 				: "modmenu.updatesAvailableToast.description.a";
 		SystemToast.add(client.getToastManager(),
 				SystemToast.Type.TUTORIAL_HINT,
 				new TranslatableText("modmenu.updatesAvailableToast.title"),
-				new TranslatableText(descriptionKey, ModUpdateProvider.availableUpdates));
+				new TranslatableText(descriptionKey, ModUpdateProvider.availableUpdates.get()));
 	}
 }

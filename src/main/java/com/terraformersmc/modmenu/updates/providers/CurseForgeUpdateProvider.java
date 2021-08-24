@@ -63,6 +63,7 @@ public class CurseForgeUpdateProvider extends ModUpdateProvider<CurseForgeUpdate
 									downloadUrl = String.format("https://minecraft.curseforge.com/projects/%s", data.projectId);
 								}
 
+								availableUpdates.incrementAndGet();
 								callback.accept(new AvailableUpdate(fileName, downloadUrl, null, "curseforge"));
 							}
 						}

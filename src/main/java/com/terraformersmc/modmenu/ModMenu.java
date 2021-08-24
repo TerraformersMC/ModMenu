@@ -129,7 +129,7 @@ public class ModMenu implements ClientModInitializer {
 	public static Text createModsButtonText() {
 		TranslatableText modsText = new TranslatableText("modmenu.title");
 		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
-			int outdated = ModUpdateProvider.availableUpdates;
+			int outdated = ModUpdateProvider.availableUpdates.get();
 			String outdatedKey = (outdated > 0) ? ".outdated" : "";
 			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", ModMenu.getDisplayedModCount()));

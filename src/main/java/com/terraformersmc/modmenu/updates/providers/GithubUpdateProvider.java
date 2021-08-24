@@ -57,7 +57,7 @@ public class GithubUpdateProvider extends ModUpdateProvider<GithubUpdateProvider
 										(githubVersion.body != null && !githubVersion.body.isEmpty()) ? githubVersion.body : null,
 										"github_releases"
 								);
-								availableUpdates++;
+								availableUpdates.incrementAndGet();
 								callback.accept(update);
 								break;
 							}
