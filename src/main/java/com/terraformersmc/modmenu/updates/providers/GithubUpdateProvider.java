@@ -5,18 +5,23 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
-import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
+import com.terraformersmc.modmenu.util.mod.fabric.ModUpdateData;
+import com.terraformersmc.modmenu.util.mod.fabric.CustomValueUtil;
+import net.fabricmc.loader.api.metadata.CustomValue;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.util.Util;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Consumer;
 
-public class GithubUpdateProvider extends ModUpdateProvider {
+public class GithubUpdateProvider extends ModUpdateProvider<GithubUpdateProvider.GithubUpdateData> {
 	private static final Gson gson = new GsonBuilder().create();
 
 	public GithubUpdateProvider(String gameVersion) {
@@ -24,10 +29,10 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, GithubUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
-			String url = String.format("https://api.github.com/repos/%s/releases?per_page=25", data.getRepository().get());
+			String url = String.format("https://api.github.com/repos/%s/releases?per_page=25", data.repository);
 
 			HttpGet request = new HttpGet(url);
 			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (GithubUpdateProvider)");
@@ -41,11 +46,11 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 
 						for (GithubResponse githubVersion : versions) {
 							String githubVersionTag = githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag;
-							if (!githubVersionTag.equalsIgnoreCase(data.getCurrentVersion().getFriendlyString())
+							if (!githubVersionTag.equalsIgnoreCase(data.metadata.getVersion().getFriendlyString())
 									&& !githubVersion.draft
-									&& (data.getAllowPrerelease().get() || !githubVersion.preRelease)
+									&& (data.allowPreRelease || !githubVersion.preRelease)
 									&& githubVersionTag
-									.matches(data.getVersionRegEx().get())) {
+									.matches(data.versionRegEx)) {
 								AvailableUpdate update = new AvailableUpdate(
 										githubVersionTag,
 										githubVersion.url,
@@ -66,13 +71,32 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 		});
 	}
 
+	@NotNull
 	@Override
-	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
-		if (data.getRepository().isEmpty()
-				&& data.getAllowPrerelease().isEmpty()
-				&& data.getVersionRegEx().isEmpty()) {
-			throw new RuntimeException("Github update provider must have one of each repository, allowPrerelease, and versionRegex.");
+	public GithubUpdateData readModUpdateData(ModMetadata metadata, String modFileName, CustomValue.CvObject object) {
+		Optional<String> repository = CustomValueUtil.getString("repository", object);
+		Optional<String> versionRegEx = CustomValueUtil.getString("versionRegEx", object);
+		Optional<Boolean> allowPreRelease = CustomValueUtil.getBoolean("allowPreRelease", object);
+
+		if (repository.isEmpty() || versionRegEx.isEmpty()) {
+			throw new RuntimeException("Github update provider must have one of each repository, allowPreRelease, and versionRegex.");
 		}
+
+		// ModUpdater compatibility
+		String repo;
+		if (object.containsKey("owner") && !repository.get().contains("/")) {
+			repo = CustomValueUtil.getString("owner", object).get() + "/" + repository.get();
+		} else {
+			repo = repository.get();
+		}
+
+		return new GithubUpdateData(
+				metadata,
+				modFileName,
+				repo,
+				versionRegEx.get(),
+				allowPreRelease.orElse(false) // Defaults to false.
+		);
 	}
 
 	public static class GithubResponse {
@@ -82,5 +106,18 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 		private String body;
 		private boolean preRelease;
 		private boolean draft;
+	}
+
+	public static class GithubUpdateData extends ModUpdateData {
+		public String repository;
+		public boolean allowPreRelease;
+		public String versionRegEx;
+
+		public GithubUpdateData(ModMetadata metadata, String modFileName, String repository, String versionRegEx, boolean allowPreRelease) {
+			super(metadata, modFileName);
+			this.repository = repository;
+			this.versionRegEx = versionRegEx;
+			this.allowPreRelease = allowPreRelease;
+		}
 	}
 }

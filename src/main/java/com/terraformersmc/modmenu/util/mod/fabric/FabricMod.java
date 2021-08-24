@@ -6,12 +6,12 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
+import com.terraformersmc.modmenu.updates.providers.LoaderMetaUpdateProvider;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -24,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,6 +52,7 @@ public class FabricMod implements Mod {
 		/* Load modern mod menu custom value data */
 		Optional<String> parentId = Optional.empty();
 		ModMenuData.DummyParentData parentData = null;
+		ModUpdateProvider<ModUpdateData> updateProvider = null;
 		ModUpdateData updateData = null;
 		Set<String> badgeNames = new HashSet<>();
 		CustomValue modMenuValue = metadata.getCustomValue("modmenu");
@@ -91,22 +91,9 @@ public class FabricMod implements Mod {
 						CustomValue.CvObject updatesObj = updatesCv.getAsObject();
 						String providerKey = CustomValueUtil.getString("provider", updatesObj)
 								.orElseThrow(() -> new RuntimeException("Updates object lacks provider"));
-						ModUpdateProvider provider = ModUpdateProvider.fromKey(providerKey)
+						updateProvider = ModUpdateProvider.fromKey(providerKey)
 								.orElseThrow(() -> new RuntimeException("Update provider not found."));
-						ModUpdateData tempUpdateData = new ModUpdateData(
-								provider,
-								metadata.getVersion(),
-								modFileName,
-								CustomValueUtil.getString("projectId", updatesObj),
-								CustomValueUtil.getString("projectSlug", updatesObj),
-								CustomValueUtil.getString("repository", updatesObj),
-								CustomValueUtil.getString("group", updatesObj),
-								CustomValueUtil.getString("artifact", updatesObj),
-								CustomValueUtil.getBoolean("allowPrerelease", updatesObj),
-								CustomValueUtil.getString("versionRegEx", updatesObj)
-						);
-						provider.validateProviderConfig(tempUpdateData);
-						updateData = tempUpdateData;
+						updateData = updateProvider.readModUpdateData(metadata, modFileName, updatesObj);
 					} catch (Throwable t) {
 						LOGGER.error("Error loading updates data from mod: " + metadata.getId(), t);
 					}
@@ -119,29 +106,14 @@ public class FabricMod implements Mod {
 					CustomValue.CvObject updatesObj = modUpdaterCv.getAsObject();
 					String providerKey = CustomValueUtil.getString("strategy", updatesObj)
 							.orElseThrow(() -> new RuntimeException("Modupdater block lacks strategy key"));
-					ModUpdateProvider provider = ModUpdateProvider.fromKey(providerKey)
-							.orElseThrow(() -> new RuntimeException("Update provider not found."));
+					if (!providerKey.equalsIgnoreCase("json")) {
+						updateProvider = ModUpdateProvider.fromKey(providerKey)
+								.orElseThrow(() -> new RuntimeException("Update provider not found."));
 
-					ModUpdateData tempUpdateData = new ModUpdateData(
-							provider,
-							metadata.getVersion(),
-							modFileName,
-							CustomValueUtil.getString("projectID", updatesObj),
-							CustomValueUtil.getString("projectSlug", updatesObj),
-							CustomValueUtil.getString("repository", updatesObj),
-							CustomValueUtil.getString("group", updatesObj),
-							CustomValueUtil.getString("artifact", updatesObj),
-							CustomValueUtil.getBoolean("allowPrerelease", updatesObj),
-							CustomValueUtil.getString("versionRegEx", updatesObj)
-					);
-					if (updatesObj.containsKey("owner")
-							&& CustomValueUtil.getString("strategy", updatesObj).orElse("").equals("github")) {
-						// This is a github repo, we expect the repository to be in an owner/name format.
-						tempUpdateData.repository = Optional.of(
-								CustomValueUtil.getString("owner", updatesObj).get() + "/" + CustomValueUtil.getString("repository", updatesObj));
+						updateData = updateProvider.readModUpdateData(metadata, modFileName, updatesObj);
 					}
 				} catch (Throwable t) {
-					// As this is just for compatibility with other mods who use modupdater, it'll just silently fail.
+					// As this is just for compatibility with other mods who use ModUpdater, it'll just silently fail.
 				}
 			}
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
@@ -150,18 +122,8 @@ public class FabricMod implements Mod {
 
 		// update data for fabric loader
 		if (this.getId().equals("fabricloader")) {
-			updateData = new ModUpdateData(
-					ModUpdateProvider.fromKey("loader").get(),
-					metadata.getVersion(),
-					modFileName,
-					Optional.empty(),
-					Optional.empty(),
-					Optional.empty(),
-					Optional.empty(),
-					Optional.empty(),
-					Optional.empty(),
-					Optional.empty()
-			);
+			updateProvider = ModUpdateProvider.fromKey("loader").get();
+			updateData = new LoaderMetaUpdateProvider.LoaderMetaUpdateData(metadata, modFileName);
 		}
 
 		this.modMenuData = new ModMenuData(
@@ -204,8 +166,8 @@ public class FabricMod implements Mod {
 		}
 
 		// check for updates
-		if (!ModMenuConfig.DISABLE_UPDATE_CHECKS.getValue() && modMenuData.updateData != null) {
-			modMenuData.updateData.getProvider().check(
+		if (!ModMenuConfig.DISABLE_UPDATE_CHECKS.getValue() && updateProvider != null && modMenuData.updateData != null) {
+			updateProvider.check(
 					this.getId(),
 					modMenuData.updateData, this::hasUpdateCallback);
 		}
@@ -366,7 +328,7 @@ public class FabricMod implements Mod {
 		private @Nullable
 		final DummyParentData dummyParentData;
 		private @Nullable
-		final FabricMod.ModUpdateData updateData;
+		final ModUpdateData updateData;
 
 		public ModMenuData(Set<String> badges, Optional<String> parent, DummyParentData dummyParentData, ModUpdateData updateData) {
 			this.badges = Badge.convert(badges);
@@ -387,7 +349,7 @@ public class FabricMod implements Mod {
 			return dummyParentData;
 		}
 
-		public @Nullable FabricMod.ModUpdateData getUpdateData() {
+		public @Nullable ModUpdateData getUpdateData() {
 			return updateData;
 		}
 
@@ -443,81 +405,6 @@ public class FabricMod implements Mod {
 			public Set<Badge> getBadges() {
 				return badges;
 			}
-		}
-	}
-
-	public static class ModUpdateData {
-		private final ModUpdateProvider provider;
-		private final Version currentVersion;
-		private final String modFileName;
-		private final Optional<String> projectId;
-		private final Optional<String> projectSlug;
-		private Optional<String> repository;
-		private final Optional<String> group;
-		private final Optional<String> artifact;
-		private final Optional<Boolean> allowPrerelease;
-		private final Optional<String> versionRegEx;
-
-		public ModUpdateData(ModUpdateProvider provider,
-							 Version currentVersion,
-							 String modFileName,
-							 Optional<String> projectId,
-							 Optional<String> projectSlug,
-							 Optional<String> repository,
-							 Optional<String> group,
-							 Optional<String> artifact,
-							 Optional<Boolean> allowPrerelease,
-							 Optional<String> versionRegEx) {
-			this.provider = provider;
-			this.currentVersion = currentVersion;
-			this.modFileName = modFileName;
-			this.projectId = projectId;
-			this.projectSlug = projectSlug;
-			this.repository = repository;
-			this.group = group;
-			this.artifact = artifact;
-			this.allowPrerelease = allowPrerelease;
-			this.versionRegEx = versionRegEx;
-		}
-
-		public ModUpdateProvider getProvider() {
-			return provider;
-		}
-
-		public Version getCurrentVersion() {
-			return this.currentVersion;
-		}
-
-		public String getModFileName() {
-			return modFileName;
-		}
-
-		public Optional<String> getProjectId() {
-			return projectId;
-		}
-
-		public Optional<String> getProjectSlug() {
-			return projectSlug;
-		}
-
-		public Optional<String> getRepository() {
-			return repository;
-		}
-
-		public Optional<String> getGroup() {
-			return group;
-		}
-
-		public Optional<String> getArtifact() {
-			return artifact;
-		}
-
-		public Optional<Boolean> getAllowPrerelease() {
-			return allowPrerelease;
-		}
-
-		public Optional<String> getVersionRegEx() {
-			return versionRegEx;
 		}
 	}
 }

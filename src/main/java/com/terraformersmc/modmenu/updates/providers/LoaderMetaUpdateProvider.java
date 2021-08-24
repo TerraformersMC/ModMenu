@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.terraformersmc.modmenu.updates.AvailableUpdate;
 import com.terraformersmc.modmenu.updates.ModUpdateProvider;
-import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
+import com.terraformersmc.modmenu.util.mod.fabric.ModUpdateData;
+import net.fabricmc.loader.api.metadata.CustomValue;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.util.Util;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -18,7 +21,7 @@ import java.util.function.Consumer;
 /**
  * This update provider is specifically for checking loader versions.
  */
-public class LoaderMetaUpdateProvider extends ModUpdateProvider {
+public class LoaderMetaUpdateProvider extends ModUpdateProvider<LoaderMetaUpdateProvider.LoaderMetaUpdateData> {
 	private static final Gson gson = new GsonBuilder().create();
 
 	public LoaderMetaUpdateProvider(String gameVersion) {
@@ -26,7 +29,7 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void check(String modId, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, LoaderMetaUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
 			HttpGet request = new HttpGet(String.format("https://meta.fabricmc.net/v1/versions/loader/%s", this.gameVersion));
@@ -39,7 +42,7 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 						MetaResponse[] versions = gson.fromJson(EntityUtils.toString(entity), MetaResponse[].class);
 
 						for (MetaResponse metaVersion : versions) {
-							if (metaVersion.loader.stable && !data.getCurrentVersion().getFriendlyString().equalsIgnoreCase(metaVersion.loader.version)) {
+							if (metaVersion.loader.stable && !data.metadata.getVersion().getFriendlyString().equalsIgnoreCase(metaVersion.loader.version)) {
 								AvailableUpdate update = new AvailableUpdate(
 										metaVersion.loader.version,
 										"https://fabricmc.net/use/",
@@ -61,7 +64,8 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
+	public @NotNull LoaderMetaUpdateProvider.LoaderMetaUpdateData readModUpdateData(ModMetadata metadata, String modFileName, CustomValue.CvObject updatesObject) {
+		return new LoaderMetaUpdateData(metadata, modFileName);
 	}
 
 	private static class MetaResponse {
@@ -71,6 +75,12 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 			private String version;
 
 			private boolean stable;
+		}
+	}
+
+	public static class LoaderMetaUpdateData extends ModUpdateData {
+		public LoaderMetaUpdateData(ModMetadata metadata, String modFileName) {
+			super(metadata, modFileName);
 		}
 	}
 }
