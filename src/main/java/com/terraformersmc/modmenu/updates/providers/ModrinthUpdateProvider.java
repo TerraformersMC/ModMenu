@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ModrinthUpdateProvider extends ModUpdateProvider {
-
 	private static final Gson gson = new GsonBuilder().create();
 
 	public ModrinthUpdateProvider(String gameVersion) {
@@ -48,13 +47,13 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (ModrinthUpdateProvider)");
 
 			try (CloseableHttpResponse response = httpClient.execute(request)) {
-				if(response.getStatusLine().getStatusCode() == 200) {
+				if (response.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = response.getEntity();
-					if(entity != null) {
+					if (entity != null) {
 						ModrinthVersion[] versions = gson.fromJson(EntityUtils.toString(entity), ModrinthVersion[].class);
-						if(versions.length > 0) {
+						if (versions.length > 0) {
 							ModrinthVersion latest = versions[0];
-							if(!latest.versionNumber.equalsIgnoreCase(version)) {
+							if (!latest.versionNumber.equalsIgnoreCase(version)) {
 								AvailableUpdate update = new AvailableUpdate(
 										latest.versionNumber,
 										String.format("https://modrinth.com/mod/%s/version/%s", data.getProjectId().get(), latest.versionId),
@@ -74,10 +73,9 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 		});
 	}
 
-
 	@Override
 	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
-		if(!data.getProjectId().isPresent()) {
+		if (data.getProjectId().isEmpty()) {
 			throw new RuntimeException("The modrinth update provider requires a single \"projectId\" field.");
 		}
 	}
@@ -94,8 +92,10 @@ public class ModrinthUpdateProvider extends ModUpdateProvider {
 	public static class ModrinthVersion {
 		@SerializedName("id")
 		private String versionId;
+
 		@SerializedName("version_number")
 		private String versionNumber;
+
 		@SerializedName("changelog")
 		private String changeLog;
 	}

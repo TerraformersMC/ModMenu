@@ -19,7 +19,6 @@ import java.util.function.Consumer;
  * This update provider is specifically for checking loader versions.
  */
 public class LoaderMetaUpdateProvider extends ModUpdateProvider {
-
 	private static final Gson gson = new GsonBuilder().create();
 
 	public LoaderMetaUpdateProvider(String gameVersion) {
@@ -36,11 +35,11 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 			try (CloseableHttpResponse response = httpClient.execute(request)) {
 				if (response.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = response.getEntity();
-					if(entity != null) {
+					if (entity != null) {
 						MetaResponse[] versions = gson.fromJson(EntityUtils.toString(entity), MetaResponse[].class);
 
 						for (MetaResponse metaVersion : versions) {
-							if(metaVersion.loader.stable && !version.equalsIgnoreCase(metaVersion.loader.version)) {
+							if (metaVersion.loader.stable && !version.equalsIgnoreCase(metaVersion.loader.version)) {
 								AvailableUpdate update = new AvailableUpdate(
 										metaVersion.loader.version,
 										"https://fabricmc.net/use/",
@@ -62,15 +61,16 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider {
 	}
 
 	@Override
-	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {}
+	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
+	}
 
 	private static class MetaResponse {
 		private Loader loader;
 
 		private static class Loader {
 			private String version;
+
 			private boolean stable;
 		}
 	}
-
 }

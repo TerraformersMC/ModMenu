@@ -54,8 +54,10 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
 		Text name = new LiteralText(mod.getName());
-		if(mod.getAvailableUpdate() != null) {
-			name = new LiteralText("").append(new LiteralText("\u2193 ").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.RED))).append(new LiteralText(mod.getName()).setStyle(Style.EMPTY));
+		if (mod.getAvailableUpdate() != null) {
+			name = new LiteralText("")
+					.append(new LiteralText("\u2193 ").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.RED)))
+					.append(new LiteralText(mod.getName()).setStyle(Style.EMPTY));
 		}
 		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;

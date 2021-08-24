@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 public class GithubUpdateProvider extends ModUpdateProvider {
-
 	private static final Gson gson = new GsonBuilder().create();
 
 	public GithubUpdateProvider(String gameVersion) {
@@ -34,19 +33,20 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (GithubUpdateProvider)");
 			request.addHeader(HttpHeaders.ACCEPT, "application/vnd.github.v3+json");
 
-			try(CloseableHttpResponse response = httpClient.execute(request)) {
-				if(response.getStatusLine().getStatusCode() == 200) {
+			try (CloseableHttpResponse response = httpClient.execute(request)) {
+				if (response.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = response.getEntity();
-					if(entity != null) {
+					if (entity != null) {
 						GithubResponse[] versions = gson.fromJson(EntityUtils.toString(entity), GithubResponse[].class);
 
 						for (GithubResponse githubVersion : versions) {
-							if(!githubVersion.draft
-									&& (data.getAllowPrerelease().get() || !githubVersion.prerelease)
-									&& (githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag)
+							String githubVersionTag = githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag;
+							if (!githubVersion.draft
+									&& (data.getAllowPrerelease().get() || !githubVersion.preRelease)
+									&& githubVersionTag
 									.matches(data.getVersionRegEx().get())) {
 								AvailableUpdate update = new AvailableUpdate(
-										(githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag),
+										githubVersionTag,
 										githubVersion.url,
 										(githubVersion.body != null && !githubVersion.body.isEmpty()) ? githubVersion.body : null,
 										"github_releases"
@@ -67,19 +67,19 @@ public class GithubUpdateProvider extends ModUpdateProvider {
 
 	@Override
 	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
-		if(!data.getRepository().isPresent()
-		&& !data.getAllowPrerelease().isPresent()
-		&& !data.getVersionRegEx().isPresent()) {
+		if (data.getRepository().isEmpty()
+				&& data.getAllowPrerelease().isEmpty()
+				&& data.getVersionRegEx().isEmpty()) {
 			throw new RuntimeException("Github update provider must have one of each repository, allowPrerelease, and versionRegex.");
 		}
 	}
 
 	public static class GithubResponse {
-		private String url;
 		@SerializedName("tag_name")
 		private String tag;
+		private String url;
 		private String body;
-		private boolean prerelease;
+		private boolean preRelease;
 		private boolean draft;
 	}
 }

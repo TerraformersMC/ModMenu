@@ -83,8 +83,8 @@ public class FabricMod implements Mod {
 					}
 				}
 			}
-			if(updatesCv != null) {
-				if(updatesCv.getType() == CustomValue.CvType.OBJECT) {
+			if (updatesCv != null) {
+				if (updatesCv.getType() == CustomValue.CvType.OBJECT) {
 					try {
 						CustomValue.CvObject updatesObj = updatesCv.getAsObject();
 						String providerKey = CustomValueUtil.getString("provider", updatesObj)
@@ -114,7 +114,7 @@ public class FabricMod implements Mod {
 		}
 
 		// update data for fabric loader
-		if(this.getId().equals("fabricloader")) {
+		if (this.getId().equals("fabricloader")) {
 			updateData = new ModUpdateData(
 					ModUpdateProvider.fromKey("loader").get(),
 					modFileName,
@@ -168,7 +168,7 @@ public class FabricMod implements Mod {
 		}
 
 		// check for updates
-		if(!ModMenuConfig.DISABLE_UPDATE_CHECKS.getValue() && modMenuData.updateData != null) {
+		if (!ModMenuConfig.DISABLE_UPDATE_CHECKS.getValue() && modMenuData.updateData != null) {
 			modMenuData.updateData.getProvider().check(
 					this.getId(),
 					MinecraftClient.getInstance().getGameVersion(),
@@ -177,7 +177,7 @@ public class FabricMod implements Mod {
 	}
 
 	private void hasUpdateCallback(AvailableUpdate update) {
-		if(update != null) {
+		if (update != null) {
 			LOGGER.warn("An update is available for {}. ({} -> {})", this.getName(), this.getVersion(), update.getVersion());
 			this.availableUpdate = update;
 		}

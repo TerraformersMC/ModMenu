@@ -4,20 +4,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AvailableUpdate {
-	private String version;
-	private String url;
-	private String changeLog;
-	private String provider;
+	private final @NotNull String version;
+	private final @Nullable String url;
+	private final @Nullable String changelog;
+	private final @NotNull String provider;
 
-	public AvailableUpdate(String version, String url, String changeLog, String provider) {
+	public AvailableUpdate(@NotNull String version,
+						   @Nullable String url,
+						   @Nullable String changelog,
+						   @NotNull String provider) {
 		this.version = version;
 		this.url = url;
-		this.changeLog = changeLog;
+		this.changelog = changelog;
 		this.provider = provider;
 	}
 
 	/**
-	 *
 	 * @return the new version available
 	 */
 	public @NotNull String getVersion() {
@@ -25,7 +27,6 @@ public class AvailableUpdate {
 	}
 
 	/**
-	 *
 	 * @return the url where the user can download the update.
 	 */
 	public @Nullable String getUrl() {
@@ -33,15 +34,13 @@ public class AvailableUpdate {
 	}
 
 	/**
-	 *
 	 * @return changelog for this update.
 	 */
-	public @Nullable String getChangeLog() {
-		return changeLog;
+	public @Nullable String getChangelog() {
+		return changelog;
 	}
 
 	/**
-	 *
 	 * @return where there update is from
 	 */
 	public @NotNull String getProvider() {

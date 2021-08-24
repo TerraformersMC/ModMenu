@@ -22,10 +22,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class MavenUpdateProvider extends ModUpdateProvider {
-
 	DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-	DocumentBuilder builder = null;
 
+	DocumentBuilder builder = null;
 
 	public MavenUpdateProvider(String gameVersion) {
 		super(gameVersion);
@@ -49,11 +48,11 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 			HttpGet request = new HttpGet(url);
 			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (MavenUpdateProvider)");
 
-			try(CloseableHttpResponse response = httpClient.execute(request)) {
-				if(response.getStatusLine().getStatusCode() == 200) {
+			try (CloseableHttpResponse response = httpClient.execute(request)) {
+				if (response.getStatusLine().getStatusCode() == 200) {
 
 					HttpEntity entity = response.getEntity();
-					if(entity != null) {
+					if (entity != null) {
 						try {
 							ByteArrayInputStream stream = new ByteArrayInputStream(EntityUtils.toString(entity).getBytes(StandardCharsets.UTF_8));
 							Document document = builder.parse(stream);
@@ -61,7 +60,7 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 							NodeList versions = document.getElementsByTagName("version");
 							for (int i = 0; i < versions.getLength(); i++) {
 								String newVersion = versions.item(i).getTextContent();
-								if(newVersion.matches(data.getVersionRegEx().get())) {
+								if (newVersion.matches(data.getVersionRegEx().get())) {
 									AvailableUpdate update = new AvailableUpdate(
 											newVersion,
 											null,
@@ -86,10 +85,10 @@ public class MavenUpdateProvider extends ModUpdateProvider {
 
 	@Override
 	public void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException {
-		if(!data.getRepository().isPresent()
-		|| !data.getGroup().isPresent()
-		|| !data.getArtifact().isPresent()
-		|| !data.getVersionRegEx().isPresent()) {
+		if (data.getRepository().isEmpty()
+				|| data.getGroup().isEmpty()
+				|| data.getArtifact().isEmpty()
+				|| data.getVersionRegEx().isEmpty()) {
 			throw new RuntimeException("Maven update provider must have one of each repository, group, artifact, and versionRegex.");
 		}
 	}

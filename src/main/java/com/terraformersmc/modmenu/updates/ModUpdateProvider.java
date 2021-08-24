@@ -13,20 +13,16 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class ModUpdateProvider {
-
-	public final String gameVersion;
 	public static final Map<String, ModUpdateProvider> PROVIDERS = new HashMap<>();
+	public static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 	public static int availableUpdates = 0;
 	private static int runningChecks = 0;
-	public static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+	public final String gameVersion;
 
 	public ModUpdateProvider(String gameVersion) {
 		this.gameVersion = gameVersion;
 	}
-
-	public abstract void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback);
-
-	public abstract void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException;
 
 	public static void initializeProviders() {
 		String gameVersion = MinecraftVersion.GAME_VERSION.getName();
@@ -34,7 +30,7 @@ public abstract class ModUpdateProvider {
 		ModUpdateProvider.PROVIDERS.put("github", new GithubUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("maven", new MavenUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("loader", new LoaderMetaUpdateProvider(gameVersion));
-		ModUpdateProvider.PROVIDERS.put("curseforge", new CurseforgeUpdateProvider(gameVersion));
+		ModUpdateProvider.PROVIDERS.put("curseforge", new CurseForgeUpdateProvider(gameVersion));
 	}
 
 	public static Optional<ModUpdateProvider> fromKey(String provider) {
@@ -47,7 +43,7 @@ public abstract class ModUpdateProvider {
 
 	public static void completeUpdateCheck() {
 		runningChecks--;
-		if(runningChecks == 0) {
+		if (runningChecks == 0) {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
@@ -55,5 +51,9 @@ public abstract class ModUpdateProvider {
 			}
 		}
 	}
+
+	public abstract void check(String modId, String version, FabricMod.ModUpdateData data, Consumer<AvailableUpdate> callback);
+
+	public abstract void validateProviderConfig(FabricMod.ModUpdateData data) throws RuntimeException;
 }
 
