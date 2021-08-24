@@ -59,6 +59,7 @@ public class FabricMod implements Mod {
 			CustomValue.CvObject modMenuObject = modMenuValue.getAsObject();
 			CustomValue parentCv = modMenuObject.get("parent");
 			CustomValue updatesCv = modMenuObject.get("updates");
+			CustomValue modUpdaterCv = modMenuObject.get("modupdater");
 			if (parentCv != null) {
 				if (parentCv.getType() == CustomValue.CvType.STRING) {
 					parentId = Optional.of(parentCv.getAsString());
@@ -107,6 +108,37 @@ public class FabricMod implements Mod {
 					} catch (Throwable t) {
 						LOGGER.error("Error loading updates data from mod: " + metadata.getId(), t);
 					}
+				}
+			}
+			if (modUpdaterCv != null
+					&& modUpdaterCv.getType() == CustomValue.CvType.OBJECT
+					&& updateData == null) { // Only use as a fallback.
+				try {
+					CustomValue.CvObject updatesObj = modUpdaterCv.getAsObject();
+					String providerKey = CustomValueUtil.getString("strategy", updatesObj)
+							.orElseThrow(() -> new RuntimeException("Modupdater block lacks strategy key"));
+					ModUpdateProvider provider = ModUpdateProvider.fromKey(providerKey)
+							.orElseThrow(() -> new RuntimeException("Update provider not found."));
+
+					ModUpdateData tempUpdateData = new ModUpdateData(
+							provider,
+							modFileName,
+							CustomValueUtil.getString("projectID", updatesObj),
+							CustomValueUtil.getString("projectSlug", updatesObj),
+							CustomValueUtil.getString("repository", updatesObj),
+							CustomValueUtil.getString("group", updatesObj),
+							CustomValueUtil.getString("artifact", updatesObj),
+							CustomValueUtil.getBoolean("allowPrerelease", updatesObj),
+							CustomValueUtil.getString("versionRegEx", updatesObj)
+					);
+					if (updatesObj.containsKey("owner")
+							&& CustomValueUtil.getString("strategy", updatesObj).orElse("").equals("github")) {
+						// This is a github repo, we expect the repository to be in an owner/name format.
+						tempUpdateData.repository = Optional.of(
+								CustomValueUtil.getString("owner", updatesObj).get() + "/" + CustomValueUtil.getString("repository", updatesObj));
+					}
+				} catch (Throwable t) {
+					// As this is just for compatibility with other mods who use modupdater, it'll just silently fail.
 				}
 			}
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
@@ -416,7 +448,7 @@ public class FabricMod implements Mod {
 		private final String modFileName;
 		private final Optional<String> projectId;
 		private final Optional<String> projectSlug;
-		private final Optional<String> repository;
+		private Optional<String> repository;
 		private final Optional<String> group;
 		private final Optional<String> artifact;
 		private final Optional<Boolean> allowPrerelease;
