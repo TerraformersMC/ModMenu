@@ -35,6 +35,7 @@ public abstract class ModUpdateProvider<T extends ModUpdateData> {
 		ModUpdateProvider.PROVIDERS.put("maven", new MavenUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("loader", new LoaderMetaUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("curseforge", new CurseForgeUpdateProvider(gameVersion));
+		ModUpdateProvider.PROVIDERS.put("gitlab", new GitLabUpdateProvider(gameVersion));
 	}
 
 	public static Optional<ModUpdateProvider<ModUpdateData>> fromKey(String provider) {
