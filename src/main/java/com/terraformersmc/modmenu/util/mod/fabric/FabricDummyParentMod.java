@@ -74,6 +74,11 @@ public class FabricDummyParentMod implements Mod {
 	}
 
 	@Override
+	public @NotNull String getPrefixedVersion() {
+		return "";
+	}
+
+	@Override
 	public @NotNull List<String> getAuthors() {
 		return new ArrayList<>();
 	}
