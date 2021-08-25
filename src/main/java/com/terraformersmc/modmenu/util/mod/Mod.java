@@ -29,6 +29,9 @@ public interface Mod {
 	String getVersion();
 
 	@NotNull
+	String getPrefixedVersion();
+
+	@NotNull
 	List<String> getAuthors();
 
 	@NotNull

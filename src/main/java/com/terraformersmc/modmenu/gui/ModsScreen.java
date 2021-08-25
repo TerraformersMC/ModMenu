@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
-import com.terraformersmc.modmenu.config.option.ConfigOptionStorage;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
@@ -15,7 +14,6 @@ import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -331,7 +329,7 @@ public class ModsScreen extends Screen {
 				modBadgeRenderer.draw(matrices, mouseX, mouseY);
 			}
 			if (mod.isReal()) {
-				textRenderer.draw(matrices, "v" + mod.getVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
+				textRenderer.draw(matrices, mod.getPrefixedVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
 			}
 			String authors;
 			List<String> names = mod.getAuthors();
