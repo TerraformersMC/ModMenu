@@ -21,30 +21,30 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class GithubUpdateProvider extends ModUpdateProvider<GithubUpdateProvider.GithubUpdateData> {
+public class GitHubUpdateProvider extends ModUpdateProvider<GitHubUpdateProvider.GitHubUpdateData> {
 	private static final Gson gson = new GsonBuilder().create();
 
-	public GithubUpdateProvider(String gameVersion) {
+	public GitHubUpdateProvider(String gameVersion) {
 		super(gameVersion);
 	}
 
 	@Override
-	public void check(String modId, GithubUpdateData data, Consumer<AvailableUpdate> callback) {
+	public void check(String modId, GitHubUpdateData data, Consumer<AvailableUpdate> callback) {
 		beginUpdateCheck();
 		Util.getMainWorkerExecutor().execute(() -> {
 			String url = String.format("https://api.github.com/repos/%s/releases?per_page=25", data.repository);
 
 			HttpGet request = new HttpGet(url);
-			request.addHeader(HttpHeaders.USER_AGENT, "ModMenu (GithubUpdateProvider)");
+			request.addHeader(HttpHeaders.USER_AGENT, String.format("ModMenu (%s)", this.getClass().getSimpleName()));
 			request.addHeader(HttpHeaders.ACCEPT, "application/vnd.github.v3+json");
 
 			try (CloseableHttpResponse response = httpClient.execute(request)) {
 				if (response.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
-						GithubResponse[] versions = gson.fromJson(EntityUtils.toString(entity), GithubResponse[].class);
+						GitHubResponse[] versions = gson.fromJson(EntityUtils.toString(entity), GitHubResponse[].class);
 
-						for (GithubResponse githubVersion : versions) {
+						for (GitHubResponse githubVersion : versions) {
 							String githubVersionTag = githubVersion.tag.startsWith("v") ? githubVersion.tag.substring(1) : githubVersion.tag;
 							if (!githubVersionTag.equalsIgnoreCase(data.metadata.getVersion().getFriendlyString())
 									&& !githubVersion.draft
@@ -73,13 +73,13 @@ public class GithubUpdateProvider extends ModUpdateProvider<GithubUpdateProvider
 
 	@NotNull
 	@Override
-	public GithubUpdateData readModUpdateData(ModMetadata metadata, String modFileName, CustomValue.CvObject object) {
+	public GitHubUpdateProvider.GitHubUpdateData readModUpdateData(ModMetadata metadata, String modFileName, CustomValue.CvObject object) {
 		Optional<String> repository = CustomValueUtil.getString("repository", object);
 		Optional<String> versionRegEx = CustomValueUtil.getString("versionRegEx", object);
 		Optional<Boolean> allowPreRelease = CustomValueUtil.getBoolean("allowPreRelease", object);
 
 		if (repository.isEmpty() || versionRegEx.isEmpty()) {
-			throw new RuntimeException("Github update provider must have one of each repository, allowPreRelease, and versionRegex.");
+			throw new RuntimeException("GitHub update provider must have one of each repository, allowPreRelease, and versionRegex.");
 		}
 
 		// ModUpdater compatibility
@@ -90,7 +90,7 @@ public class GithubUpdateProvider extends ModUpdateProvider<GithubUpdateProvider
 			repo = repository.get();
 		}
 
-		return new GithubUpdateData(
+		return new GitHubUpdateData(
 				metadata,
 				modFileName,
 				repo,
@@ -99,7 +99,7 @@ public class GithubUpdateProvider extends ModUpdateProvider<GithubUpdateProvider
 		);
 	}
 
-	public static class GithubResponse {
+	public static class GitHubResponse {
 		@SerializedName("tag_name")
 		private String tag;
 		private String url;
@@ -108,12 +108,12 @@ public class GithubUpdateProvider extends ModUpdateProvider<GithubUpdateProvider
 		private boolean draft;
 	}
 
-	public static class GithubUpdateData extends ModUpdateData {
+	public static class GitHubUpdateData extends ModUpdateData {
 		public String repository;
 		public boolean allowPreRelease;
 		public String versionRegEx;
 
-		public GithubUpdateData(ModMetadata metadata, String modFileName, String repository, String versionRegEx, boolean allowPreRelease) {
+		public GitHubUpdateData(ModMetadata metadata, String modFileName, String repository, String versionRegEx, boolean allowPreRelease) {
 			super(metadata, modFileName);
 			this.repository = repository;
 			this.versionRegEx = versionRegEx;

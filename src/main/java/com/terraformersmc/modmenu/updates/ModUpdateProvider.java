@@ -31,7 +31,7 @@ public abstract class ModUpdateProvider<T extends ModUpdateData> {
 	public static void initializeProviders() {
 		String gameVersion = MinecraftVersion.GAME_VERSION.getName();
 		ModUpdateProvider.PROVIDERS.put("modrinth", new ModrinthUpdateProvider(gameVersion));
-		ModUpdateProvider.PROVIDERS.put("github", new GithubUpdateProvider(gameVersion));
+		ModUpdateProvider.PROVIDERS.put("github", new GitHubUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("maven", new MavenUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("loader", new LoaderMetaUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("curseforge", new CurseForgeUpdateProvider(gameVersion));
