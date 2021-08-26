@@ -17,11 +17,19 @@ Visit the <a href="https://github.com/TerraformersMC/ModMenu/wiki">Mod Menu Wiki
 </h4>
 
 ### Features
+
 ![Screenshot of the Mods screen](https://camo.githubusercontent.com/3fb56ac264de3a3be29bf2da68f93d667cd773d8285c7b152f1ae8db2cfaffbb/68747470733a2f2f692e696d6775722e636f6d2f79794f6d564d322e706e67)
 
 You can view the features more in-depth on the [Mod Menu wiki](https://github.com/TerraformersMC/ModMenu/wiki/API)
 
 ### Developers
+
 If you are a developer and would like to see what metadata Mod Menu will make use of, how to add Library or Client-side only badges to your mod, or how to make your Config screens accessible via Mod Menu, check out [the API documentation on the Mod Menu wiki](https://github.com/TerraformersMC/ModMenu/wiki/API)
+
+### Translators
+
+Mod Menu is being translated using [Weblate](https://hosted.weblate.org/engage/fabric-modmenu/), a web tool designed to ease translating for both developers and translators.
+
+[![Translation status](https://hosted.weblate.org/widgets/fabric-modmenu/-/svg-badge.svg)](https://hosted.weblate.org/engage/fabric-modmenu/)
 
 ### Mod Menu is a mod for Fabric, and there are no plans to port this mod to Forge.
