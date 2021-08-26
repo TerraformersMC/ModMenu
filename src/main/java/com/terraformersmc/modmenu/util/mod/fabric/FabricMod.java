@@ -195,6 +195,21 @@ public class FabricMod implements Mod {
 		return metadata.getVersion().getFriendlyString();
 	}
 
+	/**
+	 * A styled and prefixed version string.
+	 */
+	public @NotNull String getPrefixedVersion() {
+		String version = getVersion().trim();
+		if (version.startsWith("version")) {
+			version = "v" + version.substring("version".length());
+		} else if (version.startsWith("ver")) {
+			version = "v" + version.substring("ver".length());
+		} else if (!version.startsWith("v")) {
+			version = "v" + version;
+		}
+		return version.trim();
+	}
+
 	@Override
 	public @NotNull List<String> getAuthors() {
 		List<String> authors = metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
