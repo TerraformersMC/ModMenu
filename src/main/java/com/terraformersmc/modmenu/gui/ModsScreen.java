@@ -327,7 +327,7 @@ public class ModsScreen extends Screen {
 				modBadgeRenderer.draw(matrices, mouseX, mouseY);
 			}
 			if (mod.isReal()) {
-				textRenderer.draw(matrices, "v" + mod.getVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
+				textRenderer.draw(matrices, mod.getPrefixedVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
 			}
 			String authors;
 			List<String> names = mod.getAuthors();
