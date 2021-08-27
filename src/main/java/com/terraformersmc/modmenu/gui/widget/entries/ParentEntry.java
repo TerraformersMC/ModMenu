@@ -79,18 +79,32 @@ public class ParentEntry extends ModListEntry {
 	}
 
 	@Override
-	public boolean keyPressed(int int_1, int int_2, int int_3) {
-		if (int_1 == GLFW.GLFW_KEY_ENTER) {
-			String id = getMod().getId();
-			if (list.getParent().showModChildren.contains(id)) {
-				list.getParent().showModChildren.remove(id);
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		String modId = getMod().getId();
+		if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_SPACE) {
+			if (list.getParent().showModChildren.contains(modId)) {
+				list.getParent().showModChildren.remove(modId);
 			} else {
-				list.getParent().showModChildren.add(id);
+				list.getParent().showModChildren.add(modId);
 			}
 			list.filter(list.getParent().getSearchInput(), false);
 			return true;
+		} else if (keyCode == GLFW.GLFW_KEY_LEFT) {
+			if (list.getParent().showModChildren.contains(modId)) {
+				list.getParent().showModChildren.remove(modId);
+				list.filter(list.getParent().getSearchInput(), false);
+			}
+			return true;
+		} else if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+			if (!list.getParent().showModChildren.contains(modId)) {
+				list.getParent().showModChildren.add(modId);
+				list.filter(list.getParent().getSearchInput(), false);
+			} else {
+				return list.keyPressed(GLFW.GLFW_KEY_DOWN, 0, 0);
+			}
+			return true;
 		}
-		return super.keyPressed(int_1, int_2, int_3);
+		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	public void setChildren(List<Mod> children) {

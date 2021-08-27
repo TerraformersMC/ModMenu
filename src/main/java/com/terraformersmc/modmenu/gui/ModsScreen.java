@@ -256,8 +256,8 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public boolean keyPressed(int int_1, int int_2, int int_3) {
-		return super.keyPressed(int_1, int_2, int_3) || this.searchBox.keyPressed(int_1, int_2, int_3);
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		return super.keyPressed(keyCode, scanCode, modifiers) || this.searchBox.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override

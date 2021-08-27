@@ -2,6 +2,9 @@ package com.terraformersmc.modmenu.gui.widget.entries;
 
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.util.mod.Mod;
+
+import org.lwjgl.glfw.GLFW;
+
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -22,6 +25,16 @@ public class ChildEntry extends ModListEntry {
 		int color = 0xFFA0A0A0;
 		DrawableHelper.fill(matrices, x, y - 2, x + 1, y + (bottomChild ? rowHeight / 2 : rowHeight + 2), color);
 		DrawableHelper.fill(matrices, x, y + rowHeight / 2, x + 7, y + rowHeight / 2 + 1, color);
+	}
+
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (keyCode == GLFW.GLFW_KEY_LEFT) {
+			list.setSelected(parent);
+			list.ensureVisible(parent);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

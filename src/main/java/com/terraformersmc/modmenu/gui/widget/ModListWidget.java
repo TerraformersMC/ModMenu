@@ -25,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -229,7 +230,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				entry.render(matrices, index, entryTop, entryLeft, rowWidth, entryHeight, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPos(mouseX, mouseY), entry), delta);
 			}
 		}
+	}
 
+	public void ensureVisible(ModListEntry entry) {
+		super.ensureVisible(entry);
 	}
 
 	@Override
@@ -258,6 +262,16 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 			return this.scrolling;
 		}
+	}
+
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
+			return super.keyPressed(keyCode, scanCode, modifiers);
+		}
+		if (getSelectedOrNull() != null) {
+			return getSelectedOrNull().keyPressed(keyCode, scanCode, modifiers);
+		}
+		return false;
 	}
 
 	public final ModListEntry getEntryAtPos(double x, double y) {
