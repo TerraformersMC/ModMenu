@@ -1,9 +1,9 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "com.terraformersmc.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinEntryListWidgetEntries",
     "MixinTitleScreen"
   ],
   "injectors": {

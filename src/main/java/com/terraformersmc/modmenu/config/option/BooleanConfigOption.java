@@ -1,8 +1,8 @@
 package com.terraformersmc.modmenu.config.option;
 
 import com.terraformersmc.modmenu.util.TranslationUtil;
-import net.minecraft.client.options.BooleanOption;
-import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.option.BooleanOption;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
