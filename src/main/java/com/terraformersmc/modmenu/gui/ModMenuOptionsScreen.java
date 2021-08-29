@@ -19,6 +19,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 	private Screen previous;
 	private ButtonListWidget list;
 
+	@SuppressWarnings("resource")
 	public ModMenuOptionsScreen(Screen previous) {
 		super(previous, MinecraftClient.getInstance().options, new TranslatableText("modmenu.options"));
 		this.previous = previous;

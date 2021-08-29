@@ -101,7 +101,7 @@ public class ModsScreen extends Screen {
 
 	@Override
 	protected void init() {
-		Objects.requireNonNull(this.client).keyboard.setRepeatEvents(true);
+		this.client.keyboard.setRepeatEvents(true);
 		paneY = 48;
 		paneWidth = this.width / 2 - 8;
 		rightPaneX = width - paneWidth;
@@ -248,7 +248,7 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(websiteButton);
 		this.addDrawableChild(issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDirectory(), "mods"))));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))));
 		this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen)));
 		this.setInitialFocus(this.searchBox);
 
@@ -322,7 +322,7 @@ public class ModsScreen extends Screen {
 				setTooltip(new TranslatableText("modmenu.modIdToolTip", mod.getId()));
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
-				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + Objects.requireNonNull(this.client).textRenderer.getWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.mod, this);
+				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.mod, this);
 				init = false;
 			}
 			if (!ModMenuConfig.HIDE_BADGES.getValue()) {

@@ -62,6 +62,7 @@ public class ModMenu implements ClientModInitializer {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();

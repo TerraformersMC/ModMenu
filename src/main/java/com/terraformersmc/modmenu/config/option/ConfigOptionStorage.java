@@ -29,6 +29,7 @@ public class ConfigOptionStorage {
 		return BOOLEAN_OPTIONS.get(key);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <E extends Enum<E>> E getEnum(String key, Class<E> typeClass) {
 		return (E) ENUM_OPTIONS.get(key);
 	}

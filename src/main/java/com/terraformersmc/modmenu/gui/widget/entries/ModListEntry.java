@@ -19,12 +19,9 @@ import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> {
 	public static final Identifier UNKNOWN_ICON = new Identifier("textures/misc/unknown_pack.png");
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	protected final MinecraftClient client;
 	public final Mod mod;
@@ -97,7 +94,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public void bindIconTexture() {
 		if (this.iconLocation == null) {
 			this.iconLocation = new Identifier(ModMenu.MOD_ID, mod.getId() + "_icon");
-			NativeImageBackedTexture icon = mod.getIcon(list.getIconHandler(), 64 * MinecraftClient.getInstance().options.guiScale);
+			NativeImageBackedTexture icon = mod.getIcon(list.getIconHandler(), 64 * this.client.options.guiScale);
 			if (icon != null) {
 				this.client.getTextureManager().registerTexture(this.iconLocation, icon);
 			} else {

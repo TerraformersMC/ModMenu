@@ -145,6 +145,10 @@ public class FabricMod implements Mod {
 		}
 	}
 
+	public @NotNull ModContainer getContainer() {
+		return container;
+	}
+
 	@Override
 	public @NotNull String getId() {
 		return metadata.getId();
