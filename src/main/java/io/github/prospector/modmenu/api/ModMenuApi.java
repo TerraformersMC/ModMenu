@@ -1,6 +1,7 @@
 package io.github.prospector.modmenu.api;
 
 import com.google.common.collect.ImmutableMap;
+import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.ModMenuApiMarker;
 import net.minecraft.client.gui.screen.Screen;
 

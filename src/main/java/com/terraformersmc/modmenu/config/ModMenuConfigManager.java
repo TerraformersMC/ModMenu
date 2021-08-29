@@ -31,7 +31,6 @@ public class ModMenuConfigManager {
 		load();
 	}
 
-	@SuppressWarnings("unchecked")
 	private static void load() {
 		prepareConfigFile();
 
@@ -85,7 +84,6 @@ public class ModMenuConfigManager {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void save() {
 		ModMenu.clearModCountCache();
 		prepareConfigFile();

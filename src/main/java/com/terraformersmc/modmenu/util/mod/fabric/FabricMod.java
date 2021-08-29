@@ -35,7 +35,7 @@ public class FabricMod implements Mod {
 
 	public FabricMod(ModContainer modContainer) {
 		this.container = modContainer;
-		this.metadata = container.getMetadata();
+		this.metadata = modContainer.getMetadata();
 
 		/* Load modern mod menu custom value data */
 		boolean usesModernParent = false;

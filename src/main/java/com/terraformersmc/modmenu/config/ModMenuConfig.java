@@ -5,7 +5,7 @@ import com.terraformersmc.modmenu.config.option.BooleanConfigOption;
 import com.terraformersmc.modmenu.config.option.EnumConfigOption;
 import com.terraformersmc.modmenu.config.option.StringSetConfigOption;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import net.minecraft.client.option.Option;
+import net.minecraft.client.options.Option;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

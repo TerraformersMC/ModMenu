@@ -12,7 +12,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -36,12 +37,12 @@ public class ModMenuEventHandler {
 
 	private static void afterTitleScreenInit(Screen screen) {
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue()) {
-			final List<ClickableWidget> buttons = Screens.getButtons(screen);
+			final List<AbstractButtonWidget> buttons = Screens.getButtons(screen);
 			int modsButtonIndex = -1;
 			final int spacing = 24;
 			int buttonsY = screen.height / 4 + 48;
 			for (int i = 0; i < buttons.size(); i++) {
-				ClickableWidget button = buttons.get(i);
+				AbstractButtonWidget button = buttons.get(i);
 				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
@@ -78,13 +79,13 @@ public class ModMenuEventHandler {
 
 	private static void afterGameMenuScreenInit(Screen screen) {
 		if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
-			final List<ClickableWidget> buttons = Screens.getButtons(screen);
+			final List<AbstractButtonWidget> buttons = Screens.getButtons(screen);
 			int modsButtonIndex = -1;
 			final int spacing = 24;
 			int buttonsY = screen.height / 4 + 8;
 			ModMenuConfig.ModsButtonStyle style = ModMenuConfig.MODS_BUTTON_STYLE.getValue().forGameMenu();
 			for (int i = 0; i < buttons.size(); i++) {
-				ClickableWidget button = buttons.get(i);
+				AbstractButtonWidget button = buttons.get(i);
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
@@ -115,12 +116,12 @@ public class ModMenuEventHandler {
 		}
 	}
 
-	private static boolean buttonHasText(ClickableWidget button, String translationKey) {
+	private static boolean buttonHasText(AbstractButtonWidget button, String translationKey) {
 		Text text = button.getMessage();
 		return text instanceof TranslatableText && ((TranslatableText) text).getKey().equals(translationKey);
 	}
 
-	private static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {
+	private static void shiftButtons(AbstractButtonWidget button, boolean shiftUp, int spacing) {
 		if (shiftUp) {
 			button.y -= spacing / 2;
 		} else {
