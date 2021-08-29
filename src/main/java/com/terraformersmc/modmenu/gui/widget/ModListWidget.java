@@ -21,15 +21,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable {
-	private static final Logger LOGGER = LogManager.getLogger();
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
 
 	private final ModsScreen parent;

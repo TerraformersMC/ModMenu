@@ -8,7 +8,7 @@ import java.util.AbstractList;
 import java.util.List;
 
 @Mixin(targets = "net.minecraft.client.gui.widget.EntryListWidget$Entries")
-public abstract class MixinEntryListWidgetEntries extends AbstractList {
+public abstract class MixinEntryListWidgetEntries<E> extends AbstractList<E> {
 
 	@Shadow
 	@Final
