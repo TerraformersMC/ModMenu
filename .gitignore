@@ -14,9 +14,6 @@ out
 *.iml
 .idea
 
-# vscode
-.vscode
-
 # gradle
 build
 .gradle
@@ -24,7 +21,6 @@ build
 # other
 eclipse
 run
-logs
 
 Thumbs.db
 *.psd

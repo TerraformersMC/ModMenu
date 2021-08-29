@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
-	public static final Logger LOGGER = LogManager.getLogger("Mod Menu");
+	public static final Logger LOGGER = LogManager.getLogger();
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
 
 	public static final Map<String, Mod> MODS = new HashMap<>();
@@ -62,7 +62,6 @@ public class ModMenu implements ClientModInitializer {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
