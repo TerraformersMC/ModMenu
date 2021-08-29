@@ -55,7 +55,7 @@ public class ModsScreen extends Screen {
 	private static final TranslatableText TOGGLE_FILTER_OPTIONS = new TranslatableText("modmenu.toggleFilterOptions");
 	private static final TranslatableText CONFIGURE = new TranslatableText("modmenu.configure");
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger("Mod Menu");
 
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
@@ -261,8 +261,8 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public boolean charTyped(char char_1, int int_1) {
-		return this.searchBox.charTyped(char_1, int_1);
+	public boolean charTyped(char chr, int keyCode) {
+		return this.searchBox.charTyped(chr, keyCode);
 	}
 
 	@Override
