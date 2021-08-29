@@ -78,7 +78,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	@Override
-	protected boolean isSelectedItem(int index) {
+	protected boolean isSelectedEntry(int index) {
 		ModListEntry selected = getSelected();
 		return selected != null && selected.getMod().getId().equals(getEntry(index).getMod().getId());
 	}
@@ -184,11 +184,11 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	@Override
 	protected void renderList(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
-		int itemCount = this.getItemCount();
+		int entryCount = this.getEntryCount();
 		Tessellator tessellator_1 = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator_1.getBuffer();
 
-		for (int index = 0; index < itemCount; ++index) {
+		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowTop(index) + this.itemHeight;
 			if (entryBottom >= this.top && entryTop <= this.bottom) {
@@ -196,7 +196,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				ModListEntry entry = this.getEntry(index);
 				int rowWidth = this.getRowWidth();
 				int entryLeft;
-				if (this.isSelectedItem(index)) {
+				if (this.isSelectedEntry(index)) {
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
 					int selectionRight = x + rowWidth + 2;
 					RenderSystem.disableTexture();
@@ -270,7 +270,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	public final ModListEntry getEntryAtPos(double x, double y) {
 		int int_5 = MathHelper.floor(y - (double) this.top) - this.headerHeight + (int) this.getScrollAmount() - 4;
 		int index = int_5 / this.itemHeight;
-		return x < (double) this.getScrollbarPositionX() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getItemCount() ? this.children().get(index) : null;
+		return x < (double) this.getScrollbarPositionX() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? this.children().get(index) : null;
 	}
 
 	@Override
