@@ -91,21 +91,21 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				if (mod.getAvailableUpdate() != null) {
 					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
 					AvailableUpdate update = mod.getAvailableUpdate();
-					TranslatableText updateText = new TranslatableText("modmenu.updateAvailable", mod.getVersion(), update.getVersion());
+					TranslatableText updateText = new TranslatableText("modmenu.updateAvailable", mod.getVersion(), update.version());
 
 					for (OrderedText line : textRenderer.wrapLines(updateText, getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
 					}
 
-					if (update.getProvider() != null && update.getUrl() != null) {
-						children().add(new DescriptionEntry(new TranslatableText("modmenu.downloadFrom", update.getVersion()).asOrderedText(), this));
-						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu." + update.getProvider()).formatted(Formatting.BLUE, Formatting.UNDERLINE)).asOrderedText(), update.getUrl(), this));
+					if (update.provider() != null && update.url() != null) {
+						children().add(new DescriptionEntry(new TranslatableText("modmenu.downloadFrom", update.version()).asOrderedText(), this));
+						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu." + update.provider()).formatted(Formatting.BLUE, Formatting.UNDERLINE)).asOrderedText(), update.url(), this));
 					}
 
-					if (update.getChangelog() != null) {
+					if (update.changelog() != null) {
 						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-						children().add(new DescriptionEntry(new TranslatableText("modmenu.changelog", update.getVersion()).asOrderedText(), this));
-						String changelog = "  " + update.getChangelog().replaceAll("\n", "\n  ");
+						children().add(new DescriptionEntry(new TranslatableText("modmenu.changelog", update.version()).asOrderedText(), this));
+						String changelog = "  " + update.changelog().replaceAll("\n", "\n  ");
 						for (OrderedText line : textRenderer.wrapLines(new LiteralText(changelog), getRowWidth() - 5)) {
 							children().add(new DescriptionEntry(line, this));
 						}

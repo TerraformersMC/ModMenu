@@ -17,7 +17,6 @@ import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -180,7 +179,7 @@ public class FabricMod implements Mod {
 
 	private void hasUpdateCallback(AvailableUpdate update) {
 		if (update != null) {
-			LOGGER.warn("An update is available for {}. ({} -> {})", this.getName(), this.getVersion(), update.getVersion());
+			LOGGER.warn("An update is available for {}. ({} -> {})", this.getName(), this.getVersion(), update.version());
 			this.availableUpdate = update;
 		}
 	}
