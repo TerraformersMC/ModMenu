@@ -92,5 +92,6 @@
     "modmenu.loaded.short": "(%s)",
     "modmenu.loaded.69.secret": "(%s Laddat... snyggt)",
     "modmenu.descriptionTranslation.modmenu": "Lägger till en moddmeny för att se en lista på de moddar som du har installerat.",
-    "option.modmenu.hide_config_buttons": "Config -knappar"
+    "option.modmenu.hide_config_buttons": "Config -knappar",
+    "option.modmenu.hide_badges": "Mod Märken"
 }
