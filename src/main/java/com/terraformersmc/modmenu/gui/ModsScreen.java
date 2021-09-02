@@ -119,6 +119,9 @@ public class ModsScreen extends Screen {
 				try {
 					Screen configScreen = ModMenu.getConfigScreen(mod.getId(), this);
 					modHasConfigScreen.put(mod.getId(), configScreen != null);
+				} catch (java.lang.NoClassDefFoundError e) {
+					LOGGER.warn("The '" + mod.getId() + "' mod config screen is not available because " + e.getLocalizedMessage() + " is missing.");
+					modHasConfigScreen.put(mod.getId(), false);
 				} catch (Throwable e) {
 					LOGGER.error("Error from mod '" + mod.getId() + "'", e);
 				}
