@@ -186,11 +186,11 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	@Override
 	protected void renderList(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
-		int itemCount = this.getEntryCount();
-		Tessellator tessellator_1 = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator_1.getBuffer();
+		int entryCount = this.getEntryCount();
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
 
-		for (int index = 0; index < itemCount; ++index) {
+		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowTop(index) + this.itemHeight;
 			if (entryBottom >= this.top && entryTop <= this.bottom) {
@@ -211,7 +211,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).next();
 					buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F).next();
 					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F).next();
-					tessellator_1.draw();
+					tessellator.draw();
 					RenderSystem.setShader(GameRenderer::getPositionShader);
 					RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
 					buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
@@ -219,7 +219,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).next();
 					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).next();
 					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).next();
-					tessellator_1.draw();
+					tessellator.draw();
 					RenderSystem.enableTexture();
 				}
 
