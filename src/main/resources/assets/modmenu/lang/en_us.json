@@ -5,6 +5,8 @@
   "modmenu.loaded.69.secret": "(%s Loaded...nice)",
   "modmenu.loaded.420.secret": "(%s Loaded...blaze it)",
   "modmenu.loaded.short": "(%s)",
+  "modmenu.config.buttton": "Mod Settings...",
+  "modmenu.config.title": "Mod Settings",
   "modmenu.config": "Edit Config",
   "modmenu.modsFolder": "Open Mods Folder",
   "modmenu.configsFolder": "Open Configs Folder",
@@ -101,5 +103,8 @@
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
-  "option.modmenu.mods_button_style.icon": "Icon"
+  "option.modmenu.mods_button_style.icon": "Icon",
+  "option.modmenu.show_config_button": "Config Button",
+  "option.modmenu.show_config_button.true": "Shown",
+  "option.modmenu.show_config_button.false": "Hidden"
 }
