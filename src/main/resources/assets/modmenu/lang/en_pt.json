@@ -1,6 +1,6 @@
 {
     "modmenu.title": "Magic Jars",
-    "modmenu.descriptionTranslation.modmenu": "Menu o' mods ye installed matey!",
+    "modmenu.descriptionTranslation.modmenu": "Menu o' mods ye installed matey.",
     "modmenu.loaded": "(%s Opened)",
     "modmenu.config": "Edit Config",
     "modmenu.modsFolder": "Open yer Coffer o' Mods",
@@ -35,5 +35,17 @@
     "option.modmenu.show_libraries.true": "Revealing",
     "option.modmenu.show_libraries.false": "Burying",
     "modmenu.loaded.420.secret": "(%s Opened…shiver me timbers!)",
-    "modmenu.loaded.69.secret": "(%s Opened…thar she blows!)"
+    "modmenu.loaded.69.secret": "(%s Opened…thar she blows!)",
+    "modmenu.kofi": "Ko-fi",
+    "modmenu.crowdin": "Crowdin",
+    "modmenu.github_releases": "GitHub Releases",
+    "modmenu.modrinth": "Modrinth",
+    "modmenu.curseforge": "CurseForge",
+    "modmenu.youtube": "YouTube",
+    "modmenu.twitch": "Twitch",
+    "modmenu.patreon": "Patreon",
+    "modmenu.reddit": "Reddit",
+    "modmenu.twitter": "Twitter",
+    "modmenu.discord": "Discord",
+    "modmenu.loaded.short": "(%s)"
 }
