@@ -17,6 +17,7 @@ jobs:
           15    # Latest
         ]
         os: [ubuntu-20.04]
+        fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
