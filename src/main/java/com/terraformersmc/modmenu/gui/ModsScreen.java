@@ -123,6 +123,7 @@ public class ModsScreen extends Screen {
 					modHasConfigScreen.put(mod.getId(), false);
 				} catch (Throwable e) {
 					LOGGER.error("Error from mod '" + mod.getId() + "'", e);
+					modHasConfigScreen.put(mod.getId(), false);
 				}
 			}
 		}
