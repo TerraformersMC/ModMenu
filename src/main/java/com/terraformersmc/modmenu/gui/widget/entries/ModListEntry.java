@@ -37,7 +37,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	}
 
 	@Override
-	public Text method_37006() {
+	public Text getNarration() {
 		return new LiteralText(mod.getName());
 	}
 

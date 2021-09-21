@@ -57,7 +57,7 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 		RenderSystem.enableDepthTest();
 
 		if (this.isHovered()) {
-			this.renderToolTip(matrices, mouseX, mouseY);
+			this.renderTooltip(matrices, mouseX, mouseY);
 		}
 	}
 

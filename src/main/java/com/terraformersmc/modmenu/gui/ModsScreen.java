@@ -135,7 +135,7 @@ public class ModsScreen extends Screen {
 			final String modid = Objects.requireNonNull(selected).getMod().getId();
 			if (modHasConfigScreen.get(modid)) {
 				Screen configScreen = ModMenu.getConfigScreen(modid, this);
-				client.openScreen(configScreen);
+				client.setScreen(configScreen);
 			} else {
 				button.active = false;
 			}
@@ -172,11 +172,11 @@ public class ModsScreen extends Screen {
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
 				new TranslatableText("modmenu.website"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
-			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
+			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
 					Util.getOperatingSystem().open(mod.getWebsite());
 				}
-				this.client.openScreen(this);
+				this.client.setScreen(this);
 			}, mod.getWebsite(), false));
 		}) {
 			@Override
@@ -189,11 +189,11 @@ public class ModsScreen extends Screen {
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
 				new TranslatableText("modmenu.issues"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
-			this.client.openScreen(new ConfirmChatLinkScreen((bool) -> {
+			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
 					Util.getOperatingSystem().open(mod.getIssueTracker());
 				}
-				this.client.openScreen(this);
+				this.client.setScreen(this);
 			}, mod.getIssueTracker(), false));
 		}) {
 			@Override
@@ -253,7 +253,7 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
 		this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))));
-		this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen)));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.setScreen(previousScreen)));
 		this.setInitialFocus(this.searchBox);
 
 		init = true;
@@ -404,7 +404,7 @@ public class ModsScreen extends Screen {
 	@Override
 	public void onClose() {
 		this.modList.close();
-		this.client.openScreen(this.previousScreen);
+		this.client.setScreen(this.previousScreen);
 	}
 
 	private void setTooltip(Text tooltip) {
@@ -461,7 +461,7 @@ public class ModsScreen extends Screen {
 				.map(Path::toString)
 				.collect(Collectors.joining(", "));
 
-		this.client.openScreen(new ConfirmScreen((value) -> {
+		this.client.setScreen(new ConfirmScreen((value) -> {
 			if (value) {
 				boolean allSuccessful = true;
 
@@ -480,7 +480,7 @@ public class ModsScreen extends Screen {
 					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, new TranslatableText("modmenu.dropSuccessful.line1"), new TranslatableText("modmenu.dropSuccessful.line2"));
 				}
 			}
-			this.client.openScreen(this);
+			this.client.setScreen(this);
 		}, new TranslatableText("modmenu.dropConfirm"), new LiteralText(modList)));
 	}
 

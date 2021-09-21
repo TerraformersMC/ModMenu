@@ -261,7 +261,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			if (isMouseOver(mouseX, mouseY)) {
-				client.openScreen(new CreditsScreen(false, Runnables.doNothing()));
+				client.setScreen(new CreditsScreen(false, Runnables.doNothing()));
 			}
 			return super.mouseClicked(mouseX, mouseY, button);
 		}
@@ -278,11 +278,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			if (isMouseOver(mouseX, mouseY)) {
-				client.openScreen(new ConfirmChatLinkScreen((open) -> {
+				client.setScreen(new ConfirmChatLinkScreen((open) -> {
 					if (open) {
 						Util.getOperatingSystem().open(link);
 					}
-					client.openScreen(parent);
+					client.setScreen(parent);
 				}, link, false));
 			}
 			return super.mouseClicked(mouseX, mouseY, button);

@@ -32,7 +32,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.addSelectableChild(this.list);
 		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, (button) -> {
 			ModMenuConfigManager.save();
-			this.client.openScreen(this.previous);
+			this.client.setScreen(this.previous);
 		}));
 	}
 
