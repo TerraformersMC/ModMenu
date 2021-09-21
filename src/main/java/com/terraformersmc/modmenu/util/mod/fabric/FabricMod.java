@@ -38,7 +38,6 @@ public class FabricMod implements Mod {
 		this.metadata = modContainer.getMetadata();
 
 		/* Load modern mod menu custom value data */
-		boolean usesModernParent = false;
 		Optional<String> parentId = Optional.empty();
 		ModMenuData.DummyParentData parentData = null;
 		Set<String> badgeNames = new HashSet<>();
@@ -60,6 +59,11 @@ public class FabricMod implements Mod {
 								CustomValueUtil.getString("icon", parentObj),
 								CustomValueUtil.getStringSet("badges", parentObj).orElse(new HashSet<>())
 						);
+						if (parentId.orElse("").equals(this.metadata.getId())) {
+							parentId = Optional.empty();
+							parentData = null;
+							throw new RuntimeException("Mod declared itself as its own parent");
+						}
 					} catch (Throwable t) {
 						LOGGER.error("Error loading parent data from mod: " + metadata.getId(), t);
 					}
@@ -67,50 +71,12 @@ public class FabricMod implements Mod {
 			}
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
-			usesModernParent = modMenuObject.containsKey("parent");
-		}
-		if (parentId.orElse("").equals(this.metadata.getId())) {
-			LOGGER.warn("WARNING! Mod " + metadata.getId() + " declared itself as its own parent! This parent declaration is ignored.");
-			parentId = Optional.empty();
-			parentData = null;
 		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
 				parentId,
 				parentData
 		);
-
-		/* Load legacy mod menu custom value data */
-		final boolean finalUsesModernParent = usesModernParent;
-		CustomValueUtil.getString("modmenu:parent", metadata).ifPresent(parent -> {
-			modMenuData.parent = Optional.of(parent);
-			if (!finalUsesModernParent) {
-				LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:parent' custom value! This will be removed in 1.18 snapshots, so ask the author of this mod to support the new API.");
-			}
-		});
-
-		CustomValueUtil.getBoolean("modmenu:clientsideOnly", metadata).ifPresent(client -> {
-			if (client) {
-				modMenuData.badges.add(Badge.CLIENT);
-			}
-			LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:clientsideOnly' custom value! This is no longer needed and will be removed in 1.18 snapshots.");
-		});
-		CustomValueUtil.getBoolean("modmenu:api", metadata).ifPresent(library -> {
-			if (library) {
-				modMenuData.badges.add(Badge.LIBRARY);
-			}
-			if (!badgeNames.contains("library")) {
-				LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:api' custom value! This will be removed in 1.18 snapshots, so ask the author of this mod to support the new API.");
-			}
-		});
-		CustomValueUtil.getBoolean("modmenu:deprecated", metadata).ifPresent(deprecated -> {
-			if (deprecated) {
-				modMenuData.badges.add(Badge.DEPRECATED);
-			}
-			if (!badgeNames.contains("deprecated")) {
-				LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:deprecated' custom value! This will be removed in 1.18 snapshots, so ask the author of this mod to support the new API.");
-			}
-		});
 
 		/* Hardcode parents and badges for Fabric API & Fabric Loader */
 		String id = metadata.getId();
@@ -199,9 +165,6 @@ public class FabricMod implements Mod {
 		return metadata.getVersion().getFriendlyString();
 	}
 
-	/**
-	 * A styled and prefixed version string.
-	 */
 	public @NotNull String getPrefixedVersion() {
 		String version = getVersion().trim();
 		if (version.startsWith("version")) {
