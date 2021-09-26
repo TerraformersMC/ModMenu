@@ -21,7 +21,7 @@
   "modmenu.showingModsLibraries.n.1": "Showing %s mods and %s library",
   "modmenu.showingModsLibraries.1.n": "Showing %s mod and %s libraries",
   "modmenu.showingModsLibraries.1.1": "Showing %s mod and %s library",
-  
+
   "modmenu.badge.library": "Library",
   "modmenu.badge.clientsideOnly": "Client",
   "modmenu.badge.deprecated": "Deprecated",
@@ -47,12 +47,17 @@
   "modmenu.links": "Links:",
   "modmenu.source": "Source",
 
+  "modmenu.buymeacoffee": "Buy Me a Coffee",
+  "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
   "modmenu.curseforge": "CurseForge",
   "modmenu.discord": "Discord",
+  "modmenu.flattr": "Flattr",
   "modmenu.github_releases": "GitHub Releases",
   "modmenu.kofi": "Ko-fi",
+  "modmenu.liberapay": "Liberapay",
   "modmenu.modrinth": "Modrinth",
+  "modmenu.opencollective": "Open Collective",
   "modmenu.patreon": "Patreon",
   "modmenu.reddit": "Reddit",
   "modmenu.twitch": "Twitch",
@@ -109,5 +114,8 @@
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
-  "option.modmenu.mods_button_style.icon": "Icon"
+  "option.modmenu.mods_button_style.icon": "Icon",
+  "option.modmenu.log_deprecation_warnings": "Deprecation Warnings",
+  "option.modmenu.log_deprecation_warnings.true": "ON",
+  "option.modmenu.log_deprecation_warnings.false": "OFF"
 }
