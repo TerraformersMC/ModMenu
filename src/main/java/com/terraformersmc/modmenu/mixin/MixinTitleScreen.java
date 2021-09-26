@@ -25,7 +25,7 @@ public class MixinTitleScreen {
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnTitleScreen()) {
 			String count = ModMenu.getDisplayedModCount();
 			String specificKey = "modmenu.mods." + count;
-			String replacementKey = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.mods.a";
+			String replacementKey = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.mods.n";
 			if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
 				replacementKey = specificKey + ".secret";
 			}
