@@ -100,5 +100,9 @@
     "modmenu.showingMods.n": "Showin %s modz",
     "modmenu.search": "Surtch 4 modz",
     "modmenu.modsFolder": "Opn Modz Foldr",
-    "modmenu.loaded": "(%s Lowded)"
+    "modmenu.loaded": "(%s Lowded)",
+    "option.modmenu.log_deprecation_warnings.false": "Nah",
+    "option.modmenu.log_deprecation_warnings.true": "Yea",
+    "option.modmenu.log_deprecation_warnings": "Anshien Warnins",
+    "modmenu.liberapay": "Liberapaw"
 }
