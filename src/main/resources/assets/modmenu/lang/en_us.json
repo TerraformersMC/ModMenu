@@ -104,5 +104,8 @@
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
-  "option.modmenu.mods_button_style.icon": "Icon"
+  "option.modmenu.mods_button_style.icon": "Icon",
+  "option.modmenu.log_deprecation_warnings": "Deprecation Warnings: %s",
+  "option.modmenu.log_deprecation_warnings.true": "ON",
+  "option.modmenu.log_deprecation_warnings.false": "OFF"
 }
