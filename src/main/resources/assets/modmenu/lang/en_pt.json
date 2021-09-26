@@ -45,5 +45,12 @@
     "modmenu.reddit": "Reddit",
     "modmenu.twitter": "Twitter",
     "modmenu.discord": "Discord",
-    "modmenu.loaded.short": "(%s)"
+    "modmenu.loaded.short": "(%s)",
+    "modmenu.links": "Maps:",
+    "option.modmenu.hide_mod_links.false": "Revealing",
+    "option.modmenu.hide_badges.false": "Revealing",
+    "option.modmenu.hide_mod_links.true": "Burying",
+    "option.modmenu.hide_badges.true": "Burying",
+    "option.modmenu.hide_config_buttons.true": "Burying",
+    "option.modmenu.hide_config_buttons.false": "Revealing"
 }
