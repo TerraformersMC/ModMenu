@@ -31,6 +31,7 @@
   },
   "authors": [
     "Prospector",
+    "jackassmc",
     "TerraformersMC"
   ],
   "contributors": [
@@ -81,7 +82,6 @@
     "ENDERZOMBI102",
     "anatom3000",
     "OroArmor",
-    "jackassmc",
     "Vaerian"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
