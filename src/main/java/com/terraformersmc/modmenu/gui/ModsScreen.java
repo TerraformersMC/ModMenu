@@ -281,8 +281,8 @@ public class ModsScreen extends Screen {
 		this.searchBox.render(matrices, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
 		drawCenteredText(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
-		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 16777215);
-		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 16777215);
+		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 16777215);
+		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 16777215);
 		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {

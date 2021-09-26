@@ -17,11 +17,11 @@
     "modmenu.twitter": "Twitter",
     "modmenu.twitch": "Twitch",
     "modmenu.patreon": "Patreon",
-    "modmenu.minecraft": "Minecraft",
+    "modmenu.badge.minecraft": "Minecraft",
     "modmenu.modrinth": "Modrinth",
     "modmenu.kofi": "Ko-fi",
     "modmenu.github_releases": "GitHub Releases",
-    "modmenu.forge": "Forge",
+    "modmenu.badge.forge": "Forge",
     "modmenu.discord": "Discord",
     "modmenu.curseforge": "CurseForge",
     "modmenu.crowdin": "Crowdin"

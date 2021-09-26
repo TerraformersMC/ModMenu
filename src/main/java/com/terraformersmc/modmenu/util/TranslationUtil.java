@@ -41,7 +41,7 @@ public class TranslationUtil {
 				if (((flags & (1 << i)) != 0) && override[i] != -1) {
 					fullKey.append(override[i]);
 				} else {
-					fullKey.append('a');
+					fullKey.append('n');
 				}
 			}
 			lastKey = fullKey.toString();
