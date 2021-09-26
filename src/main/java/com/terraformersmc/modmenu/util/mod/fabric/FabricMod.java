@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModIconHandler;
@@ -84,30 +85,33 @@ public class FabricMod implements Mod {
 		final boolean finalUsesModernParent = usesModernParent;
 		CustomValueUtil.getString("modmenu:parent", metadata).ifPresent(parent -> {
 			modMenuData.parent = Optional.of(parent);
-			if (!finalUsesModernParent) {
+			if (!finalUsesModernParent && ModMenuConfig.LOG_DEPRECATION_WARNINGS.getValue()) {
 				LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:parent' custom value! This will be removed in 1.18 snapshots, so ask the author of this mod to support the new API.");
 			}
 		});
 
-		CustomValueUtil.getBoolean("modmenu:clientsideOnly", metadata).ifPresent(client -> {
-			if (client) {
+		CustomValueUtil.getBoolean("modmenu:clientsideOnly", metadata).ifPresent(isClient -> {
+			if (isClient) {
 				modMenuData.badges.add(Badge.CLIENT);
 			}
-			LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:clientsideOnly' custom value! This is no longer needed and will be removed in 1.18 snapshots.");
+			final boolean modernIsClient = this.metadata.getEnvironment() == ModEnvironment.CLIENT;
+			if (isClient != modernIsClient && ModMenuConfig.LOG_DEPRECATION_WARNINGS.getValue()) {
+				LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:clientsideOnly' custom value! This is no longer needed and will be removed in 1.18 snapshots.");
+			}
 		});
-		CustomValueUtil.getBoolean("modmenu:api", metadata).ifPresent(library -> {
-			if (library) {
+		CustomValueUtil.getBoolean("modmenu:api", metadata).ifPresent(isLibrary -> {
+			if (isLibrary) {
 				modMenuData.badges.add(Badge.LIBRARY);
 			}
-			if (!badgeNames.contains("library")) {
+			if (!badgeNames.contains("library") && ModMenuConfig.LOG_DEPRECATION_WARNINGS.getValue()) {
 				LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:api' custom value! This will be removed in 1.18 snapshots, so ask the author of this mod to support the new API.");
 			}
 		});
-		CustomValueUtil.getBoolean("modmenu:deprecated", metadata).ifPresent(deprecated -> {
-			if (deprecated) {
+		CustomValueUtil.getBoolean("modmenu:deprecated", metadata).ifPresent(isDeprecated -> {
+			if (isDeprecated) {
 				modMenuData.badges.add(Badge.DEPRECATED);
 			}
-			if (!badgeNames.contains("deprecated")) {
+			if (!badgeNames.contains("deprecated") && ModMenuConfig.LOG_DEPRECATION_WARNINGS.getValue()) {
 				LOGGER.warn("WARNING! Mod " + metadata.getId() + " is only using deprecated 'modmenu:deprecated' custom value! This will be removed in 1.18 snapshots, so ask the author of this mod to support the new API.");
 			}
 		});

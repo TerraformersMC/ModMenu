@@ -13,6 +13,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 public class ModMenuConfig {
@@ -33,11 +34,18 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption MODIFY_GAME_MENU = new BooleanConfigOption("modify_game_menu", true);
 	public static final BooleanConfigOption HIDE_CONFIG_BUTTONS = new BooleanConfigOption("hide_config_buttons", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
+	public static final BooleanConfigOption LOG_DEPRECATION_WARNINGS = new BooleanConfigOption("log_deprecation_warnings", true);
+
+	public static final List<String> HIDDEN_OPTIONS = List.of(
+		"MODIFY_TITLE_SCREEN",
+		"MODIFY_GAME_MENU",
+		"HIDE_CONFIG_BUTTONS"
+	);
 
 	public static Option[] asOptions() {
 		ArrayList<Option> options = new ArrayList<>();
 		for (Field field : ModMenuConfig.class.getDeclaredFields()) {
-			if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && OptionConvertable.class.isAssignableFrom(field.getType()) && !field.getName().equals("HIDE_CONFIG_BUTTONS") && !field.getName().equals("MODIFY_TITLE_SCREEN") && !field.getName().equals("MODIFY_GAME_MENU")) {
+			if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && OptionConvertable.class.isAssignableFrom(field.getType()) && !HIDDEN_OPTIONS.contains(field.getName())) {
 				try {
 					options.add(((OptionConvertable) field.get(null)).asOption());
 				} catch (IllegalAccessException e) {
