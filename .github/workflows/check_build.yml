@@ -13,6 +13,7 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
+          1.8,  # Minimum
           11,   # LTS
           15    # Latest
         ]
