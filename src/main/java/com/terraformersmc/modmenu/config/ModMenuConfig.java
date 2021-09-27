@@ -12,8 +12,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ModMenuConfig {
 	public static final EnumConfigOption<Sorting> SORTING = new EnumConfigOption<>("sorting", Sorting.ASCENDING);
@@ -35,11 +37,11 @@ public class ModMenuConfig {
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
 	public static final BooleanConfigOption LOG_DEPRECATION_WARNINGS = new BooleanConfigOption("log_deprecation_warnings", true);
 
-	public static final List<String> HIDDEN_OPTIONS = List.of(
+	public static final Set<String> HIDDEN_OPTIONS = Stream.of(
 		"MODIFY_TITLE_SCREEN",
 		"MODIFY_GAME_MENU",
 		"HIDE_CONFIG_BUTTONS"
-	);
+	).collect(Collectors.toCollection(HashSet::new));
 
 	public static Option[] asOptions() {
 		ArrayList<Option> options = new ArrayList<>();
