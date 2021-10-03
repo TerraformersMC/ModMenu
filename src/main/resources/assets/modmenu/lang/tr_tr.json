@@ -100,5 +100,13 @@
     "modmenu.patreon": "Patreon",
     "modmenu.reddit": "Reddit",
     "modmenu.twitter": "Twitter",
-    "modmenu.wiki": "Wiki"
+    "modmenu.wiki": "Wiki",
+    "option.modmenu.log_deprecation_warnings": "Kullanımdan Kaldırma Uyarıları",
+    "option.modmenu.log_deprecation_warnings.false": "KAPALI",
+    "option.modmenu.log_deprecation_warnings.true": "AÇIK",
+    "modmenu.coindrop": "Coindrop",
+    "modmenu.opencollective": "Open Collective",
+    "modmenu.flattr": "Flattr",
+    "modmenu.buymeacoffee": "Bana Bir Kahve Ismarla",
+    "modmenu.liberapay": "Liberapay"
 }
