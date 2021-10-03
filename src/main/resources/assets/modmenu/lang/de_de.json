@@ -100,5 +100,8 @@
     "modmenu.badge.deprecated": "Veraltet",
     "modmenu.loaded.short": "(%s)",
     "modmenu.loaded.420.secret": "(%s geladen...brenn es)",
-    "modmenu.loaded.69.secret": "(%s geladen...nice)"
+    "modmenu.loaded.69.secret": "(%s geladen...nice)",
+    "modmenu.flattr": "Flattr",
+    "modmenu.buymeacoffee": "Kauf mir einen Kaffee",
+    "modmenu.liberapay": "Liberapay"
 }

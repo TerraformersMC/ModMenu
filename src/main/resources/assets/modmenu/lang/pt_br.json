@@ -100,5 +100,10 @@
     "modmenu.dropInfo.line2": "nesta janela para adicionar mods",
     "modmenu.dropInfo.line1": "Arraste e solte os arquivos",
     "modmenu.dropSuccessful.line2": "Reinicie o jogo para carregar mods",
-    "modmenu.dropSuccessful.line1": "Mods copiados"
+    "modmenu.dropSuccessful.line1": "Mods copiados",
+    "modmenu.coindrop": "Coindrop",
+    "modmenu.opencollective": "Open Collective",
+    "modmenu.flattr": "Flattr",
+    "modmenu.buymeacoffee": "Buy Me a Coffee",
+    "modmenu.liberapay": "Liberapay"
 }
