@@ -97,5 +97,8 @@
     "modmenu.showingMods.a": "%s Mods angezeigt",
     "modmenu.loaded.short": "(%s)",
     "modmenu.toggleFilterOptions": "Filteroptionen umschalten",
-    "modmenu.deprecated": "Veraltet"
+    "modmenu.deprecated": "Veraltet",
+    "modmenu.flattr": "Flattr",
+    "modmenu.buymeacoffee": "Kauf mir einen Kaffee",
+    "modmenu.liberapay": "Liberapay"
 }

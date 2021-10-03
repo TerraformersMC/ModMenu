@@ -97,5 +97,13 @@
     "modmenu.reddit": "Reddit",
     "modmenu.twitter": "Twitter",
     "modmenu.wiki": "Wiki",
-    "modmenu.kofi": "Ko-fi"
+    "modmenu.kofi": "Ko-fi",
+    "option.modmenu.log_deprecation_warnings.false": "KAPALI",
+    "option.modmenu.log_deprecation_warnings.true": "AÇIK",
+    "option.modmenu.log_deprecation_warnings": "Kullanımdan Kaldırma Uyarıları: %s",
+    "modmenu.coindrop": "Coindrop",
+    "modmenu.opencollective": "Open Collective",
+    "modmenu.flattr": "Flattr",
+    "modmenu.buymeacoffee": "Bana Bir Kahve Ismarla",
+    "modmenu.liberapay": "Liberapay"
 }
