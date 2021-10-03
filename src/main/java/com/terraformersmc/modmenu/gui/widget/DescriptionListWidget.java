@@ -13,6 +13,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
@@ -61,7 +62,8 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 	@Override
 	public void appendNarrations(NarrationMessageBuilder builder) {
-		// TODO let's not read the whole thing
+		Mod mod = parent.getSelectedEntry().getMod();
+		builder.put(NarrationPart.TITLE, mod.getName() + " " + mod.getPrefixedVersion());
 	}
 
 	@Override
