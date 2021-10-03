@@ -97,5 +97,13 @@
     "modmenu.twitch": "Twitch",
     "modmenu.patreon": "Patreon",
     "modmenu.reddit": "Reddit",
-    "modmenu.discord": "Discord"
+    "modmenu.discord": "Discord",
+    "option.modmenu.log_deprecation_warnings.false": "Não",
+    "option.modmenu.log_deprecation_warnings.true": "Sim",
+    "option.modmenu.log_deprecation_warnings": "Aviso de obsoletos: %s",
+    "modmenu.coindrop": "Coindrop",
+    "modmenu.opencollective": "Open Collective",
+    "modmenu.flattr": "Flattr",
+    "modmenu.buymeacoffee": "Buy Me a Coffee",
+    "modmenu.liberapay": "Liberapay"
 }
