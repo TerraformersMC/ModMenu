@@ -100,5 +100,10 @@
     "modmenu.patreon": "Patreon",
     "modmenu.reddit": "Reddit",
     "modmenu.twitter": "Twitter",
-    "modmenu.wiki": "Wiki"
+    "modmenu.wiki": "Wiki",
+    "modmenu.coindrop": "Coindrop",
+    "modmenu.opencollective": "Open Collective",
+    "modmenu.flattr": "Flattr",
+    "modmenu.buymeacoffee": "Bana Bir Kahve Ismarla",
+    "modmenu.liberapay": "Liberapay"
 }
