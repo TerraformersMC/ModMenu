@@ -42,6 +42,10 @@ public class LoaderMetaUpdateProvider extends ModUpdateProvider<LoaderMetaUpdate
 						MetaResponse[] versions = gson.fromJson(EntityUtils.toString(entity), MetaResponse[].class);
 
 						for (MetaResponse metaVersion : versions) {
+							if (!metaVersion.loader.stable && data.metadata.getVersion().getFriendlyString().equalsIgnoreCase(metaVersion.loader.version)) {
+								// We have a more recent unstable version (beta). Let's not show the update prompt.
+								break;
+							}
 							if (metaVersion.loader.stable && !data.metadata.getVersion().getFriendlyString().equalsIgnoreCase(metaVersion.loader.version)) {
 								AvailableUpdate update = new AvailableUpdate(
 										metaVersion.loader.version,
