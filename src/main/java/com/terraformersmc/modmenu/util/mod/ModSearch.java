@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.util.mod;
 
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.gui.ModsScreen;
+import net.minecraft.text.TranslatableText;
 
 import java.util.List;
 import java.util.Locale;
@@ -25,15 +26,21 @@ public class ModSearch {
 	private static boolean passesFilters(ModsScreen screen, Mod mod, String query) {
 		String modId = mod.getId();
 
+		String library = new TranslatableText("modmenu.searchTerms.library").toString();
+		String patchwork = new TranslatableText("modmenu.searchTerms.patchwork").toString();
+		String deprecated = new TranslatableText("modmenu.searchTerms.deprecated").toString();
+		String clientside = new TranslatableText("modmenu.searchTerms.clientside").toString();
+		String configurable = new TranslatableText("modmenu.searchTerms.configurable").toString();
+
 		// Some basic search, could do with something more advanced but this will do for now
 		if (mod.getName().toLowerCase(Locale.ROOT).contains(query) // Search mod name
 				|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod name
 				|| authorMatches(mod, query) // Search via author
-				|| (mod.getBadges().contains(Mod.Badge.LIBRARY) && "api library".contains(query)) // Search for lib mods
-				|| ("patchwork forge".contains(query) && mod.getBadges().contains(Mod.Badge.PATCHWORK_FORGE)) // Search for patchwork mods
-				|| ("deprecated".contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED)) // Search for deprecated mods
-				|| ("clientside client-side".contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT)) // Search for clientside mods
-				|| ("configurations configs configures configurable".contains(query) && screen.getModHasConfigScreen().get(modId)) // Search for mods that can be configured
+				|| library.contains(query) && mod.getBadges().contains(Mod.Badge.LIBRARY) // Search for lib mods
+				|| patchwork.contains(query) && mod.getBadges().contains(Mod.Badge.PATCHWORK_FORGE) // Search for patchwork mods
+				|| deprecated.contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED) // Search for deprecated mods
+				|| clientside.contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT) // Search for clientside mods
+				|| configurable.contains(query) && screen.getModHasConfigScreen().get(modId) // Search for mods that can be configured
 		) {
 			return true;
 		}
