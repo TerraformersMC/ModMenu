@@ -30,8 +30,8 @@ public class ModSearch {
 		// Some basic search, could do with something more advanced but this will do for now
 		if (mod.getName().toLowerCase(Locale.ROOT).contains(query) // Search mod name
 				|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod name
-				|| modDescription.toLowerCase(Locale.ROOT).contains(query) // Search mod name
-				|| modSummary.toLowerCase(Locale.ROOT).contains(query) // Search mod name
+				|| modDescription.toLowerCase(Locale.ROOT).contains(query) // Search mod description
+				|| modSummary.toLowerCase(Locale.ROOT).contains(query) // Search mod summary
 				|| authorMatches(mod, query) // Search via author
 				|| (mod.getBadges().contains(Mod.Badge.LIBRARY) && "api library".contains(query)) // Search for lib mods
 				|| ("patchwork forge".contains(query) && mod.getBadges().contains(Mod.Badge.PATCHWORK_FORGE)) // Search for patchwork mods
