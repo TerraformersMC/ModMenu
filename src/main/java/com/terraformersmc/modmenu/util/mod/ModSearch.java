@@ -29,7 +29,7 @@ public class ModSearch {
 
 		// Some basic search, could do with something more advanced but this will do for now
 		if (mod.getName().toLowerCase(Locale.ROOT).contains(query) // Search mod name
-				|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod name
+				|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod ID
 				|| modDescription.toLowerCase(Locale.ROOT).contains(query) // Search mod description
 				|| modSummary.toLowerCase(Locale.ROOT).contains(query) // Search mod summary
 				|| authorMatches(mod, query) // Search via author
