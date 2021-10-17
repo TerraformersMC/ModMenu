@@ -12,6 +12,12 @@
   "modmenu.mods.420.secret": " (%s Mods...blaze it)",
 
   "modmenu.search": "Search for mods",
+  "modmenu.searchTerms.library": "api library",
+  "modmenu.searchTerms.patchwork": "patchwork forge fml",
+  "modmenu.searchTerms.deprecated": "deprecated outdated old",
+  "modmenu.searchTerms.clientside": "clientside gameside",
+  "modmenu.searchTerms.configurable": "configurations configs configures configurable options",
+
   "modmenu.toggleFilterOptions": "Toggle Filter Options",
   "modmenu.showingMods.n": "Showing %s mods",
   "modmenu.showingMods.1": "Showing %s mod",
