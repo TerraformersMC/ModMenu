@@ -1,7 +1,6 @@
 {
     "modmenu.title": "Modlar",
     "modmenu.descriptionTranslation.modmenu": "Kurmuş olduğun modların listesini göstermek için bir mod menüsü ekler.",
-
     "modmenu.loaded": "(%s Yüklü)",
     "modmenu.loaded.short": "(%s)",
     "modmenu.loaded.420.secret": "(%s Yüklü...ateşle)",
@@ -10,7 +9,6 @@
     "modmenu.mods.1": " (%s Mod)",
     "modmenu.mods.69.secret": " (%s Mod...güzel)",
     "modmenu.mods.420.secret": " (%s Mod...ateşle)",
-
     "modmenu.search": "Modları ara",
     "modmenu.toggleFilterOptions": "Filtrelemeyi Aç/Kapa",
     "modmenu.showingMods.n": "%s mod gösteriliyor",
@@ -21,32 +19,27 @@
     "modmenu.showingModsLibraries.n.1": "%s mod ve %s kütüphane gösteriliyor",
     "modmenu.showingModsLibraries.1.n": "%s mod ve %s kütüphane gösteriliyor",
     "modmenu.showingModsLibraries.1.1": "%s mod ve %s kütüphane gösteriliyor",
-
     "modmenu.badge.library": "Kütüphane",
     "modmenu.badge.clientsideOnly": "İstemci",
     "modmenu.badge.deprecated": "Eskimiş",
     "modmenu.badge.forge": "Forge",
     "modmenu.badge.minecraft": "Minecraft",
-
     "modmenu.dropInfo.line1": "Modları eklemek için bu pencereye",
     "modmenu.dropInfo.line2": "dosyaları sürükleyip bırakın",
     "modmenu.dropConfirm": "Seçili mod veya modları mod dizinine kopyalamak istiyor musun?",
     "modmenu.dropSuccessful.line1": "Modlar başarıyla kopyalandı",
     "modmenu.dropSuccessful.line2": "Modları yüklemek için oyunu yeniden başlat",
-
-    "modmenu.modIdToolTip": "Mod kimliği: %s",            
+    "modmenu.modIdToolTip": "Mod kimliği: %s",
     "modmenu.authorPrefix": "%s tarafından geliştirildi",
     "modmenu.config": "Ayarları Düzenle",
     "modmenu.configure": "Ayarla...",
     "modmenu.website": "Web sitesi",
     "modmenu.issues": "Sorunlar",
-
     "modmenu.credits": "Emeği Geçenler:",
     "modmenu.viewCredits": "Emeği Geçenleri Göster",
     "modmenu.license": "Lisans:",
     "modmenu.links": "Bağlantılar:",
     "modmenu.source": "Kaynak",
-
     "modmenu.buymeacoffee": "Bana Bir Kahve Ismarla",
     "modmenu.coindrop": "Coindrop",
     "modmenu.crowdin": "Crowdin",
@@ -64,10 +57,8 @@
     "modmenu.twitter": "Twitter",
     "modmenu.wiki": "Wiki",
     "modmenu.youtube": "YouTube",
-
     "modmenu.modsFolder": "Mod Klasörünü Aç",
     "modmenu.configsFolder": "Ayarlama Klasörünü Aç",
-
     "modmenu.options": "Mod Menü Ayarları",
     "option.modmenu.sorting": "Sırala",
     "option.modmenu.sorting.ascending": "A-Z",
@@ -114,8 +105,5 @@
     "option.modmenu.mods_button_style.classic": "Realms'in Altında",
     "option.modmenu.mods_button_style.replace_realms": "Realms'in Yerine",
     "option.modmenu.mods_button_style.shrink": "Bitişik",
-    "option.modmenu.mods_button_style.icon": "Simge",
-    "option.modmenu.log_deprecation_warnings": "Kullanımdan Kaldırma Uyarıları",
-    "option.modmenu.log_deprecation_warnings.false": "KAPALI",
-    "option.modmenu.log_deprecation_warnings.true": "AÇIK"
+    "option.modmenu.mods_button_style.icon": "Simge"
 }
