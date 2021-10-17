@@ -6,7 +6,7 @@
     "modmenu.config": "Изменить настройки",
     "modmenu.modsFolder": "Открыть папку модов",
     "modmenu.configsFolder": "Открыть папку настроек",
-    "modmenu.configure": "Настройки",
+    "modmenu.configure": "Настройки...",
     "modmenu.modIdToolTip": "ID мода: %s",
     "modmenu.website": "Сайт мода",
     "modmenu.issues": "Сообщить об ошибке",
