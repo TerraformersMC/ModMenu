@@ -54,5 +54,10 @@
     "option.modmenu.hide_mod_links.true": "Burying",
     "option.modmenu.hide_badges.true": "Burying",
     "option.modmenu.hide_config_buttons.true": "Burying",
-    "option.modmenu.hide_config_buttons.false": "Revealing"
+    "option.modmenu.hide_config_buttons.false": "Revealing",
+    "option.modmenu.hide_mod_credits.true": "Burying",
+    "option.modmenu.hide_mod_credits.false": "Revealing",
+    "option.modmenu.hide_mod_license.true": "Burying",
+    "option.modmenu.hide_mod_license.false": "Revealing",
+    "option.modmenu.count_libraries": "%s Jars o' Knowledge"
 }
