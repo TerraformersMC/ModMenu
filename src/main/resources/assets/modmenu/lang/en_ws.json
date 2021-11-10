@@ -14,5 +14,6 @@
     "modmenu.curseforge": "CurseForge",
     "modmenu.youtube": "YouTube",
     "modmenu.twitch": "Twitch",
-    "modmenu.patreon": "Patreon"
+    "modmenu.patreon": "Patreon",
+    "option.modmenu.sorting.ascending": "A-Z"
 }
