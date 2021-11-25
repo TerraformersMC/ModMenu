@@ -24,5 +24,6 @@
     "modmenu.badge.forge": "Forge",
     "modmenu.discord": "Discord",
     "modmenu.curseforge": "CurseForge",
-    "modmenu.crowdin": "Crowdin"
+    "modmenu.crowdin": "Crowdin",
+    "modmenu.descriptionTranslation.modmenu": "Добавя меню с модове, за да видите списъка с модове, които сте инсталирали"
 }
