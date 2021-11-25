@@ -87,7 +87,7 @@
     "option.modmenu.count_hidden_mods.false": "不统计",
     "option.modmenu.mod_count_location": "列出总数",
     "option.modmenu.mod_count_location.title_screen": "标题边上",
-    "option.modmenu.mod_count_location.mods_button": "模组按钮",
+    "option.modmenu.mod_count_location.mods_button": "模组按钮位置",
     "option.modmenu.mod_count_location.title_screen_and_mods_button": "都显示",
     "option.modmenu.mod_count_location.none": "都不显示",
     "option.modmenu.easter_eggs": "复活节彩蛋",
