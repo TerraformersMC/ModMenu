@@ -87,7 +87,7 @@
     "option.modmenu.count_hidden_mods.false": "حساب نشود",
     "option.modmenu.mod_count_location": "نمایش تعداد ماد ها: %s",
     "option.modmenu.mod_count_location.title_screen": "گوشۀ صفحه",
-    "option.modmenu.mod_count_location.mods_button": "دکمۀ ماد ها",
+    "option.modmenu.mod_count_location.mods_button": "دکمه ماد ها: %s",
     "option.modmenu.mod_count_location.title_screen_and_mods_button": "هردو",
     "option.modmenu.mod_count_location.none": "هیچکدام",
     "option.modmenu.easter_eggs.true": "فعال",
