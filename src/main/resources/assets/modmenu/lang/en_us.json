@@ -132,7 +132,7 @@
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
   "option.modmenu.mods_button_style.icon": "Icon",
-  "option.modmenu.disable_update_checks": "Update Checks: %s",
+  "option.modmenu.disable_update_checks": "Update Checks",
   "option.modmenu.disable_update_checks.false": "Enabled",
   "option.modmenu.disable_update_checks.true": "Disabled",
   "option.modmenu.disable_update_notification": "Update Notification",

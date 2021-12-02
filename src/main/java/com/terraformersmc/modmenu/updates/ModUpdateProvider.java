@@ -29,7 +29,7 @@ public abstract class ModUpdateProvider<T extends ModUpdateData> {
 	}
 
 	public static void initializeProviders() {
-		String gameVersion = MinecraftVersion.GAME_VERSION.getName();
+		String gameVersion = MinecraftVersion.CURRENT.toString();
 		ModUpdateProvider.PROVIDERS.put("modrinth", new ModrinthUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("github", new GitHubUpdateProvider(gameVersion));
 		ModUpdateProvider.PROVIDERS.put("maven", new MavenUpdateProvider(gameVersion));
