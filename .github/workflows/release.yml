@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         # Use these Java versions
-        java: [16]
+        java: [17]
         # and run on both Linux and Windows
         os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
@@ -55,7 +55,7 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           DISCORD_ANNOUNCEMENT_WEBHOOK: ${{ secrets.DISCORD_ANNOUNCEMENT_WEBHOOK }}
       - name: Capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '16' }} # Only upload artifacts built from LTS java on one OS
+        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from LTS java on one OS
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts

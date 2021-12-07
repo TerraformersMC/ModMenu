@@ -8,8 +8,8 @@ pluginManagement {
 	}
 }
 
-if (JavaVersion.current().ordinal() + 1 < 16) {
-	throw new IllegalStateException("Please run gradle with Java 16+!")
+if (JavaVersion.current().ordinal() + 1 < 17) {
+	throw new IllegalStateException("Please run gradle with Java 17+!")
 }
 
 rootProject.name = "modmenu"
