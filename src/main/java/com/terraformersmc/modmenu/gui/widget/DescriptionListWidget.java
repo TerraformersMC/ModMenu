@@ -115,6 +115,8 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					if ("minecraft".equals(mod.getId())) {
 						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
 						children().add(new MojangCreditsEntry(new TranslatableText("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), this));
+					} else if ("java".equals(mod.getId())) {
+						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
 					} else {
 						List<String> authors = mod.getAuthors();
 						List<String> contributors = mod.getContributors();

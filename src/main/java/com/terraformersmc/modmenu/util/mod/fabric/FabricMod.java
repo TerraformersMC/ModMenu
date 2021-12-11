@@ -184,8 +184,12 @@ public class FabricMod implements Mod {
 	@Override
 	public @NotNull List<String> getAuthors() {
 		List<String> authors = metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
-		if ("minecraft".equals(getId()) && authors.isEmpty()) {
-			return Lists.newArrayList("Mojang Studios");
+		if (authors.isEmpty()) {
+			if ("minecraft".equals(getId())) {
+				return Lists.newArrayList("Mojang Studios");
+			} else if ("java".equals(getId())) {
+				return Lists.newArrayList(System.getProperty("java.vendor"));
+			}
 		}
 		return authors;
 	}
