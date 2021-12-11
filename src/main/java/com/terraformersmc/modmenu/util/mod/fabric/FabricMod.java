@@ -154,8 +154,12 @@ public class FabricMod implements Mod {
 	@Override
 	public @NotNull String getDescription() {
 		String description = metadata.getDescription();
-		if ("minecraft".equals(getId()) && description.isEmpty()) {
-			return "The base game.";
+		if (description.isEmpty()) {
+			if ("minecraft".equals(getId())) {
+				return "The base game.";
+			} else if ("java".equals(getId())) {
+				return "The Java runtime environment.";
+			}
 		}
 		return description;
 	}
