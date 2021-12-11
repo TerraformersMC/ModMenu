@@ -166,6 +166,9 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @NotNull String getVersion() {
+		if ("java".equals(getId())) {
+			return System.getProperty("java.version");
+		}
 		return metadata.getVersion().getFriendlyString();
 	}
 
