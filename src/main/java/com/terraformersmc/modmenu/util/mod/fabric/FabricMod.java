@@ -212,6 +212,8 @@ public class FabricMod implements Mod {
 	public @Nullable String getWebsite() {
 		if ("minecraft".equals(getId())) {
 			return "https://www.minecraft.net/";
+		} else if ("java".equals(getId())) {
+			return System.getProperty("java.vendor.url");
 		}
 		return metadata.getContact().get("homepage").orElse(null);
 	}
