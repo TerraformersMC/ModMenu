@@ -25,7 +25,6 @@
     "modmenu.dropSuccessful.line1": "複製完成",
     "modmenu.dropSuccessful.line2": "請重啟遊戲以重新載入模組",
     "option.modmenu.sorting": "排序",
-    "option.modmenu.sorting.descending": "",
     "option.modmenu.show_libraries.true": "已顯示",
     "option.modmenu.show_libraries.false": "已隱藏",
     "option.modmenu.hide_config_buttons.false": "已顯示",

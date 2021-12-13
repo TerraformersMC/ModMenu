@@ -22,14 +22,12 @@
     "modmenu.showingModsLibraries.n.1": "spoɯ %s puɐ ʎɹɐɹqıן s% ƃuıʍoɥS",
     "modmenu.showingModsLibraries.1.n": "poɯ %s puɐ sǝıɹɐɹqıן s% ƃuıʍoɥS",
     "modmenu.showingModsLibraries.1.1": "poɯ %s puɐ ʎɹɐɹqıן s% ƃuıʍoɥS",
-    "modmenu.badge.forge": "",
     "modmenu.dropConfirm": "¿ʎɹoʇɔǝɹıp spoɯ ǝɥʇ oʇuı spoɯ ƃuıʍoןןoɟ ǝɥʇ ʎdoɔ oʇ ʇuɐʍ noʎ oᗡ",
     "modmenu.dropSuccessful.line1": "spoɯ pǝıdoɔ ʎןןnɟssǝɔɔnS",
     "modmenu.dropSuccessful.line2": "spoɯ pɐoן oʇ ǝɯɐƃ ʇɹɐʇsǝᴚ",
     "modmenu.dropInfo.line1": "oʇuı sǝןıɟ doɹp puɐ ƃɐɹᗡ",
     "modmenu.dropInfo.line2": "spoɯ ppɐ oʇ ʍopuıʍ sıɥʇ",
     "option.modmenu.sorting": "ʇɹoS",
-    "option.modmenu.sorting.descending": "",
     "option.modmenu.show_libraries": "sǝᴉɹɐɹqᴉ⅂",
     "option.modmenu.show_libraries.true": "uʍoɥS",
     "option.modmenu.show_libraries.false": "uǝppᴉH",
@@ -78,9 +76,7 @@
     "modmenu.mods.420.secret": " (ʇᴉ ǝzɐʅq...spoꟽ %s)",
     "modmenu.mods.69.secret": " (ǝɔᴉu...spoꟽ %s)",
     "modmenu.mods.1": " (poꟽ %s)",
-    "modmenu.crowdin": "",
     "modmenu.modrinth": "",
-    "modmenu.youtube": "",
     "modmenu.wiki": "ᴉʞᴉϺ",
     "modmenu.source": "ǝɔɹnoS",
     "modmenu.links": ":sʞuᴉ⅂",
@@ -88,6 +84,5 @@
     "modmenu.viewCredits": "sʇᴉpǝɹϽ ʍǝᴉɅ",
     "modmenu.credits": ":sʇᴉpǝɹϽ",
     "modmenu.loaded.420.secret": "(ʇᴉ ǝzɐʅq...pǝpɐo⅂ %s)",
-    "modmenu.loaded.69.secret": "(ǝɔᴉu...pǝpɐo⅂ %s)",
-    "modmenu.twitter": ""
+    "modmenu.loaded.69.secret": "(ǝɔᴉu...pǝpɐo⅂ %s)"
 }
