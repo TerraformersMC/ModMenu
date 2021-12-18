@@ -12,7 +12,7 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
-          16,  # Minimum
+          17,  # Minimum
         ]
         os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: ./gradlew build --stacktrace --parallel
       - name: Capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '16' }} # Only upload artifacts built from LTS java on one OS
+        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from LTS java on one OS
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
