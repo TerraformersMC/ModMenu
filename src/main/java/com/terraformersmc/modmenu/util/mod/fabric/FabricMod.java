@@ -229,7 +229,7 @@ public class FabricMod implements Mod {
 	@Override
 	public @NotNull Set<String> getLicense() {
 		if ("minecraft".equals(getId())) {
-			return Sets.newHashSet("All Rights Reserved");
+			return Sets.newHashSet("Minecraft EULA");
 		}
 		return Sets.newHashSet(metadata.getLicense());
 	}
