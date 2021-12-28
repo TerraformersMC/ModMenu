@@ -14,7 +14,6 @@
     "modmenu.toggleFilterOptions": "フィルター設定の切り替え",
     "modmenu.showingMods.n": "%s個のmodを表示中",
     "option.modmenu.sorting": "表示順",
-    "option.modmenu.sorting.descending": "",
     "option.modmenu.show_libraries": "前提mod",
     "option.modmenu.show_libraries.true": "表示",
     "option.modmenu.show_libraries.false": "非表示",

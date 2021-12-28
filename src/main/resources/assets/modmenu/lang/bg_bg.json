@@ -8,13 +8,9 @@
     "modmenu.modIdToolTip": "ID на модификацията: %s",
     "modmenu.website": "Уебсайт",
     "modmenu.authorPrefix": "От %s",
-    "option.modmenu.sorting.ascending": "",
     "modmenu.loaded.short": "",
-    "modmenu.twitter": "",
     "modmenu.patreon": "",
-    "modmenu.modrinth": "",
     "modmenu.github_releases": "",
-    "modmenu.discord": "",
     "modmenu.crowdin": "",
     "modmenu.descriptionTranslation.modmenu": "Добавя меню с модове, за да видите списъка с модове, които сте инсталирали"
 }
