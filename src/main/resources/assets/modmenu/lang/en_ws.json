@@ -1,6 +1,5 @@
 {
     "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods installed by thee.",
     "option.modmenu.sorting.descending": "Z-A",
-    "modmenu.crowdin": "",
     "option.modmenu.sorting.ascending": "A-Z"
 }
