@@ -37,7 +37,6 @@
     "modmenu.mods.n": " (%s modia)",
     "modmenu.options": "Mod Menu -asetukset",
     "option.modmenu.sorting": "Järjestys",
-    "option.modmenu.sorting.descending": "",
     "option.modmenu.show_libraries": "Kirjastot",
     "option.modmenu.show_libraries.true": "Näkyvissä",
     "option.modmenu.show_libraries.false": "Piilossa",

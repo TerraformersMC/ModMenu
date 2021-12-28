@@ -22,7 +22,6 @@
     "modmenu.showingModsLibraries.n.1": "Pokazuję %s modyfikacji oraz %s bibliotekę",
     "modmenu.showingModsLibraries.1.n": "Pokazuję %s modyfikację oraz %s bibliotek",
     "modmenu.showingModsLibraries.1.1": "Pokazuję %s modyfikację oraz %s bibliotekę",
-    "modmenu.badge.forge": "",
     "modmenu.dropConfirm": "Czy chcesz skopiować wybrane mody do folderu z modami?",
     "modmenu.dropSuccessful.line1": "Mody zostały pomyślnie skopiowane",
     "modmenu.dropSuccessful.line2": "Zrestartuj grę, aby załadować mody",
