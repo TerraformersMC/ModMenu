@@ -8,6 +8,5 @@
     "modmenu.modIdToolTip": "ID на модификацията: %s",
     "modmenu.website": "Уебсайт",
     "modmenu.authorPrefix": "От %s",
-    "modmenu.crowdin": "",
     "modmenu.descriptionTranslation.modmenu": "Добавя меню с модове, за да видите списъка с модове, които сте инсталирали"
 }
