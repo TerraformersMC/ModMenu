@@ -15,11 +15,7 @@ import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -263,9 +259,20 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			if (isMouseOver(mouseX, mouseY)) {
-				client.setScreen(new CreditsScreen(false, Runnables.doNothing()));
+				client.setScreen(new MinecraftCredits(false));
 			}
 			return super.mouseClicked(mouseX, mouseY, button);
+		}
+
+		class MinecraftCredits extends CreditsScreen {
+			public MinecraftCredits(boolean endCredits) {
+				super(endCredits, Runnables.doNothing());
+			}
+
+			@Override
+			public void onClose() {
+				client.setScreen(parent);
+			}
 		}
 	}
 
