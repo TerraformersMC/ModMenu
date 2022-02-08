@@ -1,18 +1,5 @@
 {
     "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods installed by thee.",
     "option.modmenu.sorting.descending": "Z-A",
-    "modmenu.twitter": "Twitter",
-    "modmenu.loaded.short": "(%s)",
-    "modmenu.minecraft": "Minecraft",
-    "modmenu.reddit": "Reddit",
-    "modmenu.discord": "Discord",
-    "modmenu.forge": "Forge",
-    "modmenu.kofi": "Ko-fi",
-    "modmenu.crowdin": "Crowdin",
-    "modmenu.github_releases": "GitHub Releases",
-    "modmenu.modrinth": "Modrinth",
-    "modmenu.curseforge": "CurseForge",
-    "modmenu.youtube": "YouTube",
-    "modmenu.twitch": "Twitch",
-    "modmenu.patreon": "Patreon"
+    "option.modmenu.sorting.ascending": "A-Z"
 }
