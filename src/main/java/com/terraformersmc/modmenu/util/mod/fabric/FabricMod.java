@@ -154,14 +154,21 @@ public class FabricMod implements Mod {
 	@Override
 	public @NotNull String getDescription() {
 		String description = metadata.getDescription();
-		if ("minecraft".equals(getId()) && description.isEmpty()) {
-			return "The base game.";
+		if (description.isEmpty()) {
+			if ("minecraft".equals(getId())) {
+				return "The base game.";
+			} else if ("java".equals(getId())) {
+				return "The Java runtime environment.";
+			}
 		}
 		return description;
 	}
 
 	@Override
 	public @NotNull String getVersion() {
+		if ("java".equals(getId())) {
+			return System.getProperty("java.version");
+		}
 		return metadata.getVersion().getFriendlyString();
 	}
 
@@ -180,8 +187,12 @@ public class FabricMod implements Mod {
 	@Override
 	public @NotNull List<String> getAuthors() {
 		List<String> authors = metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
-		if ("minecraft".equals(getId()) && authors.isEmpty()) {
-			return Lists.newArrayList("Mojang Studios");
+		if (authors.isEmpty()) {
+			if ("minecraft".equals(getId())) {
+				return Lists.newArrayList("Mojang Studios");
+			} else if ("java".equals(getId())) {
+				return Lists.newArrayList(System.getProperty("java.vendor"));
+			}
 		}
 		return authors;
 	}
@@ -204,6 +215,8 @@ public class FabricMod implements Mod {
 	public @Nullable String getWebsite() {
 		if ("minecraft".equals(getId())) {
 			return "https://www.minecraft.net/";
+		} else if ("java".equals(getId())) {
+			return System.getProperty("java.vendor.url");
 		}
 		return metadata.getContact().get("homepage").orElse(null);
 	}
