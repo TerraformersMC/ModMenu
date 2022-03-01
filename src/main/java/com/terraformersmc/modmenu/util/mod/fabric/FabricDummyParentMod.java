@@ -31,6 +31,9 @@ public class FabricDummyParentMod implements Mod {
 		if (parentData != null) {
 			return parentData.getName().orElse("");
 		}
+		if (id.equals("fabric")) {
+			return "Fabric API";
+		}
 		return id;
 	}
 
@@ -94,7 +97,11 @@ public class FabricDummyParentMod implements Mod {
 		if (parentData != null) {
 			return parentData.getBadges();
 		}
-		return new HashSet<>();
+		var badges = new HashSet<Badge>();
+		if (id.equals("fabric")) {
+			badges.add(Badge.LIBRARY);
+		}
+		return badges;
 	}
 
 	@Override
