@@ -402,7 +402,7 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void onClose() {
+	public void close() {
 		this.modList.close();
 		this.client.setScreen(this.previousScreen);
 	}
