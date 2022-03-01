@@ -272,7 +272,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			}
 
 			@Override
-			public void onClose() {
+			public void close() {
 				client.setScreen(parent);
 			}
 		}
