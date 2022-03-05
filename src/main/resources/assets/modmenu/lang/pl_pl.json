@@ -9,7 +9,7 @@
     "modmenu.modIdToolTip": "ID moda: %s",
     "modmenu.website": "Strona",
     "modmenu.authorPrefix": "Stworzone przez %s",
-    "modmenu.search": "Szukaj modyfikacji...",
+    "modmenu.search": "Szukaj modów",
     "modmenu.badge.clientsideOnly": "Klient",
     "modmenu.badge.deprecated": "Porzucone",
     "modmenu.badge.library": "Biblioteka",
@@ -78,5 +78,6 @@
     "option.modmenu.mods_button_style.replace_realms": "Zastąp Realms",
     "option.modmenu.mods_button_style.shrink": "Obok Realms",
     "option.modmenu.mods_button_style.icon": "Ikona",
-    "modmenu.mods.69.secret": " (%s modów...nieźle)"
+    "modmenu.mods.69.secret": " (%s modów...nieźle)",
+    "modmenu.loaded.69.secret": "(%s załadowanych... nieźle)"
 }
