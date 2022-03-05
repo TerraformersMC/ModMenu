@@ -78,5 +78,11 @@
     "modmenu.loaded.420.secret": "(%s laaditud...pilvede embuses)",
     "modmenu.mods.420.secret": " (%s modi...pilvede embuses)",
     "modmenu.loaded.69.secret": "(%s laaditud...lahe)",
-    "modmenu.wiki": "Viki"
+    "modmenu.wiki": "Viki",
+    "modmenu.searchTerms.library": "api library teek rakendusliides",
+    "modmenu.searchTerms.deprecated": "deprecated outdated old vananenud aegunud",
+    "modmenu.issues": "Veahaldus",
+    "modmenu.searchTerms.clientside": "clientside gameside mängupoolne kliendipoolne klient",
+    "modmenu.github_releases": "GitHubi väljalasked",
+    "modmenu.searchTerms.configurable": "configurations configs configures configurable options seadistused kohandused valikud sätted"
 }
