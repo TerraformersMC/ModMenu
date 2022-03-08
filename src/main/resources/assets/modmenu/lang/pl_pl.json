@@ -98,5 +98,15 @@
     "modmenu.twitter": "Twitter",
     "modmenu.youtube": "YouTube",
     "option.modmenu.sorting.descending": "Z-A",
-    "modmenu.loaded.420.secret": "(%s załadowane... jesteś tego pewien?)"
+    "modmenu.loaded.420.secret": "(%s załadowane... jesteś tego pewien?)",
+    "modmenu.badge.forge": "Forge",
+    "modmenu.badge.minecraft": "Minecraft",
+    "modmenu.issues": "Problemy",
+    "modmenu.crowdin": "Crowdin",
+    "modmenu.discord": "Discord",
+    "modmenu.github_releases": "GitHub Releases",
+    "modmenu.loaded.short": "(%s)",
+    "option.modmenu.sorting.ascending": "A-Z",
+    "modmenu.curseforge": "CurseForge",
+    "modmenu.kofi": "Ko-fi"
 }
