@@ -87,7 +87,6 @@
     "option.modmenu.log_deprecation_warnings": "Ostrzeżenia o wycofaniu",
     "option.modmenu.log_deprecation_warnings.true": "ON",
     "option.modmenu.log_deprecation_warnings.false": "OFF",
-    "option.modmenu.sorting.ascending": "",
     "modmenu.mods.420.secret": " (%s modów... jesteś tego pewien?)",
     "modmenu.buymeacoffee": "Buy Me a Coffee",
     "modmenu.curseforge": "CurseForge",
