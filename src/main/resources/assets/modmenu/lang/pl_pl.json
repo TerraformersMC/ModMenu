@@ -82,7 +82,7 @@
     "modmenu.loaded.69.secret": "(%s załadowanych... nieźle)",
     "modmenu.mods.1": " (%s Mod)",
     "modmenu.coindrop": "Coindrop",
-    "modmenu.discord": "Discord",
+    "modmenu.discord": "",
     "modmenu.flattr": "Flattr",
     "modmenu.github_releases": "GitHub Releases",
     "modmenu.opencollective": "Open Collective",
