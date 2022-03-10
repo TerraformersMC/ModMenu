@@ -83,7 +83,7 @@
     "modmenu.mods.1": " (%s Mod)",
     "modmenu.coindrop": "Coindrop",
     "modmenu.flattr": "Flattr",
-    "modmenu.github_releases": "GitHub Releases",
+    "modmenu.github_releases": "",
     "modmenu.opencollective": "Open Collective",
     "option.modmenu.log_deprecation_warnings": "Ostrzeżenia o wycofaniu",
     "option.modmenu.log_deprecation_warnings.true": "ON",
