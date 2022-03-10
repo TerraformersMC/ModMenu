@@ -27,5 +27,11 @@
     "option.modmenu.hide_badges.false": "表示",
     "option.modmenu.hide_mod_credits.false": "表示",
     "option.modmenu.hide_mod_license.false": "表示",
-    "option.modmenu.count_libraries": "前提mod"
+    "option.modmenu.count_libraries": "前提mod",
+    "modmenu.dropSuccessful.line1": "正常にModをコピーしました",
+    "modmenu.dropSuccessful.line2": "再起動してModを読み込む",
+    "modmenu.badge.deprecated": "非推奨",
+    "modmenu.dropConfirm": "Modディレクトリに以下のModをコピーしますか？",
+    "modmenu.descriptionTranslation.modmenu": "インストールしたModをMod menuのリストに追加します",
+    "modmenu.credits": "クレジット:"
 }
