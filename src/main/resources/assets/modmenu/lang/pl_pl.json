@@ -91,13 +91,8 @@
     "modmenu.buymeacoffee": "Buy Me a Coffee",
     "modmenu.wiki": "Wiki",
     "modmenu.liberapay": "Liberapay",
-    "modmenu.reddit": "",
     "modmenu.twitch": "",
-    "modmenu.youtube": "",
     "modmenu.loaded.420.secret": "(%s załadowane... jesteś tego pewien?)",
-    "modmenu.badge.minecraft": "",
     "modmenu.crowdin": "",
-    "modmenu.github_releases": "",
-    "option.modmenu.sorting.ascending": "",
-    "modmenu.kofi": ""
+    "option.modmenu.sorting.ascending": ""
 }
