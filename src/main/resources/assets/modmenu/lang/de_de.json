@@ -87,21 +87,12 @@
     "modmenu.flattr": "Flattr",
     "modmenu.buymeacoffee": "Kauf mir einen Kaffee",
     "modmenu.liberapay": "Liberapay",
-    "modmenu.kofi": "",
     "modmenu.badge.minecraft": "",
-    "modmenu.issues": "",
     "modmenu.curseforge": "",
-    "modmenu.loaded.short": "",
     "modmenu.crowdin": "",
-    "modmenu.discord": "",
     "modmenu.github_releases": "",
-    "modmenu.modrinth": "",
     "modmenu.patreon": "",
-    "modmenu.reddit": "",
     "modmenu.twitch": "",
-    "modmenu.twitter": "",
     "modmenu.youtube": "",
-    "option.modmenu.sorting.ascending": "",
-    "option.modmenu.sorting.descending": "",
-    "modmenu.badge.forge": ""
+    "option.modmenu.sorting.descending": ""
 }
