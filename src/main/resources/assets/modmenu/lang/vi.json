@@ -19,5 +19,17 @@
     "modmenu.modsFolder": "Mở thư mục Mods",
     "modmenu.toggleFilterOptions": "Thiết lập tuỳ chọn bộ lọc",
     "modmenu.showingModsLibraries.1.1": "Hiển thị %s mod và %s thư viện",
-    "modmenu.dropSuccessful.line1": "Đã chép thành công các mod"
+    "modmenu.dropSuccessful.line1": "Đã chép thành công các mod",
+    "modmenu.showingMods.n": "Hiện %s mods",
+    "modmenu.showingLibraries.n": "Hiện %s thư viện của mod",
+    "modmenu.showingModsLibraries.n.n": "Hiển thị %s mod và %s thư viện",
+    "modmenu.showingModsLibraries.n.1": "Hiển thị %s mod và %s thư viện",
+    "modmenu.showingModsLibraries.1.n": "Hiển thị %s mod và %s thư viện",
+    "modmenu.badge.library": "Thư viện",
+    "modmenu.badge.clientsideOnly": "Client",
+    "modmenu.badge.deprecated": "Không được chấp nhận",
+    "modmenu.badge.forge": "Forge",
+    "modmenu.badge.minecraft": "Minecraft",
+    "modmenu.dropInfo.line1": "Kéo và thả tệp vào",
+    "modmenu.dropInfo.line2": "cửa sổ này để thêm mod"
 }
