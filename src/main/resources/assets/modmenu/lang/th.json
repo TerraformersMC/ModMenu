@@ -1,6 +1,6 @@
 {
     "modmenu.loaded.420.secret": "(%s ม็อดถูกโหลด...เจ๋ง!)",
-    "modmenu.showingModsLibraries.1.n": "กำลังแสดง %s ม็อด กับ %s ไลบรารี่",
+    "modmenu.showingModsLibraries.1.n": "กำลังแสดง %s ม็อด และ %s ไลบรารี่",
     "modmenu.showingModsLibraries.n.n": "กำลังแสดง %s ม็อด และ %s ไลบรารี่",
     "modmenu.title": "ม็อด",
     "modmenu.loaded": "(%s ม็อดถูกโหลด)",
