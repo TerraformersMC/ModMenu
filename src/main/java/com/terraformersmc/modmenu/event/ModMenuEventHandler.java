@@ -123,7 +123,7 @@ public class ModMenuEventHandler {
 	private static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {
 		if (shiftUp) {
 			button.y -= spacing / 2;
-		} else {
+		} else if (!button.getMessage().equals(TitleScreen.COPYRIGHT)) {
 			button.y += spacing - (spacing / 2);
 		}
 	}
