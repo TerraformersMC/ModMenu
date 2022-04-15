@@ -23,7 +23,7 @@
     "fabric-resource-loader-v0": "*",
     "fabric-screen-api-v1": ">=1.0.4",
     "fabricloader": ">=0.12.6",
-    "minecraft": ">=1.18"
+    "minecraft": "~1.19-"
   },
   "breaks" : {
     "better_mod_button": "*"
