@@ -23,7 +23,7 @@
     "fabric-resource-loader-v0": "*",
     "fabric-screen-api-v1": ">=1.0.4",
     "fabricloader": ">=0.12.6",
-    "minecraft": "~1.19-"
+    "minecraft": ">=1.19-"
   },
   "breaks" : {
     "better_mod_button": "*"
@@ -82,7 +82,14 @@
     "anatom3000",
     "OroArmor",
     "Vaerian",
-    "spnda"
+    "RDKRACZ",
+    "Hulenkius",
+    "XfedeX",
+    "spnda",
+    "SolidBlock",
+    "Tkain",
+    "nfitzen",
+    "DenaryDev"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
