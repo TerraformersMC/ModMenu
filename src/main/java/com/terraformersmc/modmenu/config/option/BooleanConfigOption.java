@@ -2,7 +2,7 @@ package com.terraformersmc.modmenu.config.option;
 
 import com.terraformersmc.modmenu.util.TranslationUtil;
 import net.minecraft.client.gui.screen.ScreenTexts;
-import net.minecraft.client.option.CyclingOption;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
@@ -50,10 +50,12 @@ public class BooleanConfigOption implements OptionConvertable {
 	}
 
 	@Override
-	public CyclingOption<Boolean> asOption() {
+	public SimpleOption<Boolean> asOption() {
 		if (enabledText != null && disabledText != null) {
-			return CyclingOption.create(translationKey, enabledText, disabledText, ignored -> ConfigOptionStorage.getBoolean(key), (ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value));
+			return new SimpleOption<>(translationKey, SimpleOption.emptyTooltip(),
+					(text, value) -> value ? enabledText : disabledText, SimpleOption.BOOLEAN, defaultValue,
+					newValue -> ConfigOptionStorage.setBoolean(key, newValue));
 		}
-		return CyclingOption.create(translationKey, ignored -> ConfigOptionStorage.getBoolean(key), (ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value));
+		return SimpleOption.ofBoolean(translationKey, defaultValue, (value) -> ConfigOptionStorage.setBoolean(key, value));
 	}
 }
