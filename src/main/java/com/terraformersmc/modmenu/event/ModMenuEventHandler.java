@@ -118,7 +118,6 @@ public class ModMenuEventHandler {
 
 	private static boolean buttonHasText(ClickableWidget button, String translationKey) {
 		Text text = button.getMessage();
-		System.out.println("buttonHasText: " + text.toString());
 		var whateverThisIs = text.method_10851();
 		return whateverThisIs instanceof TranslatableText && ((TranslatableText) whateverThisIs).getKey().equals(translationKey);
 	}
