@@ -32,7 +32,7 @@ public class StringSetConfigOption {
 	}
 
 	public Text getMessage() {
-		return new TranslatableText(translationKey);
+		return Text.translatable(translationKey);
 	}
 
 	public Set<String> getDefaultValue() {

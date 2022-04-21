@@ -17,8 +17,8 @@ public class BooleanConfigOption implements OptionConvertable {
 		this.key = key;
 		this.translationKey = TranslationUtil.translationKeyOf("option", key);
 		this.defaultValue = defaultValue;
-		this.enabledText = new TranslatableText(translationKey + "." + enabledKey);
-		this.disabledText = new TranslatableText(translationKey + "." + disabledKey);
+		this.enabledText = Text.translatable(translationKey + "." + enabledKey);
+		this.disabledText = Text.translatable(translationKey + "." + disabledKey);
 	}
 
 	public BooleanConfigOption(String key, boolean defaultValue) {
@@ -46,7 +46,7 @@ public class BooleanConfigOption implements OptionConvertable {
 	}
 
 	public Text getButtonText() {
-		return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValue() ? enabledText : disabledText);
+		return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText);
 	}
 
 	@Override

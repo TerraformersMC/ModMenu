@@ -20,6 +20,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -77,7 +78,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					description = I18n.translate(translatableDescriptionKey);
 				}
 				if (!description.isEmpty()) {
-					for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
+					for (OrderedText line : textRenderer.wrapLines(Text.literal(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
 					}
 				}
@@ -85,45 +86,45 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				Map<String, String> links = mod.getLinks();
 				String sourceLink = mod.getSource();
 				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
-					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-					children().add(new DescriptionEntry(new TranslatableText("modmenu.links").asOrderedText(), this));
+					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+					children().add(new DescriptionEntry(Text.translatable("modmenu.links").asOrderedText(), this));
 
 					if (sourceLink != null) {
-						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), sourceLink, this));
+						children().add(new LinkEntry(Text.literal("  ").append(Text.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), sourceLink, this));
 					}
 
 					links.forEach((key, value) -> {
-						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), value, this));
+						children().add(new LinkEntry(Text.literal("  ").append(Text.translatable(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), value, this));
 					});
 				}
 
 				Set<String> licenses = mod.getLicense();
 				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
-					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-					children().add(new DescriptionEntry(new TranslatableText("modmenu.license").asOrderedText(), this));
+					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+					children().add(new DescriptionEntry(Text.translatable("modmenu.license").asOrderedText(), this));
 
 					for (String license : licenses) {
-						children().add(new DescriptionEntry(new LiteralText("  " + license).asOrderedText(), this));
+						children().add(new DescriptionEntry(Text.literal("  " + license).asOrderedText(), this));
 					}
 				}
 
 				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
 					if ("minecraft".equals(mod.getId())) {
-						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-						children().add(new MojangCreditsEntry(new TranslatableText("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), this));
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new MojangCreditsEntry(Text.translatable("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), this));
 					} else if ("java".equals(mod.getId())) {
-						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
 					} else {
 						List<String> authors = mod.getAuthors();
 						List<String> contributors = mod.getContributors();
 						if (!authors.isEmpty() || !contributors.isEmpty()) {
-							children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-							children().add(new DescriptionEntry(new TranslatableText("modmenu.credits").asOrderedText(), this));
+							children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+							children().add(new DescriptionEntry(Text.translatable("modmenu.credits").asOrderedText(), this));
 							for (String author : authors) {
-								children().add(new DescriptionEntry(new LiteralText("  " + author).asOrderedText(), this));
+								children().add(new DescriptionEntry(Text.literal("  " + author).asOrderedText(), this));
 							}
 							for (String contributor : contributors) {
-								children().add(new DescriptionEntry(new LiteralText("  " + contributor).asOrderedText(), this));
+								children().add(new DescriptionEntry(Text.literal("  " + contributor).asOrderedText(), this));
 							}
 						}
 					}

@@ -38,7 +38,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	@Override
 	public Text getNarration() {
-		return new LiteralText(mod.getName());
+		return Text.literal(mod.getName());
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
-		Text name = new LiteralText(mod.getName());
+		Text name = Text.literal(mod.getName());
 		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;
 		TextRenderer font = this.client.textRenderer;

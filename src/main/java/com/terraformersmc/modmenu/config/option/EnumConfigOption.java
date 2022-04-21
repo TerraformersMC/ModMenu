@@ -48,11 +48,11 @@ public class EnumConfigOption<E extends Enum<E>> implements OptionConvertable {
 	}
 
 	private static <E extends Enum<E>> Text getValueText(EnumConfigOption<E> option, E value) {
-		return new TranslatableText(option.translationKey + "." + value.name().toLowerCase(Locale.ROOT));
+		return Text.translatable(option.translationKey + "." + value.name().toLowerCase(Locale.ROOT));
 	}
 
 	public Text getButtonText() {
-		return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText(this, getValue()));
+		return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText(this, getValue()));
 	}
 
 	@Override

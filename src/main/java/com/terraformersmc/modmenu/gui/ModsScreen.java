@@ -29,10 +29,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
@@ -52,8 +49,8 @@ public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 
-	private static final TranslatableText TOGGLE_FILTER_OPTIONS = new TranslatableText("modmenu.toggleFilterOptions");
-	private static final TranslatableText CONFIGURE = new TranslatableText("modmenu.configure");
+	private static final Text TOGGLE_FILTER_OPTIONS = Text.translatable("modmenu.toggleFilterOptions");
+	private static final Text CONFIGURE = Text.translatable("modmenu.configure");
 
 	private static final Logger LOGGER = LogManager.getLogger("Mod Menu");
 
@@ -79,7 +76,7 @@ public class ModsScreen extends Screen {
 	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
 
 	public ModsScreen(Screen previousScreen) {
-		super(new TranslatableText("modmenu.title"));
+		super(Text.translatable("modmenu.title"));
 		this.previousScreen = previousScreen;
 	}
 
@@ -108,7 +105,7 @@ public class ModsScreen extends Screen {
 
 		int searchBoxWidth = paneWidth - 32 - 22;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - 22 / 2;
-		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, new TranslatableText("modmenu.search"));
+		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, Text.translatable("modmenu.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
 		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY + 19, this.height - 36, ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36, this.searchBox.getText(), this.modList, this);
 		this.modList.setLeftPos(0);
@@ -170,7 +167,7 @@ public class ModsScreen extends Screen {
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
-				new TranslatableText("modmenu.website"), button -> {
+				Text.translatable("modmenu.website"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
 			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -187,7 +184,7 @@ public class ModsScreen extends Screen {
 			}
 		};
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
-				new TranslatableText("modmenu.issues"), button -> {
+				Text.translatable("modmenu.issues"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
 			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -252,7 +249,7 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(websiteButton);
 		this.addDrawableChild(issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, Text.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))));
 		this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.setScreen(previousScreen)));
 		this.setInitialFocus(this.searchBox);
 
@@ -281,8 +278,8 @@ public class ModsScreen extends Screen {
 		this.searchBox.render(matrices, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
 		drawCenteredText(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
-		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 16777215);
-		drawCenteredText(matrices, this.textRenderer, new TranslatableText("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 16777215);
+		drawCenteredText(matrices, this.textRenderer, Text.translatable("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 16777215);
+		drawCenteredText(matrices, this.textRenderer, Text.translatable("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 16777215);
 		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
@@ -314,7 +311,7 @@ public class ModsScreen extends Screen {
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
-			Text name = new LiteralText(mod.getName());
+			Text name = Text.literal(mod.getName());
 			StringVisitable trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getWidth(name) > maxNameWidth) {
@@ -323,7 +320,7 @@ public class ModsScreen extends Screen {
 			}
 			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
-				setTooltip(new TranslatableText("modmenu.modIdToolTip", mod.getId()));
+				setTooltip(Text.translatable("modmenu.modIdToolTip", mod.getId()));
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.mod, this);
@@ -369,7 +366,7 @@ public class ModsScreen extends Screen {
 			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
 			return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
-			return new LiteralText(null);
+			return Text.literal(null);
 		}
 	}
 
@@ -477,11 +474,11 @@ public class ModsScreen extends Screen {
 				}
 
 				if (allSuccessful) {
-					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, new TranslatableText("modmenu.dropSuccessful.line1"), new TranslatableText("modmenu.dropSuccessful.line2"));
+					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, Text.translatable("modmenu.dropSuccessful.line1"), Text.translatable("modmenu.dropSuccessful.line2"));
 				}
 			}
 			this.client.setScreen(this);
-		}, new TranslatableText("modmenu.dropConfirm"), new LiteralText(modList)));
+		}, Text.translatable("modmenu.dropConfirm"), Text.literal(modList)));
 	}
 
 	private static boolean isFabricMod(Path mod) {

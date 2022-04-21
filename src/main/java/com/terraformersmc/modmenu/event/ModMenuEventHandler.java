@@ -8,6 +8,7 @@ import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.minecraft.class_7417;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -117,7 +118,9 @@ public class ModMenuEventHandler {
 
 	private static boolean buttonHasText(ClickableWidget button, String translationKey) {
 		Text text = button.getMessage();
-		return text instanceof TranslatableText && ((TranslatableText) text).getKey().equals(translationKey);
+		System.out.println("buttonHasText: " + text.toString());
+		var whateverThisIs = text.method_10851();
+		return whateverThisIs instanceof TranslatableText && ((TranslatableText) whateverThisIs).getKey().equals(translationKey);
 	}
 
 	private static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {

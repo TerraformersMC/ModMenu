@@ -10,7 +10,7 @@ import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 
 	@SuppressWarnings("resource")
 	public ModMenuOptionsScreen(Screen previous) {
-		super(previous, MinecraftClient.getInstance().options, new TranslatableText("modmenu.options"));
+		super(previous, MinecraftClient.getInstance().options, Text.translatable("modmenu.options"));
 		this.previous = previous;
 	}
 

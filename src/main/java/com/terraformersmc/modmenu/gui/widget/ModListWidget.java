@@ -20,7 +20,7 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.glfw.GLFW;
@@ -68,7 +68,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			NarratorManager.INSTANCE.narrate(new TranslatableText("narrator.select", mod.getName()).getString());
+			NarratorManager.INSTANCE.narrate(Text.translatable("narrator.select", mod.getName()).getString());
 		}
 	}
 
