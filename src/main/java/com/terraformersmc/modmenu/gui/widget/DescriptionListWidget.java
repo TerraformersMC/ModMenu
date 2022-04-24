@@ -114,16 +114,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					} else if ("java".equals(mod.getId())) {
 						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
 					} else {
-						List<String> authors = mod.getAuthors();
-						List<String> contributors = mod.getContributors();
-						if (!authors.isEmpty() || !contributors.isEmpty()) {
+						List<String> credits = mod.getCredits();
+						if (!credits.isEmpty()) {
 							children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
 							children().add(new DescriptionEntry(new TranslatableText("modmenu.credits").asOrderedText(), this));
-							for (String author : authors) {
-								children().add(new DescriptionEntry(new LiteralText("  " + author).asOrderedText(), this));
-							}
-							for (String contributor : contributors) {
-								children().add(new DescriptionEntry(new LiteralText("  " + contributor).asOrderedText(), this));
+							for (String credit : credits) {
+								children().add(new DescriptionEntry(new LiteralText("  " + credit).asOrderedText(), this));
 							}
 						}
 					}

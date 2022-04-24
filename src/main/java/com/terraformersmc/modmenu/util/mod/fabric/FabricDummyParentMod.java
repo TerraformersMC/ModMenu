@@ -2,7 +2,6 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import com.terraformersmc.modmenu.util.mod.ModIconHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -38,7 +37,7 @@ public class FabricDummyParentMod implements Mod {
 	}
 
 	@Override
-	public @NotNull NativeImageBackedTexture getIcon(ModIconHandler iconHandler, int i) {
+	public @NotNull NativeImageBackedTexture getIcon(FabricIconHandler iconHandler, int i) {
 		String iconSourceId = host.getId();
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
 		String iconPath = null;
@@ -88,6 +87,11 @@ public class FabricDummyParentMod implements Mod {
 
 	@Override
 	public @NotNull List<String> getContributors() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public @NotNull List<String> getCredits() {
 		return new ArrayList<>();
 	}
 

@@ -12,11 +12,16 @@ dependencies {
     includeMod "fabric-api", fabricApi.module("fabric-api-base", project.fabric_version)
     includeMod "fabric-api", fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
     includeMod "fabric-api", fabricApi.module("fabric-screen-api-v1", project.fabric_version)
+	compileOnly "org.quiltmc:quilt-loader:$project.quilt_loader_version"
 }
 
 repositories {
 	maven {
 		name = 'TerraformersMC'
 		url = 'https://maven.terraformersmc.com/'
+	}
+	maven {
+		name = 'Quilt'
+		url = 'https://maven.quiltmc.org/repository/release'
 	}
 }
