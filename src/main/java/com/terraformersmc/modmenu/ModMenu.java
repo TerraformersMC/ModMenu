@@ -13,6 +13,7 @@ import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
+import com.terraformersmc.modmenu.util.mod.quilt.QuiltMod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -80,8 +81,13 @@ public class ModMenu implements ClientModInitializer {
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
 			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
-				FabricMod mod = new FabricMod(modContainer);
-				MODS.put(mod.getId(), mod);
+				if(FabricLoader.getInstance().isModLoaded("quilt_loader")){
+					QuiltMod mod = new QuiltMod(modContainer);
+					MODS.put(mod.getId(), mod);
+				}else {
+					FabricMod mod = new FabricMod(modContainer);
+					MODS.put(mod.getId(), mod);
+				}
 			}
 		}
 

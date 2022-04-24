@@ -93,7 +93,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public void bindIconTexture() {
 		if (this.iconLocation == null) {
 			this.iconLocation = new Identifier(ModMenu.MOD_ID, mod.getId() + "_icon");
-			NativeImageBackedTexture icon = mod.getIcon(list.getIconHandler(), 64 * this.client.options.getGuiScale().getValue());
+			NativeImageBackedTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.getGuiScale().getValue());
 			if (icon != null) {
 				this.client.getTextureManager().registerTexture(this.iconLocation, icon);
 			} else {

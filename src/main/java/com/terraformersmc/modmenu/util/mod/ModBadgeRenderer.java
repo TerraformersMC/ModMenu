@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
+import java.util.Set;
 
 public class ModBadgeRenderer {
 	protected int startX, startY, badgeX, badgeY, badgeMax;
@@ -29,7 +30,8 @@ public class ModBadgeRenderer {
 	public void draw(MatrixStack matrices, int mouseX, int mouseY) {
 		this.badgeX = startX;
 		this.badgeY = startY;
-		mod.getBadges().forEach(badge -> drawBadge(matrices, badge, mouseX, mouseY));
+		Set<Mod.Badge> badges = mod.getBadges();
+		badges.forEach(badge -> drawBadge(matrices, badge, mouseX, mouseY));
 		if (ModMenuConfig.EASTER_EGGS.getValue()) {
 			//noinspection MagicConstant
 			if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {

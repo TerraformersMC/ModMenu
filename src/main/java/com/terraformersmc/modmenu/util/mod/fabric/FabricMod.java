@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import com.terraformersmc.modmenu.util.mod.ModIconHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
@@ -22,16 +21,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FabricMod implements Mod {
-	private static final Logger LOGGER = LogManager.getLogger("Mod Menu");
+	private static final Logger LOGGER = LogManager.getLogger("Mod Menu | FabricMod");
 
-	private final ModContainer container;
-	private final ModMetadata metadata;
+	protected final ModContainer container;
+	protected final ModMetadata metadata;
 
-	private final ModMenuData modMenuData;
+	protected final ModMenuData modMenuData;
 
-	private final Set<Badge> badges;
+	protected final Set<Badge> badges;
 
-	private final Map<String, String> links = new HashMap<>();
+	protected final Map<String, String> links = new HashMap<>();
 
 	public FabricMod(ModContainer modContainer) {
 		this.container = modContainer;
@@ -126,7 +125,7 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @NotNull NativeImageBackedTexture getIcon(ModIconHandler iconHandler, int i) {
+	public @NotNull NativeImageBackedTexture getIcon(FabricIconHandler iconHandler, int i) {
 		String iconSourceId = getId();
 		String iconPath = metadata.getIconPath(i).orElse("assets/" + getId() + "/icon.png");
 		if ("minecraft".equals(getId())) {
@@ -204,6 +203,14 @@ public class FabricMod implements Mod {
 			return Lists.newArrayList();
 		}
 		return authors;
+	}
+
+	@NotNull
+	public List<String> getCredits() {
+		List<String> list = new ArrayList<>();
+		list.addAll(getAuthors());
+		list.addAll(getContributors());
+		return list;
 	}
 
 	@Override

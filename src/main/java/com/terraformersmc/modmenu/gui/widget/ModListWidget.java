@@ -9,7 +9,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import com.terraformersmc.modmenu.util.mod.ModIconHandler;
+import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
@@ -36,7 +36,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private final Set<Mod> addedMods = new HashSet<>();
 	private String selectedModId = null;
 	private boolean scrolling;
-	private final ModIconHandler iconHandler = new ModIconHandler();
+	private final FabricIconHandler iconHandler = new FabricIconHandler();
 
 	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, String searchTerm, ModListWidget list, ModsScreen parent) {
 		super(client, width, height, y1, y2, entryHeight);
@@ -324,7 +324,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		iconHandler.close();
 	}
 
-	public ModIconHandler getIconHandler() {
+	public FabricIconHandler getFabricIconHandler() {
 		return iconHandler;
 	}
 }

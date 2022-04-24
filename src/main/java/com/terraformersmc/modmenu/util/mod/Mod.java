@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.util.mod;
 
+import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public interface Mod {
 	String getName();
 
 	@NotNull
-	NativeImageBackedTexture getIcon(ModIconHandler iconHandler, int i);
+	NativeImageBackedTexture getIcon(FabricIconHandler iconHandler, int i);
 
 	@NotNull
 	String getSummary();
@@ -35,6 +36,9 @@ public interface Mod {
 
 	@NotNull
 	List<String> getContributors();
+
+	@NotNull
+	List<String> getCredits();
 
 	@NotNull
 	Set<Badge> getBadges();
