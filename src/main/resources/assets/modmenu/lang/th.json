@@ -103,7 +103,7 @@
     "option.modmenu.easter_eggs.true": "เปิด",
     "option.modmenu.easter_eggs.false": "ปิด",
     "option.modmenu.mods_button_style.classic": "ข้างใต้ปุ่ม Realms",
-    "modmenu.dropConfirm": "คุณต้องการที่จะลงม็อดดังนี้ลงไปยังตัวเกมของคุณหรือไม่?",
+    "modmenu.dropConfirm": "คุณต้องการที่จะติดตั้งม็อดดังนี้ลงไปยังตัวเกมของคุณหรือไม่?",
     "modmenu.showingModsLibraries.n.1": "กำลังแสดงม็อด %s ตัว กับไลบรารี่ %s ตัว",
     "modmenu.badge.library": "ไลบรารี่",
     "modmenu.badge.clientsideOnly": "ไคลเอนต์",
