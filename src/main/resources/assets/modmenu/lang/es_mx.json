@@ -76,5 +76,6 @@
     "modmenu.mods.69.secret": " (%s mods ... genial)",
     "modmenu.dropInfo.line1": "Arrastrar y soltar archivos a",
     "modmenu.dropInfo.line2": "esta ventana para agregar mods",
-    "option.modmenu.count_libraries": "Librerías"
+    "option.modmenu.count_libraries": "Librerías",
+    "modmenu.loaded.69.secret": "(%s cargado... agradable)"
 }
