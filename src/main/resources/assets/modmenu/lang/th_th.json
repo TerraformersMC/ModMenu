@@ -1,6 +1,6 @@
 {
   "modmenu.title": "ม็อด",
-  "modmenu.descriptionTranslation.modmenu": "เพิ่มเมนูม็อด เพื่อดูรายการม็อดที่คุณได้ติดตั้งไว้",
+  "modmenu.descriptionTranslation.modmenu": "เพิ่มเมนูม็อดให้กับตัวเกม เพื่อดูรายการม็อดที่คุณได้ติดตั้งไว้",
 
   "modmenu.loaded": "(โหลดแล้ว %s)",
   "modmenu.loaded.short": "(%s)",
@@ -8,8 +8,8 @@
   "modmenu.loaded.420.secret": "(โหลดแล้ว %s...ธาตุไฟคือความร้อนแรง พร้อมแผดเผาทุกสิ่ง)",
   "modmenu.mods.n": "(ม็อดทั้งหมด %s ตัว)",
   "modmenu.mods.1": "(ม็อดทั้งหมด %s ตัว)",
-  "modmenu.mods.69.secret": "(ม็อดทั้งหมด %s ตัว...สุดยอดตัวเลข)",
-  "modmenu.mods.420.secret": "(ม็อดทั้งหมด %s ตัว...ธาตุไฟคือความร้อนแรง พร้อมแผดเผาทุกสิ่ง)",
+  "modmenu.mods.69.secret": " (ม็อดทั้งหมด %s ตัว...สุดยอดตัวเลข)",
+  "modmenu.mods.420.secret": " (ม็อดทั้งหมด %s ตัว...ธาตุไฟคือความร้อนแรง พร้อมแผดเผาทุกสิ่ง)",
 
   "modmenu.search": "ค้นหาม็อด",
   "modmenu.searchTerms.library": "api library เอพีไอ ไลบรารี",
@@ -31,7 +31,7 @@
   "modmenu.badge.library": "ไลบรารี",
   "modmenu.badge.clientsideOnly": "ไคลเอนต์",
   "modmenu.badge.deprecated": "เลิกใช้แล้ว",
-  "modmenu.badge.forge": "ฟอร์จ",
+  "modmenu.badge.forge": "Forge",
   "modmenu.badge.minecraft": "ไมน์คราฟ",
 
   "modmenu.dropInfo.line1": "ลากไฟล์มาไว้ในหน้าต่างนี้",
@@ -72,7 +72,7 @@
   "modmenu.youtube": "YouTube",
 
   "modmenu.modsFolder": "เปิดโฟลเดอร์ม็อด",
-  "modmenu.configsFolder": "เปิดโฟลเดอร์กำหนดค่า (Config)",
+  "modmenu.configsFolder": "เปิดโฟลเดอร์ตั้งค่า",
 
   "modmenu.options": "ตั้งค่าเมนูม็อด",
   "option.modmenu.sorting": "เรียงลำดับจาก",
@@ -99,7 +99,7 @@
   "option.modmenu.hide_mod_license": "ใบอนุญาตของม็อด",
   "option.modmenu.hide_mod_license.true": "ซ่อนไว้",
   "option.modmenu.hide_mod_license.false": "แสดงให้เห็น",
-  "option.modmenu.count_children": "ม็อดชิลเดรน",
+  "option.modmenu.count_children": "ม็อดย่อย",
   "option.modmenu.count_children.true": "นับ",
   "option.modmenu.count_children.false": "ไม่นับ",
   "option.modmenu.count_libraries": "ไลบรารี",
