@@ -108,5 +108,10 @@
     "modmenu.loaded.69.secret": "(%s načteno...nice)",
     "modmenu.mods.69.secret": " (%s módů...nice)",
     "modmenu.mods.420.secret": " (%s módů...do toho)",
-    "modmenu.showingModsLibraries.n.n": "Zobrazování %s módů a %s knihoven"
+    "modmenu.showingModsLibraries.n.n": "Zobrazování %s módů a %s knihoven",
+    "modmenu.searchTerms.library": "knihovna api",
+    "modmenu.searchTerms.patchwork": "patchwork forge fml",
+    "modmenu.searchTerms.deprecated": "zastaralé neaktuální staré",
+    "modmenu.searchTerms.clientside": "klient server",
+    "modmenu.searchTerms.configurable": "konfigurace nastavení konfigy konfigurovatelné možnosti"
 }

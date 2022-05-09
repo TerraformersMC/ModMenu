@@ -90,5 +90,6 @@
     "option.modmenu.log_deprecation_warnings.false": "关",
     "option.modmenu.log_deprecation_warnings": "弃用项目警告",
     "modmenu.loaded.69.secret": "(已加载%s个…好样的)",
-    "modmenu.buymeacoffee": "给我买一杯咖啡"
+    "modmenu.buymeacoffee": "给我买一杯咖啡",
+    "modmenu.searchTerms.library": "API数据库"
 }

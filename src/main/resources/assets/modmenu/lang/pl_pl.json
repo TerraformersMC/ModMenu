@@ -91,5 +91,10 @@
     "modmenu.buymeacoffee": "Buy Me a Coffee",
     "modmenu.wiki": "Wiki",
     "modmenu.liberapay": "Liberapay",
-    "modmenu.loaded.420.secret": "(%s załadowane... jesteś tego pewien?)"
+    "modmenu.loaded.420.secret": "(%s załadowane... jesteś tego pewien?)",
+    "modmenu.searchTerms.library": "biblioteka api",
+    "modmenu.searchTerms.patchwork": "patchwork forge fml",
+    "modmenu.searchTerms.deprecated": "przestarzały nieaktualny stary",
+    "modmenu.searchTerms.clientside": "po stronie klienta",
+    "modmenu.searchTerms.configurable": "konfiguracja"
 }
