@@ -108,5 +108,10 @@
     "modmenu.badge.library": "ไลบรารี่",
     "modmenu.badge.clientsideOnly": "ไคลเอนต์",
     "modmenu.dropInfo.line1": "ลากไฟล์ลงที่นี่",
-    "option.modmenu.show_libraries": "ไลบรารี่"
+    "option.modmenu.show_libraries": "ไลบรารี่",
+    "modmenu.searchTerms.library": "api library ไลบรารี",
+    "modmenu.searchTerms.patchwork": "patchwork forge fml ฟอร์จ แพทช์เวิร์ก",
+    "modmenu.searchTerms.deprecated": "deprecated outdated old ไม่ถูกนำมาใช้",
+    "modmenu.searchTerms.clientside": "clientside gameside ไคลเอนต์",
+    "modmenu.searchTerms.configurable": "configurations configs configures configurable options การตั้งค่า"
 }
