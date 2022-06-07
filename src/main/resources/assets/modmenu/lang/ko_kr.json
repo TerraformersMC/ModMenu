@@ -80,5 +80,17 @@
     "option.modmenu.mods_button_style.classic": "Realms 아래",
     "option.modmenu.mods_button_style.replace_realms": "Realms 대체",
     "option.modmenu.mods_button_style.shrink": "Realms 옆",
-    "option.modmenu.mods_button_style.icon": "아이콘"
+    "option.modmenu.mods_button_style.icon": "아이콘",
+    "modmenu.searchTerms.library": "API 라이브러리",
+    "modmenu.searchTerms.patchwork": "Patchwork Forge FML",
+    "modmenu.searchTerms.deprecated": "곧 사라짐 오래됨 오래됨",
+    "modmenu.searchTerms.clientside": "클라이언트용 게임용",
+    "modmenu.searchTerms.configurable": "구성 구성 구성 구성 옵션",
+    "modmenu.buymeacoffee": "Buy Me a Coffee",
+    "modmenu.flattr": "Flattr",
+    "modmenu.liberapay": "Liberapay",
+    "modmenu.opencollective": "Open Collective",
+    "modmenu.loaded.69.secret": "(%s개 로드됨...nice)",
+    "modmenu.loaded.420.secret": "(%s개 로드됨...활활 타오른다)",
+    "modmenu.mods.420.secret": " (%s개 모드...활활 타오른다)"
 }
