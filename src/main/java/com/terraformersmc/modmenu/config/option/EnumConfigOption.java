@@ -2,10 +2,9 @@ package com.terraformersmc.modmenu.config.option;
 
 import com.mojang.serialization.Codec;
 import com.terraformersmc.modmenu.util.TranslationUtil;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.option.SimpleOption;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.Arrays;
 import java.util.Locale;

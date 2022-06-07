@@ -1,7 +1,6 @@
 package com.terraformersmc.modmenu.config.option;
 
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import com.terraformersmc.modmenu.util.TranslationUtil;
 
