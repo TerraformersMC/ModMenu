@@ -84,21 +84,5 @@
     "modmenu.buymeacoffee": "Задонать пж",
     "modmenu.flattr": "Flattr",
     "modmenu.liberapay": "Донат на Liberapay",
-    "modmenu.opencollective": "Поддержка -> Open Collective",
-    "modmenu.issues": "Сообщить о проблеме",
-    "modmenu.curseforge": "CurseForge",
-    "modmenu.modrinth": "Modrinth",
-    "modmenu.coindrop": "Бросить монету",
-    "modmenu.discord": "Discord",
-    "modmenu.patreon": "Patreon",
-    "modmenu.reddit": "Reddit",
-    "modmenu.twitch": "Twitch",
-    "modmenu.youtube": "YouTube",
-    "modmenu.github_releases": "Релизы на GitHub",
-    "modmenu.kofi": "Ko-fi",
-    "modmenu.twitter": "Twitter",
-    "modmenu.loaded.short": "(%s)",
-    "modmenu.crowdin": "Crowdin",
-    "option.modmenu.sorting.ascending": "А-Я",
-    "option.modmenu.sorting.descending": "Я-А"
+    "modmenu.opencollective": "Поддержка -> Open Collective"
 }
