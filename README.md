@@ -28,8 +28,8 @@ If you are a developer and would like to see what metadata Mod Menu will make us
 
 ### Translators
 
-Mod Menu is being translated using [Weblate](https://hosted.weblate.org/engage/fabric-modmenu/), a web tool designed to ease translating for both developers and translators.
+Mod Menu uses [Crowdin](https://crowdin.com/project/fabric-mod-menu), the same cloud-based localization management tool that Minecraft uses.
 
-[![Translation status](https://hosted.weblate.org/widgets/fabric-modmenu/-/svg-badge.svg)](https://hosted.weblate.org/engage/fabric-modmenu/)
+[![Crowdin](https://badges.crowdin.net/fabric-mod-menu/localized.svg)](https://crowdin.com/project/fabric-mod-menu)
 
 ### Mod Menu is a mod for Fabric, and there are no plans to port this mod to Forge.
