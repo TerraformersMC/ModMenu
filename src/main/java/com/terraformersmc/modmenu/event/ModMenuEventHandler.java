@@ -6,6 +6,8 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
@@ -13,17 +15,28 @@ import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
 public class ModMenuEventHandler {
 	private static final Identifier FABRIC_ICON_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/mods_button.png");
+	private static KeyBinding MENU_KEY_BIND;
 
 	public static void register() {
+		MENU_KEY_BIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"key.modmenu.open_menu",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_R,
+				"category.modmenu.name"
+		));
 		ScreenEvents.AFTER_INIT.register(ModMenuEventHandler::afterScreenInit);
+		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
 	}
 
 	public static void afterScreenInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {
@@ -112,6 +125,12 @@ public class ModMenuEventHandler {
 					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
 				}
 			}
+		}
+	}
+
+	private static void onClientEndTick(MinecraftClient client) {
+		while (MENU_KEY_BIND.wasPressed()) {
+			client.setScreen(new ModsScreen(client.currentScreen));
 		}
 	}
 
