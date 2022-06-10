@@ -30,10 +30,10 @@ public class ModMenuEventHandler {
 
 	public static void register() {
 		MENU_KEY_BIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-				"category.modmenu.name",
+				"key.modmenu.open_menu",
 				InputUtil.Type.KEYSYM,
 				InputUtil.UNKNOWN_KEY.getCode(),
-				"key.modmenu.open_menu"
+				"category.modmenu.name"
 		));
 		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
 
