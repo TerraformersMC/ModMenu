@@ -1,7 +1,8 @@
 {
+  "category.modmenu.name": "Mod Menu",
+  "key.modmenu.open_menu": "Opens the Mod Menu screen.",
   "modmenu.title": "Mods",
   "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods you have installed.",
-
   "modmenu.loaded": "(%s Loaded)",
   "modmenu.loaded.short": "(%s)",
   "modmenu.loaded.69.secret": "(%s Loaded...nice)",
