@@ -32,7 +32,7 @@ public class ModMenuEventHandler {
 		MENU_KEY_BIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"key.modmenu.open_menu",
 				InputUtil.Type.KEYSYM,
-				GLFW.GLFW_KEY_R,
+				InputUtil.UNKNOWN_KEY.getCode(),
 				"category.modmenu.name"
 		));
 		ScreenEvents.AFTER_INIT.register(ModMenuEventHandler::afterScreenInit);
