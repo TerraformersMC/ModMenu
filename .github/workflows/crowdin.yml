@@ -42,7 +42,10 @@ jobs:
         # see https://github.com/jackassmc/minecraft-crowdin-languages
 
         pull_request_title: Update ${{ env.branch }} translations
-        commit_message: "- Update translations"
+        commit_message: |
+          Update ${{ env.branch }} translations
+
+          - Update translations
         localization_branch_name: l10n_${{ env.branch }}
         crowdin_branch_name: ${{ env.branch }}
 
