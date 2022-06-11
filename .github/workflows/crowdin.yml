@@ -14,7 +14,6 @@ jobs:
         upload_translations: true
         download_translations: true
         skip_untranslated_strings: true
-        skip_untranslated_files: true
         pull_request_title: Update 1.19 translations
         commit_message: "- Update %language% translations"
         localization_branch_name: l10n_1.19
