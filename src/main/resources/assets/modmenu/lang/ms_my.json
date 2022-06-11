@@ -71,5 +71,6 @@
     "modmenu.showingModsLibraries.n.1": "Menunjukkan %s mod dan %s pustaka",
     "modmenu.showingModsLibraries.1.n": "Menunjukkan %s mod dan %s pustaka",
     "modmenu.badge.library": "Pustaka",
-    "option.modmenu.mods_button_style": "Butang Mod"
+    "option.modmenu.mods_button_style": "Butang Mod",
+    "modmenu.mods.1": " (%s Mod)"
 }

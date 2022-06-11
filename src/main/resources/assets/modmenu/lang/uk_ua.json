@@ -26,7 +26,7 @@
     "modmenu.showingModsLibraries.1.n": "Показаний %s мод і %s бібліотек",
     "modmenu.badge.library": "Бібліотека",
     "modmenu.badge.clientsideOnly": "Клієнт",
-    "modmenu.badge.deprecated": "Застарів",
+    "modmenu.badge.deprecated": "Застарілий",
     "modmenu.badge.forge": "Forge",
     "modmenu.badge.minecraft": "Minecraft",
     "modmenu.config": "Змінити налаштування",
