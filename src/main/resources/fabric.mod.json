@@ -22,6 +22,8 @@
   "depends": {
     "fabric-resource-loader-v0": "*",
     "fabric-screen-api-v1": "*",
+    "fabric-key-binding-api-v1": "*",
+    "fabric-lifecycle-events-v1": "*",
     "fabricloader": ">=0.11.1",
     "minecraft": ">=1.16-"
   },
@@ -80,7 +82,8 @@
     "NotSteven",
     "Dolphin 2.1",
     "ENDERZOMBI102",
-    "anatom3000"
+    "anatom3000",
+    "legenden"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
