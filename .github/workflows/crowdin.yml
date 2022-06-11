@@ -18,8 +18,8 @@ jobs:
         commit_message: "- Update %language% translations"
         localization_branch_name: l10n_1.19
         crowdin_branch_name: "1.19"
-        source: /src/main/resources/assets/modmenu/lang/en_us.json
-        translation: /src/main/resources/assets/modmenu/lang/%locale%.json
+        source: src/main/resources/assets/modmenu/lang/en_us.json
+        translation: src/main/resources/assets/modmenu/lang/%locale%.json
         project_id: 520764
         token: ${{ secrets.CROWDIN_TOKEN }}
       env:
