@@ -1,7 +1,0 @@
-pull_request_title: Update 1.19 translations
-commit_message: "- Update %language% translations"
-append_commit_message: false
-
-files:
-  - source: /src/main/resources/assets/modmenu/lang/en_us.json
-    translation: /src/main/resources/assets/modmenu/lang/%locale%.json

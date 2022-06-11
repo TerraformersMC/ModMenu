@@ -1,0 +1,26 @@
+name: Crowdin
+on:
+  workflow_dispatch: ~
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  crowdin:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: crowdin/github-action@1.4.9
+      with:
+        upload_sources: true
+        upload_translations: true
+        download_translations: true
+        skip_untranslated_strings: true
+        skip_untranslated_files: true
+        pull_request_title: Update 1.19 translations
+        commit_message: "- Update %language% translations"
+        localization_branch_name: l10n_1.19
+        crowdin_branch_name: "1.19"
+        dryrun_action: true
+        source: /src/main/resources/assets/modmenu/lang/en_us.json
+        translation: /src/main/resources/assets/modmenu/lang/%locale%.json
+        project_id: 520764
+        token: ${{ secrets.CROWDIN_TOKEN }}
