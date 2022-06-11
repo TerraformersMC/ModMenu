@@ -23,3 +23,5 @@ jobs:
         translation: /src/main/resources/assets/modmenu/lang/%locale%.json
         project_id: 520764
         token: ${{ secrets.CROWDIN_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
