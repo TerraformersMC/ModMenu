@@ -12,14 +12,11 @@
 name: Crowdin
 
 # can be run manually
-# also automatically runs once a day at 02:01
+# also automatically runs every three hours
 on:
   workflow_dispatch: ~
   schedule:
-    - cron: "1 2 * * *"
-
-# crowdin translations cannot be built concurrently
-concurrency: crowdin
+    - cron: "0 */3 * * *"
 
 jobs:
   crowdin:
