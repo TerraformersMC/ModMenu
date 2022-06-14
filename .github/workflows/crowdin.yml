@@ -58,3 +58,5 @@ jobs:
 
         # fix https://github.com/crowdin/github-action/blob/61feedea6d51292a8f4c9c78a89f32064654d60b/entrypoint.sh#L145
         GITHUB_REF: refs/heads/${{ matrix.branch }}
+
+        INPUT_DEBUG_MODE: true
