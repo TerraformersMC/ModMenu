@@ -81,8 +81,5 @@
   "option.modmenu.mods_button_style.classic": "Realms'in Altında",
   "option.modmenu.mods_button_style.replace_realms": "Realms'in Yerine",
   "option.modmenu.mods_button_style.shrink": "Bitişik",
-  "option.modmenu.mods_button_style.icon": "Simge",
-  "option.modmenu.log_deprecation_warnings": "Kullanımdan Kaldırma Uyarıları",
-  "option.modmenu.log_deprecation_warnings.true": "AÇIK",
-  "option.modmenu.log_deprecation_warnings.false": "KAPALI"
+  "option.modmenu.mods_button_style.icon": "Simge"
 }

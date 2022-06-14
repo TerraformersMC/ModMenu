@@ -94,8 +94,5 @@
   "option.modmenu.mods_button_style.classic": "Під Realms",
   "option.modmenu.mods_button_style.replace_realms": "Замість Realms",
   "option.modmenu.mods_button_style.shrink": "Поруч з Realms",
-  "option.modmenu.mods_button_style.icon": "Іконка",
-  "option.modmenu.log_deprecation_warnings": "Попередження застарілості",
-  "option.modmenu.log_deprecation_warnings.true": "Увімкнено",
-  "option.modmenu.log_deprecation_warnings.false": "Вимкнено"
+  "option.modmenu.mods_button_style.icon": "Іконка"
 }

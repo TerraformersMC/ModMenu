@@ -78,8 +78,5 @@
   "option.modmenu.mods_button_style.classic": "Debaixo de Realms",
   "option.modmenu.mods_button_style.replace_realms": "Substituir Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacente",
-  "option.modmenu.mods_button_style.icon": "Ícone",
-  "option.modmenu.log_deprecation_warnings": "Avisar obsolescência",
-  "option.modmenu.log_deprecation_warnings.true": "Sim",
-  "option.modmenu.log_deprecation_warnings.false": "Não"
+  "option.modmenu.mods_button_style.icon": "Ícone"
 }

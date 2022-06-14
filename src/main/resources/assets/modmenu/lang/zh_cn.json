@@ -86,8 +86,5 @@
   "option.modmenu.mods_button_style.classic": "Realms下一行",
   "option.modmenu.mods_button_style.replace_realms": "替换掉Realms",
   "option.modmenu.mods_button_style.shrink": "Realms同一行",
-  "option.modmenu.mods_button_style.icon": "Realms边的图标",
-  "option.modmenu.log_deprecation_warnings": "弃用项目警告",
-  "option.modmenu.log_deprecation_warnings.true": "开",
-  "option.modmenu.log_deprecation_warnings.false": "关"
+  "option.modmenu.mods_button_style.icon": "Realms边的图标"
 }

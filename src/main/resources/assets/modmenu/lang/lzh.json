@@ -9,6 +9,8 @@
   "modmenu.mods.69.secret": " （%s既載……善哉）",
   "modmenu.mods.420.secret": " （%s囊……燃也）",
   "modmenu.search": "索",
+  "modmenu.searchTerms.library": "前置庫",
+  "modmenu.searchTerms.configurable": "配置 configs 配置可配置的選項",
   "modmenu.toggleFilterOptions": "察",
   "modmenu.showingMods.n": "旣示%s囊",
   "modmenu.showingMods.1": "旣示%s囊",
@@ -21,6 +23,7 @@
   "modmenu.badge.library": "函式庫",
   "modmenu.badge.clientsideOnly": "客端",
   "modmenu.badge.deprecated": "旣摒",
+  "modmenu.badge.minecraft": "我的世界",
   "modmenu.dropInfo.line1": "曳囊至此戶",
   "modmenu.dropInfo.line2": "以增益一囊",
   "modmenu.dropConfirm": "君實欲複製諸改囊至改囊夾乎?",
@@ -37,6 +40,9 @@
   "modmenu.links": "連結：",
   "modmenu.source": "源碼",
   "modmenu.buymeacoffee": "予吾一茶",
+  "modmenu.github_releases": "GitHub發布頁面",
+  "modmenu.twitter": "推特",
+  "modmenu.wiki": "維基百科",
   "modmenu.modsFolder": "啟改囊之資料夾",
   "modmenu.configsFolder": "啟置設之資料夾",
   "modmenu.options": "調囊之列",
@@ -83,8 +89,5 @@
   "option.modmenu.mods_button_style.classic": "領域之次行",
   "option.modmenu.mods_button_style.replace_realms": "替領域也",
   "option.modmenu.mods_button_style.shrink": "同行于領域",
-  "option.modmenu.mods_button_style.icon": "鄰領域鈕也",
-  "option.modmenu.log_deprecation_warnings": "示摒",
-  "option.modmenu.log_deprecation_warnings.true": "啟",
-  "option.modmenu.log_deprecation_warnings.false": "閉"
+  "option.modmenu.mods_button_style.icon": "鄰領域鈕也"
 }

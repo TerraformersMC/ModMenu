@@ -9,6 +9,8 @@
   "modmenu.mods.69.secret": " （%s 個模組……Nice）",
   "modmenu.mods.420.secret": " （%s 個模組…燃燒吧）",
   "modmenu.search": "搜尋",
+  "modmenu.searchTerms.library": "前置庫",
+  "modmenu.searchTerms.configurable": "配置 configs 配置可配置的選項",
   "modmenu.toggleFilterOptions": "檢視",
   "modmenu.showingMods.n": "已顯示 %s 個模組",
   "modmenu.showingMods.1": "已顯示 %s 個模組",
@@ -21,6 +23,7 @@
   "modmenu.badge.library": "函式庫",
   "modmenu.badge.clientsideOnly": "用戶端",
   "modmenu.badge.deprecated": "已棄用",
+  "modmenu.badge.minecraft": "我的世界",
   "modmenu.dropInfo.line1": "將檔案拖動至此處",
   "modmenu.dropInfo.line2": "以添加模組",
   "modmenu.dropConfirm": "確定要複製下列模組到模組資料夾嗎?",
@@ -37,6 +40,9 @@
   "modmenu.links": "連結：",
   "modmenu.source": "源代碼",
   "modmenu.buymeacoffee": "給我買一杯咖啡",
+  "modmenu.github_releases": "GitHub發布頁面",
+  "modmenu.twitter": "推特",
+  "modmenu.wiki": "維基百科",
   "modmenu.modsFolder": "開啟模組資料夾",
   "modmenu.configsFolder": "開啟設定檔資料夾",
   "modmenu.options": "模組功能表選項",
@@ -83,8 +89,5 @@
   "option.modmenu.mods_button_style.classic": "Realms 下一行",
   "option.modmenu.mods_button_style.replace_realms": "替換掉 Realms",
   "option.modmenu.mods_button_style.shrink": "Realms 同一行",
-  "option.modmenu.mods_button_style.icon": "Realms 邊的圖示",
-  "option.modmenu.log_deprecation_warnings": "棄用警告",
-  "option.modmenu.log_deprecation_warnings.true": "開啟",
-  "option.modmenu.log_deprecation_warnings.false": "關閉"
+  "option.modmenu.mods_button_style.icon": "Realms 邊的圖示"
 }
