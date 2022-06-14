@@ -1,12 +1,12 @@
 {
-    "modmenu.title": "Модификации",
-    "modmenu.loaded": "(%s заредени)",
-    "modmenu.config": "Редактирай конфигурация",
-    "modmenu.modsFolder": "Отвори папка с модификации",
-    "modmenu.configsFolder": "Отвори папка с конфигурации",
-    "modmenu.configure": "Конфигурирай...",
-    "modmenu.modIdToolTip": "ID на модификацията: %s",
-    "modmenu.website": "Уебсайт",
-    "modmenu.authorPrefix": "От %s",
-    "modmenu.descriptionTranslation.modmenu": "Добавя меню с модове, за да видите списъка с модове, които сте инсталирали"
+  "modmenu.title": "Модификации",
+  "modmenu.descriptionTranslation.modmenu": "Добавя меню с модове, за да видите списъка с модове, които сте инсталирали",
+  "modmenu.loaded": "(%s заредени)",
+  "modmenu.modIdToolTip": "ID на модификацията: %s",
+  "modmenu.authorPrefix": "От %s",
+  "modmenu.config": "Редактирай конфигурация",
+  "modmenu.configure": "Конфигурирай...",
+  "modmenu.website": "Уебсайт",
+  "modmenu.modsFolder": "Отвори папка с модификации",
+  "modmenu.configsFolder": "Отвори папка с конфигурации"
 }
