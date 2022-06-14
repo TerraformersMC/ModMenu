@@ -26,6 +26,8 @@ jobs:
         branch: ["1.17", "1.18", "1.19"]
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ matrix.branch }}
     - uses: crowdin/github-action@1.4.9
       with:
         upload_sources: true
