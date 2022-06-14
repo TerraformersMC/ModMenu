@@ -1,34 +1,33 @@
 # This action synchronizes translations with Crowdin:
 # - new source strings from en_us.json are uploaded
-# - new translations committed directly to other language files are uploaded
 # - new translations added in Crowdin are downloaded
 #   - if translations were downloaded a pull request is created
 # 
 # Adding a new branch:
-# - update the branch env var
-# - run the action on the new branch once to initialize the new branch on Crowdin
+# - add branch to matrix
+# - manually run the action once to initialize the new branch on Crowdin
 # - make sure Crowdin knows about the new branch
 
 name: Crowdin
 
 # can be run manually
-# also automatically runs every three hours
+# also automatically runs once a week (only on the default branch)
 on:
   workflow_dispatch: ~
   schedule:
-    - cron: "0 */3 * * *"
+    - cron: 1 2 * * 3 # At 02:01 on Wednesday.
 
 jobs:
   crowdin:
     runs-on: ubuntu-latest
-    env:
-      branch: "1.18"
+    strategy:
+      matrix:
+        branch: ["1.17", "1.18", "1.19"]
     steps:
     - uses: actions/checkout@v2
     - uses: crowdin/github-action@1.4.9
       with:
         upload_sources: true
-        upload_translations: true
 
         download_translations: true
         skip_untranslated_strings: true
@@ -38,13 +37,15 @@ jobs:
         # locale/language mappings must be added in Crowdin
         # see https://github.com/jackassmc/minecraft-crowdin-languages
 
-        pull_request_title: Update ${{ env.branch }} translations
+        crowdin_branch_name: ${{ matrix.branch }}
+        localization_branch_name: l10n_${{ matrix.branch }}
+        pull_request_base_branch_name: ${{ matrix.branch }}
+
+        pull_request_title: Update ${{ matrix.branch }} translations
         commit_message: |
-          Update ${{ env.branch }} translations
+          Update ${{ matrix.branch }} translations
 
           - Update translations
-        localization_branch_name: l10n_${{ env.branch }}
-        crowdin_branch_name: ${{ env.branch }}
 
         project_id: 520764
         token: ${{ secrets.CROWDIN_TOKEN }}
