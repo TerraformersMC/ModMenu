@@ -82,8 +82,5 @@
   "option.modmenu.mods_button_style.classic": "Underworld Domination",
   "option.modmenu.mods_button_style.replace_realms": "World Domination",
   "option.modmenu.mods_button_style.shrink": "Semi-World Domination",
-  "option.modmenu.mods_button_style.icon": "Iconz",
-  "option.modmenu.log_deprecation_warnings": "Anshien Warnins",
-  "option.modmenu.log_deprecation_warnings.true": "Yea",
-  "option.modmenu.log_deprecation_warnings.false": "Nah"
+  "option.modmenu.mods_button_style.icon": "Iconz"
 }
