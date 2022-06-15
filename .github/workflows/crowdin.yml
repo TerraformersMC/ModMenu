@@ -29,7 +29,7 @@ jobs:
       with:
         ref: ${{ matrix.branch }}
         fetch-depth: 0
-    - uses: jackassmc/crowdin-github-action@1.4.9-fix
+    - uses: crowdin/github-action@master
       with:
         upload_sources: true
 
@@ -53,5 +53,6 @@ jobs:
 
         project_id: 520764
         token: ${{ secrets.CROWDIN_TOKEN }}
+        skip_ref_checkout: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
