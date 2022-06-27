@@ -35,7 +35,7 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption MODIFY_GAME_MENU = new BooleanConfigOption("modify_game_menu", true);
 	public static final BooleanConfigOption HIDE_CONFIG_BUTTONS = new BooleanConfigOption("hide_config_buttons", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
-	public static final BooleanConfigOption LOG_DEPRECATION_WARNINGS = new BooleanConfigOption("log_deprecation_warnings", true);
+	public static final BooleanConfigOption LOG_DEPRECATION_WARNINGS = new BooleanConfigOption("log_deprecation_warnings", false);
 
 	public static final Set<String> HIDDEN_OPTIONS = Stream.of(
 		"MODIFY_TITLE_SCREEN",
