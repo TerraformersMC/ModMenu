@@ -1,1 +1,13 @@
-{}
+{
+  "category.modmenu.name": "Mod Menu",
+  "key.modmenu.open_menu": "Open Mod Menu",
+  "modmenu.title": "Mods",
+  "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods you have installed.",
+  "modmenu.loaded": "(%s loaded)",
+  "modmenu.loaded.short": "(%s)",
+  "modmenu.loaded.69.secret": "(%s loaded... nice)",
+  "modmenu.loaded.420.secret": "(%s loaded... blaze it)",
+  "modmenu.mods.n": "(%s Mods)",
+  "option.modmenu.log_deprecation_warnings.true": "ON",
+  "option.modmenu.log_deprecation_warnings.false": "OFF"
+}
