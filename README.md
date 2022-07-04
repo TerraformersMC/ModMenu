@@ -30,6 +30,4 @@ If you are a developer and would like to see what metadata Mod Menu will make us
 
 Mod Menu uses [Crowdin](https://crowdin.com/project/mod-menu), the same cloud-based localization management tool that Minecraft uses.
 
-[![Crowdin](https://badges.crowdin.net/mod-menu/localized.svg)](https://crowdin.com/project/mod-menu)
-
 ### Mod Menu is a mod for Fabric, and there are no plans to port this mod to Forge.
