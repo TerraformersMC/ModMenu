@@ -88,11 +88,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					children().add(new DescriptionEntry(Text.translatable("modmenu.links").asOrderedText(), this));
 
 					if (sourceLink != null) {
-						children().add(new LinkEntry(Text.literal("  ").append(Text.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), sourceLink, this));
+						children().add(new LinkEntry(Text.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), sourceLink, this, 8));
 					}
 
 					links.forEach((key, value) -> {
-						children().add(new LinkEntry(Text.literal("  ").append(Text.translatable(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), value, this));
+						children().add(new LinkEntry(Text.translatable(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), value, this, 8));
 					});
 				}
 
@@ -102,7 +102,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					children().add(new DescriptionEntry(Text.translatable("modmenu.license").asOrderedText(), this));
 
 					for (String license : licenses) {
-						children().add(new DescriptionEntry(Text.literal("  " + license).asOrderedText(), this));
+						children().add(new DescriptionEntry(Text.literal(license).asOrderedText(), this, 8));
 					}
 				}
 
@@ -118,7 +118,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 							children().add(new DescriptionEntry(OrderedText.EMPTY, this));
 							children().add(new DescriptionEntry(Text.translatable("modmenu.credits").asOrderedText(), this));
 							for (String credit : credits) {
-								children().add(new DescriptionEntry(Text.literal("  " + credit).asOrderedText(), this));
+								int indent = 8;
+								for (OrderedText line : textRenderer.wrapLines(Text.literal(credit), getRowWidth() - 5 - 16)) {
+									children().add(new DescriptionEntry(line, this, indent));
+									indent = 16;
+								}
 							}
 						}
 					}
@@ -231,10 +235,16 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
 		private final DescriptionListWidget widget;
 		protected OrderedText text;
+		protected int indent;
 
-		public DescriptionEntry(OrderedText text, DescriptionListWidget widget) {
+		public DescriptionEntry(OrderedText text, DescriptionListWidget widget, int indent) {
 			this.text = text;
 			this.widget = widget;
+			this.indent = indent;
+		}
+
+		public DescriptionEntry(OrderedText text, DescriptionListWidget widget) {
+			this(text, widget, 0);
 		}
 
 		@Override
@@ -242,7 +252,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			if (widget.top > y || widget.bottom - textRenderer.fontHeight < y) {
 				return;
 			}
-			textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
+			textRenderer.drawWithShadow(matrices, text, x + indent, y, 0xAAAAAA);
 		}
 	}
 
@@ -274,9 +284,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	protected class LinkEntry extends DescriptionEntry {
 		private final String link;
 
-		public LinkEntry(OrderedText text, String link, DescriptionListWidget widget) {
-			super(text, widget);
+		public LinkEntry(OrderedText text, String link, DescriptionListWidget widget, int indent) {
+			super(text, widget, indent);
 			this.link = link;
+		}
+
+		public LinkEntry(OrderedText text, String link, DescriptionListWidget widget) {
+			this(text, link, widget, 0);
 		}
 
 		@Override
