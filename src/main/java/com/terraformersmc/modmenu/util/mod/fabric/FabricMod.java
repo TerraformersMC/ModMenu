@@ -32,6 +32,8 @@ public class FabricMod implements Mod {
 
 	protected final Map<String, String> links = new HashMap<>();
 
+	protected boolean defaultIconWarning = true;
+
 	public FabricMod(ModContainer modContainer) {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
@@ -139,7 +141,10 @@ public class FabricMod implements Mod {
 		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
 		NativeImageBackedTexture icon = iconHandler.createIcon(iconSource, iconPath);
 		if (icon == null) {
-			LOGGER.warn("Warning! Mod {} has a broken icon, loading default icon", metadata.getId());
+			if (defaultIconWarning) {
+				LOGGER.warn("Warning! Mod {} has a broken icon, loading default icon", metadata.getId());
+				defaultIconWarning = false;
+			}
 			return iconHandler.createIcon(FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + ModMenu.MOD_ID)), "assets/" + ModMenu.MOD_ID + "/unknown_icon.png");
 		}
 		return icon;
