@@ -18,7 +18,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -68,7 +67,9 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			NarratorManager.INSTANCE.narrate(Text.translatable("narrator.select", mod.getName()).getString());
+			// TODO https://github.com/FabricMC/yarn/pull/3228
+			// this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getName()).getString());
+			this.client.method_44713().narrate(Text.translatable("narrator.select", mod.getName()).getString());
 		}
 	}
 
