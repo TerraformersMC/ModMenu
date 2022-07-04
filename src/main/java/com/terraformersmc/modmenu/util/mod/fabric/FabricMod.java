@@ -12,8 +12,8 @@ import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.texture.NativeImageBackedTexture;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FabricMod implements Mod {
-	private static final Logger LOGGER = LogManager.getLogger("Mod Menu | FabricMod");
+	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | FabricMod");
 
 	protected final ModContainer container;
 	protected final ModMetadata metadata;

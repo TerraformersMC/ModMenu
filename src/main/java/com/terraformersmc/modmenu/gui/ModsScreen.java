@@ -34,8 +34,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.Util;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class ModsScreen extends Screen {
 	private static final Text TOGGLE_FILTER_OPTIONS = Text.translatable("modmenu.toggleFilterOptions");
 	private static final Text CONFIGURE = Text.translatable("modmenu.configure");
 
-	private static final Logger LOGGER = LogManager.getLogger("Mod Menu");
+	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu");
 
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
