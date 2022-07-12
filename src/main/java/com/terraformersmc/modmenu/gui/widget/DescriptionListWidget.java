@@ -10,7 +10,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
+import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
@@ -194,7 +194,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				next();
 		tessellator.draw();
 
-		this.renderList(matrices, mouseX, mouseY, delta);
+		int k = this.getRowLeft();
+		int l = this.top + 4 - (int) this.getScrollAmount();
+		this.renderList(matrices, k, l, mouseX, mouseY, delta);
 		this.renderScrollBar(bufferBuilder, tessellator);
 
 		RenderSystem.enableTexture();
@@ -296,7 +298,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			if (isMouseOver(mouseX, mouseY)) {
-				client.setScreen(new ConfirmLinkScreen((open) -> {
+				client.setScreen(new ConfirmChatLinkScreen((open) -> {
 					if (open) {
 						Util.getOperatingSystem().open(link);
 					}
