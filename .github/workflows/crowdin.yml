@@ -33,7 +33,7 @@ jobs:
         upload_sources: true
 
         download_translations: true
-        skip_untranslated_strings: true
+        # skip_untranslated_strings: true
 
         source: src/main/resources/assets/modmenu/lang/en_us.json
         translation: src/main/resources/assets/modmenu/lang/%locale%.json
