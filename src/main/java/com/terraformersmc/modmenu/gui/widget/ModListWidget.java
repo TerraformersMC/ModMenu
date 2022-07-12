@@ -67,9 +67,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			// TODO https://github.com/FabricMC/yarn/pull/3228
-			// this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getName()).getString());
-			this.client.method_44713().narrate(Text.translatable("narrator.select", mod.getName()).getString());
+			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getName()).getString());
 		}
 	}
 
