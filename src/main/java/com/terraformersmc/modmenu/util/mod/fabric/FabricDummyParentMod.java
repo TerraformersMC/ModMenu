@@ -49,7 +49,11 @@ public class FabricDummyParentMod implements Mod {
 		}
 		if (iconPath == null) {
 			iconSourceId = ModMenu.MOD_ID;
-			iconPath = "assets/" + ModMenu.MOD_ID + "/unknown_parent.png";
+			if (id.equals("fabric")) {
+				iconPath = "assets/" + ModMenu.MOD_ID + "/fabric.png";
+			} else {
+				iconPath = "assets/" + ModMenu.MOD_ID + "/unknown_parent.png";
+			}
 		}
 		final String finalIconSourceId = iconSourceId;
 		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
