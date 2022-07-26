@@ -10,8 +10,8 @@
   "modmenu.loaded.420.secret": "(Завантажено: %s...спали їх)",
   "modmenu.mods.n": " (%s модів)",
   "modmenu.mods.1": " (%s мод)",
-  "modmenu.mods.69.secret": " (Модів: %s...непогано)",
-  "modmenu.mods.420.secret": " (Модів: %s...спали їх)",
+  "modmenu.mods.69.secret": " (%s модів...непогано)",
+  "modmenu.mods.420.secret": " (%s модів...спали їх)",
 
   "modmenu.search": "Пошук модів",
   "modmenu.searchTerms.library": "api library",
