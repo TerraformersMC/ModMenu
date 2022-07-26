@@ -44,8 +44,8 @@
 
   "modmenu.modIdToolTip": "ID мода: %s",
   "modmenu.authorPrefix": "Автор: %s",
-  "modmenu.config": "Редагувати конфігурацію",
-  "modmenu.configure": "Конфігурація...",
+  "modmenu.config": "Редагувати налаштування",
+  "modmenu.configure": "Налаштування...",
   "modmenu.website": "Вебсайт",
   "modmenu.issues": "Повідомити про проблему",
 
@@ -76,7 +76,7 @@
   "modmenu.modsFolder": "Відкрити папку модів",
   "modmenu.configsFolder": "Відкрити папку конфігурацій",
 
-  "modmenu.options": "Параметри Mod Menu",
+  "modmenu.options": "Налаштування Mod Menu",
   "option.modmenu.sorting": "Сортування",
   "option.modmenu.sorting.ascending": "А-Я",
   "option.modmenu.sorting.descending": "Я-А",
