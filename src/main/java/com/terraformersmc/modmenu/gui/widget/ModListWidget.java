@@ -18,7 +18,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -68,7 +67,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			NarratorManager.INSTANCE.narrate(Text.translatable("narrator.select", mod.getName()).getString());
+			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getName()).getString());
 		}
 	}
 
@@ -185,7 +184,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 
 	@Override
-	protected void renderList(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
+	protected void renderList(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
@@ -200,7 +199,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				int entryLeft;
 				if (this.isSelectedEntry(index)) {
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
-					int selectionRight = x + rowWidth + 2;
+					int selectionRight = this.getRowLeft() + rowWidth + 2;
 					RenderSystem.disableTexture();
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
 					RenderSystem.setShader(GameRenderer::getPositionShader);
