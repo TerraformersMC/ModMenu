@@ -52,9 +52,9 @@ public class BooleanConfigOption implements OptionConvertable {
 	public SimpleOption<Boolean> asOption() {
 		if (enabledText != null && disabledText != null) {
 			return new SimpleOption<>(translationKey, SimpleOption.emptyTooltip(),
-					(text, value) -> value ? enabledText : disabledText, SimpleOption.BOOLEAN, defaultValue,
+					(text, value) -> value ? enabledText : disabledText, SimpleOption.BOOLEAN, getValue(),
 					newValue -> ConfigOptionStorage.setBoolean(key, newValue));
 		}
-		return SimpleOption.ofBoolean(translationKey, defaultValue, (value) -> ConfigOptionStorage.setBoolean(key, value));
+		return SimpleOption.ofBoolean(translationKey, getValue(), (value) -> ConfigOptionStorage.setBoolean(key, value));
 	}
 }

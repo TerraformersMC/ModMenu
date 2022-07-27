@@ -63,6 +63,6 @@ public class EnumConfigOption<E extends Enum<E>> implements OptionConvertable {
 								string -> Arrays.stream(enumClass.getEnumConstants()).filter(e -> e.name().toLowerCase().equals(string)).findAny().orElse(null),
 								newValue -> newValue.name().toLowerCase()
 						)),
-				defaultValue, value -> ConfigOptionStorage.setEnum(key, value));
+				getValue(), value -> ConfigOptionStorage.setEnum(key, value));
 	}
 }
