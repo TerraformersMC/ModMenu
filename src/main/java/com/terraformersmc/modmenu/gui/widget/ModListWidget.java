@@ -184,16 +184,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 
-	/*@Override
-	protected void renderList(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		super.renderList(matrices, mouseX, mouseY, delta);
-	}*/
-
-	@Override
-	protected void setRenderHeader(boolean renderHeader, int headerHeight) {
-		super.setRenderHeader(renderHeader, headerHeight);
-	}
-
 	@Override
 	protected void renderList(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
