@@ -19,6 +19,6 @@
   "modmenu.showingMods": "%s個のmodを表示中",
   "modmenu.sorting": "表示順: %s",
   "modmenu.sorting.ascending": "昇順(A-Z)",
-  "modmenu.sorting.decending": "降順(Z-A)",
+  "modmenu.sorting.descending": "降順(Z-A)",
   "modmenu.minecraft": "Minecraft"
 }

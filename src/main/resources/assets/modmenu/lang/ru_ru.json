@@ -26,7 +26,7 @@
   "modmenu.showingModsLibraries.1.1": "Показано: %s мод и %s библиотека",
   "modmenu.sorting": "Сортировка: %s",
   "modmenu.sorting.ascending": "A-Z",
-  "modmenu.sorting.decending": "Z-A",
+  "modmenu.sorting.descending": "Z-A",
   "modmenu.minecraft": "Minecraft",
   "modmenu.forge": "Forge"
 }
