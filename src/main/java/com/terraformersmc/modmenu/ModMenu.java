@@ -28,8 +28,10 @@ import org.slf4j.LoggerFactory;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
@@ -64,6 +66,7 @@ public class ModMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
+		Set<String> modpackMods = new HashSet<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(entrypoint -> {
 			ModMetadata metadata = entrypoint.getProvider().getMetadata();
 			String modId = metadata.getId();
@@ -71,6 +74,7 @@ public class ModMenu implements ClientModInitializer {
 				ModMenuApi api = entrypoint.getEntrypoint();
 				factories.put(modId, api.getModConfigScreenFactory());
 				dynamicScreenFactories.add(api::getProvidedConfigScreenFactories);
+				api.attachModpackBadges(modpackMods::add);
 			} catch (Throwable e) {
 				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
 			}
@@ -82,10 +86,10 @@ public class ModMenu implements ClientModInitializer {
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
 			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
 				if(FabricLoader.getInstance().isModLoaded("quilt_loader")){
-					QuiltMod mod = new QuiltMod(modContainer);
+					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
 				}else {
-					FabricMod mod = new FabricMod(modContainer);
+					FabricMod mod = new FabricMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
 				}
 			}

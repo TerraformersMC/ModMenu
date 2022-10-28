@@ -30,6 +30,7 @@ public class ModSearch {
 
 		String library = Text.translatable("modmenu.searchTerms.library").toString();
 		String patchwork = Text.translatable("modmenu.searchTerms.patchwork").toString();
+		String modpack = Text.translatable("modmenu.searchTerms.modpack").toString();
 		String deprecated = Text.translatable("modmenu.searchTerms.deprecated").toString();
 		String clientside = Text.translatable("modmenu.searchTerms.clientside").toString();
 		String configurable = Text.translatable("modmenu.searchTerms.configurable").toString();
@@ -42,6 +43,7 @@ public class ModSearch {
 				|| authorMatches(mod, query) // Search via author
 				|| library.contains(query) && mod.getBadges().contains(Mod.Badge.LIBRARY) // Search for lib mods
 				|| patchwork.contains(query) && mod.getBadges().contains(Mod.Badge.PATCHWORK_FORGE) // Search for patchwork mods
+				|| modpack.contains(query) && mod.getBadges().contains(Mod.Badge.MODPACK) // Search for modpack mods
 				|| deprecated.contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED) // Search for deprecated mods
 				|| clientside.contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT) // Search for clientside mods
 				|| configurable.contains(query) && screen.getModHasConfigScreen().get(modId) // Search for mods that can be configured
