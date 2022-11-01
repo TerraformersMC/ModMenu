@@ -24,21 +24,19 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, EMPTY);
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.EMPTY_TOOLTIP);
 	}
 
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, TooltipSupplier tooltipSupplier) {
-		super(x, y, width, height, message, onPress, tooltipSupplier);
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, tooltipSupplier, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+	}
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, TooltipSupplier tooltipSupplier, NarrationSupplier narationSupplier) {
+		super(x, y, width, height, message, onPress, tooltipSupplier, narationSupplier);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
 		this.u = u;
 		this.v = v;
 		this.texture = texture;
-	}
-
-	protected void setPos(int x, int y) {
-		this.x = x;
-		this.y = y;
 	}
 
 	@Override
@@ -53,7 +51,7 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 			adjustedV += this.height;
 		}
 
-		drawTexture(matrices, this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
+		drawTexture(matrices, this.getX(), this.getY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
 
 		if (this.isHovered()) {

@@ -20,16 +20,13 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.*;
+import net.minecraft.text.StringVisitable;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
@@ -42,6 +39,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
@@ -142,7 +140,7 @@ public class ModsScreen extends Screen {
 			if (button.isJustHovered()) {
 				this.renderTooltip(matrices, CONFIGURE, mouseX, mouseY);
 			} else if (button.isFocusedButNotHovered()) {
-				this.renderTooltip(matrices, CONFIGURE, button.x, button.y);
+				this.renderTooltip(matrices, CONFIGURE, button.getX(), button.getY());
 			}
 		}) {
 			@Override
@@ -175,7 +173,7 @@ public class ModsScreen extends Screen {
 				}
 				this.client.setScreen(this);
 			}, mod.getWebsite(), false));
-		}) {
+		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
@@ -192,7 +190,7 @@ public class ModsScreen extends Screen {
 				}
 				this.client.setScreen(this);
 			}, mod.getIssueTracker(), false));
-		}) {
+		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
@@ -206,7 +204,7 @@ public class ModsScreen extends Screen {
 			if (button.isJustHovered()) {
 				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, mouseX, mouseY);
 			} else if (button.isFocusedButNotHovered()) {
-				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, button.x, button.y);
+				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, button.getX(), button.getY());
 			}
 		}));
 		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
@@ -220,7 +218,7 @@ public class ModsScreen extends Screen {
 			ModMenuConfig.SORTING.cycleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
-		}) {
+		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				matrices.translate(0, 0, 1);
@@ -233,7 +231,7 @@ public class ModsScreen extends Screen {
 			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
-		}) {
+		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				matrices.translate(0, 0, 1);
@@ -249,8 +247,20 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(websiteButton);
 		this.addDrawableChild(issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, Text.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))));
-		this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.setScreen(previousScreen)));
+		this.addDrawableChild(
+				ButtonWidget.createBuilder(Text.translatable ("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")))
+						.setPosition(this.width / 2 - 154, this.height - 28)
+						.setSize(150, 20)
+						.setTooltipSupplier(ButtonWidget.EMPTY_TOOLTIP)
+						.setNarrationSupplier(Supplier::get)
+						.build());
+		this.addDrawableChild(
+				ButtonWidget.createBuilder(ScreenTexts.DONE, button -> client.setScreen(previousScreen))
+						.setPosition(this.width / 2 + 4, this.height - 28)
+						.setSize(150, 20)
+						.setTooltipSupplier(ButtonWidget.EMPTY_TOOLTIP)
+						.setNarrationSupplier(Supplier::get)
+						.build());
 		this.setInitialFocus(this.searchBox);
 
 		init = true;

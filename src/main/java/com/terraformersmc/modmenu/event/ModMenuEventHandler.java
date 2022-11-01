@@ -60,20 +60,20 @@ public class ModMenuEventHandler {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
 						if (modsButtonIndex == -1) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
 				if (buttonHasText(button, "menu.online")) {
 					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS) {
-						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 							button.setWidth(98);
 						}
 						modsButtonIndex = i + 1;
 						if (button.visible) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
@@ -103,18 +103,18 @@ public class ModMenuEventHandler {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
 						if (modsButtonIndex == -1) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
 				if (buttonHasText(button, "menu.reportBugs")) {
 					modsButtonIndex = i + 1;
 					if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
-						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						modsButtonIndex = i + 1;
 						if (button.visible) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
@@ -143,9 +143,9 @@ public class ModMenuEventHandler {
 
 	private static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {
 		if (shiftUp) {
-			button.y -= spacing / 2;
+			button.setY(button.getY() - spacing / 2);
 		} else if (!button.getMessage().equals(TitleScreen.COPYRIGHT)) {
-			button.y += spacing - (spacing / 2);
+			button.setY(button.getY() + spacing / 2);
 		}
 	}
 }

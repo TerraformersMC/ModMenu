@@ -13,6 +13,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ModMenuOptionsScreen extends GameOptionsScreen {
 
@@ -30,12 +31,14 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
 		this.list.addAll(ModMenuConfig.asOptions());
 		this.addSelectableChild(this.list);
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, (button) -> {
-			ModMenuConfigManager.save();
-			this.client.setScreen(this.previous);
-		}));
+		this.addDrawableChild(
+				ButtonWidget.createBuilder(ScreenTexts.DONE, (button) -> {
+							ModMenuConfigManager.save();
+							this.client.setScreen(this.previous);
+						}).setPosition(this.width / 2 - 100, this.height - 27)
+						.setSize(200, 20)
+						.build());
 	}
-
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
 		this.list.render(matrices, mouseX, mouseY, delta);
