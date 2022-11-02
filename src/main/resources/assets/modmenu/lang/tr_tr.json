@@ -31,7 +31,7 @@
   "modmenu.badge.deprecated": "Eskimiş",
   "modmenu.badge.forge": "Forge",
   "modmenu.badge.minecraft": "Minecraft",
-  "modmenu.dropInfo.line1": "Modları eklemek için bu pencereye",
+  "modmenu.dropInfo.line1": "Sürükleyip buraya bırakın",
   "modmenu.dropInfo.line2": "dosyaları sürükleyip bırakın",
   "modmenu.dropConfirm": "Seçili mod veya modları mod dizinine kopyalamak istiyor musun?",
   "modmenu.dropSuccessful.line1": "Modlar başarıyla kopyalandı",
