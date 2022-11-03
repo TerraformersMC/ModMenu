@@ -8,6 +8,6 @@ import net.minecraft.text.Text;
 
 public class ModMenuButtonWidget extends ButtonWidget {
 	public ModMenuButtonWidget(int x, int y, int width, int height, Text text, Screen screen) {
-		super(x, y, width, height, text, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)));
+		super(x, y, width, height, text, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ButtonWidget.EMPTY_TOOLTIP, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
 	}
 }

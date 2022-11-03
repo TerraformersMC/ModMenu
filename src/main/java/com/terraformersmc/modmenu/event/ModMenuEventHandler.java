@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
+import com.terraformersmc.modmenu.mixin.IGridWidgetAccessor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -60,20 +62,20 @@ public class ModMenuEventHandler {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
 						if (modsButtonIndex == -1) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
 				if (buttonHasText(button, "menu.online")) {
 					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS) {
-						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 							button.setWidth(98);
 						}
 						modsButtonIndex = i + 1;
 						if (button.visible) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
@@ -91,7 +93,8 @@ public class ModMenuEventHandler {
 	}
 
 	private static void afterGameMenuScreenInit(Screen screen) {
-		final List<ClickableWidget> buttons = Screens.getButtons(screen);
+		GridWidget grid = (GridWidget) Screens.getButtons(screen).get(0);
+		final List<ClickableWidget> buttons = ((IGridWidgetAccessor) grid).getChildren();
 		if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;
@@ -103,18 +106,18 @@ public class ModMenuEventHandler {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
 						if (modsButtonIndex == -1) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
 				if (buttonHasText(button, "menu.reportBugs")) {
 					modsButtonIndex = i + 1;
 					if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
-						buttons.set(i, new ModMenuButtonWidget(button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						modsButtonIndex = i + 1;
 						if (button.visible) {
-							buttonsY = button.y;
+							buttonsY = button.getY();
 						}
 					}
 				}
@@ -123,7 +126,7 @@ public class ModMenuEventHandler {
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing, 204, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 - 16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
 				}
 			}
 		}
@@ -143,9 +146,9 @@ public class ModMenuEventHandler {
 
 	private static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {
 		if (shiftUp) {
-			button.y -= spacing / 2;
+			button.setY(button.getY() - spacing / 2);
 		} else if (!button.getMessage().equals(TitleScreen.COPYRIGHT)) {
-			button.y += spacing - (spacing / 2);
+			button.setY(button.getY() + spacing / 2);
 		}
 	}
 }
