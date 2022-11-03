@@ -16,6 +16,7 @@
   "modmenu.search": "Search for mods",
   "modmenu.searchTerms.library": "api library",
   "modmenu.searchTerms.patchwork": "patchwork forge fml",
+  "modmenu.searchTerms.modpack": "modpack pack",
   "modmenu.searchTerms.deprecated": "deprecated outdated old",
   "modmenu.searchTerms.clientside": "clientside gameside",
   "modmenu.searchTerms.configurable": "configurations configs configures configurable options",
@@ -34,6 +35,7 @@
   "modmenu.badge.clientsideOnly": "Client",
   "modmenu.badge.deprecated": "Deprecated",
   "modmenu.badge.forge": "Forge",
+  "modmenu.badge.modpack": "Modpack",
   "modmenu.badge.minecraft": "Minecraft",
 
   "modmenu.dropInfo.line1": "Drag and drop files into",

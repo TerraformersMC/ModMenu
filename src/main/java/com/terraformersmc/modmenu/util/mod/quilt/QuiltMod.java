@@ -9,14 +9,15 @@ import org.quiltmc.loader.api.ModMetadata;
 import org.quiltmc.loader.api.QuiltLoader;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class QuiltMod extends FabricMod {
 	protected final ModContainer container;
 	protected final ModMetadata metadata;
 
-	public QuiltMod(net.fabricmc.loader.api.ModContainer fabricModContainer) {
-		super(fabricModContainer);
+	public QuiltMod(net.fabricmc.loader.api.ModContainer fabricModContainer, Set<String> modpackMods) {
+		super(fabricModContainer, modpackMods);
 		this.container = QuiltLoader.getModContainer(fabricModContainer.getMetadata().getId()).get();
 		this.metadata = container.metadata();
 
