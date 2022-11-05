@@ -92,16 +92,9 @@ public class SearchQuery {
 		if (content.startsWith("@")) {
 			String keyword = content.substring(1);
 
-			if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.library")) {
-				return new BadgeSearchTerm(data, Mod.Badge.LIBRARY);
-			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.patchwork")) {
-				return new BadgeSearchTerm(data, Mod.Badge.PATCHWORK_FORGE);
-			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.modpack")) {
-				return new BadgeSearchTerm(data, Mod.Badge.MODPACK);
-			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.deprecated")) {
-				return new BadgeSearchTerm(data, Mod.Badge.DEPRECATED);
-			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.clientside")) {
-				return new BadgeSearchTerm(data, Mod.Badge.CLIENT);
+			BadgeSearchTerm term = getBadgeFromKeyword(data);
+			if (term != null) {
+				return term;
 			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.configurable")) {
 				return new ConfigurableSearchTerm(data, screen);
 			}
@@ -110,7 +103,18 @@ public class SearchQuery {
 		return new ContentSearchTerm(data);
 	}
 
+	protected static BadgeSearchTerm getBadgeFromKeyword(String keyword, TermData data) {
+		for (Mod.Badge badge : Mod.Badge.values()) {
+			if (isKeyword(keyword, badge.getSearchTerms())) {
+				return new BadgeSearchTerm(data, badge);
+			}
+		}
+		return null;
+	}
+
 	protected static boolean isKeyword(String keyword, String translationKey) {
+		if (translationKey == null) return false;
+
 		String translated = I18n.translate(translationKey);
 
 		for (String option : translated.split(" ")) {
