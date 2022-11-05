@@ -92,7 +92,7 @@ public class SearchQuery {
 		if (content.startsWith("@")) {
 			String keyword = content.substring(1);
 
-			BadgeSearchTerm term = getBadgeFromKeyword(data);
+			BadgeSearchTerm term = getBadgeFromKeyword(keyword, data);
 			if (term != null) {
 				return term;
 			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.configurable")) {
