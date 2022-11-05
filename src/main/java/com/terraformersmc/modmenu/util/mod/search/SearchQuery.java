@@ -105,7 +105,7 @@ public class SearchQuery {
 
 	protected static BadgeSearchTerm getBadgeFromKeyword(String keyword, TermData data) {
 		for (Mod.Badge badge : Mod.Badge.values()) {
-			if (isKeyword(keyword, badge.getSearchTerms())) {
+			if (isKeyword(keyword, badge.getSearchKey())) {
 				return new BadgeSearchTerm(data, badge);
 			}
 		}
