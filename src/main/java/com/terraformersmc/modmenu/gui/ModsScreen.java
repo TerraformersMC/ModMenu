@@ -14,6 +14,7 @@ import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.class_7919;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -56,7 +57,6 @@ public class ModsScreen extends Screen {
 	private DescriptionListWidget descriptionListWidget;
 	private final Screen previousScreen;
 	private ModListWidget modList;
-	private Text tooltip;
 	private ModListEntry selected;
 	private ModBadgeRenderer modBadgeRenderer;
 	private double scrollPercent = 0;
@@ -134,14 +134,6 @@ public class ModsScreen extends Screen {
 			} else {
 				button.active = false;
 			}
-		},
-				CONFIGURE, (buttonWidget, matrices, mouseX, mouseY) -> {
-			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
-			if (button.isJustHovered()) {
-				this.renderTooltip(matrices, CONFIGURE, mouseX, mouseY);
-			} else if (button.isFocusedButNotHovered()) {
-				this.renderTooltip(matrices, CONFIGURE, button.getX(), button.getY());
-			}
 		}) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -162,6 +154,7 @@ public class ModsScreen extends Screen {
 				super.renderButton(matrices, mouseX, mouseY, delta);
 			}
 		};
+		configureButton.method_47400(class_7919.method_47407(CONFIGURE));
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
@@ -173,7 +166,7 @@ public class ModsScreen extends Screen {
 				}
 				this.client.setScreen(this);
 			}, mod.getWebsite(), false));
-		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
+		}, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
@@ -190,7 +183,7 @@ public class ModsScreen extends Screen {
 				}
 				this.client.setScreen(this);
 			}, mod.getIssueTracker(), false));
-		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
+		}, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
@@ -199,14 +192,9 @@ public class ModsScreen extends Screen {
 			}
 		};
 		this.addSelectableChild(this.searchBox);
-		this.addDrawableChild(new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS, (buttonWidget, matrices, mouseX, mouseY) -> {
-			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
-			if (button.isJustHovered()) {
-				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, mouseX, mouseY);
-			} else if (button.isFocusedButNotHovered()) {
-				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, button.getX(), button.getY());
-			}
-		}));
+		ButtonWidget filtersButton = new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
+		filtersButton.method_47400(class_7919.method_47407(TOGGLE_FILTER_OPTIONS));
+		this.addDrawableChild(filtersButton);
 		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
 		Text sortingText = ModMenuConfig.SORTING.getButtonText();
 		int showLibrariesWidth = textRenderer.getWidth(showLibrariesText) + 20;
@@ -218,7 +206,7 @@ public class ModsScreen extends Screen {
 			ModMenuConfig.SORTING.cycleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
-		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
+		}, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				matrices.translate(0, 0, 1);
@@ -231,7 +219,7 @@ public class ModsScreen extends Screen {
 			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
-		}, ButtonWidget.EMPTY_TOOLTIP, Supplier::get) {
+		}, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				matrices.translate(0, 0, 1);
@@ -251,14 +239,12 @@ public class ModsScreen extends Screen {
 				ButtonWidget.createBuilder(Text.translatable ("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")))
 						.setPosition(this.width / 2 - 154, this.height - 28)
 						.setSize(150, 20)
-						.setTooltipSupplier(ButtonWidget.EMPTY_TOOLTIP)
 						.setNarrationSupplier(Supplier::get)
 						.build());
 		this.addDrawableChild(
 				ButtonWidget.createBuilder(ScreenTexts.DONE, button -> client.setScreen(previousScreen))
 						.setPosition(this.width / 2 + 4, this.height - 28)
 						.setSize(150, 20)
-						.setTooltipSupplier(ButtonWidget.EMPTY_TOOLTIP)
 						.setNarrationSupplier(Supplier::get)
 						.build());
 		this.setInitialFocus(this.searchBox);
@@ -279,7 +265,6 @@ public class ModsScreen extends Screen {
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
-		this.tooltip = null;
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
 			this.descriptionListWidget.render(matrices, mouseX, mouseY, delta);
@@ -330,7 +315,7 @@ public class ModsScreen extends Screen {
 			}
 			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
-				setTooltip(Text.translatable("modmenu.modIdToolTip", mod.getId()));
+				this.method_47415(Text.translatable("modmenu.modIdToolTip", mod.getId()));
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.mod, this);
@@ -355,9 +340,6 @@ public class ModsScreen extends Screen {
 			}
 		}
 		super.render(matrices, mouseX, mouseY, delta);
-		if (this.tooltip != null) {
-			this.renderOrderedTooltip(matrices, textRenderer.wrapLines(this.tooltip, Integer.MAX_VALUE), mouseX, mouseY);
-		}
 	}
 
 	private Text computeModCountText(boolean includeLibs) {
@@ -412,10 +394,6 @@ public class ModsScreen extends Screen {
 	public void close() {
 		this.modList.close();
 		this.client.setScreen(this.previousScreen);
-	}
-
-	private void setTooltip(Text tooltip) {
-		this.tooltip = tooltip;
 	}
 
 	public ModListEntry getSelectedEntry() {
