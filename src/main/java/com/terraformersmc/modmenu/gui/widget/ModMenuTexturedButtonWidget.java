@@ -24,14 +24,11 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.EMPTY_TOOLTIP);
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
 	}
 
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, TooltipSupplier tooltipSupplier) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, tooltipSupplier, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
-	}
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, TooltipSupplier tooltipSupplier, NarrationSupplier narationSupplier) {
-		super(x, y, width, height, message, onPress, tooltipSupplier, narationSupplier);
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, NarrationSupplier narationSupplier) {
+		super(x, y, width, height, message, onPress, narationSupplier);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
 		this.u = u;
@@ -53,17 +50,5 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 
 		drawTexture(matrices, this.getX(), this.getY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
-
-		if (this.isHovered()) {
-			this.renderTooltip(matrices, mouseX, mouseY);
-		}
-	}
-
-	public boolean isJustHovered() {
-		return hovered;
-	}
-
-	public boolean isFocusedButNotHovered() {
-		return !hovered && isFocused();
 	}
 }
