@@ -134,7 +134,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
 
 		{
-			RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+			RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 			RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
@@ -149,7 +149,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		RenderSystem.disableDepthTest();
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
-		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		bufferBuilder.vertex(this.left, (this.top + 4), 0.0D).
@@ -214,7 +214,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				q = this.top;
 			}
 
-			RenderSystem.setShader(GameRenderer::getPositionColorShader);
+			RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 			bufferBuilder.vertex(scrollbarStartX, this.bottom, 0.0D).color(0, 0, 0, 255).next();
 			bufferBuilder.vertex(scrollbarEndX, this.bottom, 0.0D).color(0, 0, 0, 255).next();

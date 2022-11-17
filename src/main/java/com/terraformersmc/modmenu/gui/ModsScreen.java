@@ -14,13 +14,13 @@ import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_7919;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.screen.Tooltip;
 import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
@@ -96,7 +96,6 @@ public class ModsScreen extends Screen {
 
 	@Override
 	protected void init() {
-		this.client.keyboard.setRepeatEvents(true);
 		paneY = 48;
 		paneWidth = this.width / 2 - 8;
 		rightPaneX = width - paneWidth;
@@ -149,12 +148,12 @@ public class ModsScreen extends Screen {
 
 			@Override
 			public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+				RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 				RenderSystem.setShaderColor(1, 1, 1, 1f);
 				super.renderButton(matrices, mouseX, mouseY, delta);
 			}
 		};
-		configureButton.method_47400(class_7919.method_47407(CONFIGURE));
+		configureButton.setTooltip(Tooltip.of(CONFIGURE));
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
@@ -193,7 +192,7 @@ public class ModsScreen extends Screen {
 		};
 		this.addSelectableChild(this.searchBox);
 		ButtonWidget filtersButton = new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
-		filtersButton.method_47400(class_7919.method_47407(TOGGLE_FILTER_OPTIONS));
+		filtersButton.setTooltip(Tooltip.of(TOGGLE_FILTER_OPTIONS));
 		this.addDrawableChild(filtersButton);
 		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
 		Text sortingText = ModMenuConfig.SORTING.getButtonText();
@@ -315,7 +314,7 @@ public class ModsScreen extends Screen {
 			}
 			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
-				this.method_47415(Text.translatable("modmenu.modIdToolTip", mod.getId()));
+				this.setTooltip(Text.translatable("modmenu.modIdToolTip", mod.getId()));
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.mod, this);
@@ -379,7 +378,7 @@ public class ModsScreen extends Screen {
 	static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
