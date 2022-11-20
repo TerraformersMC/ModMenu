@@ -107,7 +107,7 @@ public class FabricMod implements Mod {
 		if (metadata.containsCustomValue("patchwork:patcherMeta")) {
 			badges.add(Badge.PATCHWORK_FORGE);
 		}
-		if (modpackMods.contains(getId()) && "fabric".equals(this.metadata.getType())) {
+		if (modpackMods.contains(getId()) && !"builtin".equals(this.metadata.getType())) {
 			badges.add(Badge.MODPACK);
 		}
 		if ("minecraft".equals(getId())) {
