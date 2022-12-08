@@ -28,11 +28,11 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.list.addAll(ModMenuConfig.asOptions());
 		this.addSelectableChild(this.list);
 		this.addDrawableChild(
-				ButtonWidget.createBuilder(ScreenTexts.DONE, (button) -> {
+				ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
 							ModMenuConfigManager.save();
 							this.client.setScreen(this.previous);
-						}).setPosition(this.width / 2 - 100, this.height - 27)
-						.setSize(200, 20)
+						}).position(this.width / 2 - 100, this.height - 27)
+						.size(200, 20)
 						.build());
 	}
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {

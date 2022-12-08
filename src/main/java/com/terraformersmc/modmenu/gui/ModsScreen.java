@@ -20,7 +20,7 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.screen.Tooltip;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
@@ -235,16 +235,16 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
 		this.addDrawableChild(
-				ButtonWidget.createBuilder(Text.translatable ("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")))
-						.setPosition(this.width / 2 - 154, this.height - 28)
-						.setSize(150, 20)
-						.setNarrationSupplier(Supplier::get)
+				ButtonWidget.builder(Text.translatable ("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")))
+						.position(this.width / 2 - 154, this.height - 28)
+						.size(150, 20)
+						.narrationSupplier(Supplier::get)
 						.build());
 		this.addDrawableChild(
-				ButtonWidget.createBuilder(ScreenTexts.DONE, button -> client.setScreen(previousScreen))
-						.setPosition(this.width / 2 + 4, this.height - 28)
-						.setSize(150, 20)
-						.setNarrationSupplier(Supplier::get)
+				ButtonWidget.builder(ScreenTexts.DONE, button -> client.setScreen(previousScreen))
+						.position(this.width / 2 + 4, this.height - 28)
+						.size(150, 20)
+						.narrationSupplier(Supplier::get)
 						.build());
 		this.setInitialFocus(this.searchBox);
 
