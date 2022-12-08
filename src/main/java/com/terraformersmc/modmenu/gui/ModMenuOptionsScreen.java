@@ -9,11 +9,7 @@ import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 public class ModMenuOptionsScreen extends GameOptionsScreen {
 
@@ -32,11 +28,11 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.list.addAll(ModMenuConfig.asOptions());
 		this.addSelectableChild(this.list);
 		this.addDrawableChild(
-				ButtonWidget.createBuilder(ScreenTexts.DONE, (button) -> {
+				ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
 							ModMenuConfigManager.save();
 							this.client.setScreen(this.previous);
-						}).setPosition(this.width / 2 - 100, this.height - 27)
-						.setSize(200, 20)
+						}).position(this.width / 2 - 100, this.height - 27)
+						.size(200, 20)
 						.build());
 	}
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -44,11 +40,6 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.list.render(matrices, mouseX, mouseY, delta);
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
 		super.render(matrices, mouseX, mouseY, delta);
-		List<OrderedText> list = getHoveredButtonTooltip(this.list, mouseX, mouseY);
-		if (list != null) {
-			this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
-		}
-
 	}
 
 	public void removed() {

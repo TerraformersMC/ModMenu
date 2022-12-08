@@ -2,7 +2,7 @@
 # - new source strings from en_us.json are uploaded
 # - new translations added in Crowdin are downloaded
 #   - if translations were downloaded a pull request is created
-# 
+#
 # Adding a new branch:
 # - add branch to matrix
 # - manually run the action once to initialize the new branch on Crowdin
@@ -19,11 +19,11 @@ on:
 
 jobs:
   crowdin:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       max-parallel: 1
       matrix:
-        branch: ["1.17", "1.18", "1.19"]
+        branch: ["1.17", "1.18", "1.19", "1.19.3"]
     steps:
     - uses: actions/checkout@v3
       with:
