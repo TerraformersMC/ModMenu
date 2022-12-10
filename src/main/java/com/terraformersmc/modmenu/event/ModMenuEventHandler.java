@@ -93,40 +93,42 @@ public class ModMenuEventHandler {
 	}
 
 	private static void afterGameMenuScreenInit(Screen screen) {
-		GridWidget grid = (GridWidget) Screens.getButtons(screen).get(0);
-		final List<ClickableWidget> buttons = ((IGridWidgetAccessor) grid).getChildren();
-		if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
-			int modsButtonIndex = -1;
-			final int spacing = 24;
-			int buttonsY = screen.height / 4 + 8;
-			ModMenuConfig.ModsButtonStyle style = ModMenuConfig.MODS_BUTTON_STYLE.getValue().forGameMenu();
-			for (int i = 0; i < buttons.size(); i++) {
-				ClickableWidget button = buttons.get(i);
-				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
-					if (button.visible) {
-						shiftButtons(button, modsButtonIndex == -1, spacing);
-						if (modsButtonIndex == -1) {
-							buttonsY = button.getY();
-						}
-					}
-				}
-				if (buttonHasText(button, "menu.reportBugs")) {
-					modsButtonIndex = i + 1;
-					if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
-						buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
-					} else {
-						modsButtonIndex = i + 1;
+		ClickableWidget widget = Screens.getButtons(screen).get(0);
+		if (widget instanceof GridWidget) {
+			final List<ClickableWidget> buttons = ((IGridWidgetAccessor) widget).getChildren();
+			if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
+				int modsButtonIndex = -1;
+				final int spacing = 24;
+				int buttonsY = screen.height / 4 + 8;
+				ModMenuConfig.ModsButtonStyle style = ModMenuConfig.MODS_BUTTON_STYLE.getValue().forGameMenu();
+				for (int i = 0; i < buttons.size(); i++) {
+					ClickableWidget button = buttons.get(i);
+					if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 						if (button.visible) {
-							buttonsY = button.getY();
+							shiftButtons(button, modsButtonIndex == -1, spacing);
+							if (modsButtonIndex == -1) {
+								buttonsY = button.getY();
+							}
+						}
+					}
+					if (buttonHasText(button, "menu.reportBugs")) {
+						modsButtonIndex = i + 1;
+						if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
+							buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						} else {
+							modsButtonIndex = i + 1;
+							if (button.visible) {
+								buttonsY = button.getY();
+							}
 						}
 					}
 				}
-			}
-			if (modsButtonIndex != -1) {
-				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
-					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing, 204, 20, ModMenuApi.createModsButtonText(), screen));
-				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 - 16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+				if (modsButtonIndex != -1) {
+					if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
+						buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing, 204, 20, ModMenuApi.createModsButtonText(), screen));
+					} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
+						buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 - 16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+					}
 				}
 			}
 		}
