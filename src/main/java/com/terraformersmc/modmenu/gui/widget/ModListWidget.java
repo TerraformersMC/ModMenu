@@ -59,7 +59,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	@Override
-	protected boolean isFocused() {
+	public boolean isFocused() {
 		return parent.getFocused() == this;
 	}
 
@@ -200,7 +200,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				if (this.isSelectedEntry(index)) {
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
 					int selectionRight = this.getRowLeft() + rowWidth + 2;
-					RenderSystem.disableTexture();
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
 					RenderSystem.setShader(GameRenderer::getPositionProgram);
 					RenderSystem.setShaderColor(float_2, float_2, float_2, 1.0F);
@@ -219,7 +218,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).next();
 					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).next();
 					tessellator.draw();
-					RenderSystem.enableTexture();
 				}
 
 				entryLeft = this.getRowLeft();

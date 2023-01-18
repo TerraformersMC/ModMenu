@@ -246,7 +246,7 @@ public class ModsScreen extends Screen {
 						.size(150, 20)
 						.narrationSupplier(Supplier::get)
 						.build());
-		this.setInitialFocus(this.searchBox);
+		this.searchBox.setFocused(true);
 
 		init = true;
 	}
