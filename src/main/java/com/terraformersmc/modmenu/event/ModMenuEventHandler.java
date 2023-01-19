@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -92,9 +93,19 @@ public class ModMenuEventHandler {
 		}
 	}
 
+	private static GridWidget getFirstGridWidget(Screen screen) {
+		for (Element element : screen.children()) {
+			if (element instanceof GridWidget widget) {
+				return widget;
+			}
+		}
+
+		return null;
+	}
+
 	private static void afterGameMenuScreenInit(Screen screen) {
-		ClickableWidget widget = Screens.getButtons(screen).get(0);
-		if (widget instanceof GridWidget) {
+		GridWidget widget = getFirstGridWidget(screen);
+		if (widget != null) {
 			final List<ClickableWidget> buttons = ((IGridWidgetAccessor) widget).getChildren();
 			if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 				int modsButtonIndex = -1;

@@ -7,13 +7,17 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import net.minecraft.class_8020;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
@@ -24,6 +28,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -197,7 +202,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.renderList(matrices, mouseX, mouseY, delta);
 		this.renderScrollBar(bufferBuilder, tessellator);
 
-		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
 	}
 
@@ -206,7 +210,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		int scrollbarEndX = scrollbarStartX + 6;
 		int maxScroll = this.getMaxScroll();
 		if (maxScroll > 0) {
-			RenderSystem.disableTexture();
 			int p = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top)) / (float) this.getMaxPosition());
 			p = MathHelper.clamp(p, 32, this.bottom - this.top - 8);
 			int q = (int) this.getScrollAmount() * (this.bottom - this.top - p) / maxScroll + this.top;
@@ -232,7 +235,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 	}
 
-	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
+	protected class DescriptionEntry extends ElementListWidget.Entry<DescriptionEntry> {
 		private final DescriptionListWidget widget;
 		protected OrderedText text;
 		protected int indent;
@@ -254,6 +257,16 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			}
 			textRenderer.drawWithShadow(matrices, text, x + indent, y, 0xAAAAAA);
 		}
+
+		@Override
+		public List<? extends Element> children() {
+			return Collections.emptyList();
+		}
+
+		@Override
+		public List<? extends Selectable> selectableChildren() {
+			return Collections.emptyList();
+		}
 	}
 
 	protected class MojangCreditsEntry extends DescriptionEntry {
@@ -271,7 +284,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		class MinecraftCredits extends CreditsScreen {
 			public MinecraftCredits(boolean endCredits) {
-				super(endCredits, Runnables.doNothing());
+				super(endCredits, new class_8020(false), Runnables.doNothing());
 			}
 
 			@Override
