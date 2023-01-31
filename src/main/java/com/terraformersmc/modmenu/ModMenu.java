@@ -85,10 +85,10 @@ public class ModMenu implements ClientModInitializer {
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
 			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
-				if(FabricLoader.getInstance().isModLoaded("quilt_loader")){
+				if (FabricLoader.getInstance().isModLoaded("quilt_loader")) {
 					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
-				}else {
+				} else {
 					FabricMod mod = new FabricMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
 				}

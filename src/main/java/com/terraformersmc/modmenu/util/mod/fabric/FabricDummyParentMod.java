@@ -30,7 +30,7 @@ public class FabricDummyParentMod implements Mod {
 		if (parentData != null) {
 			return parentData.getName().orElse("");
 		}
-		if (id.equals("fabric")) {
+		if (id.equals("fabric-api")) {
 			return "Fabric API";
 		}
 		return id;
@@ -49,7 +49,7 @@ public class FabricDummyParentMod implements Mod {
 		}
 		if (iconPath == null) {
 			iconSourceId = ModMenu.MOD_ID;
-			if (id.equals("fabric")) {
+			if (id.equals("fabric-api")) {
 				iconPath = "assets/" + ModMenu.MOD_ID + "/fabric.png";
 			} else {
 				iconPath = "assets/" + ModMenu.MOD_ID + "/unknown_parent.png";
@@ -106,7 +106,7 @@ public class FabricDummyParentMod implements Mod {
 			return parentData.getBadges();
 		}
 		var badges = new HashSet<Badge>();
-		if (id.equals("fabric")) {
+		if (id.equals("fabric-api")) {
 			badges.add(Badge.LIBRARY);
 		}
 
