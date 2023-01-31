@@ -49,6 +49,9 @@ public class ModMenu implements ClientModInitializer {
 	private static int cachedDisplayedModCount = -1;
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
+		if (ModMenuConfig.HIDDEN_CONFIGS.getValue().contains(modid)) {
+			return null;
+		}
 		ConfigScreenFactory<?> factory = configScreenFactories.get(modid);
 		if (factory != null) {
 			return factory.create(menuScreen);

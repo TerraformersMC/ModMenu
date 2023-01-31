@@ -38,6 +38,7 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption CONFIG_MODE = new BooleanConfigOption("config_mode", false);
 	public static final BooleanConfigOption DISABLE_DRAG_AND_DROP = new BooleanConfigOption("disable_drag_and_drop", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
+	public static final StringSetConfigOption HIDDEN_CONFIGS = new StringSetConfigOption("hidden_configs", new HashSet<>());
 
 	public static SimpleOption<?>[] asOptions() {
 		ArrayList<SimpleOption<?>> options = new ArrayList<>();

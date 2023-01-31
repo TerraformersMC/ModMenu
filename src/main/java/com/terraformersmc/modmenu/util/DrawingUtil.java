@@ -22,7 +22,7 @@ public class DrawingUtil {
 	public static void drawRandomVersionBackground(Mod mod, MatrixStack matrices, int x, int y, int width, int height) {
 		int seed = mod.getName().hashCode() + mod.getVersion().hashCode();
 		Random random = new Random(seed);
-		int color = 0xFF000000 & MathHelper.hsvToRgb(random.nextFloat(1f), random.nextFloat(0.7f, 0.8f), 0.9f);
+		int color = 0xFF000000 | MathHelper.hsvToRgb(random.nextFloat(1f), random.nextFloat(0.7f, 0.8f), 0.9f);
 		if (!ModMenuConfig.RANDOM_JAVA_COLORS.getValue()) {
 			color = 0xFFDD5656;
 		}
