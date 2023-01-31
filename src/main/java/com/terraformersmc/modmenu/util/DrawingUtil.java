@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,12 +22,11 @@ public class DrawingUtil {
 	public static void drawRandomVersionBackground(Mod mod, MatrixStack matrices, int x, int y, int width, int height) {
 		int seed = mod.getName().hashCode() + mod.getVersion().hashCode();
 		Random random = new Random(seed);
-		int color = 0xFF000000 + MathHelper.hsvToRgb(random.nextFloat(), (random.nextInt(2000) + 1000) / 10000f, 0.9f);
-		float a = (float) (color >> 24 & 0xFF) / 0xFF;
-		float r = (float) (color >> 16 & 0xFF) / 0xFF;
-		float g = (float) (color >> 8 & 0xFF) / 0xFF;
-		float b = (float) (color & 0xFF) / 0xFF;
-		RenderSystem.setShaderColor(r, g, b, a);
+		int color = 0xFF000000 & MathHelper.hsvToRgb(random.nextFloat(1f), random.nextFloat(0.7f, 0.8f), 0.9f);
+		if (!ModMenuConfig.RANDOM_JAVA_COLORS.getValue()) {
+			color = 0xFFDD5656;
+		}
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		DrawableHelper.fill(matrices, x, y, x + width, y + height, color);
 	}
 

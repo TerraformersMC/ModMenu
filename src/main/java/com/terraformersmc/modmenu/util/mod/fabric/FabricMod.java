@@ -11,6 +11,7 @@ import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,13 +155,17 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @NotNull String getSummary() {
-		return getTranslatedDescription();
+	public @NotNull String getDescription() {
+		return metadata.getDescription();
 	}
 
 	@Override
-	public @NotNull String getDescription() {
-		return metadata.getDescription();
+	public @NotNull String getTranslatedDescription() {
+		var description = Mod.super.getTranslatedDescription();
+		if (getId().equals("java")) {
+			description = description + "\n" + I18n.translate("modmenu.javaDistributionName", getName());
+		}
+		return description;
 	}
 
 	@Override

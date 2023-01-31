@@ -305,7 +305,7 @@ public class ModsScreen extends Screen {
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
-			Text name = Text.literal(mod.getName());
+			Text name = Text.literal(mod.getTranslatedName());
 			StringVisitable trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getWidth(name) > maxNameWidth) {

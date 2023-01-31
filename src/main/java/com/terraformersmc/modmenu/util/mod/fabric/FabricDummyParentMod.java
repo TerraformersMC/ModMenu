@@ -61,11 +61,6 @@ public class FabricDummyParentMod implements Mod {
 	}
 
 	@Override
-	public @NotNull String getSummary() {
-		return getTranslatedDescription();
-	}
-
-	@Override
 	public @NotNull String getDescription() {
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
 		if (parentData != null) {
