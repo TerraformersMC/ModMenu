@@ -155,20 +155,12 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @NotNull String getSummary() {
-		return getDescription();
+		return getTranslatedDescription();
 	}
 
 	@Override
 	public @NotNull String getDescription() {
-		String description = metadata.getDescription();
-		if (description.isEmpty()) {
-			if ("minecraft".equals(getId())) {
-				return "The base game.";
-			} else if ("java".equals(getId())) {
-				return "The Java runtime environment.";
-			}
-		}
-		return description;
+		return metadata.getDescription();
 	}
 
 	@Override

@@ -62,7 +62,7 @@ public class FabricDummyParentMod implements Mod {
 
 	@Override
 	public @NotNull String getSummary() {
-		return getDescription();
+		return getTranslatedDescription();
 	}
 
 	@Override
