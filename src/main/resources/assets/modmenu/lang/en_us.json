@@ -128,5 +128,8 @@
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
-  "option.modmenu.mods_button_style.icon": "Icon"
+  "option.modmenu.mods_button_style.icon": "Icon",
+
+  "modmenu.descriptionTranslation.minecraft": "The base game.",
+  "modmenu.descriptionTranslation.java": "The Java runtime environment."
 }

@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.util.mod;
 
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,15 @@ public interface Mod {
 
 	@NotNull
 	String getDescription();
+
+	@NotNull
+	default String getTranslatedDescription() {
+		String translatableDescriptionKey = "modmenu.descriptionTranslation." + getId();
+		if (I18n.hasTranslation(translatableDescriptionKey)) {
+			return I18n.translate(translatableDescriptionKey);
+		}
+		return getDescription();
+	}
 
 	@NotNull
 	String getVersion();

@@ -100,11 +100,6 @@
     "mixins.modmenu.json"
   ],
   "custom": {
-    "modupdater": {
-      "strategy": "curseforge",
-      "projectID": 308702,
-      "strict": false
-    },
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/jEGF5fb"
