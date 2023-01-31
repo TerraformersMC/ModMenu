@@ -82,10 +82,10 @@ public class FabricMod implements Mod {
 		/* Hardcode parents and badges for Fabric API & Fabric Loader */
 		String id = metadata.getId();
 		if (id.startsWith("fabric") && metadata.containsCustomValue("fabric-api:module-lifecycle")) {
-			if (FabricLoader.getInstance().isModLoaded("fabric-api")) {
-				modMenuData.fillParentIfEmpty("fabric-api");
-			} else {
+			if (FabricLoader.getInstance().isModLoaded("fabric")) {
 				modMenuData.fillParentIfEmpty("fabric");
+			} else {
+				modMenuData.fillParentIfEmpty("fabric-api");
 			}
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
