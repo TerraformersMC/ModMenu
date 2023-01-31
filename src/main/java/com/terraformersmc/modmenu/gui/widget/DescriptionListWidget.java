@@ -63,7 +63,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	@Override
 	public void appendNarrations(NarrationMessageBuilder builder) {
 		Mod mod = parent.getSelectedEntry().getMod();
-		builder.put(NarrationPart.TITLE, mod.getName() + " " + mod.getPrefixedVersion());
+		builder.put(NarrationPart.TITLE, mod.getTranslatedName() + " " + mod.getPrefixedVersion());
 	}
 
 	@Override

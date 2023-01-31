@@ -25,6 +25,8 @@ public class ModSearch {
 
 	private static boolean passesFilters(ModsScreen screen, Mod mod, String query) {
 		String modId = mod.getId();
+		String modName = mod.getName();
+		String modTranslatedName = mod.getTranslatedName();
 		String modDescription = mod.getDescription();
 		String modTranslatedDescription = mod.getTranslatedDescription();
 		String modSummary = mod.getSummary();
@@ -37,7 +39,8 @@ public class ModSearch {
 		String configurable = I18n.translate("modmenu.searchTerms.configurable");
 
 		// Some basic search, could do with something more advanced but this will do for now
-		if (mod.getName().toLowerCase(Locale.ROOT).contains(query) // Search mod name
+		if (modName.toLowerCase(Locale.ROOT).contains(query) // Search default mod name
+				|| modTranslatedName.toLowerCase(Locale.ROOT).contains(query) // Search localized mod name
 				|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod ID
 				|| modDescription.toLowerCase(Locale.ROOT).contains(query) // Search default mod description
 				|| modTranslatedDescription.toLowerCase(Locale.ROOT).contains(query) // Search localized mod description
