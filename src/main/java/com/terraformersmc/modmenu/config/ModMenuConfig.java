@@ -35,12 +35,22 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption RANDOM_JAVA_COLORS = new BooleanConfigOption("random_java_colors", true);
 	public static final BooleanConfigOption TRANSLATE_NAMES = new BooleanConfigOption("translate_names", true);
 	public static final BooleanConfigOption TRANSLATE_DESCRIPTIONS = new BooleanConfigOption("translate_descriptions", true);
+	public static final BooleanConfigOption CONFIG_MODE = new BooleanConfigOption("config_mode", false);
+	public static final BooleanConfigOption DISABLE_DRAG_AND_DROP = new BooleanConfigOption("disable_drag_and_drop", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
 
 	public static SimpleOption<?>[] asOptions() {
 		ArrayList<SimpleOption<?>> options = new ArrayList<>();
 		for (Field field : ModMenuConfig.class.getDeclaredFields()) {
-			if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && OptionConvertable.class.isAssignableFrom(field.getType()) && !field.getName().equals("HIDE_CONFIG_BUTTONS") && !field.getName().equals("MODIFY_TITLE_SCREEN") && !field.getName().equals("MODIFY_GAME_MENU")) {
+			if (Modifier.isStatic(field.getModifiers())
+					&& Modifier.isFinal(field.getModifiers())
+					&& OptionConvertable.class.isAssignableFrom(field.getType())
+					&& !field.getName().equals("HIDE_CONFIG_BUTTONS")
+					&& !field.getName().equals("MODIFY_TITLE_SCREEN")
+					&& !field.getName().equals("MODIFY_GAME_MENU")
+					&& !field.getName().equals("CONFIG_MODE")
+					&& !field.getName().equals("DISABLE_DRAG_AND_DROP")
+			) {
 				try {
 					options.add(((OptionConvertable) field.get(null)).asOption());
 				} catch (IllegalAccessException e) {
