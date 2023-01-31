@@ -102,7 +102,8 @@ public class ModsScreen extends Screen {
 		rightPaneX = width - paneWidth;
 
 		int filtersButtonSize = (ModMenuConfig.CONFIG_MODE.getValue() ? 0 : 22);
-		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? 200 : paneWidth - 32 - filtersButtonSize;
+		int searchWidthMax = paneWidth - 32 - filtersButtonSize;
+		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - filtersButtonSize / 2;
 		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, Text.translatable("modmenu.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
