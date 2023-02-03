@@ -7,7 +7,6 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
-import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.TranslationUtil;
@@ -20,6 +19,7 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
@@ -129,7 +129,7 @@ public class ModsScreen extends Screen {
 
 		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, 20, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String modid = Objects.requireNonNull(selected).getMod().getId();
 			if (modHasConfigScreen.get(modid)) {
 				Screen configScreen = ModMenu.getConfigScreen(modid, this);
@@ -195,7 +195,7 @@ public class ModsScreen extends Screen {
 			}
 		};
 		this.addSelectableChild(this.searchBox);
-		ButtonWidget filtersButton = new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
+		ButtonWidget filtersButton = new TexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, 20, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
 		filtersButton.setTooltip(Tooltip.of(TOGGLE_FILTER_OPTIONS));
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.addDrawableChild(filtersButton);

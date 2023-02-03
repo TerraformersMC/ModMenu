@@ -7,11 +7,11 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import net.minecraft.class_8020;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.CreditsScreen;
@@ -280,7 +280,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		class MinecraftCredits extends CreditsScreen {
 			public MinecraftCredits(boolean endCredits) {
-				super(endCredits, new class_8020(false), Runnables.doNothing());
+				super(endCredits, new LogoDrawer(false), Runnables.doNothing());
 			}
 
 			@Override
