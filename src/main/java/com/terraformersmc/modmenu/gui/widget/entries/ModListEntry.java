@@ -37,7 +37,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	@Override
 	public Text getNarration() {
-		return Text.literal(mod.getName());
+		return Text.literal(mod.getTranslatedName());
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
-		Text name = Text.literal(mod.getName());
+		Text name = Text.literal(mod.getTranslatedName());
 		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;
 		TextRenderer font = this.client.textRenderer;
@@ -67,13 +67,6 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		}
 		if (!ModMenuConfig.COMPACT_LIST.getValue()) {
 			String summary = mod.getSummary();
-			String translatableSummaryKey = "modmenu.summaryTranslation." + mod.getId();
-			String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
-			if (I18n.hasTranslation(translatableSummaryKey)) {
-				summary = I18n.translate(translatableSummaryKey);
-			} else if (I18n.hasTranslation(translatableDescriptionKey)) {
-				summary = I18n.translate(translatableDescriptionKey);
-			}
 			DrawingUtil.drawWrappedString(matrices, summary, (x + iconSize + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - iconSize - 7, 2, 0x808080);
 		} else {
 			DrawingUtil.drawWrappedString(matrices, mod.getPrefixedVersion(), (x + iconSize + 3), (y + client.textRenderer.fontHeight + 2), rowWidth - iconSize - 7, 2, 0x808080);

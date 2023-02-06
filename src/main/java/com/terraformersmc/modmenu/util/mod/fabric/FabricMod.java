@@ -11,6 +11,7 @@ import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,10 +83,10 @@ public class FabricMod implements Mod {
 		/* Hardcode parents and badges for Fabric API & Fabric Loader */
 		String id = metadata.getId();
 		if (id.startsWith("fabric") && metadata.containsCustomValue("fabric-api:module-lifecycle")) {
-			if (FabricLoader.getInstance().isModLoaded("fabric-api")) {
-				modMenuData.fillParentIfEmpty("fabric-api");
-			} else {
+			if (FabricLoader.getInstance().isModLoaded("fabric")) {
 				modMenuData.fillParentIfEmpty("fabric");
+			} else {
+				modMenuData.fillParentIfEmpty("fabric-api");
 			}
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
@@ -154,19 +155,15 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @NotNull String getSummary() {
-		return getDescription();
+	public @NotNull String getDescription() {
+		return metadata.getDescription();
 	}
 
 	@Override
-	public @NotNull String getDescription() {
-		String description = metadata.getDescription();
-		if (description.isEmpty()) {
-			if ("minecraft".equals(getId())) {
-				return "The base game.";
-			} else if ("java".equals(getId())) {
-				return "The Java runtime environment.";
-			}
+	public @NotNull String getTranslatedDescription() {
+		var description = Mod.super.getTranslatedDescription();
+		if (getId().equals("java")) {
+			description = description + "\n" + I18n.translate("modmenu.javaDistributionName", getName());
 		}
 		return description;
 	}

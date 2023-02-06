@@ -35,7 +35,7 @@ public class ModMenuEventHandler {
 				"key.modmenu.open_menu",
 				InputUtil.Type.KEYSYM,
 				InputUtil.UNKNOWN_KEY.getCode(),
-				"category.modmenu.name"
+				"key.categories.misc"
 		));
 		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
 

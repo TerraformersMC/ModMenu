@@ -67,7 +67,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getName()).getString());
+			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
 		}
 	}
 
@@ -121,7 +121,16 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private void filter(String searchTerm, boolean refresh, boolean search) {
 		this.clearEntries();
 		addedMods.clear();
-		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId())).collect(Collectors.toSet());
+		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> {
+			if (ModMenuConfig.CONFIG_MODE.getValue()) {
+				Map<String, Boolean> modHasConfigScreen = parent.getModHasConfigScreen();
+				var hasConfig = modHasConfigScreen.get(mod.getId());
+				if (!hasConfig) {
+					return false;
+				}
+			}
+			return !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId());
+		}).collect(Collectors.toSet());
 
 		if (DEBUG) {
 			mods = new ArrayList<>(mods);

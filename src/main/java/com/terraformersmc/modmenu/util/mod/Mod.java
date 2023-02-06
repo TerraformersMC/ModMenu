@@ -1,6 +1,8 @@
 package com.terraformersmc.modmenu.util.mod;
 
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -17,13 +19,42 @@ public interface Mod {
 	String getName();
 
 	@NotNull
+	default String getTranslatedName() {
+		String translationKey = "modmenu.nameTranslation." + getId();
+		if ((getId().equals("minecraft") || getId().equals("java") || ModMenuConfig.TRANSLATE_NAMES.getValue()) && I18n.hasTranslation(translationKey)) {
+			return I18n.translate(translationKey);
+		}
+		return getName();
+	}
+
+	@NotNull
 	NativeImageBackedTexture getIcon(FabricIconHandler iconHandler, int i);
 
 	@NotNull
-	String getSummary();
+	default String getSummary() {
+		return getTranslatedSummary();
+	}
+
+	@NotNull
+	default String getTranslatedSummary() {
+		String translationKey = "modmenu.summaryTranslation." + getId();
+		if ((getId().equals("minecraft") || getId().equals("java") || ModMenuConfig.TRANSLATE_DESCRIPTIONS.getValue()) && I18n.hasTranslation(translationKey)) {
+			return I18n.translate(translationKey);
+		}
+		return getTranslatedDescription();
+	}
 
 	@NotNull
 	String getDescription();
+
+	@NotNull
+	default String getTranslatedDescription() {
+		String translatableDescriptionKey = "modmenu.descriptionTranslation." + getId();
+		if ((getId().equals("minecraft") || getId().equals("java") || ModMenuConfig.TRANSLATE_DESCRIPTIONS.getValue()) && I18n.hasTranslation(translatableDescriptionKey)) {
+			return I18n.translate(translatableDescriptionKey);
+		}
+		return getDescription();
+	}
 
 	@NotNull
 	String getVersion();

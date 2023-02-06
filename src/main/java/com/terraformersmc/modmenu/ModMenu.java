@@ -49,6 +49,9 @@ public class ModMenu implements ClientModInitializer {
 	private static int cachedDisplayedModCount = -1;
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
+		if (ModMenuConfig.HIDDEN_CONFIGS.getValue().contains(modid)) {
+			return null;
+		}
 		ConfigScreenFactory<?> factory = configScreenFactories.get(modid);
 		if (factory != null) {
 			return factory.create(menuScreen);
@@ -85,10 +88,10 @@ public class ModMenu implements ClientModInitializer {
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
 			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
-				if(FabricLoader.getInstance().isModLoaded("quilt_loader")){
+				if (FabricLoader.getInstance().isModLoaded("quilt_loader")) {
 					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
-				}else {
+				} else {
 					FabricMod mod = new FabricMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
 				}

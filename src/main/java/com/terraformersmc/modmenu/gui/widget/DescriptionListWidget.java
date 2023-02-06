@@ -58,7 +58,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	@Override
 	public void appendNarrations(NarrationMessageBuilder builder) {
 		Mod mod = parent.getSelectedEntry().getMod();
-		builder.put(NarrationPart.TITLE, mod.getName() + " " + mod.getPrefixedVersion());
+		builder.put(NarrationPart.TITLE, mod.getTranslatedName() + " " + mod.getPrefixedVersion());
 	}
 
 	@Override
@@ -70,11 +70,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			setScrollAmount(-Double.MAX_VALUE);
 			if (lastSelected != null) {
 				Mod mod = lastSelected.getMod();
-				String description = mod.getDescription();
-				String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
-				if (I18n.hasTranslation(translatableDescriptionKey)) {
-					description = I18n.translate(translatableDescriptionKey);
-				}
+				String description = mod.getTranslatedDescription();
 				if (!description.isEmpty()) {
 					for (OrderedText line : textRenderer.wrapLines(Text.literal(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
