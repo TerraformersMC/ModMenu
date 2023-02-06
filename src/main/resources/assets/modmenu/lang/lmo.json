@@ -1,7 +1,8 @@
 {
   "category.modmenu.name": "Mod Menu",
   "key.modmenu.open_menu": "Apri menù delle mod",
-  "modmenu.title": "Mods",
+  "modmenu.title": "Mod",
+  "modmenu.nameTranslation.modmenu": "Mod Menu",
   "modmenu.descriptionTranslation.modmenu": "Aggiunge un menù delle mod dove puoi vedere un elenco di tutte le mod installate.",
   "modmenu.loaded": "(%s caricate)",
   "modmenu.loaded.short": "(%s)",
@@ -72,6 +73,11 @@
   "modmenu.youtube": "YouTube",
   "modmenu.modsFolder": "Apri cartella delle mod",
   "modmenu.configsFolder": "Apri cartella delle configurazioni",
+  "modmenu.nameTranslation.minecraft": "Minecraft",
+  "modmenu.descriptionTranslation.minecraft": "The base game.",
+  "modmenu.nameTranslation.java": "Java",
+  "modmenu.descriptionTranslation.java": "The Java runtime environment.",
+  "modmenu.javaDistributionName": "Running: %s",
   "modmenu.options": "Opzioni di Mod Menu",
   "option.modmenu.sorting": "Ordina",
   "option.modmenu.sorting.ascending": "A-Z",
@@ -118,5 +124,14 @@
   "option.modmenu.mods_button_style.classic": "Sotto Realms",
   "option.modmenu.mods_button_style.replace_realms": "Sost. Realms",
   "option.modmenu.mods_button_style.shrink": "Adiacente",
-  "option.modmenu.mods_button_style.icon": "Icona"
+  "option.modmenu.mods_button_style.icon": "Icona",
+  "option.modmenu.random_java_colors": "Java Color",
+  "option.modmenu.random_java_colors.true": "Vendor",
+  "option.modmenu.random_java_colors.false": "Always Red",
+  "option.modmenu.translate_names": "Names",
+  "option.modmenu.translate_names.true": "Localized",
+  "option.modmenu.translate_names.false": "Not Localized",
+  "option.modmenu.translate_descriptions": "Descriptions",
+  "option.modmenu.translate_descriptions.true": "Localized",
+  "option.modmenu.translate_descriptions.false": "Not Localized"
 }
