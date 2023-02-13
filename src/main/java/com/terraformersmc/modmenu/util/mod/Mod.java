@@ -94,6 +94,9 @@ public interface Mod {
 
 	boolean isReal();
 
+	@Nullable
+	ModrinthData getModrinthData();
+
 	enum Badge {
 		LIBRARY("modmenu.badge.library", 0xff107454, 0xff093929, "library"),
 		CLIENT("modmenu.badge.clientsideOnly", 0xff2b4b7c, 0xff0e2a55, null),

@@ -77,6 +77,19 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					}
 				}
 
+				if(mod.getModrinthData() != null) {
+					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+					children().add(new DescriptionEntry(Text.translatable("modmenu.hasUpdate").asOrderedText(), this));
+					children().add(new LinkEntry(
+							Text.empty()
+									.append("v%s (".formatted(mod.getModrinthData().versionName()))
+									.append(Text.translatable("modmenu.modrinth"))
+									.append(")")
+									.formatted(Formatting.BLUE)
+									.formatted(Formatting.UNDERLINE)
+									.asOrderedText(), "https://modrinth.com/mod/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this, 8));
+				}
+
 				Map<String, String> links = mod.getLinks();
 				String sourceLink = mod.getSource();
 				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {

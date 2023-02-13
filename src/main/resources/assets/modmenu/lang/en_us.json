@@ -57,6 +57,7 @@
   "modmenu.license": "License:",
   "modmenu.links": "Links:",
   "modmenu.source": "Source",
+  "modmenu.hasUpdate": "An update is available:",
 
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
@@ -144,5 +145,11 @@
   "option.modmenu.translate_names.false": "Not Localized",
   "option.modmenu.translate_descriptions": "Descriptions",
   "option.modmenu.translate_descriptions.true": "Localized",
-  "option.modmenu.translate_descriptions.false": "Not Localized"
+  "option.modmenu.translate_descriptions.false": "Not Localized",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "Enabled",
+  "option.modmenu.update_checker.false": "Disabled",
+  "option.modmenu.update_badge": "Update Notification",
+  "option.modmenu.update_badge.true": "Enabled",
+  "option.modmenu.update_badge.false": "Disabled"
 }
