@@ -38,7 +38,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
 		this.list.render(matrices, mouseX, mouseY, delta);
-		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+		drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 
