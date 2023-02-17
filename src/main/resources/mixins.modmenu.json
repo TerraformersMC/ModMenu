@@ -4,7 +4,6 @@
   "package": "com.terraformersmc.modmenu.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "IGridWidgetAccessor",
     "MixinTitleScreen"
   ],
   "injectors": {

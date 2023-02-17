@@ -73,15 +73,24 @@ public class ModrinthUtil {
 				} else if (status == 200) {
 					JsonObject responseObject = JsonParser.parseString(latestVersionsResponse.body()).getAsJsonObject();
 					LOGGER.debug(String.valueOf(responseObject));
-					responseObject.asMap().forEach((lookupHash, versionJson) -> {
+					for (var entry : responseObject.entrySet()) {
+						var lookupHash = entry.getKey();
+						var versionJson = entry.getValue();
+
 						var versionObj = versionJson.getAsJsonObject();
 						var projectId = versionObj.get("project_id").getAsString();
 						var versionNumber = versionObj.get("version_number").getAsString();
 						var versionId = versionObj.get("id").getAsString();
-						var versionHash = versionObj.get("files").getAsJsonArray().asList()
-								.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst()
-								.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
-						if (!Objects.equals(versionHash, lookupHash)) {
+
+						var versionHash = "";
+						for (var file : versionObj.get("files").getAsJsonArray()) {
+							if (file.getAsJsonObject().get("primary").getAsBoolean()) {
+								versionHash = file.getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
+								break;
+							}
+						}
+
+						if (!versionHash.isEmpty() && !Objects.equals(versionHash, lookupHash)) {
 							// hashes different, there's an update.
 							HASH_TO_MOD.get(lookupHash).forEach(mod -> {
 								LOGGER.info("Update available for '{}@{}', (-> {})", mod.getId(), mod.getVersion(), versionNumber);
@@ -89,7 +98,7 @@ public class ModrinthUtil {
 								ModMenu.modUpdateAvailable = true;
 							});
 						}
-					});
+					}
 				}
 			} catch (IOException | InterruptedException e) {
 				LOGGER.error("Error checking for updates: ", e);

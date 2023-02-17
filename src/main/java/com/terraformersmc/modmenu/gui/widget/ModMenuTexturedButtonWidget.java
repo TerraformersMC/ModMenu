@@ -27,15 +27,19 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.DEFAULT_NARRATION_SUPPLIER, false);
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.EMPTY, false);
 	}
 
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, boolean allowUpdateBadge) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.DEFAULT_NARRATION_SUPPLIER, allowUpdateBadge);
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.EMPTY, allowUpdateBadge);
 	}
 
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, NarrationSupplier narationSupplier, boolean allowUpdateBadge) {
-		super(x, y, width, height, message, onPress, narationSupplier);
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, ButtonWidget.TooltipSupplier tooltipSupplier) {
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, tooltipSupplier, false);
+	}
+
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, ButtonWidget.TooltipSupplier tooltipSupplier, boolean allowUpdateBadge) {
+		super(x, y, width, height, message, onPress, tooltipSupplier);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
 		this.u = u;
@@ -56,11 +60,23 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 			adjustedV += this.height;
 		}
 
-		drawTexture(matrices, this.getX(), this.getY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
+		drawTexture(matrices, this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
 
-		if (this.allowUpdateBadge && ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
-			UpdateAvailableBadge.renderBadge(matrices, this.getX() + this.width - 5, this.getY() - 3);
+		if (this.isHovered()) {
+			this.renderTooltip(matrices, mouseX, mouseY);
 		}
+
+		if (this.allowUpdateBadge && ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
+			UpdateAvailableBadge.renderBadge(matrices, this.x + this.width - 5, this.y - 3);
+		}
+	}
+
+	public boolean isJustHovered() {
+		return hovered;
+	}
+
+	public boolean isFocusedButNotHovered() {
+		return !hovered && isFocused();
 	}
 }
