@@ -64,9 +64,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		}
 		font.draw(matrices, Language.getInstance().reorder(trimmedName), x + iconSize + 3, y + 1, 0xFFFFFF);
 		var updateBadgeXOffset = 0;
-		if (ModMenuConfig.UPDATE_CHECKER.getValue() && mod.getModrinthData() != null) {
+		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId()) && (mod.getModrinthData() != null || mod.getChildHasUpdate())) {
 			UpdateAvailableBadge.renderBadge(matrices, x + iconSize + 3 + font.getWidth(name) + 2, y);
-			updateBadgeXOffset = 10;
+			updateBadgeXOffset = 11;
 		}
 		if (!ModMenuConfig.HIDE_BADGES.getValue()) {
 			new ModBadgeRenderer(x + iconSize + 3 + font.getWidth(name) + 2 + updateBadgeXOffset, y, x + rowWidth, mod, list.getParent()).draw(matrices, mouseX, mouseY);

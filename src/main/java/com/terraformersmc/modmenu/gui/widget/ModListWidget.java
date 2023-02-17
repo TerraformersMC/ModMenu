@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable {
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
-
 	private final ModsScreen parent;
 	private List<Mod> mods = null;
 	private final Set<Mod> addedMods = new HashSet<>();

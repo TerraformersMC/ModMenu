@@ -5,8 +5,6 @@ import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
-import com.terraformersmc.modmenu.config.ModMenuConfig;
-import com.terraformersmc.modmenu.util.ModrinthUtil;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthData;
@@ -15,12 +13,10 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.util.Util;
-import org.quiltmc.loader.api.QuiltLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -44,6 +40,8 @@ public class FabricMod implements Mod {
 	protected boolean defaultIconWarning = true;
 
 	protected boolean allowsUpdateChecks = true;
+
+	protected boolean childHasUpdate = false;
 
 	public FabricMod(ModContainer modContainer, Set<String> modpackMods) {
 		this.container = modContainer;
@@ -297,6 +295,10 @@ public class FabricMod implements Mod {
 	@Override
 	public void setModrinthData(ModrinthData modrinthData) {
 		this.modrinthData = modrinthData;
+		String parent = getParent();
+		if (parent != null && modrinthData != null) {
+			ModMenu.MODS.get(parent).setChildHasUpdate();
+		}
 	}
 
 	public ModMenuData getModMenuData() {
@@ -315,6 +317,16 @@ public class FabricMod implements Mod {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public boolean getChildHasUpdate() {
+		return childHasUpdate;
+	}
+
+	@Override
+	public void setChildHasUpdate() {
+		this.childHasUpdate = true;
 	}
 
 	static class ModMenuData {
