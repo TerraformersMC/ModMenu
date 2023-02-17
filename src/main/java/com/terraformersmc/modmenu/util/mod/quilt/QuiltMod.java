@@ -14,6 +14,7 @@ import org.quiltmc.loader.api.QuiltLoader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,8 +68,8 @@ public class QuiltMod extends FabricMod {
 		if (fabricResult == null) {
 			if (container.getSourceType().equals(ModContainer.BasicSourceType.NORMAL_QUILT)) {
 				var path = container.getSourcePaths().stream()
-						.filter(p -> p.stream().anyMatch(p2 -> p2.endsWith(".jar"))).findFirst().orElse(Collections.emptyList())
-						.stream().filter(p -> p.endsWith(".jar")).findFirst();
+						.filter(p -> p.stream().anyMatch(p2 -> p2.toString().toLowerCase(Locale.ROOT).endsWith(".jar"))).findFirst().orElse(Collections.emptyList())
+						.stream().filter(p -> p.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).findFirst();
 				if (path.isPresent()) {
 					var file = path.get().toFile();
 					if (file.isFile()) {
