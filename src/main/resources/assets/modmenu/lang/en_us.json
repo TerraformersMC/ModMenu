@@ -21,7 +21,7 @@
   "modmenu.searchTerms.deprecated": "deprecated outdated old",
   "modmenu.searchTerms.clientside": "clientside gameside",
   "modmenu.searchTerms.configurable": "configurations configs configures configurable options settings",
-  "modmenu.searchTerms.hasUpdate": "updates version",
+  "modmenu.searchTerms.hasUpdate": "updates versions",
 
   "modmenu.toggleFilterOptions": "Toggle Filter Options",
   "modmenu.showingMods.n": "Showing %s mods",
