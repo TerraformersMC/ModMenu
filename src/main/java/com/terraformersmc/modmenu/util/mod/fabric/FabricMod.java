@@ -49,6 +49,10 @@ public class FabricMod implements Mod {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
 
+		if ("minecraft".equals(metadata.getId()) || "fabricloader".equals(metadata.getId()) || "java".equals(metadata.getId()) || "quilt_loader".equals(metadata.getId())) {
+			allowsUpdateChecks = false;
+		}
+
 		/* Load modern mod menu custom value data */
 		Optional<String> parentId = Optional.empty();
 		ModMenuData.DummyParentData parentData = null;
@@ -84,9 +88,6 @@ public class FabricMod implements Mod {
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
-			if ("minecraft".equals(metadata.getId()) || "fabricloader".equals(metadata.getId()) || "java".equals(metadata.getId()) || "quilt_loader".equals(metadata.getId())) {
-				allowsUpdateChecks = false;
-			}
 		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
