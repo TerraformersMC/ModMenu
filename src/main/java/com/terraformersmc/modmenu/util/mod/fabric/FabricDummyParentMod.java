@@ -158,4 +158,14 @@ public class FabricDummyParentMod implements Mod {
 	public @Nullable ModrinthData getModrinthData() {
 		return null;
 	}
+
+	@Override
+	public void setModrinthData(ModrinthData modrinthData) {
+		// Not a real mod, won't exist on Modrinth
+	}
+
+	@Override
+	public boolean allowsUpdateChecks() {
+		return false;
+	}
 }

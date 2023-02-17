@@ -4,4 +4,5 @@ public record ModrinthData(
 		String projectId,
 		String versionId,
 		String versionName
-) {}
+) {
+}

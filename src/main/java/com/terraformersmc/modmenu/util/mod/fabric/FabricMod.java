@@ -2,6 +2,8 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.ModrinthUtil;
@@ -10,18 +12,17 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.CustomValue;
-import net.fabricmc.loader.api.metadata.ModEnvironment;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.api.metadata.Person;
+import net.fabricmc.loader.api.metadata.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Util;
+import org.quiltmc.loader.api.QuiltLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,9 +37,12 @@ public class FabricMod implements Mod {
 	protected final Set<Badge> badges;
 
 	protected final Map<String, String> links = new HashMap<>();
+
 	protected @Nullable ModrinthData modrinthData = null;
 
 	protected boolean defaultIconWarning = true;
+
+	protected boolean allowsUpdateChecks = true;
 
 	public FabricMod(ModContainer modContainer, Set<String> modpackMods) {
 		this.container = modContainer;
@@ -48,7 +52,6 @@ public class FabricMod implements Mod {
 		Optional<String> parentId = Optional.empty();
 		ModMenuData.DummyParentData parentData = null;
 		Set<String> badgeNames = new HashSet<>();
-		var allowsUpdateChecks = true;
 		CustomValue modMenuValue = metadata.getCustomValue("modmenu");
 		if (modMenuValue != null && modMenuValue.getType() == CustomValue.CvType.OBJECT) {
 			CustomValue.CvObject modMenuObject = modMenuValue.getAsObject();
@@ -120,12 +123,6 @@ public class FabricMod implements Mod {
 		}
 		if ("minecraft".equals(getId())) {
 			badges.add(Badge.MINECRAFT);
-		}
-
-		if(allowsUpdateChecks && ModMenuConfig.UPDATE_CHECKER.getValue()) {
-			Util.getMainWorkerExecutor().execute(() -> {
-				this.modrinthData = ModrinthUtil.getLatestModVersion(this.getId());
-			});
 		}
 	}
 
@@ -287,8 +284,32 @@ public class FabricMod implements Mod {
 		return this.modrinthData;
 	}
 
+	@Override
+	public boolean allowsUpdateChecks() {
+		return this.allowsUpdateChecks;
+	}
+
+	@Override
+	public void setModrinthData(ModrinthData modrinthData) {
+		this.modrinthData = modrinthData;
+	}
+
 	public ModMenuData getModMenuData() {
 		return modMenuData;
+	}
+
+	public @Nullable String getSha512Hash() throws IOException {
+		LOGGER.debug(container.getRoot().toString());
+		if (container.getOrigin().getKind() == ModOrigin.Kind.PATH) {
+			var fileOptional = container.getOrigin().getPaths().stream().filter(path -> path.endsWith(".jar")).findFirst();
+			if (fileOptional.isPresent()) {
+				var file = fileOptional.get().toFile();
+				if (file.isFile()) {
+					return Files.asByteSource(file).hash(Hashing.sha512()).toString();
+				}
+			}
+		}
+		return null;
 	}
 
 	static class ModMenuData {

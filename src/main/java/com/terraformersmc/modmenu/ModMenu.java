@@ -10,6 +10,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
+import com.terraformersmc.modmenu.util.ModrinthUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
@@ -37,6 +38,7 @@ import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
+	public static final String GITHUB_REF = "TerraformersMC/ModMenu";
 	public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu");
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
 
@@ -93,9 +95,11 @@ public class ModMenu implements ClientModInitializer {
 				if (FabricLoader.getInstance().isModLoaded("quilt_loader")) {
 					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
+					ModrinthUtil.checkForUpdates(mod);
 				} else {
 					FabricMod mod = new FabricMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
+					ModrinthUtil.checkForUpdates(mod);
 				}
 			}
 		}
