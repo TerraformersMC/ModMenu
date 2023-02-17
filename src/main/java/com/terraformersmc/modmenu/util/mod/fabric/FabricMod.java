@@ -2,21 +2,27 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.util.ModrinthUtil;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.CustomValue;
-import net.fabricmc.loader.api.metadata.ModEnvironment;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.api.metadata.Person;
+import net.fabricmc.loader.api.metadata.*;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.util.Util;
+import org.quiltmc.loader.api.QuiltLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,9 +38,17 @@ public class FabricMod implements Mod {
 
 	protected final Map<String, String> links = new HashMap<>();
 
+	protected @Nullable ModrinthData modrinthData = null;
+
+	protected boolean allowsUpdateChecks = true;
+
 	public FabricMod(ModContainer modContainer) {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
+
+		if ("minecraft".equals(metadata.getId()) || "fabricloader".equals(metadata.getId()) || "java".equals(metadata.getId()) || "quilt_loader".equals(metadata.getId())) {
+			allowsUpdateChecks = false;
+		}
 
 		/* Load modern mod menu custom value data */
 		Optional<String> parentId = Optional.empty();
@@ -70,6 +84,7 @@ public class FabricMod implements Mod {
 			}
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
+			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
 		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
@@ -80,7 +95,7 @@ public class FabricMod implements Mod {
 		/* Hardcode parents and badges for Fabric API & Fabric Loader */
 		String id = metadata.getId();
 		if (id.startsWith("fabric") && metadata.containsCustomValue("fabric-api:module-lifecycle")) {
-			if (FabricLoader.getInstance().isModLoaded("fabric-api")) {
+			if (FabricLoader.getInstance().isModLoaded("fabric-api") || !FabricLoader.getInstance().isModLoaded("fabric")) {
 				modMenuData.fillParentIfEmpty("fabric-api");
 			} else {
 				modMenuData.fillParentIfEmpty("fabric");
@@ -264,8 +279,37 @@ public class FabricMod implements Mod {
 		return true;
 	}
 
+	@Override
+	public @Nullable ModrinthData getModrinthData() {
+		return this.modrinthData;
+	}
+
+	@Override
+	public boolean allowsUpdateChecks() {
+		return this.allowsUpdateChecks;
+	}
+
+	@Override
+	public void setModrinthData(ModrinthData modrinthData) {
+		this.modrinthData = modrinthData;
+	}
+
 	public ModMenuData getModMenuData() {
 		return modMenuData;
+	}
+
+	public @Nullable String getSha512Hash() throws IOException {
+		if (container.getContainingMod().isEmpty() && container.getOrigin().getKind() == ModOrigin.Kind.PATH) {
+			List<Path> paths = container.getOrigin().getPaths();
+			var fileOptional = paths.stream().filter(path -> path.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).findFirst();
+			if (fileOptional.isPresent()) {
+				var file = fileOptional.get().toFile();
+				if (file.isFile()) {
+					return Files.asByteSource(file).hash(Hashing.sha512()).toString();
+				}
+			}
+		}
+		return null;
 	}
 
 	static class ModMenuData {
