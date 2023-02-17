@@ -95,7 +95,7 @@
   "option.modmenu.hide_mod_license": "Licencia del Mod",
   "option.modmenu.hide_mod_license.true": "Escondida",
   "option.modmenu.hide_mod_license.false": "Visibles",
-  "option.modmenu.count_children": "Children",
+  "option.modmenu.count_children": "Submods",
   "option.modmenu.count_children.true": "Contados",
   "option.modmenu.count_children.false": "No contadas",
   "option.modmenu.count_libraries": "Librerías",
@@ -117,7 +117,7 @@
   "option.modmenu.mods_button_style.replace_realms": "Reemplazar Realms",
   "option.modmenu.mods_button_style.shrink": "Adyacente",
   "option.modmenu.mods_button_style.icon": "Icono",
-  "option.modmenu.log_deprecation_warnings": "Deprecation Warnings",
+  "option.modmenu.log_deprecation_warnings": "Advertencias de obsolescencia",
   "option.modmenu.log_deprecation_warnings.true": "Activado",
   "option.modmenu.log_deprecation_warnings.false": "Desactivado"
 }
