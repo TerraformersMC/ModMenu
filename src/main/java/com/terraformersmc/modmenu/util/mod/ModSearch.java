@@ -37,6 +37,7 @@ public class ModSearch {
 		String deprecated = I18n.translate("modmenu.searchTerms.deprecated");
 		String clientside = I18n.translate("modmenu.searchTerms.clientside");
 		String configurable = I18n.translate("modmenu.searchTerms.configurable");
+		String hasUpdate = I18n.translate("modmenu.searchTerms.hasUpdate");
 
 		// Some basic search, could do with something more advanced but this will do for now
 		if (modName.toLowerCase(Locale.ROOT).contains(query) // Search default mod name
@@ -52,6 +53,7 @@ public class ModSearch {
 				|| deprecated.contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED) // Search for deprecated mods
 				|| clientside.contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT) // Search for clientside mods
 				|| configurable.contains(query) && screen.getModHasConfigScreen().get(modId) // Search for mods that can be configured
+				|| hasUpdate.contains(query) && mod.getModrinthData() != null // Search for mods that have updates
 		) {
 			return true;
 		}
