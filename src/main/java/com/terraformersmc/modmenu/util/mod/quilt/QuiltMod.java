@@ -1,14 +1,20 @@
 package com.terraformersmc.modmenu.util.mod.quilt;
 
 import com.google.common.collect.Lists;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.ModContributor;
 import org.quiltmc.loader.api.ModMetadata;
 import org.quiltmc.loader.api.QuiltLoader;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,5 +60,24 @@ public class QuiltMod extends FabricMod {
 	@Override
 	public @NotNull List<String> getCredits() {
 		return this.getContributors();
+	}
+
+
+	public @Nullable String getSha512Hash() throws IOException {
+		var fabricResult = super.getSha512Hash();
+		if (fabricResult == null) {
+			if (container.getSourceType().equals(ModContainer.BasicSourceType.NORMAL_QUILT)) {
+				var path = container.getSourcePaths().stream()
+						.filter(p -> p.stream().anyMatch(p2 -> p2.toString().toLowerCase(Locale.ROOT).endsWith(".jar"))).findFirst().orElse(Collections.emptyList())
+						.stream().filter(p -> p.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).findFirst();
+				if (path.isPresent()) {
+					var file = path.get().toFile();
+					if (file.isFile()) {
+						return Files.asByteSource(file).hash(Hashing.sha512()).toString();
+					}
+				}
+			}
+		}
+		return null;
 	}
 }
