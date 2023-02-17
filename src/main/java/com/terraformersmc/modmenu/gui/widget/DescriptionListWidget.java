@@ -76,14 +76,20 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					}
 				}
 
-				if (mod.getModrinthData() != null) {
-					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
-					children().add(new DescriptionEntry(Text.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
-					children().add(new LinkEntry(
-							Text.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), Text.translatable("modmenu.modrinth"))
-									.formatted(Formatting.BLUE)
-									.formatted(Formatting.UNDERLINE)
-									.asOrderedText(), "https://modrinth.com/mod/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this, 8));
+				if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId())) {
+					if (mod.getModrinthData() != null) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(Text.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
+						children().add(new LinkEntry(
+								Text.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), Text.translatable("modmenu.modrinth"))
+										.formatted(Formatting.BLUE)
+										.formatted(Formatting.UNDERLINE)
+										.asOrderedText(), "https://modrinth.com/project/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this, 8));
+					}
+					if (mod.getChildHasUpdate()) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(Text.translatable("modmenu.childHasUpdate").asOrderedText(), this).setUpdateTextEntry());
+					}
 				}
 
 				Map<String, String> links = mod.getLinks();
@@ -265,7 +271,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			}
 			if (updateTextEntry) {
 				UpdateAvailableBadge.renderBadge(matrices, x + indent, y);
-				x += 10;
+				x += 11;
 			}
 			textRenderer.drawWithShadow(matrices, text, x + indent, y, 0xAAAAAA);
 		}

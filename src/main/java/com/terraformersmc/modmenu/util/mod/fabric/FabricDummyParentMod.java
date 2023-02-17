@@ -14,6 +14,7 @@ import java.util.*;
 public class FabricDummyParentMod implements Mod {
 	private final String id;
 	private final FabricMod host;
+	private boolean childHasUpdate;
 
 	public FabricDummyParentMod(FabricMod host, String id) {
 		this.host = host;
@@ -167,5 +168,15 @@ public class FabricDummyParentMod implements Mod {
 	@Override
 	public boolean allowsUpdateChecks() {
 		return false;
+	}
+
+	@Override
+	public boolean getChildHasUpdate() {
+		return childHasUpdate;
+	}
+
+	@Override
+	public void setChildHasUpdate() {
+		this.childHasUpdate = true;
 	}
 }

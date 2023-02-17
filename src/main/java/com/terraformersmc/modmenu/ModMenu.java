@@ -27,12 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
@@ -40,6 +35,7 @@ public class ModMenu implements ClientModInitializer {
 	public static final String GITHUB_REF = "TerraformersMC/ModMenu";
 	public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu");
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
+	public static final Gson GSON_MINIFIED = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
 	public static final Map<String, Mod> MODS = new HashMap<>();
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
@@ -96,13 +92,15 @@ public class ModMenu implements ClientModInitializer {
 				if (ModMenu.runningQuilt) {
 					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
-					ModrinthUtil.checkForUpdates(mod);
 				} else {
 					FabricMod mod = new FabricMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
-					ModrinthUtil.checkForUpdates(mod);
 				}
 			}
+		}
+
+		if (ModMenuConfig.UPDATE_CHECKER.getValue()) {
+			ModrinthUtil.checkForUpdates();
 		}
 
 		Map<String, Mod> dummyParents = new HashMap<>();
