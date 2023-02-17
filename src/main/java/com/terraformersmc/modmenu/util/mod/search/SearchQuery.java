@@ -10,6 +10,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.search.term.BadgeSearchTerm;
 import com.terraformersmc.modmenu.util.mod.search.term.ConfigurableSearchTerm;
 import com.terraformersmc.modmenu.util.mod.search.term.ContentSearchTerm;
+import com.terraformersmc.modmenu.util.mod.search.term.HasUpdateSearchTerm;
 import com.terraformersmc.modmenu.util.mod.search.term.SearchTerm;
 import com.terraformersmc.modmenu.util.mod.search.term.TermData;
 
@@ -97,6 +98,8 @@ public class SearchQuery {
 				return term;
 			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.configurable")) {
 				return new ConfigurableSearchTerm(data, screen);
+			} else if (SearchQuery.isKeyword(keyword, "modmenu.searchTerms.hasUpdate")) {
+				return new HasUpdateSearchTerm(data);
 			}
 		}
 

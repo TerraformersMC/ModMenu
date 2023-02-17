@@ -17,13 +17,17 @@ public class ContentSearchTerm extends SearchTerm {
 	@Override
 	public boolean matches(Mod mod) {
 		String modName = mod.getName().toLowerCase(Locale.ROOT);
+		String modTranslatedName = mod.getTranslatedName().toLowerCase(Locale.ROOT);
 		String modId = mod.getId().toLowerCase(Locale.ROOT);
 		String modDescription = mod.getDescription().toLowerCase(Locale.ROOT);
+		String modTranslatedDescription = mod.getDescription().toLowerCase(Locale.ROOT);
 		String modSummary = mod.getSummary().toLowerCase(Locale.ROOT);
 
 		return modName.contains(this.content) // Search mod name
+			|| modTranslatedName.contains(this.content) // Search mod translated name
 			|| modId.contains(this.content) // Search mod ID
 			|| modDescription.contains(this.content) // Search mod description
+			|| modTranslatedDescription.contains(this.content) // Search mod translated description
 			|| modSummary.contains(this.content) // Search mod summary
 			|| ContentSearchTerm.authorMatches(mod, this.content); // Search via author
 	}

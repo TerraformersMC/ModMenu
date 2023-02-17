@@ -33,6 +33,7 @@
   "authors": [
     "Prospector",
     "jackassmc",
+    "haykam821",
     "TerraformersMC"
   ],
   "contributors": [
@@ -41,7 +42,7 @@
     "Mordna",
     "Madis0",
     "Yanis48",
-    "Boundarybreaker",
+    "LemmaEOF",
     "fewizz",
     "XuyuEre",
     "geniiii",
@@ -93,18 +94,18 @@
     "Tkain",
     "nfitzen",
     "DenaryDev",
-    "legenden"
+    "legenden",
+    "NaiNonTH",
+    "MagnusHJensen",
+    "Benjamin-Norton",
+    "triphora",
+    "Pyrrha"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
     "mixins.modmenu.json"
   ],
   "custom": {
-    "modupdater": {
-      "strategy": "curseforge",
-      "projectID": 308702,
-      "strict": false
-    },
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/jEGF5fb"

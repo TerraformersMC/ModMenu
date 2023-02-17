@@ -16,7 +16,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.*;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -58,7 +57,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	@Override
 	public void appendNarrations(NarrationMessageBuilder builder) {
 		Mod mod = parent.getSelectedEntry().getMod();
-		builder.put(NarrationPart.TITLE, mod.getName() + " " + mod.getPrefixedVersion());
+		builder.put(NarrationPart.TITLE, mod.getTranslatedName() + " " + mod.getPrefixedVersion());
 	}
 
 	@Override
@@ -70,14 +69,26 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			setScrollAmount(-Double.MAX_VALUE);
 			if (lastSelected != null) {
 				Mod mod = lastSelected.getMod();
-				String description = mod.getDescription();
-				String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
-				if (I18n.hasTranslation(translatableDescriptionKey)) {
-					description = I18n.translate(translatableDescriptionKey);
-				}
+				String description = mod.getTranslatedDescription();
 				if (!description.isEmpty()) {
 					for (OrderedText line : textRenderer.wrapLines(Text.literal(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
+					}
+				}
+
+				if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId())) {
+					if (mod.getModrinthData() != null) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(Text.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
+						children().add(new LinkEntry(
+								Text.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), Text.translatable("modmenu.modrinth"))
+										.formatted(Formatting.BLUE)
+										.formatted(Formatting.UNDERLINE)
+										.asOrderedText(), "https://modrinth.com/project/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this, 8));
+					}
+					if (mod.getChildHasUpdate()) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(Text.translatable("modmenu.childHasUpdate").asOrderedText(), this).setUpdateTextEntry());
 					}
 				}
 
@@ -236,6 +247,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		private final DescriptionListWidget widget;
 		protected OrderedText text;
 		protected int indent;
+		public boolean updateTextEntry = false;
 
 		public DescriptionEntry(OrderedText text, DescriptionListWidget widget, int indent) {
 			this.text = text;
@@ -247,10 +259,19 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			this(text, widget, 0);
 		}
 
+		public DescriptionEntry setUpdateTextEntry() {
+			this.updateTextEntry = true;
+			return this;
+		}
+
 		@Override
 		public void render(MatrixStack matrices, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 			if (widget.top > y || widget.bottom - textRenderer.fontHeight < y) {
 				return;
+			}
+			if (updateTextEntry) {
+				UpdateAvailableBadge.renderBadge(matrices, x + indent, y);
+				x += 11;
 			}
 			textRenderer.drawWithShadow(matrices, text, x + indent, y, 0xAAAAAA);
 		}

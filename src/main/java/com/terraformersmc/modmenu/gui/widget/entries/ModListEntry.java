@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
+import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
 import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
@@ -37,7 +38,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	@Override
 	public Text getNarration() {
-		return Text.literal(mod.getName());
+		return Text.literal(mod.getTranslatedName());
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
-		Text name = Text.literal(mod.getName());
+		Text name = Text.literal(mod.getTranslatedName());
 		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;
 		TextRenderer font = this.client.textRenderer;
@@ -62,18 +63,16 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			trimmedName = StringVisitable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
 		}
 		font.draw(matrices, Language.getInstance().reorder(trimmedName), x + iconSize + 3, y + 1, 0xFFFFFF);
+		var updateBadgeXOffset = 0;
+		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId()) && (mod.getModrinthData() != null || mod.getChildHasUpdate())) {
+			UpdateAvailableBadge.renderBadge(matrices, x + iconSize + 3 + font.getWidth(name) + 2, y);
+			updateBadgeXOffset = 11;
+		}
 		if (!ModMenuConfig.HIDE_BADGES.getValue()) {
-			new ModBadgeRenderer(x + iconSize + 3 + font.getWidth(name) + 2, y, x + rowWidth, mod, list.getParent()).draw(matrices, mouseX, mouseY);
+			new ModBadgeRenderer(x + iconSize + 3 + font.getWidth(name) + 2 + updateBadgeXOffset, y, x + rowWidth, mod, list.getParent()).draw(matrices, mouseX, mouseY);
 		}
 		if (!ModMenuConfig.COMPACT_LIST.getValue()) {
 			String summary = mod.getSummary();
-			String translatableSummaryKey = "modmenu.summaryTranslation." + mod.getId();
-			String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
-			if (I18n.hasTranslation(translatableSummaryKey)) {
-				summary = I18n.translate(translatableSummaryKey);
-			} else if (I18n.hasTranslation(translatableDescriptionKey)) {
-				summary = I18n.translate(translatableDescriptionKey);
-			}
 			DrawingUtil.drawWrappedString(matrices, summary, (x + iconSize + 3 + 4), (y + client.textRenderer.fontHeight + 2), rowWidth - iconSize - 7, 2, 0x808080);
 		} else {
 			DrawingUtil.drawWrappedString(matrices, mod.getPrefixedVersion(), (x + iconSize + 3), (y + client.textRenderer.fontHeight + 2), rowWidth - iconSize - 7, 2, 0x808080);

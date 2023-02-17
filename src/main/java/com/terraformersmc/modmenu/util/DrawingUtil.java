@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,6 +10,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.*;
 import net.minecraft.util.Language;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 import java.util.Random;
@@ -17,14 +19,14 @@ import java.util.Random;
 public class DrawingUtil {
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-	public static void drawRandomVersionBackground(Mod mod, MatrixStack matrices, int x, int y, int width, int height){
+	public static void drawRandomVersionBackground(Mod mod, MatrixStack matrices, int x, int y, int width, int height) {
 		int seed = mod.getName().hashCode() + mod.getVersion().hashCode();
-		int color = 0xFF000000 + new Random(seed).nextInt(0xFFFFFF);
-		float a = (float)(color >> 24 & 0xFF) / 0xFF;
-		float r = (float)(color >> 16 & 0xFF) / 0xFF;
-		float g = (float)(color >>  8 & 0xFF) / 0xFF;
-		float b = (float)(color       & 0xFF) / 0xFF;
-		RenderSystem.setShaderColor(r, g, b, a);
+		Random random = new Random(seed);
+		int color = 0xFF000000 | MathHelper.hsvToRgb(random.nextFloat(1f), random.nextFloat(0.7f, 0.8f), 0.9f);
+		if (!ModMenuConfig.RANDOM_JAVA_COLORS.getValue()) {
+			color = 0xFFDD5656;
+		}
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		DrawableHelper.fill(matrices, x, y, x + width, y + height, color);
 	}
 
