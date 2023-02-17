@@ -30,10 +30,15 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
 		this.list.addAll(ModMenuConfig.asOptions());
 		this.addSelectableChild(this.list);
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, (button) -> {
-			ModMenuConfigManager.save();
-			this.client.setScreen(this.previous);
-		}));
+		this.addDrawableChild(
+				new ButtonWidget(
+						this.width / 2 - 100, this.height - 27,
+						200, 20,
+						ScreenTexts.DONE, (button) -> {
+							ModMenuConfigManager.save();
+							this.client.setScreen(this.previous);
+						}
+				));
 	}
 
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -45,7 +50,6 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		if (list != null) {
 			this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
 		}
-
 	}
 
 	public void removed() {

@@ -23,7 +23,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        branch: ["1.17", "1.18", "1.19"]
+        branch: ["1.17", "1.18", "1.19", "1.19.3", "1.19.4"]
     steps:
     - uses: actions/checkout@v3
       with:

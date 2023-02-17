@@ -25,7 +25,10 @@ public class ModSearch {
 
 	private static boolean passesFilters(ModsScreen screen, Mod mod, String query) {
 		String modId = mod.getId();
+		String modName = mod.getName();
+		String modTranslatedName = mod.getTranslatedName();
 		String modDescription = mod.getDescription();
+		String modTranslatedDescription = mod.getTranslatedDescription();
 		String modSummary = mod.getSummary();
 
 		String library = I18n.translate("modmenu.searchTerms.library");
@@ -34,11 +37,14 @@ public class ModSearch {
 		String deprecated = I18n.translate("modmenu.searchTerms.deprecated");
 		String clientside = I18n.translate("modmenu.searchTerms.clientside");
 		String configurable = I18n.translate("modmenu.searchTerms.configurable");
+		String hasUpdate = I18n.translate("modmenu.searchTerms.hasUpdate");
 
 		// Some basic search, could do with something more advanced but this will do for now
-		if (mod.getName().toLowerCase(Locale.ROOT).contains(query) // Search mod name
+		if (modName.toLowerCase(Locale.ROOT).contains(query) // Search default mod name
+				|| modTranslatedName.toLowerCase(Locale.ROOT).contains(query) // Search localized mod name
 				|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod ID
-				|| modDescription.toLowerCase(Locale.ROOT).contains(query) // Search mod description
+				|| modDescription.toLowerCase(Locale.ROOT).contains(query) // Search default mod description
+				|| modTranslatedDescription.toLowerCase(Locale.ROOT).contains(query) // Search localized mod description
 				|| modSummary.toLowerCase(Locale.ROOT).contains(query) // Search mod summary
 				|| authorMatches(mod, query) // Search via author
 				|| library.contains(query) && mod.getBadges().contains(Mod.Badge.LIBRARY) // Search for lib mods
@@ -47,6 +53,7 @@ public class ModSearch {
 				|| deprecated.contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED) // Search for deprecated mods
 				|| clientside.contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT) // Search for clientside mods
 				|| configurable.contains(query) && screen.getModHasConfigScreen().get(modId) // Search for mods that can be configured
+				|| hasUpdate.contains(query) && mod.getModrinthData() != null // Search for mods that have updates
 		) {
 			return true;
 		}

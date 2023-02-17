@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -13,6 +14,7 @@ import java.util.*;
 public class FabricDummyParentMod implements Mod {
 	private final String id;
 	private final FabricMod host;
+	private boolean childHasUpdate;
 
 	public FabricDummyParentMod(FabricMod host, String id) {
 		this.host = host;
@@ -30,7 +32,7 @@ public class FabricDummyParentMod implements Mod {
 		if (parentData != null) {
 			return parentData.getName().orElse("");
 		}
-		if (id.equals("fabric")) {
+		if (id.equals("fabric-api")) {
 			return "Fabric API";
 		}
 		return id;
@@ -49,7 +51,7 @@ public class FabricDummyParentMod implements Mod {
 		}
 		if (iconPath == null) {
 			iconSourceId = ModMenu.MOD_ID;
-			if (id.equals("fabric")) {
+			if (id.equals("fabric-api")) {
 				iconPath = "assets/" + ModMenu.MOD_ID + "/fabric.png";
 			} else {
 				iconPath = "assets/" + ModMenu.MOD_ID + "/unknown_parent.png";
@@ -58,11 +60,6 @@ public class FabricDummyParentMod implements Mod {
 		final String finalIconSourceId = iconSourceId;
 		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
 		return Objects.requireNonNull(iconHandler.createIcon(iconSource, iconPath), "Mod icon for " + getId() + " is null somehow (should be filled with default in this case)");
-	}
-
-	@Override
-	public @NotNull String getSummary() {
-		return getDescription();
 	}
 
 	@Override
@@ -106,7 +103,7 @@ public class FabricDummyParentMod implements Mod {
 			return parentData.getBadges();
 		}
 		var badges = new HashSet<Badge>();
-		if (id.equals("fabric")) {
+		if (id.equals("fabric-api")) {
 			badges.add(Badge.LIBRARY);
 		}
 
@@ -156,5 +153,30 @@ public class FabricDummyParentMod implements Mod {
 	@Override
 	public boolean isReal() {
 		return false;
+	}
+
+	@Override
+	public @Nullable ModrinthData getModrinthData() {
+		return null;
+	}
+
+	@Override
+	public void setModrinthData(ModrinthData modrinthData) {
+		// Not a real mod, won't exist on Modrinth
+	}
+
+	@Override
+	public boolean allowsUpdateChecks() {
+		return false;
+	}
+
+	@Override
+	public boolean getChildHasUpdate() {
+		return childHasUpdate;
+	}
+
+	@Override
+	public void setChildHasUpdate() {
+		this.childHasUpdate = true;
 	}
 }
