@@ -74,9 +74,9 @@
   "modmenu.modsFolder": "Модлар папкасы",
   "modmenu.configsFolder": "Көйләүләр папкасы",
   "modmenu.nameTranslation.minecraft": "Minecraft",
-  "modmenu.descriptionTranslation.minecraft": "The base game.",
+  "modmenu.descriptionTranslation.minecraft": "Төп уен.",
   "modmenu.nameTranslation.java": "Java",
-  "modmenu.descriptionTranslation.java": "The Java runtime environment.",
+  "modmenu.descriptionTranslation.java": "Java үтәү мохите.",
   "modmenu.javaDistributionName": "Running: %s",
   "modmenu.options": "Мод исемлеге көйләүләр",
   "option.modmenu.sorting": "Сортлау",
@@ -128,10 +128,10 @@
   "option.modmenu.random_java_colors": "Java Color",
   "option.modmenu.random_java_colors.true": "Vendor",
   "option.modmenu.random_java_colors.false": "Always Red",
-  "option.modmenu.translate_names": "Names",
-  "option.modmenu.translate_names.true": "Localized",
-  "option.modmenu.translate_names.false": "Not Localized",
-  "option.modmenu.translate_descriptions": "Descriptions",
-  "option.modmenu.translate_descriptions.true": "Localized",
-  "option.modmenu.translate_descriptions.false": "Not Localized"
+  "option.modmenu.translate_names": "Исемнәр тәрҗемәсе",
+  "option.modmenu.translate_names.true": "Кушык",
+  "option.modmenu.translate_names.false": "Сүнек",
+  "option.modmenu.translate_descriptions": "Тасвирламалар тәрҗемәсе",
+  "option.modmenu.translate_descriptions.true": "Кушык",
+  "option.modmenu.translate_descriptions.false": "Сүнек"
 }
