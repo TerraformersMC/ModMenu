@@ -50,6 +50,7 @@ public class ModMenu implements ClientModInitializer {
 	private static List<Supplier<Map<String, ConfigScreenFactory<?>>>> dynamicScreenFactories = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
+	public static boolean runningQuilt = false;
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
 		if (ModMenuConfig.HIDDEN_CONFIGS.getValue().contains(modid)) {
@@ -71,6 +72,7 @@ public class ModMenu implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
+		runningQuilt = FabricLoader.getInstance().isModLoaded("quilt_loader");
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
 		Set<String> modpackMods = new HashSet<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(entrypoint -> {
@@ -91,7 +93,7 @@ public class ModMenu implements ClientModInitializer {
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
 			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
-				if (FabricLoader.getInstance().isModLoaded("quilt_loader")) {
+				if (ModMenu.runningQuilt) {
 					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
 					ModrinthUtil.checkForUpdates(mod);

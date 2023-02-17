@@ -69,7 +69,7 @@ public class ModrinthUtil {
 								.header("User-Agent", userAgent)
 								.uri(URI.create("https://api.modrinth.com/v2/project/%s/version?loaders=%s&game_versions=%s".formatted(
 										projectId,
-										URLEncoder.encode("[\"%s\"]".formatted(FabricLoader.getInstance().isModLoaded("quilt_loader") ? "quilt" : "fabric"), StandardCharsets.UTF_8),
+										URLEncoder.encode("[\"%s\"]".formatted(ModMenu.runningQuilt ? "quilt" : "fabric"), StandardCharsets.UTF_8),
 										URLEncoder.encode("[\"%s\"]".formatted(SharedConstants.getGameVersion().getName()), StandardCharsets.UTF_8)
 								)))
 								.build();
@@ -80,17 +80,23 @@ public class ModrinthUtil {
 						} else if (latestRsp.statusCode() == 200) {
 							LOGGER.debug("Getting latest version from Modrinth.");
 							var versions = JsonParser.parseString(latestRsp.body()).getAsJsonArray();
-							var latestObj = versions.get(0).getAsJsonObject();
-							var latestVersion = latestObj.get("version_number").getAsString();
-							var latestId = latestObj.get("id").getAsString();
-							var latestHash = latestObj.get("files").getAsJsonArray().asList()
-									.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst()
-									.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
-							if (!Objects.equals(latestHash, localHash)) {
-								// hashes different, there's an update.
-								LOGGER.info("Update available for '{}@{}', ({} -> {})", mod.getId(), mod.getVersion(), modrinthVersion, latestVersion);
-								mod.setModrinthData(new ModrinthData(projectId, latestId, latestVersion));
-								ModMenu.modUpdateAvailable = true;
+							String currentLoader = ModMenu.runningQuilt ? "Quilt" : "Fabric";
+							LOGGER.debug("Versions of {} for {}: {}", mod.getId(), currentLoader, versions);
+							if (versions.isEmpty()) {
+								LOGGER.debug("No versions of {} for {} found on Modrinth.", mod.getId(), currentLoader);
+							} else {
+								var latestObj = versions.get(0).getAsJsonObject();
+								var latestVersion = latestObj.get("version_number").getAsString();
+								var latestId = latestObj.get("id").getAsString();
+								var latestHash = latestObj.get("files").getAsJsonArray().asList()
+										.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst()
+										.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
+								if (!Objects.equals(latestHash, localHash)) {
+									// hashes different, there's an update.
+									LOGGER.info("Update available for '{}@{}', ({} -> {})", mod.getId(), mod.getVersion(), modrinthVersion, latestVersion);
+									mod.setModrinthData(new ModrinthData(projectId, latestId, latestVersion));
+									ModMenu.modUpdateAvailable = true;
+								}
 							}
 						}
 					}
