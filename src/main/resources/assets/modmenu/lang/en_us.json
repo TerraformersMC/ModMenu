@@ -20,7 +20,8 @@
   "modmenu.searchTerms.modpack": "modpack pack",
   "modmenu.searchTerms.deprecated": "deprecated outdated old",
   "modmenu.searchTerms.clientside": "clientside gameside",
-  "modmenu.searchTerms.configurable": "configurations configs configures configurable options",
+  "modmenu.searchTerms.configurable": "configurations configs configures configurable options settings",
+  "modmenu.searchTerms.hasUpdate": "updates version",
 
   "modmenu.toggleFilterOptions": "Toggle Filter Options",
   "modmenu.showingMods.n": "Showing %s mods",
