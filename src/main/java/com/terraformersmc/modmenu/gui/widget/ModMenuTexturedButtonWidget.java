@@ -29,6 +29,7 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message) {
 		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.DEFAULT_NARRATION_SUPPLIER, false);
 	}
+
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, boolean allowUpdateBadge) {
 		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.DEFAULT_NARRATION_SUPPLIER, allowUpdateBadge);
 	}
@@ -58,7 +59,7 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 		drawTexture(matrices, this.getX(), this.getY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
 
-		if(this.allowUpdateBadge && ModMenuConfig.UPDATE_BADGE.getValue() && ModMenu.MOD_UPDATE_AVAILABLE) {
+		if (this.allowUpdateBadge && ModMenuConfig.UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
 			UpdateAvailableBadge.renderBadge(matrices, this.getX() + this.width - 5, this.getY() - 3);
 		}
 	}

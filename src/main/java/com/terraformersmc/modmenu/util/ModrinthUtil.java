@@ -1,22 +1,17 @@
 package com.terraformersmc.modmenu.util;
 
-import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
 import com.google.gson.JsonParser;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.loader.api.QuiltLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +22,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Objects;
 
 public class ModrinthUtil {
@@ -41,7 +35,6 @@ public class ModrinthUtil {
 			return;
 		}
 		Util.getMainWorkerExecutor().execute(() -> {
-
 			try {
 				var localHash = mod.getSha512Hash();
 				if (localHash == null) {
@@ -65,7 +58,7 @@ public class ModrinthUtil {
 						apiV2Deprecated = true;
 						LOGGER.warn("Modrinth API v2 is deprecated, unable to check for mod updates.");
 					} else if (versionRsp.statusCode() == 200) {
-						LOGGER.debug("Found matching version file hash on Modrinth.");
+						LOGGER.debug("Found matching version file hash on Modrinth for '{}@{}'.", mod.getId(), mod.getVersion());
 						// https://docs.modrinth.com/api-spec/#tag/version-files/operation/versionFromHash
 						var versionObj = JsonParser.parseString(versionRsp.body()).getAsJsonObject();
 						var modrinthVersion = versionObj.get("version_number").getAsString();
@@ -88,7 +81,7 @@ public class ModrinthUtil {
 							LOGGER.debug("Getting latest version from Modrinth.");
 							var versions = JsonParser.parseString(latestRsp.body()).getAsJsonArray();
 							var latestObj = versions.get(0).getAsJsonObject();
-							var latestVersion = latestObj.get("version_name").getAsString();
+							var latestVersion = latestObj.get("version_number").getAsString();
 							var latestId = latestObj.get("id").getAsString();
 							var latestHash = latestObj.get("files").getAsJsonArray().asList()
 									.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst()
@@ -96,7 +89,8 @@ public class ModrinthUtil {
 							if (!Objects.equals(latestHash, localHash)) {
 								// hashes different, there's an update.
 								LOGGER.info("Update available for '{}@{}', ({} -> {})", mod.getId(), mod.getVersion(), modrinthVersion, latestVersion);
-								mod.setModrinthData(new ModrinthData(projectId, latestVersion, latestId));
+								mod.setModrinthData(new ModrinthData(projectId, latestId, latestVersion));
+								ModMenu.modUpdateAvailable = true;
 							}
 						}
 					}

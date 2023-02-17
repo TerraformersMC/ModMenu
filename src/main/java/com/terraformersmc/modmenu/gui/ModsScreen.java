@@ -50,9 +50,7 @@ public class ModsScreen extends Screen {
 
 	private static final Text TOGGLE_FILTER_OPTIONS = Text.translatable("modmenu.toggleFilterOptions");
 	private static final Text CONFIGURE = Text.translatable("modmenu.configure");
-
-	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu");
-
+	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
 	private final Screen previousScreen;

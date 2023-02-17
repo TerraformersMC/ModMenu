@@ -17,7 +17,7 @@ public class ModMenuButtonWidget extends ButtonWidget {
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		super.render(matrices, mouseX, mouseY, delta);
-		if(ModMenuConfig.UPDATE_BADGE.getValue() && ModMenu.MOD_UPDATE_AVAILABLE) {
+		if (ModMenuConfig.UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
 			UpdateAvailableBadge.renderBadge(matrices, this.width + this.getX() - 16, this.height / 2 + this.getY() - 4);
 		}
 	}

@@ -23,7 +23,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +44,7 @@ public class ModMenu implements ClientModInitializer {
 	public static final Map<String, Mod> MODS = new HashMap<>();
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
-	public static boolean MOD_UPDATE_AVAILABLE = false;
+	public static boolean modUpdateAvailable = false;
 
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
 	private static List<Supplier<Map<String, ConfigScreenFactory<?>>>> dynamicScreenFactories = new ArrayList<>();
@@ -123,10 +122,6 @@ public class ModMenu implements ClientModInitializer {
 			}
 		}
 		MODS.putAll(dummyParents);
-		Util.getMainWorkerExecutor().execute(() -> {
-			// since update checks are run all on the main worker executor we need to run this on it too to make sure the update checks run first.
-			MOD_UPDATE_AVAILABLE = MODS.values().stream().anyMatch(m -> m.getModrinthData() != null);
-		});
 		ModMenuEventHandler.register();
 	}
 

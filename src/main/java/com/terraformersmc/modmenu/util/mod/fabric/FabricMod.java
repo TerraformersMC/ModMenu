@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,9 @@ public class FabricMod implements Mod {
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
+			if ("minecraft".equals(metadata.getId()) || "fabricloader".equals(metadata.getId()) || "java".equals(metadata.getId()) || "quilt_loader".equals(metadata.getId())) {
+				allowsUpdateChecks = false;
+			}
 		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
@@ -93,10 +97,10 @@ public class FabricMod implements Mod {
 		/* Hardcode parents and badges for Fabric API & Fabric Loader */
 		String id = metadata.getId();
 		if (id.startsWith("fabric") && metadata.containsCustomValue("fabric-api:module-lifecycle")) {
-			if (FabricLoader.getInstance().isModLoaded("fabric")) {
-				modMenuData.fillParentIfEmpty("fabric");
-			} else {
+			if (FabricLoader.getInstance().isModLoaded("fabric-api") || !FabricLoader.getInstance().isModLoaded("fabric")) {
 				modMenuData.fillParentIfEmpty("fabric-api");
+			} else {
+				modMenuData.fillParentIfEmpty("fabric");
 			}
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
@@ -299,9 +303,9 @@ public class FabricMod implements Mod {
 	}
 
 	public @Nullable String getSha512Hash() throws IOException {
-		LOGGER.debug(container.getRoot().toString());
-		if (container.getOrigin().getKind() == ModOrigin.Kind.PATH) {
-			var fileOptional = container.getOrigin().getPaths().stream().filter(path -> path.endsWith(".jar")).findFirst();
+		if (container.getContainingMod().isEmpty() && container.getOrigin().getKind() == ModOrigin.Kind.PATH) {
+			List<Path> paths = container.getOrigin().getPaths();
+			var fileOptional = paths.stream().filter(path -> path.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).findFirst();
 			if (fileOptional.isPresent()) {
 				var file = fileOptional.get().toFile();
 				if (file.isFile()) {
