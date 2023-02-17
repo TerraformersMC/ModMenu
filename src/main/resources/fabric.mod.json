@@ -98,7 +98,8 @@
     "NaiNonTH",
     "MagnusHJensen",
     "Benjamin-Norton",
-    "triphora"
+    "triphora",
+    "Pyrrha"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [

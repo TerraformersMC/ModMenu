@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
+import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
 import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
@@ -62,8 +63,13 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			trimmedName = StringVisitable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
 		}
 		font.draw(matrices, Language.getInstance().reorder(trimmedName), x + iconSize + 3, y + 1, 0xFFFFFF);
+		var updateBadgeXOffset = 0;
+		if (ModMenuConfig.UPDATE_CHECKER.getValue() && mod.getModrinthData() != null) {
+			UpdateAvailableBadge.renderBadge(matrices, x + iconSize + 3 + font.getWidth(name) + 2, y);
+			updateBadgeXOffset = 10;
+		}
 		if (!ModMenuConfig.HIDE_BADGES.getValue()) {
-			new ModBadgeRenderer(x + iconSize + 3 + font.getWidth(name) + 2, y, x + rowWidth, mod, list.getParent()).draw(matrices, mouseX, mouseY);
+			new ModBadgeRenderer(x + iconSize + 3 + font.getWidth(name) + 2 + updateBadgeXOffset, y, x + rowWidth, mod, list.getParent()).draw(matrices, mouseX, mouseY);
 		}
 		if (!ModMenuConfig.COMPACT_LIST.getValue()) {
 			String summary = mod.getSummary();

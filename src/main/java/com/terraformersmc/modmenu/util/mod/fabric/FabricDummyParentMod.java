@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -150,6 +151,21 @@ public class FabricDummyParentMod implements Mod {
 
 	@Override
 	public boolean isReal() {
+		return false;
+	}
+
+	@Override
+	public @Nullable ModrinthData getModrinthData() {
+		return null;
+	}
+
+	@Override
+	public void setModrinthData(ModrinthData modrinthData) {
+		// Not a real mod, won't exist on Modrinth
+	}
+
+	@Override
+	public boolean allowsUpdateChecks() {
 		return false;
 	}
 }
