@@ -35,6 +35,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 						.size(200, 20)
 						.build());
 	}
+
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
 		this.list.render(matrices, mouseX, mouseY, delta);

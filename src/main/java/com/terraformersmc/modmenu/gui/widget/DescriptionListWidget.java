@@ -20,7 +20,6 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.*;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -80,6 +79,16 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					for (OrderedText line : textRenderer.wrapLines(Text.literal(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
 					}
+				}
+
+				if (mod.getModrinthData() != null) {
+					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+					children().add(new DescriptionEntry(Text.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
+					children().add(new LinkEntry(
+							Text.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), Text.translatable("modmenu.modrinth"))
+									.formatted(Formatting.BLUE)
+									.formatted(Formatting.UNDERLINE)
+									.asOrderedText(), "https://modrinth.com/mod/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this, 8));
 				}
 
 				Map<String, String> links = mod.getLinks();
@@ -235,6 +244,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		private final DescriptionListWidget widget;
 		protected OrderedText text;
 		protected int indent;
+		public boolean updateTextEntry = false;
 
 		public DescriptionEntry(OrderedText text, DescriptionListWidget widget, int indent) {
 			this.text = text;
@@ -246,10 +256,19 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			this(text, widget, 0);
 		}
 
+		public DescriptionEntry setUpdateTextEntry() {
+			this.updateTextEntry = true;
+			return this;
+		}
+
 		@Override
 		public void render(MatrixStack matrices, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 			if (widget.top > y || widget.bottom - textRenderer.fontHeight < y) {
 				return;
+			}
+			if (updateTextEntry) {
+				UpdateAvailableBadge.renderBadge(matrices, x + indent, y);
+				x += 10;
 			}
 			textRenderer.drawWithShadow(matrices, text, x + indent, y, 0xAAAAAA);
 		}
