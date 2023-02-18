@@ -6,7 +6,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.text.TextColor;
 
 public class ConfigurableSearchTerm extends SearchTerm {
-	private static final TextColor COLOR = TextColor.fromRgb(0xd4955e);
+	private static final TextColor COLOR = TextColor.fromRgb(0x65bbd8);
 
 	private final ModsScreen screen;
 
