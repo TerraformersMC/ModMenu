@@ -49,11 +49,14 @@ public class ModrinthUtil {
 							LOGGER.error("Error checking for updates: ", e);
 						}
 					});
-			final var userAgent = "%s/%s".formatted(
-					ModMenu.GITHUB_REF,
-					FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID)
-							.get().getMetadata().getVersion().getFriendlyString());
-			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(HASH_TO_MOD.keySet(), ModMenu.runningQuilt ? "quilt" : "fabric", SharedConstants.getGameVersion().getName()));
+			String loader = ModMenu.runningQuilt ? "quilt" : "fabric";
+			String mcVer = SharedConstants.getGameVersion().getName();
+			String[] splitVersion = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID)
+					.get().getMetadata().getVersion().getFriendlyString().split("\\+", 1); // Strip build metadata for privacy
+			final var modMenuVersion = splitVersion.length > 1 ? splitVersion[1] : splitVersion[0];
+			final var userAgent = "%s/%s (%s/%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, mcVer, loader);
+			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(HASH_TO_MOD.keySet(), loader, mcVer));
+			LOGGER.info("User agent: " + userAgent);
 			LOGGER.debug("Body: " + body);
 			var latestVersionsRequest = HttpRequest.newBuilder()
 					.POST(HttpRequest.BodyPublishers.ofString(body))
