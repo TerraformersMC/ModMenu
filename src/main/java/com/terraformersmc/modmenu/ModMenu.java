@@ -88,12 +88,12 @@ public class ModMenu implements ClientModInitializer {
 					QuiltMod mod = new QuiltMod(modContainer);
 					MODS.put(mod.getId(), mod);
 
-					ModrinthUtil.checkForUpdates(mod);
+					ModrinthUtil.checkForUpdates();
 				}else {
 					FabricMod mod = new FabricMod(modContainer);
 					MODS.put(mod.getId(), mod);
 
-					ModrinthUtil.checkForUpdates(mod);
+					ModrinthUtil.checkForUpdates();
 				}
 			}
 		}

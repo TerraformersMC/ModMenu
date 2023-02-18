@@ -64,7 +64,7 @@ public class ModrinthUtil {
 
 			final var userAgent = "%s/%s (%s/%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, mcVer, loader);
 			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(HASH_TO_MOD.keySet(), loader, mcVer));
-			LOGGER.info("User agent: " + userAgent);
+			LOGGER.debug("User agent: " + userAgent);
 			LOGGER.debug("Body: " + body);
 			var latestVersionsRequest = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(body))
