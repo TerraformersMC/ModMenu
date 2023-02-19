@@ -14,7 +14,6 @@ import org.quiltmc.loader.api.QuiltLoader;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -71,20 +70,18 @@ public class QuiltMod extends FabricMod {
 		if (fabricResult == null) {
 			ModrinthUtil.LOGGER.debug("Checking {}", getId());
 			if (container.getSourceType().equals(ModContainer.BasicSourceType.NORMAL_QUILT) || container.getSourceType().equals(ModContainer.BasicSourceType.NORMAL_FABRIC)) {
-				for (var paths : container.getSourcePaths()) {
-					List<Path> jars = paths.stream().filter(p -> p.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).toList();
-
-					if (jars.size() == 1 && jars.get(0).getFileSystem() == FileSystems.getDefault()) {
-						var file = jars.get(0).toFile();
-
-						if (file.exists()) {
-							ModrinthUtil.LOGGER.debug("Found {} hash", getId());
-							return Files.asByteSource(file).hash(Hashing.sha512()).toString();
-						}
+				var path = container.getSourcePaths().stream()
+						.filter(p -> p.stream().anyMatch(p2 -> p2.toString().toLowerCase(Locale.ROOT).endsWith(".jar"))).findFirst().orElse(Collections.emptyList())
+						.stream().filter(p -> p.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).findFirst();
+				if (path.isPresent() && path.get().getFileSystem() == FileSystems.getDefault()) {
+					var file = path.get().toFile();
+					if (file.isFile()) {
+						ModrinthUtil.LOGGER.debug("	Found {} hash", getId());
+						return Files.asByteSource(file).hash(Hashing.sha512()).toString();
 					}
 				}
 			}
 		}
-		return fabricResult;
+		return null;
 	}
 }
