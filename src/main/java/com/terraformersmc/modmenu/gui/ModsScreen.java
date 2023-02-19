@@ -15,7 +15,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
+import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -168,7 +168,7 @@ public class ModsScreen extends Screen {
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
 				Text.translatable("modmenu.website"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
-			this.client.setScreen(new ConfirmLinkScreen((bool) -> {
+			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
 					Util.getOperatingSystem().open(mod.getWebsite());
 				}
@@ -185,7 +185,7 @@ public class ModsScreen extends Screen {
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
 				Text.translatable("modmenu.issues"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
-			this.client.setScreen(new ConfirmLinkScreen((bool) -> {
+			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
 					Util.getOperatingSystem().open(mod.getIssueTracker());
 				}
