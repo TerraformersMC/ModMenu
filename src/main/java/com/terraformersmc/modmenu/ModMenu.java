@@ -10,6 +10,8 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
+import com.terraformersmc.modmenu.util.ModrinthUtil;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
@@ -20,34 +22,37 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
-	public static final Logger LOGGER = LogManager.getLogger("Mod Menu");
+	public static final String GITHUB_REF = "TerraformersMC/ModMenu";
+	public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu");
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
+	public static final Gson GSON_MINIFIED = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
 	public static final Map<String, Mod> MODS = new HashMap<>();
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
+	public static boolean modUpdateAvailable = false;
 
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
 	private static List<Supplier<Map<String, ConfigScreenFactory<?>>>> dynamicScreenFactories = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
+	public static boolean runningQuilt = false;
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
+		if (ModMenuConfig.HIDDEN_CONFIGS.getValue().contains(modid)) {
+			return null;
+		}
 		ConfigScreenFactory<?> factory = configScreenFactories.get(modid);
 		if (factory != null) {
 			return factory.create(menuScreen);
@@ -64,7 +69,9 @@ public class ModMenu implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
+		runningQuilt = FabricLoader.getInstance().isModLoaded("quilt_loader");
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
+		Set<String> modpackMods = new HashSet<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(entrypoint -> {
 			ModMetadata metadata = entrypoint.getProvider().getMetadata();
 			String modId = metadata.getId();
@@ -72,6 +79,7 @@ public class ModMenu implements ClientModInitializer {
 				ModMenuApi api = entrypoint.getEntrypoint();
 				factories.put(modId, api.getModConfigScreenFactory());
 				dynamicScreenFactories.add(api::getProvidedConfigScreenFactories);
+				api.attachModpackBadges(modpackMods::add);
 			} catch (Throwable e) {
 				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
 			}
@@ -82,14 +90,18 @@ public class ModMenu implements ClientModInitializer {
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
 			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
-				if(FabricLoader.getInstance().isModLoaded("quilt_loader")){
-					QuiltMod mod = new QuiltMod(modContainer);
+				if (ModMenu.runningQuilt) {
+					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
-				}else {
-					FabricMod mod = new FabricMod(modContainer);
+				} else {
+					FabricMod mod = new FabricMod(modContainer, modpackMods);
 					MODS.put(mod.getId(), mod);
 				}
 			}
+		}
+
+		if (ModMenuConfig.UPDATE_CHECKER.getValue()) {
+			ModrinthUtil.checkForUpdates();
 		}
 
 		Map<String, Mod> dummyParents = new HashMap<>();
@@ -131,18 +143,18 @@ public class ModMenu implements ClientModInitializer {
 	}
 
 	public static Text createModsButtonText() {
-		TranslatableText modsText = new TranslatableText("modmenu.title");
+		MutableText modsText = TextUtils.translatable("modmenu.title");
 		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
 			String count = ModMenu.getDisplayedModCount();
 			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-				modsText.append(new LiteralText(" ")).append(new TranslatableText("modmenu.loaded.short", count));
+				modsText.append(TextUtils.literal(" ")).append(TextUtils.translatable("modmenu.loaded.short", count));
 			} else {
 				String specificKey = "modmenu.loaded." + count;
 				String key = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.loaded";
 				if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
 					key = specificKey + ".secret";
 				}
-				modsText.append(new LiteralText(" ")).append(new TranslatableText(key, count));
+				modsText.append(TextUtils.literal(" ")).append(TextUtils.translatable(key, count));
 			}
 		}
 		return modsText;

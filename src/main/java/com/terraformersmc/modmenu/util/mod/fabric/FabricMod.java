@@ -2,26 +2,29 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.CustomValue;
-import net.fabricmc.loader.api.metadata.ModEnvironment;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.api.metadata.Person;
+import net.fabricmc.loader.api.metadata.*;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class FabricMod implements Mod {
-	private static final Logger LOGGER = LogManager.getLogger("Mod Menu | FabricMod");
+	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | FabricMod");
 
 	protected final ModContainer container;
 	protected final ModMetadata metadata;
@@ -32,9 +35,21 @@ public class FabricMod implements Mod {
 
 	protected final Map<String, String> links = new HashMap<>();
 
-	public FabricMod(ModContainer modContainer) {
+	protected @Nullable ModrinthData modrinthData = null;
+
+	protected boolean defaultIconWarning = true;
+
+	protected boolean allowsUpdateChecks = true;
+
+	protected boolean childHasUpdate = false;
+
+	public FabricMod(ModContainer modContainer, Set<String> modpackMods) {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
+
+		if ("minecraft".equals(metadata.getId()) || "fabricloader".equals(metadata.getId()) || "java".equals(metadata.getId()) || "quilt_loader".equals(metadata.getId())) {
+			allowsUpdateChecks = false;
+		}
 
 		/* Load modern mod menu custom value data */
 		Optional<String> parentId = Optional.empty();
@@ -70,6 +85,7 @@ public class FabricMod implements Mod {
 			}
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
+			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
 		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
@@ -80,14 +96,14 @@ public class FabricMod implements Mod {
 		/* Hardcode parents and badges for Fabric API & Fabric Loader */
 		String id = metadata.getId();
 		if (id.startsWith("fabric") && metadata.containsCustomValue("fabric-api:module-lifecycle")) {
-			if (FabricLoader.getInstance().isModLoaded("fabric-api")) {
+			if (FabricLoader.getInstance().isModLoaded("fabric-api") || !FabricLoader.getInstance().isModLoaded("fabric")) {
 				modMenuData.fillParentIfEmpty("fabric-api");
 			} else {
 				modMenuData.fillParentIfEmpty("fabric");
 			}
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
-		if (id.startsWith("fabric") && (id.equals("fabricloader") || metadata.getProvides().contains("fabricloader") || id.equals("fabric") || id.equals("fabric-api") || metadata.getProvides().contains("fabric") || metadata.getProvides().contains("fabric-api"))) {
+		if (id.startsWith("fabric") && (id.equals("fabricloader") || metadata.getProvides().contains("fabricloader") || id.equals("fabric") || id.equals("fabric-api") || metadata.getProvides().contains("fabric") || metadata.getProvides().contains("fabric-api") || id.equals("fabric-language-kotlin"))) {
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
 
@@ -104,6 +120,9 @@ public class FabricMod implements Mod {
 		}
 		if (metadata.containsCustomValue("patchwork:patcherMeta")) {
 			badges.add(Badge.PATCHWORK_FORGE);
+		}
+		if (modpackMods.contains(getId()) && !"builtin".equals(this.metadata.getType())) {
+			badges.add(Badge.MODPACK);
 		}
 		if ("minecraft".equals(getId())) {
 			badges.add(Badge.MINECRAFT);
@@ -139,26 +158,25 @@ public class FabricMod implements Mod {
 		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
 		NativeImageBackedTexture icon = iconHandler.createIcon(iconSource, iconPath);
 		if (icon == null) {
-			LOGGER.warn("Warning! Mod {} has a broken icon, loading default icon", metadata.getId());
+			if (defaultIconWarning) {
+				LOGGER.warn("Warning! Mod {} has a broken icon, loading default icon", metadata.getId());
+				defaultIconWarning = false;
+			}
 			return iconHandler.createIcon(FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + ModMenu.MOD_ID)), "assets/" + ModMenu.MOD_ID + "/unknown_icon.png");
 		}
 		return icon;
 	}
 
 	@Override
-	public @NotNull String getSummary() {
-		return getDescription();
+	public @NotNull String getDescription() {
+		return metadata.getDescription();
 	}
 
 	@Override
-	public @NotNull String getDescription() {
-		String description = metadata.getDescription();
-		if (description.isEmpty()) {
-			if ("minecraft".equals(getId())) {
-				return "The base game.";
-			} else if ("java".equals(getId())) {
-				return "The Java runtime environment.";
-			}
+	public @NotNull String getTranslatedDescription() {
+		var description = Mod.super.getTranslatedDescription();
+		if (getId().equals("java")) {
+			description = description + "\n" + I18n.translate("modmenu.javaDistributionName", getName());
 		}
 		return description;
 	}
@@ -264,8 +282,51 @@ public class FabricMod implements Mod {
 		return true;
 	}
 
+	@Override
+	public @Nullable ModrinthData getModrinthData() {
+		return this.modrinthData;
+	}
+
+	@Override
+	public boolean allowsUpdateChecks() {
+		return this.allowsUpdateChecks;
+	}
+
+	@Override
+	public void setModrinthData(ModrinthData modrinthData) {
+		this.modrinthData = modrinthData;
+		String parent = getParent();
+		if (parent != null && modrinthData != null) {
+			ModMenu.MODS.get(parent).setChildHasUpdate();
+		}
+	}
+
 	public ModMenuData getModMenuData() {
 		return modMenuData;
+	}
+
+	public @Nullable String getSha512Hash() throws IOException {
+		if (container.getContainingMod().isEmpty() && container.getOrigin().getKind() == ModOrigin.Kind.PATH) {
+			List<Path> paths = container.getOrigin().getPaths();
+			var fileOptional = paths.stream().filter(path -> path.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).findFirst();
+			if (fileOptional.isPresent()) {
+				var file = fileOptional.get().toFile();
+				if (file.isFile()) {
+					return Files.asByteSource(file).hash(Hashing.sha512()).toString();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean getChildHasUpdate() {
+		return childHasUpdate;
+	}
+
+	@Override
+	public void setChildHasUpdate() {
+		this.childHasUpdate = true;
 	}
 
 	static class ModMenuData {

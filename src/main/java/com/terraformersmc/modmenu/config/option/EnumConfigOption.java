@@ -1,12 +1,14 @@
 package com.terraformersmc.modmenu.config.option;
 
+import com.mojang.serialization.Codec;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.TranslationUtil;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.option.CyclingOption;
 import net.minecraft.client.option.Option;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 public class EnumConfigOption<E extends Enum<E>> implements OptionConvertable {
@@ -47,15 +49,20 @@ public class EnumConfigOption<E extends Enum<E>> implements OptionConvertable {
 	}
 
 	private static <E extends Enum<E>> Text getValueText(EnumConfigOption<E> option, E value) {
-		return new TranslatableText(option.translationKey + "." + value.name().toLowerCase(Locale.ROOT));
+		return TextUtils.translatable(option.translationKey + "." + value.name().toLowerCase(Locale.ROOT));
 	}
 
 	public Text getButtonText() {
-		return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText(this, getValue()));
+		return ScreenTexts.composeGenericOptionText(TextUtils.translatable(translationKey), getValueText(this, getValue()));
 	}
 
 	@Override
 	public Option asOption() {
-		return CyclingOption.create(translationKey, enumClass.getEnumConstants(), value -> getValueText(this, value), ignored -> ConfigOptionStorage.getEnum(key, enumClass), (ignored, option, value) -> ConfigOptionStorage.setEnum(key, value));
+		return CyclingOption.create(
+				translationKey, enumClass.getEnumConstants(),
+				value -> getValueText(this, value),
+				ignored -> ConfigOptionStorage.getEnum(key, enumClass),
+				(ignored, option, value) -> ConfigOptionStorage.setEnum(key, value)
+		);
 	}
 }

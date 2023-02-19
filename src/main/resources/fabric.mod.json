@@ -25,7 +25,7 @@
     "fabric-key-binding-api-v1": "*",
     "fabric-lifecycle-events-v1": "*",
     "fabricloader": ">=0.12.6",
-    "minecraft": ">=1.18"
+    "minecraft": "1.18.x"
   },
   "breaks" : {
     "better_mod_button": "*"
@@ -33,6 +33,7 @@
   "authors": [
     "Prospector",
     "jackassmc",
+    "haykam821",
     "TerraformersMC"
   ],
   "contributors": [
@@ -41,7 +42,7 @@
     "Mordna",
     "Madis0",
     "Yanis48",
-    "Boundarybreaker",
+    "LemmaEOF",
     "fewizz",
     "XuyuEre",
     "geniiii",
@@ -84,20 +85,27 @@
     "anatom3000",
     "OroArmor",
     "Vaerian",
+    "RDKRACZ",
+    "Hulenkius",
+    "XfedeX",
     "spnda",
     "Jab125",
-    "legenden"
+    "SolidBlock",
+    "Tkain",
+    "nfitzen",
+    "DenaryDev",
+    "legenden",
+    "NaiNonTH",
+    "MagnusHJensen",
+    "Benjamin-Norton",
+    "triphora",
+    "Pyrrha"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
     "mixins.modmenu.json"
   ],
   "custom": {
-    "modupdater": {
-      "strategy": "curseforge",
-      "projectID": 308702,
-      "strict": false
-    },
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/jEGF5fb"

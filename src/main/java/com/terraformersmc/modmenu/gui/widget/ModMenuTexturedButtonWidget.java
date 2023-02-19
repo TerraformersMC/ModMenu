@@ -2,6 +2,8 @@ package com.terraformersmc.modmenu.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,6 +16,7 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	private final int v;
 	private final int uWidth;
 	private final int vHeight;
+	private final boolean allowUpdateBadge;
 
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
 		this(x, y, width, height, u, v, texture, 256, 256, onPress);
@@ -24,21 +27,25 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, EMPTY);
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.EMPTY, false);
 	}
 
-	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, TooltipSupplier tooltipSupplier) {
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, boolean allowUpdateBadge) {
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, ButtonWidget.EMPTY, allowUpdateBadge);
+	}
+
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, ButtonWidget.TooltipSupplier tooltipSupplier) {
+		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, tooltipSupplier, false);
+	}
+
+	public ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, Text message, ButtonWidget.TooltipSupplier tooltipSupplier, boolean allowUpdateBadge) {
 		super(x, y, width, height, message, onPress, tooltipSupplier);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
 		this.u = u;
 		this.v = v;
 		this.texture = texture;
-	}
-
-	protected void setPos(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.allowUpdateBadge = allowUpdateBadge;
 	}
 
 	@Override
@@ -58,6 +65,10 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 
 		if (this.isHovered()) {
 			this.renderTooltip(matrices, mouseX, mouseY);
+		}
+
+		if (this.allowUpdateBadge && ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
+			UpdateAvailableBadge.renderBadge(matrices, this.x + this.width - 5, this.y - 3);
 		}
 	}
 

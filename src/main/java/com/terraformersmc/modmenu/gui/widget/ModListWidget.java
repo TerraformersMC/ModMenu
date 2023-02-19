@@ -8,6 +8,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.ChildEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
@@ -20,7 +21,7 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.glfw.GLFW;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 
 public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable {
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
-
 	private final ModsScreen parent;
 	private List<Mod> mods = null;
 	private final Set<Mod> addedMods = new HashSet<>();
@@ -68,7 +68,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			NarratorManager.INSTANCE.narrate(new TranslatableText("narrator.select", mod.getName()).getString());
+			NarratorManager.INSTANCE.narrate(TextUtils.translatable("narrator.select", mod.getTranslatedName()).getString());
 		}
 	}
 
@@ -122,7 +122,16 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private void filter(String searchTerm, boolean refresh, boolean search) {
 		this.clearEntries();
 		addedMods.clear();
-		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId())).collect(Collectors.toSet());
+		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> {
+			if (ModMenuConfig.CONFIG_MODE.getValue()) {
+				Map<String, Boolean> modHasConfigScreen = parent.getModHasConfigScreen();
+				var hasConfig = modHasConfigScreen.get(mod.getId());
+				if (!hasConfig) {
+					return false;
+				}
+			}
+			return !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId());
+		}).collect(Collectors.toSet());
 
 		if (DEBUG) {
 			mods = new ArrayList<>(mods);

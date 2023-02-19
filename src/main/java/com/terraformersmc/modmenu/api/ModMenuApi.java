@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public interface ModMenuApi {
 
@@ -56,5 +57,16 @@ public interface ModMenuApi {
 	 */
 	default Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
 		return ImmutableMap.of();
+	}
+
+	/**
+	 * Used to mark mods with a badge indicating that they are
+	 * provided by a modpack.
+	 * <p>
+	 * Builtin mods such as `minecraft` cannot be marked as
+	 * provided by a modpack.
+	 */
+	default void attachModpackBadges(Consumer<String> consumer) {
+		return;
 	}
 }

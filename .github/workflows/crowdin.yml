@@ -1,0 +1,57 @@
+# This action synchronizes translations with Crowdin:
+# - new source strings from en_us.json are uploaded
+# - new translations added in Crowdin are downloaded
+#   - if translations were downloaded a pull request is created
+#
+# Adding a new branch:
+# - add branch to matrix
+# - manually run the action once to initialize the new branch on Crowdin
+# - make sure Crowdin knows about the new branch
+
+name: Crowdin
+
+# can be run manually
+# also automatically runs once a week (only on the default branch)
+on:
+  workflow_dispatch: ~
+  schedule:
+    - cron: 1 2 * * 3 # At 02:01 on Wednesday.
+
+jobs:
+  crowdin:
+    runs-on: ubuntu-22.04
+    strategy:
+      max-parallel: 1
+      matrix:
+        branch: ["1.17", "1.18", "1.19", "1.19.3", "1.19.4"]
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ matrix.branch }}
+    - uses: crowdin/github-action@master
+      with:
+        upload_sources: true
+
+        download_translations: true
+        # skip_untranslated_strings: true
+
+        source: src/main/resources/assets/modmenu/lang/en_us.json
+        translation: src/main/resources/assets/modmenu/lang/%locale%.json
+        # locale/language mappings must be added in Crowdin
+        # see https://github.com/jackassmc/minecraft-crowdin-languages
+
+        crowdin_branch_name: ${{ matrix.branch }}
+        localization_branch_name: l10n_${{ matrix.branch }}
+        pull_request_base_branch_name: ${{ matrix.branch }}
+
+        pull_request_title: Update ${{ matrix.branch }} translations
+        commit_message: |
+          Update ${{ matrix.branch }} translations
+
+          - Updated translations
+
+        project_id: 520764
+        token: ${{ secrets.CROWDIN_TOKEN }}
+        skip_ref_checkout: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

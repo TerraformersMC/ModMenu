@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -16,11 +17,9 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.*;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
@@ -59,7 +58,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	@Override
 	public void appendNarrations(NarrationMessageBuilder builder) {
 		Mod mod = parent.getSelectedEntry().getMod();
-		builder.put(NarrationPart.TITLE, mod.getName() + " " + mod.getPrefixedVersion());
+		builder.put(NarrationPart.TITLE, mod.getTranslatedName() + " " + mod.getPrefixedVersion());
 	}
 
 	@Override
@@ -71,55 +70,71 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			setScrollAmount(-Double.MAX_VALUE);
 			if (lastSelected != null) {
 				Mod mod = lastSelected.getMod();
-				String description = mod.getDescription();
-				String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
-				if (I18n.hasTranslation(translatableDescriptionKey)) {
-					description = I18n.translate(translatableDescriptionKey);
-				}
+				String description = mod.getTranslatedDescription();
 				if (!description.isEmpty()) {
-					for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
+					for (OrderedText line : textRenderer.wrapLines(TextUtils.literal(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
+					}
+				}
+
+				if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId())) {
+					if (mod.getModrinthData() != null) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(TextUtils.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
+						children().add(new LinkEntry(
+								TextUtils.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), TextUtils.translatable("modmenu.modrinth"))
+										.formatted(Formatting.BLUE)
+										.formatted(Formatting.UNDERLINE)
+										.asOrderedText(), "https://modrinth.com/project/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this, 8));
+					}
+					if (mod.getChildHasUpdate()) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(TextUtils.translatable("modmenu.childHasUpdate").asOrderedText(), this).setUpdateTextEntry());
 					}
 				}
 
 				Map<String, String> links = mod.getLinks();
 				String sourceLink = mod.getSource();
 				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
-					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-					children().add(new DescriptionEntry(new TranslatableText("modmenu.links").asOrderedText(), this));
+					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+					children().add(new DescriptionEntry(TextUtils.translatable("modmenu.links").asOrderedText(), this));
 
 					if (sourceLink != null) {
-						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), sourceLink, this));
+						children().add(new LinkEntry(TextUtils.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), sourceLink, this, 8));
 					}
 
 					links.forEach((key, value) -> {
-						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE)).asOrderedText(), value, this));
+						children().add(new LinkEntry(TextUtils.translatable(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), value, this, 8));
 					});
 				}
 
 				Set<String> licenses = mod.getLicense();
 				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
-					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-					children().add(new DescriptionEntry(new TranslatableText("modmenu.license").asOrderedText(), this));
+					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+					children().add(new DescriptionEntry(TextUtils.translatable("modmenu.license").asOrderedText(), this));
 
 					for (String license : licenses) {
-						children().add(new DescriptionEntry(new LiteralText("  " + license).asOrderedText(), this));
+						children().add(new DescriptionEntry(TextUtils.literal(license).asOrderedText(), this, 8));
 					}
 				}
 
 				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
 					if ("minecraft".equals(mod.getId())) {
-						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-						children().add(new MojangCreditsEntry(new TranslatableText("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), this));
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new MojangCreditsEntry(TextUtils.translatable("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), this));
 					} else if ("java".equals(mod.getId())) {
-						children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
 					} else {
 						List<String> credits = mod.getCredits();
 						if (!credits.isEmpty()) {
-							children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
-							children().add(new DescriptionEntry(new TranslatableText("modmenu.credits").asOrderedText(), this));
+							children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+							children().add(new DescriptionEntry(TextUtils.translatable("modmenu.credits").asOrderedText(), this));
 							for (String credit : credits) {
-								children().add(new DescriptionEntry(new LiteralText("  " + credit).asOrderedText(), this));
+								int indent = 8;
+								for (OrderedText line : textRenderer.wrapLines(TextUtils.literal(credit), getRowWidth() - 5 - 16)) {
+									children().add(new DescriptionEntry(line, this, indent));
+									indent = 16;
+								}
 							}
 						}
 					}
@@ -234,10 +249,22 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
 		private final DescriptionListWidget widget;
 		protected OrderedText text;
+		protected int indent;
+		public boolean updateTextEntry = false;
 
-		public DescriptionEntry(OrderedText text, DescriptionListWidget widget) {
+		public DescriptionEntry(OrderedText text, DescriptionListWidget widget, int indent) {
 			this.text = text;
 			this.widget = widget;
+			this.indent = indent;
+		}
+
+		public DescriptionEntry(OrderedText text, DescriptionListWidget widget) {
+			this(text, widget, 0);
+		}
+
+		public DescriptionEntry setUpdateTextEntry() {
+			this.updateTextEntry = true;
+			return this;
 		}
 
 		@Override
@@ -245,7 +272,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			if (widget.top > y || widget.bottom - textRenderer.fontHeight < y) {
 				return;
 			}
-			textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
+			if (updateTextEntry) {
+				UpdateAvailableBadge.renderBadge(matrices, x + indent, y);
+				x += 11;
+			}
+			textRenderer.drawWithShadow(matrices, text, x + indent, y, 0xAAAAAA);
 		}
 	}
 
@@ -277,9 +308,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	protected class LinkEntry extends DescriptionEntry {
 		private final String link;
 
-		public LinkEntry(OrderedText text, String link, DescriptionListWidget widget) {
-			super(text, widget);
+		public LinkEntry(OrderedText text, String link, DescriptionListWidget widget, int indent) {
+			super(text, widget, indent);
 			this.link = link;
+		}
+
+		public LinkEntry(OrderedText text, String link, DescriptionListWidget widget) {
+			this(text, link, widget, 0);
 		}
 
 		@Override

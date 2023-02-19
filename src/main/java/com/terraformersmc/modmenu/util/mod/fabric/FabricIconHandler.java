@@ -4,8 +4,8 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.commons.lang3.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class FabricIconHandler implements Closeable {
-	private static final Logger LOGGER = LogManager.getLogger("Mod Menu | FabricIconHandler");
+	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | FabricIconHandler");
 
 	private final Map<Path, NativeImageBackedTexture> modIconCache = new HashMap<>();
 

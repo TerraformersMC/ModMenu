@@ -3,7 +3,6 @@ package com.terraformersmc.modmenu.util;
 import com.terraformersmc.modmenu.ModMenu;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -46,10 +45,10 @@ public class TranslationUtil {
 			}
 			lastKey = fullKey.toString();
 			if (I18n.hasTranslation(lastKey)) {
-				return new TranslatableText(lastKey, realArgs);
+				return TextUtils.translatable(lastKey, realArgs);
 			}
 		}
-		return new TranslatableText(lastKey, realArgs);
+		return TextUtils.translatable(lastKey, realArgs);
 	}
 
 	public static String translationKeyOf(String type, String id) {
