@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.util.mod;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.client.resource.language.I18n;
@@ -128,7 +129,7 @@ public interface Mod {
 		private static final Map<String, Badge> KEY_MAP = new HashMap<>();
 
 		Badge(String translationKey, int outlineColor, int fillColor, String key) {
-			this.text = Text.translatable(translationKey);
+			this.text = TextUtils.translatable(translationKey);
 			this.outlineColor = outlineColor;
 			this.fillColor = fillColor;
 			this.key = key;

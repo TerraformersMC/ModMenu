@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.util.mod;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.DrawingUtil;
+import com.terraformersmc.modmenu.util.TextUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -36,11 +37,11 @@ public class ModBadgeRenderer {
 			//noinspection MagicConstant
 			if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {
 				if (mod.getId().equals(new String(new byte[]{109, 111, 100, 109, 101, 110, 117}, StandardCharsets.UTF_8))) {
-					drawBadge(matrices, Text.literal(new String(new byte[]{-30, -100, -104, 32, 86, 105, 114, 117, 115, 32, 68, 101, 116, 101, 99, 116, 101, 100}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000111111110010001000100010, 0b10001000011111110000100000001000, mouseX, mouseY);
+					drawBadge(matrices, TextUtils.literal(new String(new byte[]{-30, -100, -104, 32, 86, 105, 114, 117, 115, 32, 68, 101, 116, 101, 99, 116, 101, 100}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000111111110010001000100010, 0b10001000011111110000100000001000, mouseX, mouseY);
 				} else if (mod.getId().contains(new String(new byte[]{116, 97, 116, 101, 114}, StandardCharsets.UTF_8))) {
-					drawBadge(matrices, Text.literal(new String(new byte[]{116, 97, 116, 101, 114}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000111010111011001100101011, 0b10001000100110010111000100010010, mouseX, mouseY);
+					drawBadge(matrices, TextUtils.literal(new String(new byte[]{116, 97, 116, 101, 114}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000111010111011001100101011, 0b10001000100110010111000100010010, mouseX, mouseY);
 				} else {
-					drawBadge(matrices, Text.literal(new String(new byte[]{-30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000000111011111111101001000, 0b10001000000001110110100100001110, mouseX, mouseY);
+					drawBadge(matrices, TextUtils.literal(new String(new byte[]{-30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000000111011111111101001000, 0b10001000000001110110100100001110, mouseX, mouseY);
 				}
 			}
 		}

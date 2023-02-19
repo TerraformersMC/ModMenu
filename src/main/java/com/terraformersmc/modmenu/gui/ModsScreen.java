@@ -10,6 +10,7 @@ import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
@@ -18,13 +19,13 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
@@ -48,8 +49,8 @@ public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 
-	private static final Text TOGGLE_FILTER_OPTIONS = Text.translatable("modmenu.toggleFilterOptions");
-	private static final Text CONFIGURE = Text.translatable("modmenu.configure");
+	private static final Text TOGGLE_FILTER_OPTIONS = TextUtils.translatable("modmenu.toggleFilterOptions");
+	private static final Text CONFIGURE = TextUtils.translatable("modmenu.configure");
 	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
 	private TextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
@@ -74,7 +75,7 @@ public class ModsScreen extends Screen {
 	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
 
 	public ModsScreen(Screen previousScreen) {
-		super(Text.translatable("modmenu.title"));
+		super(TextUtils.translatable("modmenu.title"));
 		this.previousScreen = previousScreen;
 	}
 
@@ -104,7 +105,7 @@ public class ModsScreen extends Screen {
 		int searchWidthMax = paneWidth - 32 - filtersButtonSize;
 		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - filtersButtonSize / 2;
-		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, Text.translatable("modmenu.search"));
+		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, TextUtils.translatable("modmenu.search"));
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
 
 		for (Mod mod : ModMenu.MODS.values()) {
@@ -166,7 +167,7 @@ public class ModsScreen extends Screen {
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
-				Text.translatable("modmenu.website"), button -> {
+				TextUtils.translatable("modmenu.website"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
 			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -183,7 +184,7 @@ public class ModsScreen extends Screen {
 			}
 		};
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
-				Text.translatable("modmenu.issues"), button -> {
+				TextUtils.translatable("modmenu.issues"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
 			this.client.setScreen(new ConfirmChatLinkScreen((bool) -> {
 				if (bool) {
@@ -256,7 +257,7 @@ public class ModsScreen extends Screen {
 				new ButtonWidget(
 						this.width / 2 - 154, this.height - 28,
 						150, 20,
-						Text.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))
+						TextUtils.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))
 				));
 		this.addDrawableChild(
 				new ButtonWidget(
@@ -292,8 +293,8 @@ public class ModsScreen extends Screen {
 		RenderSystem.disableBlend();
 		drawCenteredText(matrices, this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
 		if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
-			drawCenteredText(matrices, this.textRenderer, Text.translatable("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1, 16777215);
-			drawCenteredText(matrices, this.textRenderer, Text.translatable("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 + 1, 16777215);
+			drawCenteredText(matrices, this.textRenderer, TextUtils.translatable("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1, 16777215);
+			drawCenteredText(matrices, this.textRenderer, TextUtils.translatable("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 + 1, 16777215);
 		}
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			Text fullModCount = computeModCountText(true);
@@ -328,7 +329,7 @@ public class ModsScreen extends Screen {
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
-			Text name = Text.literal(mod.getTranslatedName());
+			Text name = TextUtils.literal(mod.getTranslatedName());
 			StringVisitable trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getWidth(name) > maxNameWidth) {
@@ -337,7 +338,7 @@ public class ModsScreen extends Screen {
 			}
 			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, RIGHT_PANE_Y + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 && mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
-				setTooltip(Text.translatable("modmenu.modIdToolTip", mod.getId()));
+				setTooltip(TextUtils.translatable("modmenu.modIdToolTip", mod.getId()));
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2, RIGHT_PANE_Y, width - 28, selectedEntry.mod, this);
@@ -383,7 +384,7 @@ public class ModsScreen extends Screen {
 			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
 			return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
-			return Text.literal(null);
+			return TextUtils.literal(null);
 		}
 	}
 
@@ -491,11 +492,11 @@ public class ModsScreen extends Screen {
 				}
 
 				if (allSuccessful) {
-					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, Text.translatable("modmenu.dropSuccessful.line1"), Text.translatable("modmenu.dropSuccessful.line2"));
+					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, TextUtils.translatable("modmenu.dropSuccessful.line1"), TextUtils.translatable("modmenu.dropSuccessful.line2"));
 				}
 			}
 			this.client.setScreen(this);
-		}, Text.translatable("modmenu.dropConfirm"), Text.literal(modList)));
+		}, TextUtils.translatable("modmenu.dropConfirm"), TextUtils.literal(modList)));
 	}
 
 	private static boolean isFabricMod(Path mod) {

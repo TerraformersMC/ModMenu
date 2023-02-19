@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -71,7 +72,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				Mod mod = lastSelected.getMod();
 				String description = mod.getTranslatedDescription();
 				if (!description.isEmpty()) {
-					for (OrderedText line : textRenderer.wrapLines(Text.literal(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
+					for (OrderedText line : textRenderer.wrapLines(TextUtils.literal(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
 					}
 				}
@@ -79,16 +80,16 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId())) {
 					if (mod.getModrinthData() != null) {
 						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
-						children().add(new DescriptionEntry(Text.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
+						children().add(new DescriptionEntry(TextUtils.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
 						children().add(new LinkEntry(
-								Text.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), Text.translatable("modmenu.modrinth"))
+								TextUtils.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), TextUtils.translatable("modmenu.modrinth"))
 										.formatted(Formatting.BLUE)
 										.formatted(Formatting.UNDERLINE)
 										.asOrderedText(), "https://modrinth.com/project/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this, 8));
 					}
 					if (mod.getChildHasUpdate()) {
 						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
-						children().add(new DescriptionEntry(Text.translatable("modmenu.childHasUpdate").asOrderedText(), this).setUpdateTextEntry());
+						children().add(new DescriptionEntry(TextUtils.translatable("modmenu.childHasUpdate").asOrderedText(), this).setUpdateTextEntry());
 					}
 				}
 
@@ -96,41 +97,41 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				String sourceLink = mod.getSource();
 				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
 					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
-					children().add(new DescriptionEntry(Text.translatable("modmenu.links").asOrderedText(), this));
+					children().add(new DescriptionEntry(TextUtils.translatable("modmenu.links").asOrderedText(), this));
 
 					if (sourceLink != null) {
-						children().add(new LinkEntry(Text.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), sourceLink, this, 8));
+						children().add(new LinkEntry(TextUtils.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), sourceLink, this, 8));
 					}
 
 					links.forEach((key, value) -> {
-						children().add(new LinkEntry(Text.translatable(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), value, this, 8));
+						children().add(new LinkEntry(TextUtils.translatable(key).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), value, this, 8));
 					});
 				}
 
 				Set<String> licenses = mod.getLicense();
 				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
 					children().add(new DescriptionEntry(OrderedText.EMPTY, this));
-					children().add(new DescriptionEntry(Text.translatable("modmenu.license").asOrderedText(), this));
+					children().add(new DescriptionEntry(TextUtils.translatable("modmenu.license").asOrderedText(), this));
 
 					for (String license : licenses) {
-						children().add(new DescriptionEntry(Text.literal(license).asOrderedText(), this, 8));
+						children().add(new DescriptionEntry(TextUtils.literal(license).asOrderedText(), this, 8));
 					}
 				}
 
 				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
 					if ("minecraft".equals(mod.getId())) {
 						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
-						children().add(new MojangCreditsEntry(Text.translatable("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), this));
+						children().add(new MojangCreditsEntry(TextUtils.translatable("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), this));
 					} else if ("java".equals(mod.getId())) {
 						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
 					} else {
 						List<String> credits = mod.getCredits();
 						if (!credits.isEmpty()) {
 							children().add(new DescriptionEntry(OrderedText.EMPTY, this));
-							children().add(new DescriptionEntry(Text.translatable("modmenu.credits").asOrderedText(), this));
+							children().add(new DescriptionEntry(TextUtils.translatable("modmenu.credits").asOrderedText(), this));
 							for (String credit : credits) {
 								int indent = 8;
-								for (OrderedText line : textRenderer.wrapLines(Text.literal(credit), getRowWidth() - 5 - 16)) {
+								for (OrderedText line : textRenderer.wrapLines(TextUtils.literal(credit), getRowWidth() - 5 - 16)) {
 									children().add(new DescriptionEntry(line, this, indent));
 									indent = 16;
 								}
@@ -206,7 +207,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		tessellator.draw();
 
 		int k = this.getRowLeft();
-		int l = this.top + 4 -(int) this.getScrollAmount();
+		int l = this.top + 4 - (int) this.getScrollAmount();
 		this.renderList(matrices, k, l, mouseX, mouseY, delta);
 		this.renderScrollBar(bufferBuilder, tessellator);
 

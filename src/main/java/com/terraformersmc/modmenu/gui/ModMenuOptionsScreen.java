@@ -2,15 +2,15 @@ package com.terraformersmc.modmenu.gui;
 
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
+import com.terraformersmc.modmenu.util.TextUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 
 	@SuppressWarnings("resource")
 	public ModMenuOptionsScreen(Screen previous) {
-		super(previous, MinecraftClient.getInstance().options, Text.translatable("modmenu.options"));
+		super(previous, MinecraftClient.getInstance().options, TextUtils.translatable("modmenu.options"));
 		this.previous = previous;
 	}
 

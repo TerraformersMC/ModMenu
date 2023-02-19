@@ -1,8 +1,9 @@
 package com.terraformersmc.modmenu.config.option;
 
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.TranslationUtil;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.screen.ScreenTexts;
+import net.minecraft.client.gui.screen.ScreenTexts;
+import net.minecraft.client.option.CyclingOption;
 import net.minecraft.text.Text;
 
 public class BooleanConfigOption implements OptionConvertable {
@@ -16,8 +17,8 @@ public class BooleanConfigOption implements OptionConvertable {
 		this.key = key;
 		this.translationKey = TranslationUtil.translationKeyOf("option", key);
 		this.defaultValue = defaultValue;
-		this.enabledText = Text.translatable(translationKey + "." + enabledKey);
-		this.disabledText = Text.translatable(translationKey + "." + disabledKey);
+		this.enabledText = TextUtils.translatable(translationKey + "." + enabledKey);
+		this.disabledText = TextUtils.translatable(translationKey + "." + disabledKey);
 	}
 
 	public BooleanConfigOption(String key, boolean defaultValue) {
@@ -45,16 +46,21 @@ public class BooleanConfigOption implements OptionConvertable {
 	}
 
 	public Text getButtonText() {
-		return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText);
+		return ScreenTexts.composeGenericOptionText(TextUtils.translatable(translationKey), getValue() ? enabledText : disabledText);
 	}
 
 	@Override
-	public SimpleOption<Boolean> asOption() {
+	public CyclingOption<Boolean> asOption() {
 		if (enabledText != null && disabledText != null) {
-			return new SimpleOption<>(translationKey, SimpleOption.emptyTooltip(),
-					(text, value) -> value ? enabledText : disabledText, SimpleOption.BOOLEAN, getValue(),
-					newValue -> ConfigOptionStorage.setBoolean(key, newValue));
+			return CyclingOption.create(
+				translationKey, enabledText,
+					ignored -> ConfigOptionStorage.getBoolean(key),
+					(ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value)
+			);
 		}
-		return SimpleOption.ofBoolean(translationKey, getValue(), (value) -> ConfigOptionStorage.setBoolean(key, value));
+		return CyclingOption.create(translationKey,
+				ignored -> ConfigOptionStorage.getBoolean(key),
+				(ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value)
+		);
 	}
 }

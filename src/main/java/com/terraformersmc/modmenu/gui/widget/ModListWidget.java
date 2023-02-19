@@ -8,6 +8,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.ChildEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
@@ -67,7 +68,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			NarratorManager.INSTANCE.narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
+			NarratorManager.INSTANCE.narrate(TextUtils.translatable("narrator.select", mod.getTranslatedName()).getString());
 		}
 	}
 

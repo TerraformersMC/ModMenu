@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.config.option;
 
+import com.terraformersmc.modmenu.util.TextUtils;
 import net.minecraft.text.Text;
 
 import com.terraformersmc.modmenu.util.TranslationUtil;
@@ -31,7 +32,7 @@ public class StringSetConfigOption {
 	}
 
 	public Text getMessage() {
-		return Text.translatable(translationKey);
+		return TextUtils.translatable(translationKey);
 	}
 
 	public Set<String> getDefaultValue() {

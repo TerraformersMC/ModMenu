@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
 import com.terraformersmc.modmenu.util.DrawingUtil;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.minecraft.client.MinecraftClient;
@@ -38,7 +39,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	@Override
 	public Text getNarration() {
-		return Text.literal(mod.getTranslatedName());
+		return TextUtils.literal(mod.getTranslatedName());
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
-		Text name = Text.literal(mod.getTranslatedName());
+		Text name = TextUtils.literal(mod.getTranslatedName());
 		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;
 		TextRenderer font = this.client.textRenderer;
@@ -92,7 +93,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public void bindIconTexture() {
 		if (this.iconLocation == null) {
 			this.iconLocation = new Identifier(ModMenu.MOD_ID, mod.getId() + "_icon");
-			NativeImageBackedTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.getGuiScale().getValue());
+			NativeImageBackedTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.guiScale);
 			if (icon != null) {
 				this.client.getTextureManager().registerTexture(this.iconLocation, icon);
 			} else {

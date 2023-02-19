@@ -113,8 +113,8 @@ public class ModrinthUtil {
 		if (apiV2Deprecated && ModMenuConfig.UPDATE_CHECKER.getValue()) {
 			MinecraftClient.getInstance().getToastManager().add(new SystemToast(
 					SystemToast.Type.PERIODIC_NOTIFICATION,
-					Text.translatable("modmenu.modrinth.v2_deprecated.title"),
-					Text.translatable("modmenu.modrinth.v2_deprecated.description")
+					TextUtils.translatable("modmenu.modrinth.v2_deprecated.title"),
+					TextUtils.translatable("modmenu.modrinth.v2_deprecated.description")
 			));
 		}
 	}

@@ -11,6 +11,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.util.ModrinthUtil;
+import com.terraformersmc.modmenu.util.TextUtils;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
@@ -142,18 +143,18 @@ public class ModMenu implements ClientModInitializer {
 	}
 
 	public static Text createModsButtonText() {
-		MutableText modsText = Text.translatable("modmenu.title");
+		MutableText modsText = TextUtils.translatable("modmenu.title");
 		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() != ModMenuConfig.ModsButtonStyle.ICON) {
 			String count = ModMenu.getDisplayedModCount();
 			if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-				modsText.append(Text.literal(" ")).append(Text.translatable("modmenu.loaded.short", count));
+				modsText.append(TextUtils.literal(" ")).append(TextUtils.translatable("modmenu.loaded.short", count));
 			} else {
 				String specificKey = "modmenu.loaded." + count;
 				String key = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.loaded";
 				if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
 					key = specificKey + ".secret";
 				}
-				modsText.append(Text.literal(" ")).append(Text.translatable(key, count));
+				modsText.append(TextUtils.literal(" ")).append(TextUtils.translatable(key, count));
 			}
 		}
 		return modsText;

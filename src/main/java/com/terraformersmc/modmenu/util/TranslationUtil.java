@@ -45,10 +45,10 @@ public class TranslationUtil {
 			}
 			lastKey = fullKey.toString();
 			if (I18n.hasTranslation(lastKey)) {
-				return Text.translatable(lastKey, realArgs);
+				return TextUtils.translatable(lastKey, realArgs);
 			}
 		}
-		return Text.translatable(lastKey, realArgs);
+		return TextUtils.translatable(lastKey, realArgs);
 	}
 
 	public static String translationKeyOf(String type, String id) {

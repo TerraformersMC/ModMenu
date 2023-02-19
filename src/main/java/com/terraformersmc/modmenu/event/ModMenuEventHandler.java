@@ -19,8 +19,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextContent;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -139,8 +138,7 @@ public class ModMenuEventHandler {
 
 	private static boolean buttonHasText(ClickableWidget button, String translationKey) {
 		Text text = button.getMessage();
-		TextContent textContent = text.getContent();
-		return textContent instanceof TranslatableTextContent && ((TranslatableTextContent) textContent).getKey().equals(translationKey);
+		return text instanceof TranslatableText && ((TranslatableText) text).getKey().equals(translationKey);
 	}
 
 	private static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {

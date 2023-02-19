@@ -34,7 +34,7 @@ public class DrawingUtil {
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
-		List<StringVisitable> strings = CLIENT.textRenderer.getTextHandler().wrapLines(Text.literal(string), wrapWidth, Style.EMPTY);
+		List<StringVisitable> strings = CLIENT.textRenderer.getTextHandler().wrapLines(TextUtils.literal(string), wrapWidth, Style.EMPTY);
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
 				break;
