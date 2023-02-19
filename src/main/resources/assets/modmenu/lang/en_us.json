@@ -4,7 +4,6 @@
   "modmenu.title": "Mods",
   "modmenu.nameTranslation.modmenu": "Mod Menu",
   "modmenu.descriptionTranslation.modmenu": "Adds a mod menu to view the list of mods you have installed.",
-
   "modmenu.loaded": "(%s Loaded)",
   "modmenu.loaded.short": "(%s)",
   "modmenu.loaded.69.secret": "(%s Loaded...nice)",

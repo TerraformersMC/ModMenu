@@ -21,6 +21,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class ModMenuEventHandler {
 		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
 
 		ScreenEvents.AFTER_INIT.register(ModMenuEventHandler::afterScreenInit);
+		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
 	}
 
 	public static void afterScreenInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {
