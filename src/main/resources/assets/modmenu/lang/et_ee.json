@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "Autorilt %s",
   "modmenu.config": "Muuda seadistust",
   "modmenu.configure": "Seadista...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "Veebileht",
   "modmenu.issues": "Probleemid",
   "modmenu.credits": "Tiitrid:",
@@ -50,6 +51,9 @@
   "modmenu.license": "Litsents:",
   "modmenu.links": "Lingid:",
   "modmenu.source": "Lähtekood",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "tõlkimata",
   "option.modmenu.translate_descriptions": "Kirjeldused",
   "option.modmenu.translate_descriptions.true": "tõlgitud",
-  "option.modmenu.translate_descriptions.false": "tõlkimata"
+  "option.modmenu.translate_descriptions.false": "tõlkimata",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "lubatud",
+  "option.modmenu.update_checker.false": "keelatud",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "kuvatud",
+  "option.modmenu.button_update_badge.false": "peidetud"
 }

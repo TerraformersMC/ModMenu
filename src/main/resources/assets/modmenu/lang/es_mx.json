@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "de %s",
   "modmenu.config": "Editar configuración",
   "modmenu.configure": "Configurar...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "Sitio web",
   "modmenu.issues": "Problemas",
   "modmenu.credits": "Créditos:",
@@ -50,6 +51,9 @@
   "modmenu.license": "Licencia:",
   "modmenu.links": "Enlaces:",
   "modmenu.source": "Fuente",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "Comprame un café",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "Sin localizar",
   "option.modmenu.translate_descriptions": "Descripciones",
   "option.modmenu.translate_descriptions.true": "Localizado",
-  "option.modmenu.translate_descriptions.false": "Sin localizar"
+  "option.modmenu.translate_descriptions.false": "Sin localizar",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "Activados",
+  "option.modmenu.update_checker.false": "Desactivados",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "Visibles",
+  "option.modmenu.button_update_badge.false": "Escondida"
 }

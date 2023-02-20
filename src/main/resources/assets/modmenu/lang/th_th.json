@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "โดย %s",
   "modmenu.config": "ตั้งค่า",
   "modmenu.configure": "แก้ไข...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "เว็บไซต์",
   "modmenu.issues": "ปัญหา",
   "modmenu.credits": "เครดิต:",
@@ -50,6 +51,9 @@
   "modmenu.license": "ใบอนุญาต:",
   "modmenu.links": "ลิงก์:",
   "modmenu.source": "แหล่งที่มา",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "ช่วยออกค่ากาแฟได้ที่นี่",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "Not Localized",
   "option.modmenu.translate_descriptions": "Descriptions",
   "option.modmenu.translate_descriptions.true": "Localized",
-  "option.modmenu.translate_descriptions.false": "Not Localized"
+  "option.modmenu.translate_descriptions.false": "Not Localized",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "เปิด",
+  "option.modmenu.update_checker.false": "ปิด",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "แสดง",
+  "option.modmenu.button_update_badge.false": "ซ่อน"
 }

@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "tan: %s",
   "modmenu.config": "o ante",
   "modmenu.configure": "ante nasin...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "lipu",
   "modmenu.issues": "pakala",
   "modmenu.credits": "mama:",
@@ -50,6 +51,9 @@
   "modmenu.license": "lipu ken:",
   "modmenu.links": "lipu:",
   "modmenu.source": "sitelen tan",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "o esun e telo wawa tawa mi",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "ante ala toki",
   "option.modmenu.translate_descriptions": "nasin pana sona",
   "option.modmenu.translate_descriptions.true": "ante toki",
-  "option.modmenu.translate_descriptions.false": "ante ala toki"
+  "option.modmenu.translate_descriptions.false": "ante ala toki",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "lon",
+  "option.modmenu.update_checker.false": "ala",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "ken lukin",
+  "option.modmenu.button_update_badge.false": "ken ala lukin"
 }
