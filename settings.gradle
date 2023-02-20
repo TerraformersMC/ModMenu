@@ -13,3 +13,5 @@ if (JavaVersion.current().ordinal() + 1 < 17) {
 }
 
 rootProject.name = "modmenu"
+
+include 'compat-1.19.2'

@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.gui;
 
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
+import com.terraformersmc.modmenu.util.compat.MCCompat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
@@ -41,6 +42,12 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.list.render(matrices, mouseX, mouseY, delta);
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
 		super.render(matrices, mouseX, mouseY, delta);
+
+		MCCompat.getInstance().getTooltipHelper().modMenuOptionsScreen$render(this, matrices, mouseX, mouseY);
+	}
+
+	public ButtonListWidget getList() {
+		return list;
 	}
 
 	public void removed() {

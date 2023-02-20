@@ -11,6 +11,7 @@ import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.TranslationUtil;
+import com.terraformersmc.modmenu.util.compat.MCCompat;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -95,6 +96,8 @@ public class ModsScreen extends Screen {
 
 	@Override
 	protected void init() {
+		MCCompat.getInstance().getKeybindsHelper().setRepeatEvents(true);
+
 		paneY = ModMenuConfig.CONFIG_MODE.getValue() ? 48 : 48 + 19;
 		paneWidth = this.width / 2 - 8;
 		rightPaneX = width - paneWidth;

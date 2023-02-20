@@ -1,29 +1,70 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
+	id 'fabric-loom' version '1.0-SNAPSHOT' apply false
 }
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/ferry.gradle'
+class Versions {
+	String mc, yarn, fabric;
+
+	Versions(String mc, yarn, fabric) {
+		this.mc = mc;
+		this.yarn = yarn;
+		this.fabric = fabric;
+	}
+
+	public static final Versions[] VERSIONS = [
+			new Versions("1.19.3", "1.19.3+build.2", "0.73.0+1.19.3"),
+			new Versions("1.19.2", "1.19.2+build.28", "0.73.2+1.19.2")
+	]
+}
+
+allprojects {
+	apply plugin: 'fabric-loom'
+	def infos = Versions.VERSIONS[0]
+
+	for (def info in Versions.VERSIONS) {
+		if (info.mc == project.name.replace("compat-", "")) {
+			infos = info;
+			break
+		}
+	}
+
+	project.minecraft_version = infos.mc
+
+	apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/ferry.gradle'
+
+	dependencies {
+		minecraft "com.mojang:minecraft:$infos.mc"
+		mappings "net.fabricmc:yarn:$infos.yarn:v2"
+
+		mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
+		mod "fabric-api", fabricApi.module("fabric-api-base", infos.fabric)
+		mod "fabric-api", fabricApi.module("fabric-resource-loader-v0", infos.fabric)
+		mod "fabric-api", fabricApi.module("fabric-screen-api-v1", infos.fabric)
+		mod "fabric-api", fabricApi.module("fabric-key-binding-api-v1", infos.fabric)
+		mod "fabric-api", fabricApi.module("fabric-lifecycle-events-v1", infos.fabric)
+		compileOnly "org.quiltmc:quilt-loader:$project.quilt_loader_version"
+	}
+
+	repositories {
+		maven {
+			name = 'TerraformersMC'
+			url = 'https://maven.terraformersmc.com/'
+		}
+		maven {
+			name = 'Quilt'
+			url = 'https://maven.quiltmc.org/repository/release'
+		}
+	}
+}
 
 dependencies {
-	minecraft "com.mojang:minecraft:$project.minecraft_version"
-	mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
-
-	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
-	includeMod "fabric-api", fabricApi.module("fabric-api-base", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-screen-api-v1", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-key-binding-api-v1", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version)
-	compileOnly "org.quiltmc:quilt-loader:$project.quilt_loader_version"
+	subprojects.forEach {
+		include(project(path: it.path, configuration: 'namedElements'))
+	}
 }
 
-repositories {
-	maven {
-		name = 'TerraformersMC'
-		url = 'https://maven.terraformersmc.com/'
-	}
-	maven {
-		name = 'Quilt'
-		url = 'https://maven.quiltmc.org/repository/release'
+subprojects {
+	dependencies {
+		api project(path:":", configuration: 'namedElements')
 	}
 }

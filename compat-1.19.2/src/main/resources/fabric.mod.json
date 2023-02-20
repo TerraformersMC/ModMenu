@@ -1,20 +1,14 @@
 {
   "schemaVersion": 1,
-  "id": "modmenu",
+  "id": "modmenu-compat1192",
   "name": "Mod Menu",
   "version": "$version",
   "environment": "client",
   "license": "MIT",
   "icon": "assets/modmenu/icon.png",
   "entrypoints": {
-    "client": [
-      "com.terraformersmc.modmenu.ModMenu"
-    ],
-    "modmenu": [
-      "com.terraformersmc.modmenu.ModMenuModMenuCompat"
-    ],
     "modmenu-mccompat": [
-      "com.terraformersmc.modmenu.mc_latest.ModMenuMCCompat"
+      "com.terraformersmc.modmenu.mc_1_19_2.ModMenuMCCompat"
     ]
   },
   "contact": {
@@ -31,10 +25,7 @@
     "minecraft": ">=1.19.1-"
   },
   "breaks" : {
-    "better_mod_button": "*",
-    "minecraft": [
-      "1.19.3-alpha.22.43.a"
-    ]
+    "better_mod_button": "*"
   },
   "authors": [
     "Prospector",
@@ -108,9 +99,7 @@
     "Pyrrha"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
-  "mixins": [
-    "mixins.modmenu.json"
-  ],
+  "mixins": [],
   "custom": {
     "modmenu": {
       "links": {
