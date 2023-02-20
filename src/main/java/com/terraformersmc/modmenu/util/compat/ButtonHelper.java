@@ -13,7 +13,7 @@ public abstract class ButtonHelper {
 			ModsScreen screen,
 			int x, int y, int width, int height, int u, int v, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip,
-			ModListEntry selected, Map<String, Boolean> modHasConfigScreen
+			ModListEntry selected, Map<String, Boolean> modHasConfigScreen, Map<String, Throwable> modScreenErrors
 	);
 
 	public abstract ButtonWidget createFiltersButton(
