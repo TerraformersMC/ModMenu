@@ -56,11 +56,11 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 			adjustedV += this.height;
 		}
 
-		drawTexture(matrices, this.getX(), this.getY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
+		drawTexture(matrices, this.getButtonX(), this.getButtonY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
 
 		if (this.allowUpdateBadge && ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
-			UpdateAvailableBadge.renderBadge(matrices, this.getX() + this.width - 5, this.getY() - 3);
+			UpdateAvailableBadge.renderBadge(matrices, this.getButtonX() + this.width - 5, this.getButtonY() - 3);
 		}
 	}
 }

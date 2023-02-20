@@ -116,6 +116,9 @@
       "links": {
         "modmenu.discord": "https://discord.gg/jEGF5fb"
       }
+    },
+    "loom:injected_interfaces": {
+      "net/minecraft/class_339": ["com/terraformersmc/modmenu/util/compat/ButtonCompat"]
     }
   }
 }

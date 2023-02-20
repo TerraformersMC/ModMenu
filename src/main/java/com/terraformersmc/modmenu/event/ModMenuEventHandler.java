@@ -6,7 +6,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
-import com.terraformersmc.modmenu.mixin.IGridWidgetAccessor;
+import com.terraformersmc.modmenu.mixin.mc1193plus.IGridWidgetAccessor;
 import com.terraformersmc.modmenu.util.ModrinthUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -63,20 +63,20 @@ public class ModMenuEventHandler {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
 						if (modsButtonIndex == -1) {
-							buttonsY = button.getY();
+							buttonsY = button.getButtonY();
 						}
 					}
 				}
 				if (buttonHasText(button, "menu.online")) {
 					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS) {
-						buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(button.getButtonX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 							button.setWidth(98);
 						}
 						modsButtonIndex = i + 1;
 						if (button.visible) {
-							buttonsY = button.getY();
+							buttonsY = button.getButtonY();
 						}
 					}
 				}
@@ -109,18 +109,18 @@ public class ModMenuEventHandler {
 						if (button.visible) {
 							shiftButtons(button, modsButtonIndex == -1, spacing);
 							if (modsButtonIndex == -1) {
-								buttonsY = button.getY();
+								buttonsY = button.getButtonY();
 							}
 						}
 					}
 					if (buttonHasText(button, "menu.reportBugs")) {
 						modsButtonIndex = i + 1;
 						if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
-							buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+							buttons.set(i, new ModMenuButtonWidget(button.getButtonX(), button.getButtonY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
 						} else {
 							modsButtonIndex = i + 1;
 							if (button.visible) {
-								buttonsY = button.getY();
+								buttonsY = button.getButtonY();
 							}
 						}
 					}
@@ -150,9 +150,9 @@ public class ModMenuEventHandler {
 
 	private static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {
 		if (shiftUp) {
-			button.setY(button.getY() - spacing / 2);
+			button.setButtonY(button.getButtonY() - spacing / 2);
 		} else if (!button.getMessage().equals(TitleScreen.COPYRIGHT)) {
-			button.setY(button.getY() + spacing / 2);
+			button.setButtonY(button.getButtonY() + spacing / 2);
 		}
 	}
 }
