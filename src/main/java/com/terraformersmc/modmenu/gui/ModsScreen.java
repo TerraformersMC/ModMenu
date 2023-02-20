@@ -25,7 +25,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -40,7 +39,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
@@ -142,10 +140,21 @@ public class ModsScreen extends Screen {
 			}
 		}, CONFIGURE, (buttonWidget, matrices, mouseX, mouseY) -> {
 			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
+			String modId = selected.getMod().getId();
+			List<Text> tooltip = List.of(CONFIGURE);
+			if (modScreenErrors.containsKey(modId)) {
+				Throwable e = modScreenErrors.get(modId);
+				tooltip = List.of(
+						Text.translatable("modmenu.configure.error.1", modId).copy().formatted(Formatting.RED),
+						Text.translatable("modmenu.configure.error.2", modId).copy().formatted(Formatting.RED),
+						Text.of(""),
+						Text.of(e.toString()).copy().formatted(Formatting.RED)
+				);
+			}
 			if (button.isJustHovered()) {
-				this.renderTooltip(matrices, CONFIGURE, mouseX, mouseY);
+				this.renderTooltip(matrices, tooltip, mouseX, mouseY);
 			} else if (button.isFocusedButNotHovered()) {
-				this.renderTooltip(matrices, CONFIGURE, button.x, button.y);
+				this.renderTooltip(matrices, tooltip, button.x, button.y);
 			}
 		}) {
 			@Override
@@ -158,12 +167,6 @@ public class ModsScreen extends Screen {
 					visible = false;
 				}
 				visible = selected != null && modHasConfigScreen.get(modId) || modScreenErrors.containsKey(modId);
-				if (modScreenErrors.containsKey(modId)) {
-					Throwable e = modScreenErrors.get(modId);
-					this.setTooltip(Tooltip.of(Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED)));
-				} else {
-					this.setTooltip(Tooltip.of(CONFIGURE));
-				}
 				super.render(matrices, mouseX, mouseY, delta);
 			}
 
@@ -213,13 +216,13 @@ public class ModsScreen extends Screen {
 		this.addSelectableChild(this.searchBox);
 		ButtonWidget filtersButton = new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS,
 				(buttonWidget, matrices, mouseX, mouseY) -> {
-			ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
-			if (button.isJustHovered()) {
-				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, mouseX, mouseY);
-			} else if (button.isFocusedButNotHovered()) {
-				this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, button.x, button.y);
-			}
-		});
+					ModMenuTexturedButtonWidget button = (ModMenuTexturedButtonWidget) buttonWidget;
+					if (button.isJustHovered()) {
+						this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, mouseX, mouseY);
+					} else if (button.isFocusedButNotHovered()) {
+						this.renderTooltip(matrices, TOGGLE_FILTER_OPTIONS, button.x, button.y);
+					}
+				});
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.addDrawableChild(filtersButton);
 		}
