@@ -71,7 +71,7 @@
   "modmenu.modsFolder": "modsフォルダーを開く",
   "modmenu.configsFolder": "configフォルダーを開く",
   "modmenu.options": "Mod Menuのオプション",
-  "option.modmenu.sorting": "順序",
+  "option.modmenu.sorting": "表示順",
   "option.modmenu.sorting.ascending": "昇順",
   "option.modmenu.sorting.descending": "降順",
   "option.modmenu.show_libraries": "前提mod",
