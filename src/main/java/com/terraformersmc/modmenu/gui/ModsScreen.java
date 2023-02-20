@@ -73,6 +73,7 @@ public class ModsScreen extends Screen {
 	public final Set<String> showModChildren = new HashSet<>();
 
 	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
+	public final Map<String, Throwable> modScreenErrors = new HashMap<>();
 
 	public ModsScreen(Screen previousScreen) {
 		super(Text.translatable("modmenu.title"));
@@ -111,16 +112,19 @@ public class ModsScreen extends Screen {
 		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
 
 		for (Mod mod : ModMenu.MODS.values()) {
-			if (!modHasConfigScreen.containsKey(mod.getId())) {
+			String id = mod.getId();
+			if (!modHasConfigScreen.containsKey(id)) {
 				try {
-					Screen configScreen = ModMenu.getConfigScreen(mod.getId(), this);
-					modHasConfigScreen.put(mod.getId(), configScreen != null);
+					Screen configScreen = ModMenu.getConfigScreen(id, this);
+					modHasConfigScreen.put(id, configScreen != null);
 				} catch (java.lang.NoClassDefFoundError e) {
-					LOGGER.warn("The '" + mod.getId() + "' mod config screen is not available because " + e.getLocalizedMessage() + " is missing.");
-					modHasConfigScreen.put(mod.getId(), false);
+					LOGGER.warn("The '" + id + "' mod config screen is not available because " + e.getLocalizedMessage() + " is missing.");
+					modScreenErrors.put(id, e);
+					modHasConfigScreen.put(id, false);
 				} catch (Throwable e) {
-					LOGGER.error("Error from mod '" + mod.getId() + "'", e);
-					modHasConfigScreen.put(mod.getId(), false);
+					LOGGER.error("Error from mod '" + id + "'", e);
+					modScreenErrors.put(id, e);
+					modHasConfigScreen.put(id, false);
 				}
 			}
 		}
@@ -131,17 +135,41 @@ public class ModsScreen extends Screen {
 
 		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = MCCompat.getInstance().getButtonHelper()
-				.createConfigureButton(this, width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64,
-						button -> {
-					final String modid = Objects.requireNonNull(selected).getMod().getId();
-					if (modHasConfigScreen.get(modid)) {
-						Screen configScreen = ModMenu.getConfigScreen(modid, this);
-						client.setScreen(configScreen);
-					} else {
-						button.active = false;
-					}
-				}, CONFIGURE, selected, modHasConfigScreen);
+		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+			final String id = Objects.requireNonNull(selected).getMod().getId();
+			if (modHasConfigScreen.get(id)) {
+				Screen configScreen = ModMenu.getConfigScreen(id, this);
+				client.setScreen(configScreen);
+			} else {
+				button.active = false;
+			}
+		}) {
+			@Override
+			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+				String modId = selected.getMod().getId();
+				if (selected != null) {
+					active = modHasConfigScreen.get(modId);
+				} else {
+					active = false;
+					visible = false;
+				}
+				visible = selected != null && modHasConfigScreen.get(modId) || modScreenErrors.containsKey(modId);
+				if (modScreenErrors.containsKey(modId)) {
+					Throwable e = modScreenErrors.get(modId);
+					this.setTooltip(Tooltip.of(Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED)));
+				} else {
+					this.setTooltip(Tooltip.of(CONFIGURE));
+				}
+				super.render(matrices, mouseX, mouseY, delta);
+			}
+
+			@Override
+			public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+				RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+				RenderSystem.setShaderColor(1, 1, 1, 1f);
+				super.renderButton(matrices, mouseX, mouseY, delta);
+			}
+		};
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
