@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "%s tarafından geliştirildi",
   "modmenu.config": "Ayarları Düzenle",
   "modmenu.configure": "Ayarla...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "Web sitesi",
   "modmenu.issues": "Hatalar",
   "modmenu.credits": "Emeği Geçenler:",
@@ -50,6 +51,9 @@
   "modmenu.license": "Lisans:",
   "modmenu.links": "Bağlantılar:",
   "modmenu.source": "Kaynak",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "Bana Bir Kahve Ismarla",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "Not Localized",
   "option.modmenu.translate_descriptions": "Descriptions",
   "option.modmenu.translate_descriptions.true": "Localized",
-  "option.modmenu.translate_descriptions.false": "Not Localized"
+  "option.modmenu.translate_descriptions.false": "Not Localized",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "Etkin",
+  "option.modmenu.update_checker.false": "Devre Dışı",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "Görünür",
+  "option.modmenu.button_update_badge.false": "Gizli"
 }

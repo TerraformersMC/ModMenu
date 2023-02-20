@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "Авторы: %s",
   "modmenu.config": "Изменить настройки",
   "modmenu.configure": "Настройки...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "Сайт",
   "modmenu.issues": "Проблемы",
   "modmenu.credits": "Авторы:",
@@ -50,6 +51,9 @@
   "modmenu.license": "Лицензия:",
   "modmenu.links": "Ссылки:",
   "modmenu.source": "Исходный код",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "Подарите мне кофе",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "Выкл",
   "option.modmenu.translate_descriptions": "Локализация описаний",
   "option.modmenu.translate_descriptions.true": "Вкл",
-  "option.modmenu.translate_descriptions.false": "Выкл"
+  "option.modmenu.translate_descriptions.false": "Выкл",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "Включены",
+  "option.modmenu.update_checker.false": "Выключены",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "Показаны",
+  "option.modmenu.button_update_badge.false": "Скрыты"
 }

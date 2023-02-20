@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "Von %s",
   "modmenu.config": "Ändere Konfiguration",
   "modmenu.configure": "Konfiguriere...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "Webseite",
   "modmenu.issues": "Issues",
   "modmenu.credits": "Credits:",
@@ -50,6 +51,9 @@
   "modmenu.license": "Lizenz:",
   "modmenu.links": "Links:",
   "modmenu.source": "Quelle",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "Kauf mir einen Kaffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "Nicht übersetzt",
   "option.modmenu.translate_descriptions": "Beschreibungen",
   "option.modmenu.translate_descriptions.true": "Übersetzt",
-  "option.modmenu.translate_descriptions.false": "Nicht übersetzt"
+  "option.modmenu.translate_descriptions.false": "Nicht übersetzt",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "Aktiviert",
+  "option.modmenu.update_checker.false": "Deaktiviert",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "Sichtbar",
+  "option.modmenu.button_update_badge.false": "Versteckt"
 }

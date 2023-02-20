@@ -43,6 +43,7 @@
   "modmenu.authorPrefix": "Vývojář: %s",
   "modmenu.config": "Upravit konfiguraci",
   "modmenu.configure": "Nastavit...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "Web",
   "modmenu.issues": "Problémy",
   "modmenu.credits": "Poděkování:",
@@ -50,6 +51,9 @@
   "modmenu.license": "Licence:",
   "modmenu.links": "Odkazy:",
   "modmenu.source": "Zdroj",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
   "modmenu.buymeacoffee": "Kupte mi kávu",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +137,11 @@
   "option.modmenu.translate_names.false": "Nepřeložené",
   "option.modmenu.translate_descriptions": "Popisy",
   "option.modmenu.translate_descriptions.true": "Přeložené",
-  "option.modmenu.translate_descriptions.false": "Nepřeložené"
+  "option.modmenu.translate_descriptions.false": "Nepřeložené",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "Povoleny",
+  "option.modmenu.update_checker.false": "Zakázány",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "Zobrazené",
+  "option.modmenu.button_update_badge.false": "Skryté"
 }
