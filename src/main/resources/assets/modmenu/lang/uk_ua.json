@@ -1,6 +1,6 @@
 {
   "category.modmenu.name": "Меню мода",
-  "key.modmenu.open_menu": "Відкрити список модів",
+  "key.modmenu.open_menu": "Відкрити меню модів",
   "modmenu.title": "Моди",
   "modmenu.descriptionTranslation.modmenu": "Додає меню для перегляду ваших встановлених модів.",
   "modmenu.loaded": "(Завантажено: %s)",
