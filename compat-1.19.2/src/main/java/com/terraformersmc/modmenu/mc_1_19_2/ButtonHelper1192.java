@@ -4,13 +4,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.compat.ButtonHelper;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
 import java.util.Map;
 
 public class ButtonHelper1192 extends ButtonHelper {
@@ -73,5 +77,10 @@ public class ButtonHelper1192 extends ButtonHelper {
 				screen.renderTooltip(matrices, tooltip, button.x, button.y);
 			}
 		});
+	}
+
+	@Override
+	public List<ClickableWidget> getButtons(Screen screen) {
+		return Screens.getButtons(screen);
 	}
 }

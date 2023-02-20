@@ -1,19 +1,24 @@
 package com.terraformersmc.modmenu.mc_latest;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
+import com.terraformersmc.modmenu.mixin.mc1193plus.IGridWidgetAccessor;
 import com.terraformersmc.modmenu.util.compat.ButtonHelper;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
 import java.util.Map;
 
 public class ButtonHelper1193 extends ButtonHelper {
@@ -62,5 +67,12 @@ public class ButtonHelper1193 extends ButtonHelper {
 		ButtonWidget widget = new ModMenuTexturedButtonWidget(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, tooltip);
 		widget.setTooltip(Tooltip.of(tooltip));
 		return widget;
+	}
+
+	@Override
+	public List<ClickableWidget> getButtons(Screen screen) {
+		ClickableWidget widget = Screens.getButtons(screen).get(0);
+		if (widget instanceof GridWidget) return ((IGridWidgetAccessor) widget).getChildren();
+		return null;
 	}
 }
