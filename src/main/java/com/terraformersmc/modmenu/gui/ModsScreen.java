@@ -56,6 +56,7 @@ public class ModsScreen extends Screen {
 	private DescriptionListWidget descriptionListWidget;
 	private final Screen previousScreen;
 	private ModListWidget modList;
+	private Text tooltipCompat;
 	private ModListEntry selected;
 	private ModBadgeRenderer modBadgeRenderer;
 	private double scrollPercent = 0;
@@ -130,35 +131,17 @@ public class ModsScreen extends Screen {
 
 		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
-			final String modid = Objects.requireNonNull(selected).getMod().getId();
-			if (modHasConfigScreen.get(modid)) {
-				Screen configScreen = ModMenu.getConfigScreen(modid, this);
-				client.setScreen(configScreen);
-			} else {
-				button.active = false;
-			}
-		}) {
-			@Override
-			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				if (selected != null) {
-					String modid = selected.getMod().getId();
-					active = modHasConfigScreen.get(modid);
-				} else {
-					active = false;
-				}
-				visible = active;
-				super.render(matrices, mouseX, mouseY, delta);
-			}
-
-			@Override
-			public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-				RenderSystem.setShaderColor(1, 1, 1, 1f);
-				super.renderButton(matrices, mouseX, mouseY, delta);
-			}
-		};
-		configureButton.setTooltip(Tooltip.of(CONFIGURE));
+		ButtonWidget configureButton = MCCompat.getInstance().getButtonHelper()
+				.createConfigureButton(this, width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64,
+						button -> {
+					final String modid = Objects.requireNonNull(selected).getMod().getId();
+					if (modHasConfigScreen.get(modid)) {
+						Screen configScreen = ModMenu.getConfigScreen(modid, this);
+						client.setScreen(configScreen);
+					} else {
+						button.active = false;
+					}
+				}, CONFIGURE, selected, modHasConfigScreen);
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
@@ -196,8 +179,7 @@ public class ModsScreen extends Screen {
 			}
 		};
 		this.addSelectableChild(this.searchBox);
-		ButtonWidget filtersButton = new ModMenuTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
-		filtersButton.setTooltip(Tooltip.of(TOGGLE_FILTER_OPTIONS));
+		ButtonWidget filtersButton = MCCompat.getInstance().getButtonHelper().createFiltersButton(this, paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.addDrawableChild(filtersButton);
 		}
@@ -271,6 +253,7 @@ public class ModsScreen extends Screen {
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
+		this.tooltipCompat = null;
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
 			this.descriptionListWidget.render(matrices, mouseX, mouseY, delta);
@@ -325,7 +308,10 @@ public class ModsScreen extends Screen {
 			}
 			textRenderer.draw(matrices, Language.getInstance().reorder(trimmedName), x + imageOffset, RIGHT_PANE_Y + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 && mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
-				this.setTooltip(Text.translatable("modmenu.modIdToolTip", mod.getId()));
+				Text tooltipText = Text.translatable("modmenu.modIdToolTip", mod.getId());
+
+				if (MCCompat.after22w45a) this.setTooltip(tooltipText);
+				else setTooltipCompat(tooltipText);
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2, RIGHT_PANE_Y, width - 28, selectedEntry.mod, this);
@@ -350,6 +336,9 @@ public class ModsScreen extends Screen {
 			}
 		}
 		super.render(matrices, mouseX, mouseY, delta);
+		if (!MCCompat.after22w45a && this.tooltipCompat != null) {
+			this.renderOrderedTooltip(matrices, textRenderer.wrapLines(this.tooltipCompat, Integer.MAX_VALUE), mouseX, mouseY);
+		}
 	}
 
 	private Text computeModCountText(boolean includeLibs) {
@@ -404,6 +393,10 @@ public class ModsScreen extends Screen {
 	public void close() {
 		this.modList.close();
 		this.client.setScreen(this.previousScreen);
+	}
+
+	private void setTooltipCompat(Text text) {
+		this.tooltipCompat = text;
 	}
 
 	public ModListEntry getSelectedEntry() {
