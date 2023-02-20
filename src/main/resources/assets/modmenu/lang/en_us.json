@@ -49,6 +49,7 @@
   "modmenu.authorPrefix": "By %s",
   "modmenu.config": "Edit Config",
   "modmenu.configure": "Configure...",
+  "modmenu.configure.error": "Failed to load config screen for '%s'\nReport to '%s', not Mod Menu",
   "modmenu.website": "Website",
   "modmenu.issues": "Issues",
 
