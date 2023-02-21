@@ -9,7 +9,7 @@ public class MCCompat {
 	 * RenderSystem.enable/disableTexture removal, GridWidget don't extend ClickableWidget anymore.
 	 * CreditsScreen ctr takes an additional argument.
 	 */
-	public static final boolean after23w03a = testMCVersion(">=1.19.4-alpha.23.03.a");
+	public static final boolean after23w03a = testMCVersion(">=1.19.4-alpha.23.3.a");
 	/**
 	 * Keyboard.setRepeatEvents removal.
 	 */
