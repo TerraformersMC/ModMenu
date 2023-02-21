@@ -8,6 +8,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.ChildEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
+import com.terraformersmc.modmenu.util.compat.MCCompat;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
@@ -16,12 +17,9 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -212,21 +210,12 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
 					RenderSystem.setShader(GameRenderer::getPositionProgram);
 					RenderSystem.setShaderColor(float_2, float_2, float_2, 1.0F);
-					Matrix4f matrix = matrices.peek().getPositionMatrix();
-					buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).next();
-					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).next();
-					buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F).next();
-					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F).next();
-					tessellator.draw();
-					RenderSystem.setShader(GameRenderer::getPositionProgram);
-					RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-					buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F).next();
-					buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).next();
-					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).next();
-					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).next();
-					tessellator.draw();
+
+					MCCompat.getInstance().getWidgetHelper().renderModListWidget(
+							matrices, tessellator, buffer,
+							entryTop, entryHeight, entryLeft, selectionRight
+					);
+
 					RenderSystem.enableTexture();
 				}
 

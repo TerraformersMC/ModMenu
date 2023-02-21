@@ -5,22 +5,23 @@ import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import com.terraformersmc.modmenu.mixin.mc1193plus.IGridWidgetAccessor;
-import com.terraformersmc.modmenu.util.compat.ButtonHelper;
+import com.terraformersmc.modmenu.util.compat.WidgetHelper;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.joml.Matrix4f;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ButtonHelper1193 extends ButtonHelper {
+public class WidgetHelper1193 extends WidgetHelper {
 	@Override
 	public ButtonWidget createConfigureButton(
 			ModsScreen screen,
@@ -95,5 +96,27 @@ public class ButtonHelper1193 extends ButtonHelper {
 				.size(width, height)
 				.narrationSupplier(Supplier::get)
 				.build();
+	}
+
+	@Override
+	public void renderModListWidget(
+			MatrixStack matrices, Tessellator tessellator, BufferBuilder buffer,
+			int entryTop, int entryHeight, int entryLeft, int selectionRight
+	) {
+		Matrix4f matrix = matrices.peek().getPositionMatrix();
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+		buffer.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).next();
+		buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).next();
+		buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F).next();
+		buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F).next();
+		tessellator.draw();
+		RenderSystem.setShader(GameRenderer::getPositionProgram);
+		RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+		buffer.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F).next();
+		buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).next();
+		buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).next();
+		buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).next();
+		tessellator.draw();
 	}
 }

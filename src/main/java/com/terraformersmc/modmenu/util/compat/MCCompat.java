@@ -30,7 +30,7 @@ public class MCCompat {
 
 	private KeybindsHelper keybindsHelper;
 	private TooltipHelper tooltipHelper;
-	private ButtonHelper buttonHelper;
+	private WidgetHelper widgetHelper;
 
 	private static void init() {
 		INSTANCE = new MCCompat();
@@ -61,11 +61,11 @@ public class MCCompat {
 		this.tooltipHelper = tooltipHelper;
 	}
 
-	public ButtonHelper getButtonHelper() {
-		return buttonHelper;
+	public WidgetHelper getWidgetHelper() {
+		return widgetHelper;
 	}
 
-	public void setButtonHelper(ButtonHelper buttonHelper) {
-		this.buttonHelper = buttonHelper;
+	public void setWidgetHelper(WidgetHelper widgetHelper) {
+		this.widgetHelper = widgetHelper;
 	}
 }

@@ -4,13 +4,15 @@ import com.terraformersmc.modmenu.gui.ModsScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-public abstract class ButtonHelper {
+public abstract class WidgetHelper {
 	public abstract ButtonWidget createConfigureButton(
 			ModsScreen screen,
 			int x, int y, int width, int height, int u, int v, Identifier texture,
@@ -48,6 +50,11 @@ public abstract class ButtonHelper {
 
 	public abstract ButtonWidget createButtonWidget(
 			int x, int y, int width, int height, Text message, ButtonWidget.PressAction onPress
+	);
+
+	public abstract void renderModListWidget(
+			MatrixStack matrices, Tessellator tessellator, BufferBuilder buffer,
+			int entryTop, int entryHeight, int entryLeft, int selectionRight
 	);
 
 	public static interface RenderOverride {
