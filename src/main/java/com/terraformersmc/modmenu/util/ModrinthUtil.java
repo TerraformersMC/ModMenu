@@ -1,5 +1,7 @@
 package com.terraformersmc.modmenu.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
@@ -22,6 +24,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class ModrinthUtil {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu/Update Checker");
@@ -76,12 +80,12 @@ public class ModrinthUtil {
 				} else if (status == 200) {
 					JsonObject responseObject = JsonParser.parseString(latestVersionsResponse.body()).getAsJsonObject();
 					LOGGER.debug(String.valueOf(responseObject));
-					responseObject.asMap().forEach((lookupHash, versionJson) -> {
+					asMap(responseObject).forEach((lookupHash, versionJson) -> {
 						var versionObj = versionJson.getAsJsonObject();
 						var projectId = versionObj.get("project_id").getAsString();
 						var versionNumber = versionObj.get("version_number").getAsString();
 						var versionId = versionObj.get("id").getAsString();
-						var versionHash = versionObj.get("files").getAsJsonArray().asList()
+						var versionHash = asList(versionObj.get("files").getAsJsonArray())
 								.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst()
 								.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
 						if (!Objects.equals(versionHash, lookupHash)) {
@@ -98,6 +102,25 @@ public class ModrinthUtil {
 				LOGGER.error("Error checking for updates: ", e);
 			}
 		});
+	}
+
+	private static Map<String, JsonElement> asMap(JsonObject jsonObject) {
+		try {
+			return jsonObject.asMap(); // Gson 2.10+
+		} catch (NoSuchMethodError ignored) {
+			return jsonObject.entrySet().stream()
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		}
+	}
+
+	private static List<JsonElement> asList(JsonArray jsonArray) {
+		try {
+			return jsonArray.asList(); // Gson 2.10+
+		} catch (NoSuchMethodError ignored) {
+			return StreamSupport.stream(jsonArray.spliterator(), false)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
+		}
 	}
 
 	public static void triggerV2DeprecatedToast() {
