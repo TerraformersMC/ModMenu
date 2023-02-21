@@ -3,17 +3,13 @@ package com.terraformersmc.modmenu.mc_1_19_2;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.compat.WidgetHelper;
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
-
-import java.util.List;
 
 public class WidgetHelper1192 extends WidgetHelper {
 	@Override
@@ -62,11 +58,6 @@ public class WidgetHelper1192 extends WidgetHelper {
 				screen.renderTooltip(matrices, tooltip, button.x, button.y);
 			}
 		});
-	}
-
-	@Override
-	public List<ClickableWidget> getButtons(Screen screen) {
-		return Screens.getButtons(screen);
 	}
 
 	@Override

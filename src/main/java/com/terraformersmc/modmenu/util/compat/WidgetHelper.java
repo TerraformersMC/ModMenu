@@ -26,8 +26,6 @@ public abstract class WidgetHelper {
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip
 	);
 
-	public abstract List<ClickableWidget> getButtons(Screen screen);
-
 	public abstract ButtonWidget createModMenuButtonWidget(
 			int x, int y, int width, int height, Text text, Screen screen
 	);

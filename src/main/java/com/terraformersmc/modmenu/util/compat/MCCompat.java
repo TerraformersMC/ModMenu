@@ -38,7 +38,8 @@ public class MCCompat {
 	private WidgetHelper widgetHelper;
 	private ConfigHelper configHelper;
 	private Blaze3DHelper blaze3DHelper;
-	private CreditsHelper creditsHelper;
+	private DescriptionListWidgetHelper<?> descriptionListWidgetHelper;
+	private ButtonHelper buttonHelper;
 
 	private static void init() {
 		INSTANCE = new MCCompat();
@@ -93,11 +94,19 @@ public class MCCompat {
 		this.blaze3DHelper = blaze3DHelper;
 	}
 
-	public CreditsHelper getCreditsHelper() {
-		return creditsHelper;
+	public DescriptionListWidgetHelper<?> getDescriptionListWidgetHelper() {
+		return descriptionListWidgetHelper;
 	}
 
-	public void setCreditsHelper(CreditsHelper creditsHelper) {
-		this.creditsHelper = creditsHelper;
+	public void setDescriptionListWidgetHelper(DescriptionListWidgetHelper<?> descriptionListWidgetHelper) {
+		this.descriptionListWidgetHelper = descriptionListWidgetHelper;
+	}
+
+	public ButtonHelper getButtonHelper() {
+		return buttonHelper;
+	}
+
+	public void setButtonHelper(ButtonHelper buttonHelper) {
+		this.buttonHelper = buttonHelper;
 	}
 }

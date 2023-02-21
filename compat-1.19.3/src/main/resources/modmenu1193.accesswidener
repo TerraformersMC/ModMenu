@@ -1,6 +1,4 @@
 accessWidener v2 named
 
-accessible class net/minecraft/client/option/SimpleOption$Callbacks
-accessible class net/minecraft/client/gui/widget/EntryListWidget$Entry
 accessible field net/minecraft/client/gui/widget/EntryListWidget top I
 accessible field net/minecraft/client/gui/widget/EntryListWidget bottom I

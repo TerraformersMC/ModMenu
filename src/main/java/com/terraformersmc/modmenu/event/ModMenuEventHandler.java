@@ -92,7 +92,7 @@ public class ModMenuEventHandler {
 	}
 
 	private static void afterGameMenuScreenInit(Screen screen) {
-		final List<ClickableWidget> buttons = MCCompat.getInstance().getWidgetHelper().getButtons(screen);
+		final List<ClickableWidget> buttons = MCCompat.getInstance().getButtonHelper().getButtons(screen);
 		if (buttons != null && ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;

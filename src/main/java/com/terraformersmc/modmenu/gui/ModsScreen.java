@@ -51,7 +51,7 @@ public class ModsScreen extends Screen {
 	private static final Text CONFIGURE = Text.translatable("modmenu.configure");
 	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
 	private TextFieldWidget searchBox;
-	private DescriptionListWidget descriptionListWidget;
+	private DescriptionListWidget<?> descriptionListWidget;
 	private final Screen previousScreen;
 	private ModListWidget modList;
 	private Text tooltipCompat;
@@ -131,7 +131,7 @@ public class ModsScreen extends Screen {
 		this.modList.setLeftPos(0);
 		modList.reloadFilters();
 
-		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
+		this.descriptionListWidget = MCCompat.getInstance().getDescriptionListWidgetHelper().createDescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
 		ButtonWidget configureButton = MCCompat.getInstance().getWidgetHelper().createConfigureButton(this, width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String id = Objects.requireNonNull(selected).getMod().getId();
@@ -239,7 +239,9 @@ public class ModsScreen extends Screen {
 						ScreenTexts.DONE,
 						button -> client.setScreen(previousScreen))
 		);
-		this.setInitialFocus(this.searchBox);
+
+		if (MCCompat.after23w03a) this.searchBox.setFocused(true);
+		else this.setInitialFocus(this.searchBox);
 
 		init = true;
 	}
