@@ -1,22 +1,21 @@
 package com.terraformersmc.modmenu.util.compat;
 
 import com.terraformersmc.modmenu.gui.ModsScreen;
-import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class ButtonHelper {
 	public abstract ButtonWidget createConfigureButton(
 			ModsScreen screen,
 			int x, int y, int width, int height, int u, int v, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip,
-			ModListEntry selected, Map<String, Boolean> modHasConfigScreen, Map<String, Throwable> modScreenErrors
+			RenderOverride renderOverride
 	);
 
 	public abstract ButtonWidget createFiltersButton(
@@ -26,4 +25,32 @@ public abstract class ButtonHelper {
 	);
 
 	public abstract List<ClickableWidget> getButtons(Screen screen);
+
+	public abstract ButtonWidget createModMenuButtonWidget(
+			int x, int y, int width, int height, Text text, Screen screen
+	);
+
+	public abstract ButtonWidget createModMenuTexturedButtonWidget(
+			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text message, boolean allowUpdateBadge
+	);
+
+	public ButtonWidget createModMenuTexturedButtonWidget(
+			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text message
+	) {
+		return this.createModMenuTexturedButtonWidget(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, false);
+	}
+
+	public abstract ButtonWidget createButtonWidget(
+			int x, int y, int width, int height, Text message, ButtonWidget.PressAction onPress, RenderOverride renderOverride
+	);
+
+	public abstract ButtonWidget createButtonWidget(
+			int x, int y, int width, int height, Text message, ButtonWidget.PressAction onPress
+	);
+
+	public static interface RenderOverride {
+		void render(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY, float delta);
+	}
 }

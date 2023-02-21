@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
+import com.terraformersmc.modmenu.util.compat.ButtonCompat;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -60,11 +61,11 @@ public class ModMenuTexturedButtonWidget1192 extends ButtonWidget {
 			adjustedV += this.height;
 		}
 
-		drawTexture(matrices, this.getButtonX(), this.getButtonY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
+		drawTexture(matrices, ((ButtonCompat)this).getButtonX(), ((ButtonCompat)this).getButtonY(), this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
 		RenderSystem.enableDepthTest();
 
 		if (this.allowUpdateBadge && ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
-			UpdateAvailableBadge.renderBadge(matrices, this.getButtonX() + this.width - 5, this.getButtonY() - 3);
+			UpdateAvailableBadge.renderBadge(matrices, ((ButtonCompat)this).getButtonX() + this.width - 5, ((ButtonCompat)this).getButtonY() - 3);
 		}
 
 		if (this.isHovered()) {

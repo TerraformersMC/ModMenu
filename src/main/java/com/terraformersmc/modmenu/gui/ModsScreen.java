@@ -18,6 +18,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.*;
@@ -141,10 +142,28 @@ public class ModsScreen extends Screen {
 			} else {
 				button.active = false;
 			}
-		}, CONFIGURE, selected, modHasConfigScreen, modScreenErrors);
+		}, CONFIGURE, (button, matrices, mouseX, mouseY, delta) -> {
+			String modId = selected.getMod().getId();
+			if (selected != null) {
+				button.active = modHasConfigScreen.get(modId);
+			} else {
+				button.active = false;
+				button.visible = false;
+			}
+			button.visible = selected != null && modHasConfigScreen.get(modId) || modScreenErrors.containsKey(modId);
+			if (modScreenErrors.containsKey(modId)) {
+				Throwable e = modScreenErrors.get(modId);
+				Text text = Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED);
+				if (MCCompat.after22w45a) button.setTooltip(Tooltip.of(text));
+				else this.setTooltipCompat(text);
+			} else {
+				if (MCCompat.after22w45a) button.setTooltip(Tooltip.of(CONFIGURE));
+				else this.setTooltipCompat(CONFIGURE);
+			}
+		});
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
-		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
+		ButtonWidget websiteButton = MCCompat.getInstance().getButtonHelper().createButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
 				Text.translatable("modmenu.website"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
 			this.client.setScreen(new ConfirmLinkScreen((bool) -> {
@@ -153,15 +172,11 @@ public class ModsScreen extends Screen {
 				}
 				this.client.setScreen(this);
 			}, mod.getWebsite(), false));
-		}, Supplier::get) {
-			@Override
-			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				visible = selected != null;
-				active = visible && selected.getMod().getWebsite() != null;
-				super.render(matrices, mouseX, mouseY, delta);
-			}
-		};
-		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
+		}, (button, matrices, mouseX, mouseY, delta) -> {
+					button.visible = selected != null;
+					button.active = button.visible && selected.getMod().getWebsite() != null;
+		});
+		ButtonWidget issuesButton = MCCompat.getInstance().getButtonHelper().createButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
 				Text.translatable("modmenu.issues"), button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
 			this.client.setScreen(new ConfirmLinkScreen((bool) -> {
@@ -170,14 +185,10 @@ public class ModsScreen extends Screen {
 				}
 				this.client.setScreen(this);
 			}, mod.getIssueTracker(), false));
-		}, Supplier::get) {
-			@Override
-			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				visible = selected != null;
-				active = visible && selected.getMod().getIssueTracker() != null;
-				super.render(matrices, mouseX, mouseY, delta);
-			}
-		};
+		}, (button, matrices, mouseX, mouseY, delta) -> {
+					button.visible = selected != null;
+					button.active = button.visible && selected.getMod().getIssueTracker() != null;
+		});
 		this.addSelectableChild(this.searchBox);
 		ButtonWidget filtersButton = MCCompat.getInstance().getButtonHelper().createFiltersButton(this, paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
@@ -190,32 +201,24 @@ public class ModsScreen extends Screen {
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
-		this.addDrawableChild(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
+		this.addDrawableChild(MCCompat.getInstance().getButtonHelper().createButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
 			ModMenuConfig.SORTING.cycleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
-		}, Supplier::get) {
-			@Override
-			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				matrices.translate(0, 0, 1);
-				visible = filterOptionsShown;
-				this.setMessage(ModMenuConfig.SORTING.getButtonText());
-				super.render(matrices, mouseX, mouseY, delta);
-			}
-		});
-		this.addDrawableChild(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
+		}, (button, matrices, mouseX, mouseY, delta) -> {
+			matrices.translate(0, 0, 1);
+			button.visible = filterOptionsShown;
+			button.setMessage(ModMenuConfig.SORTING.getButtonText());
+		}));
+		this.addDrawableChild(MCCompat.getInstance().getButtonHelper().createButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
 			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
-		}, Supplier::get) {
-			@Override
-			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-				matrices.translate(0, 0, 1);
-				visible = filterOptionsShown;
-				this.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
-				super.render(matrices, mouseX, mouseY, delta);
-			}
-		});
+		}, (button, matrices, mouseX, mouseY, delta) -> {
+			matrices.translate(0, 0, 1);
+			button.visible = filterOptionsShown;
+			button.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
+		}));
 		this.addSelectableChild(this.modList);
 		if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
 			this.addDrawableChild(configureButton);
@@ -224,17 +227,19 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
 		this.addDrawableChild(
-				ButtonWidget.builder(Text.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")))
-						.position(this.width / 2 - 154, this.height - 28)
-						.size(150, 20)
-						.narrationSupplier(Supplier::get)
-						.build());
+				MCCompat.getInstance().getButtonHelper().createButtonWidget(
+						this.width / 2 - 154, this.height - 28,
+						150, 20,
+						Text.translatable("modmenu.modsFolder"),
+						button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")))
+		);
 		this.addDrawableChild(
-				ButtonWidget.builder(ScreenTexts.DONE, button -> client.setScreen(previousScreen))
-						.position(this.width / 2 + 4, this.height - 28)
-						.size(150, 20)
-						.narrationSupplier(Supplier::get)
-						.build());
+				MCCompat.getInstance().getButtonHelper().createButtonWidget(
+						this.width / 2 + 4, this.height - 28,
+						150, 20,
+						ScreenTexts.DONE,
+						button -> client.setScreen(previousScreen))
+		);
 		this.setInitialFocus(this.searchBox);
 
 		init = true;

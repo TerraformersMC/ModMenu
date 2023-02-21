@@ -4,6 +4,7 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
+import com.terraformersmc.modmenu.util.compat.ButtonCompat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -19,7 +20,7 @@ public class ModMenuButtonWidget1192 extends ButtonWidget {
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		super.render(matrices, mouseX, mouseY, delta);
 		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
-			UpdateAvailableBadge.renderBadge(matrices, this.width + this.getButtonX() - 16, this.height / 2 + this.getButtonY() - 4);
+			UpdateAvailableBadge.renderBadge(matrices, this.width + ((ButtonCompat)this).getButtonX() - 16, this.height / 2 + ((ButtonCompat)this).getButtonY() - 4);
 		}
 	}
 }
