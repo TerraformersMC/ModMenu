@@ -68,7 +68,9 @@ dependencies {
 	}
 }
 
-subprojects {
+subprojects { Project p ->
+	archivesBaseName = p.name
+
 	dependencies {
 		api project(path:":", configuration: 'namedElements')
 	}

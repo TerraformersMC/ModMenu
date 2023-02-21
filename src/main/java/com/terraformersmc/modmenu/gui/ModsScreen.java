@@ -240,8 +240,7 @@ public class ModsScreen extends Screen {
 						button -> client.setScreen(previousScreen))
 		);
 
-		if (MCCompat.after23w03a) this.searchBox.setFocused(true);
-		else this.setInitialFocus(this.searchBox);
+		MCCompat.getInstance().getFocusHelper().focusOnClickableWidget(this.searchBox, this);
 
 		init = true;
 	}

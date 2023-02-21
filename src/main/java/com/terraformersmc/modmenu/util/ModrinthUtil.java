@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.util.compat.MCCompat;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
@@ -54,7 +55,7 @@ public class ModrinthUtil {
 						}
 					});
 			String loader = ModMenu.runningQuilt ? "quilt" : "fabric";
-			String mcVer = SharedConstants.getGameVersion().getName();
+			String mcVer = MCCompat.getInstance().getMcVersionHelper().getMCVersion();
 			String[] splitVersion = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID)
 					.get().getMetadata().getVersion().getFriendlyString().split("\\+", 1); // Strip build metadata for privacy
 			final var modMenuVersion = splitVersion.length > 1 ? splitVersion[1] : splitVersion[0];

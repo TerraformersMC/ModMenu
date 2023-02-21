@@ -40,6 +40,8 @@ public class MCCompat {
 	private Blaze3DHelper blaze3DHelper;
 	private DescriptionListWidgetHelper<?> descriptionListWidgetHelper;
 	private ButtonHelper buttonHelper;
+	private MCVersionHelper mcVersionHelper;
+	private FocusHelper focusHelper;
 
 	private static void init() {
 		INSTANCE = new MCCompat();
@@ -108,5 +110,21 @@ public class MCCompat {
 
 	public void setButtonHelper(ButtonHelper buttonHelper) {
 		this.buttonHelper = buttonHelper;
+	}
+
+	public MCVersionHelper getMcVersionHelper() {
+		return mcVersionHelper;
+	}
+
+	public void setMcVersionHelper(MCVersionHelper mcVersionHelper) {
+		this.mcVersionHelper = mcVersionHelper;
+	}
+
+	public FocusHelper getFocusHelper() {
+		return focusHelper;
+	}
+
+	public void setFocusHelper(FocusHelper focusHelper) {
+		this.focusHelper = focusHelper;
 	}
 }

@@ -100,6 +100,7 @@
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
+    "mixins.modmenu1193.json"
   ],
   "custom": {
     "modmenu": {

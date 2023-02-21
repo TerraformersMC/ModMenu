@@ -12,5 +12,7 @@ public class ModMenuMCCompat implements CompatInitializer {
 		if (MCCompat.after23w03a) compat.setBlaze3DHelper(new Blaze3DHelper());
 		if (MCCompat.after23w03a) compat.setDescriptionListWidgetHelper(new DescriptionListWidgetHelper1194());
 		if (MCCompat.after23w03a) compat.setButtonHelper(new ButtonHelper1194());
+		if (MCCompat.after23w03a) compat.setMcVersionHelper(new MCVersionHelper1194());
+		if (MCCompat.after23w03a) compat.setFocusHelper(new FocusHelper1194());
 	}
 }
