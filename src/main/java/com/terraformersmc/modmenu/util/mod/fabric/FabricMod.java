@@ -107,6 +107,10 @@ public class FabricMod implements Mod {
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
 
+		if (id.startsWith("modmenu-compat1")) {
+			modMenuData.fillParentIfEmpty("modmenu");
+		}
+
 		/* Add additional badges */
 		this.badges = modMenuData.badges;
 		if (this.metadata.getEnvironment() == ModEnvironment.CLIENT) {
