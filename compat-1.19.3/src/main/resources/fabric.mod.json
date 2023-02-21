@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "id": "modmenu-compat1193",
+  "name": "Mod Menu 1.19.3 Compat module",
+  "version": "$version",
+  "environment": "client",
+  "license": "MIT",
+  "icon": "assets/modmenu/icon.png",
+  "entrypoints": {
+    "modmenu-mccompat": [
+      "com.terraformersmc.modmenu.mc_1_19_3.ModMenuMCCompat"
+    ]
+  },
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/modmenu",
+    "sources": "https://github.com/TerraformersMC/ModMenu",
+    "issues": "https://github.com/TerraformersMC/ModMenu/issues"
+  },
+  "depends": {
+    "fabric-resource-loader-v0": "*",
+    "fabric-screen-api-v1": ">=1.0.4",
+    "fabric-key-binding-api-v1": "*",
+    "fabric-lifecycle-events-v1": "*",
+    "fabricloader": ">=0.12.13",
+    "minecraft": ">=1.19.1-"
+  },
+  "breaks" : {
+    "better_mod_button": "*"
+  },
+  "authors": [
+    "Prospector",
+    "jackassmc",
+    "haykam821",
+    "TerraformersMC"
+  ],
+  "contributors": [
+    "shedaniel",
+    "Draylar",
+    "Mordna",
+    "Madis0",
+    "Yanis48",
+    "LemmaEOF",
+    "fewizz",
+    "XuyuEre",
+    "geniiii",
+    "thiagokenis",
+    "Juuxel",
+    "Chloe Dawn",
+    "modmuss50",
+    "Patbox",
+    "Lykrast",
+    "Pyrofab",
+    "UpcraftLP",
+    "swordglowsblue",
+    "hinataaki",
+    "LeonXu98",
+    "magneticflux",
+    "vanja-san",
+    "AlexIIL",
+    "masoncook16",
+    "el97",
+    "Hephaestus-Dev",
+    "zabi94",
+    "dexman545",
+    "dhouck",
+    "Hambaka",
+    "po-stulate",
+    "FlashyReese",
+    "egeesin",
+    "TheGlitch76",
+    "ludg1e",
+    "williambl",
+    "PepperCode1",
+    "ThatTrollzer",
+    "ToffeeMax",
+    "kalucky0",
+    "Maaster",
+    "MartrixX",
+    "NotSteven",
+    "Dolphin 2.1",
+    "ENDERZOMBI102",
+    "anatom3000",
+    "OroArmor",
+    "Vaerian",
+    "RDKRACZ",
+    "Hulenkius",
+    "XfedeX",
+    "spnda",
+    "Jab125",
+    "SolidBlock",
+    "Tkain",
+    "nfitzen",
+    "DenaryDev",
+    "legenden",
+    "NaiNonTH",
+    "MagnusHJensen",
+    "Benjamin-Norton",
+    "triphora",
+    "Pyrrha"
+  ],
+  "description": "Adds a mod menu to view the list of mods you have installed.",
+  "mixins": [
+  ],
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/jEGF5fb"
+      }
+    },
+    "loom:injected_interfaces": {
+      "net/minecraft/class_339": ["com/terraformersmc/modmenu/util/compat/ButtonCompat"]
+    }
+  }
+}

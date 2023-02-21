@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
+import com.terraformersmc.modmenu.util.compat.MCCompat;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -208,7 +209,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.renderList(matrices, mouseX, mouseY, delta);
 		this.renderScrollBar(bufferBuilder, tessellator);
 
-		RenderSystem.enableTexture();
+		MCCompat.getInstance().getBlaze3DHelper().enableTexture();
 		RenderSystem.disableBlend();
 	}
 
@@ -217,7 +218,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		int scrollbarEndX = scrollbarStartX + 6;
 		int maxScroll = this.getMaxScroll();
 		if (maxScroll > 0) {
-			RenderSystem.disableTexture();
+			MCCompat.getInstance().getBlaze3DHelper().disableTexture();
 			int p = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top)) / (float) this.getMaxPosition());
 			p = MathHelper.clamp(p, 32, this.bottom - this.top - 8);
 			int q = (int) this.getScrollAmount() * (this.bottom - this.top - p) / maxScroll + this.top;
@@ -285,20 +286,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			if (isMouseOver(mouseX, mouseY)) {
-				client.setScreen(new MinecraftCredits(false));
+				client.setScreen(MCCompat.getInstance().getCreditsHelper().createScreen(false, parent));
 			}
 			return super.mouseClicked(mouseX, mouseY, button);
-		}
-
-		class MinecraftCredits extends CreditsScreen {
-			public MinecraftCredits(boolean endCredits) {
-				super(endCredits, Runnables.doNothing());
-			}
-
-			@Override
-			public void close() {
-				client.setScreen(parent);
-			}
 		}
 	}
 

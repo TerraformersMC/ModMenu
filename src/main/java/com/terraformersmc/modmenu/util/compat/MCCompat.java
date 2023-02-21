@@ -6,6 +6,11 @@ import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 
 public class MCCompat {
 	/**
+	 * RenderSystem.enable/disableTexture removal, GridWidget don't extend ClickableWidget anymore.
+	 * CreditsScreen ctr takes an additional argument.
+	 */
+	public static final boolean after23w03a = testMCVersion(">=1.19.4-alpha.23.03.a");
+	/**
 	 * Keyboard.setRepeatEvents removal.
 	 */
 	public static final boolean after22w46a = testMCVersion(">=1.19.3-alpha.22.46.a");
@@ -32,6 +37,8 @@ public class MCCompat {
 	private TooltipHelper tooltipHelper;
 	private WidgetHelper widgetHelper;
 	private ConfigHelper configHelper;
+	private Blaze3DHelper blaze3DHelper;
+	private CreditsHelper creditsHelper;
 
 	private static void init() {
 		INSTANCE = new MCCompat();
@@ -76,5 +83,21 @@ public class MCCompat {
 
 	public void setConfigHelper(ConfigHelper configHelper) {
 		this.configHelper = configHelper;
+	}
+
+	public Blaze3DHelper getBlaze3DHelper() {
+		return blaze3DHelper;
+	}
+
+	public void setBlaze3DHelper(Blaze3DHelper blaze3DHelper) {
+		this.blaze3DHelper = blaze3DHelper;
+	}
+
+	public CreditsHelper getCreditsHelper() {
+		return creditsHelper;
+	}
+
+	public void setCreditsHelper(CreditsHelper creditsHelper) {
+		this.creditsHelper = creditsHelper;
 	}
 }

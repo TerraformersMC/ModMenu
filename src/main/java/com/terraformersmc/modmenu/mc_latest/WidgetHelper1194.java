@@ -7,6 +7,7 @@ import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import com.terraformersmc.modmenu.mixin.mc1193plus.IGridWidgetAccessor;
 import com.terraformersmc.modmenu.util.compat.WidgetHelper;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -21,7 +22,7 @@ import org.joml.Matrix4f;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class WidgetHelper1193 extends WidgetHelper {
+public class WidgetHelper1194 extends WidgetHelper {
 	@Override
 	public ButtonWidget createConfigureButton(
 			ModsScreen screen,
@@ -58,8 +59,12 @@ public class WidgetHelper1193 extends WidgetHelper {
 
 	@Override
 	public List<ClickableWidget> getButtons(Screen screen) {
-		ClickableWidget widget = Screens.getButtons(screen).get(0);
-		if (widget instanceof GridWidget) return ((IGridWidgetAccessor) widget).getChildren();
+		for (Element element : screen.children()) {
+			if (element instanceof GridWidget widget) {
+				return ((IGridWidgetAccessor) widget).getChildren();
+			}
+		}
+
 		return null;
 	}
 
