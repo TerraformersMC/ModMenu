@@ -29,12 +29,15 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		this.list.addAll(ModMenuConfig.asOptions());
 		this.addSelectableChild(this.list);
 		this.addDrawableChild(
-				ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
+				MCCompat.getInstance().getWidgetHelper().createButtonWidget(
+						this.width / 2 - 100, this.height - 27,
+						200, 20,
+						ScreenTexts.DONE, (button) -> {
 							ModMenuConfigManager.save();
 							this.client.setScreen(this.previous);
-						}).position(this.width / 2 - 100, this.height - 27)
-						.size(200, 20)
-						.build());
+						}
+				)
+		);
 	}
 
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
