@@ -154,10 +154,10 @@ public class ModsScreen extends Screen {
 				Throwable e = modScreenErrors.get(modId);
 				Text text = Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED);
 				if (MCCompat.after22w45a) button.setTooltip(Tooltip.of(text));
-				else this.setTooltipCompat(text);
+				else button.setDynamicTooltip(text);
 			} else {
 				if (MCCompat.after22w45a) button.setTooltip(Tooltip.of(CONFIGURE));
-				else this.setTooltipCompat(CONFIGURE);
+				else button.setDynamicTooltip(CONFIGURE);
 			}
 		});
 		int urlButtonWidths = paneWidth / 2 - 2;

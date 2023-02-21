@@ -18,6 +18,7 @@ public class ModMenuTexturedButtonWidget1192 extends ButtonWidget {
 	private final int uWidth;
 	private final int vHeight;
 	private final boolean allowUpdateBadge;
+	private Text dynamicTooltip;
 
 	public ModMenuTexturedButtonWidget1192(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
 		this(x, y, width, height, u, v, texture, 256, 256, onPress);
@@ -47,6 +48,7 @@ public class ModMenuTexturedButtonWidget1192 extends ButtonWidget {
 		this.v = v;
 		this.texture = texture;
 		this.allowUpdateBadge = allowUpdateBadge;
+		this.dynamicTooltip = message;
 	}
 
 	@Override
@@ -79,5 +81,14 @@ public class ModMenuTexturedButtonWidget1192 extends ButtonWidget {
 
 	public boolean isFocusedButNotHovered() {
 		return !hovered && isFocused();
+	}
+
+	@Override
+	public void setDynamicTooltip(Text dynamicTooltip) {
+		this.dynamicTooltip = dynamicTooltip;
+	}
+
+	public Text getDynamicTooltip() {
+		return dynamicTooltip;
 	}
 }

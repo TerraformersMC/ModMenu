@@ -27,9 +27,9 @@ public class WidgetHelper1192 extends WidgetHelper {
 				tooltip, (button, matrices, mouseX, mouseY) -> {
 			ModMenuTexturedButtonWidget1192 widget1192 = (ModMenuTexturedButtonWidget1192) button;
 			if (widget1192.isJustHovered()) {
-				screen.renderTooltip(matrices, tooltip, mouseX, mouseY);
+				screen.renderTooltip(matrices, widget1192.getDynamicTooltip(), mouseX, mouseY);
 			} else if (widget1192.isFocusedButNotHovered()) {
-				screen.renderTooltip(matrices, tooltip, button.x, button.y);
+				screen.renderTooltip(matrices, widget1192.getDynamicTooltip(), button.x, button.y);
 			}
 		}) {
 			@Override
