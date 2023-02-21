@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.config.option;
 
 import com.mojang.serialization.Codec;
 import com.terraformersmc.modmenu.util.TranslationUtil;
+import com.terraformersmc.modmenu.util.compat.MCCompat;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -56,7 +57,7 @@ public class EnumConfigOption<E extends Enum<E>> implements OptionConvertable {
 
 	@Override
 	public SimpleOption<E> asOption() {
-		return new SimpleOption<>(translationKey, SimpleOption.emptyTooltip(),
+		return MCCompat.getInstance().getConfigHelper().createSimpleOption(translationKey,
 				(text, value) -> getValueText(this, value),
 				new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(enumClass.getEnumConstants()),
 						Codec.STRING.xmap(

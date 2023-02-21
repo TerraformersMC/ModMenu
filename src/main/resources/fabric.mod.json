@@ -120,5 +120,6 @@
     "loom:injected_interfaces": {
       "net/minecraft/class_339": ["com/terraformersmc/modmenu/util/compat/ButtonCompat"]
     }
-  }
+  },
+  "accessWidener": "modmenu.accesswidener"
 }

@@ -11,5 +11,6 @@ public class ModMenuMCCompat implements CompatInitializer {
 		if (MCCompat.after22w46a) compat.setKeybindsHelper(new KeybindsHelper());
 		if (MCCompat.after22w45a) compat.setTooltipHelper(new TooltipHelper());
 		if (MCCompat.after22w45a) compat.setWidgetHelper(new WidgetHelper1193());
+		if (MCCompat.after22w43a) compat.setConfigHelper(new ConfigHelper1193());
 	}
 }

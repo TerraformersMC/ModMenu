@@ -57,6 +57,10 @@ allprojects {
 	}
 }
 
+loom {
+	accessWidenerPath = file("src/main/resources/modmenu.accesswidener")
+}
+
 dependencies {
 	subprojects.forEach {
 		include(project(path: it.path, configuration: 'namedElements'))

@@ -205,7 +205,7 @@ public class ModsScreen extends Screen {
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
 		}, (button, matrices, mouseX, mouseY, delta) -> {
-			matrices.translate(0, 0, 1);
+			matrices.translate(0D, 0D, 1D);
 			button.visible = filterOptionsShown;
 			button.setMessage(ModMenuConfig.SORTING.getButtonText());
 		}));
@@ -214,7 +214,7 @@ public class ModsScreen extends Screen {
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
 		}, (button, matrices, mouseX, mouseY, delta) -> {
-			matrices.translate(0, 0, 1);
+			matrices.translate(0D, 0D, 1D);
 			button.visible = filterOptionsShown;
 			button.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
 		}));

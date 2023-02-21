@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.config.option;
 
 import com.terraformersmc.modmenu.util.TranslationUtil;
+import com.terraformersmc.modmenu.util.compat.MCCompat;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -51,7 +52,7 @@ public class BooleanConfigOption implements OptionConvertable {
 	@Override
 	public SimpleOption<Boolean> asOption() {
 		if (enabledText != null && disabledText != null) {
-			return new SimpleOption<>(translationKey, SimpleOption.emptyTooltip(),
+			return MCCompat.getInstance().getConfigHelper().createSimpleOption(translationKey,
 					(text, value) -> value ? enabledText : disabledText, SimpleOption.BOOLEAN, getValue(),
 					newValue -> ConfigOptionStorage.setBoolean(key, newValue));
 		}

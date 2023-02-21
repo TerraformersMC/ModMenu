@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "modmenu-compat1192",
-  "name": "Mod Menu",
+  "name": "Mod Menu 1.19.2 Compat module",
   "version": "$version",
   "environment": "client",
   "license": "MIT",
@@ -111,5 +111,6 @@
     "loom:injected_interfaces": {
       "net/minecraft/class_339": ["com/terraformersmc/modmenu/util/compat/ButtonCompat"]
     }
-  }
+  },
+  "accessWidener": "modmenu1192.accesswidener"
 }
