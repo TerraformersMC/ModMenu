@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.terraformersmc.modmenu.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "client": [
     "mc23w03aplus.ClickableWidgetMixin",
     "mc22w43aplus.IGridWidgetAccessor",
