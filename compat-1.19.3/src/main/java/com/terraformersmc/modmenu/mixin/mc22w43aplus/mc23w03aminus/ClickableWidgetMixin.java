@@ -1,4 +1,4 @@
-package com.terraformersmc.modmenu.mixin.mc1193minus;
+package com.terraformersmc.modmenu.mixin.mc22w43aplus.mc23w03aminus;
 
 import com.terraformersmc.modmenu.util.compat.ButtonCompat;
 import net.minecraft.client.gui.DrawableHelper;
@@ -9,28 +9,34 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(ClickableWidget.class)
 public abstract class ClickableWidgetMixin extends DrawableHelper implements ButtonCompat {
 	@Shadow
-	public int x;
+	public abstract int getX();
 
 	@Shadow
-	public int y;
+	public abstract int getY();
+
+	@Shadow
+	public abstract void setX(int par1);
+
+	@Shadow
+	public abstract void setY(int par1);
 
 	@Override
 	public int getButtonX() {
-		return this.x;
+		return this.getX();
 	}
 
 	@Override
 	public int getButtonY() {
-		return this.y;
+		return this.getY();
 	}
 
 	@Override
 	public void setButtonX(int x) {
-		this.x = x;
+		this.setX(x);
 	}
 
 	@Override
 	public void setButtonY(int y) {
-		this.y = y;
+		this.setY(y);
 	}
 }

@@ -1,4 +1,4 @@
-package com.terraformersmc.modmenu.mixin.mc1193plus;
+package com.terraformersmc.modmenu.mixin.mc22w43aplus;
 
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;

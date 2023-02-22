@@ -4,7 +4,7 @@
   "package": "com.terraformersmc.modmenu.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "mc1193.ClickableWidgetMixin"
+    "mc22w43aplus.mc23w03aminus.ClickableWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

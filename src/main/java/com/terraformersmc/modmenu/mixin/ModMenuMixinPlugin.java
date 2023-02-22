@@ -1,10 +1,12 @@
 package com.terraformersmc.modmenu.mixin;
 
 import com.terraformersmc.modmenu.util.compat.MCCompat;
+import com.terraformersmc.modmenu.util.compat.MCVersions;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -21,14 +23,16 @@ public class ModMenuMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (mixinClassName.contains("mc1194plus")) {
-			return MCCompat.after23w03a;
-		} else if (mixinClassName.contains("mc1193plus")) {
-			return MCCompat.after22w43a;
-		} else if (mixinClassName.contains("mc1193minus")) {
-			return !MCCompat.after22w43a;
-		} else if (mixinClassName.contains("mc1193")) {
-			return MCCompat.after22w43a && !MCCompat.after23w03a;
+		String versionedPart = mixinClassName.split("\\.mixin\\.")[1];
+
+		if (versionedPart.contains(".")) {
+			String[] parts = versionedPart.split("\\.");
+
+			parts = Arrays.copyOf(parts, parts.length - 1);
+
+			for (String part : parts) {
+				if (!MCVersions.canApplyMixin(part)) return false;
+			}
 		}
 
 		return true;

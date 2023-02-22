@@ -17,7 +17,7 @@ public class UpdateCheckerTexturedButtonWidget extends TexturedButtonWidget {
 	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		super.renderButton(matrices, mouseX, mouseY, delta);
 		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
-			UpdateAvailableBadge.renderBadge(matrices, this.getX() + this.width - 5, this.getY() - 3);
+			UpdateAvailableBadge.renderBadge(matrices, this.getButtonX() + this.width - 5, this.getButtonY() - 3);
 		}
 	}
 }

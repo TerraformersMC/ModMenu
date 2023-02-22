@@ -11,6 +11,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.compat.MCCompat;
+import com.terraformersmc.modmenu.util.compat.MCVersions;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -153,10 +154,10 @@ public class ModsScreen extends Screen {
 			if (modScreenErrors.containsKey(modId)) {
 				Throwable e = modScreenErrors.get(modId);
 				Text text = Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED);
-				if (MCCompat.after22w45a) button.setTooltip(Tooltip.of(text));
+				if (MCVersions.MC22W45A.laterIncluded()) button.setTooltip(Tooltip.of(text));
 				else button.setDynamicTooltip(text);
 			} else {
-				if (MCCompat.after22w45a) button.setTooltip(Tooltip.of(CONFIGURE));
+				if (MCVersions.MC22W45A.laterIncluded()) button.setTooltip(Tooltip.of(CONFIGURE));
 				else button.setDynamicTooltip(CONFIGURE);
 			}
 		});
@@ -315,7 +316,7 @@ public class ModsScreen extends Screen {
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 && mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				Text tooltipText = Text.translatable("modmenu.modIdToolTip", mod.getId());
 
-				if (MCCompat.after22w45a) this.setTooltip(tooltipText);
+				if (MCVersions.MC22W45A.laterIncluded()) this.setTooltip(tooltipText);
 				else setTooltipCompat(tooltipText);
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
@@ -341,7 +342,7 @@ public class ModsScreen extends Screen {
 			}
 		}
 		super.render(matrices, mouseX, mouseY, delta);
-		if (!MCCompat.after22w45a && this.tooltipCompat != null) {
+		if (MCVersions.MC22W45A.before() && this.tooltipCompat != null) {
 			this.renderOrderedTooltip(matrices, textRenderer.wrapLines(this.tooltipCompat, Integer.MAX_VALUE), mouseX, mouseY);
 		}
 	}

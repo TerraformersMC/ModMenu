@@ -1,40 +1,8 @@
 package com.terraformersmc.modmenu.util.compat;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.VersionParsingException;
-import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 
 public class MCCompat {
-	/**
-	 * Replace ModMenuTexturedButtonWidget with new vanilla TexturedButtonWidget.
-	 */
-	public static final boolean after23w05a = testMCVersion(">=1.19.4-alpha.23.5.a");
-	/**
-	 * RenderSystem.enable/disableTexture removal, GridWidget don't extend ClickableWidget anymore.
-	 * CreditsScreen ctr takes an additional argument.
-	 */
-	public static final boolean after23w03a = testMCVersion(">=1.19.4-alpha.23.3.a");
-	/**
-	 * Keyboard.setRepeatEvents removal.
-	 */
-	public static final boolean after22w46a = testMCVersion(">=1.19.3-alpha.22.46.a");
-	/**
-	 * Tooltip supplier changes.
-	 */
-	public static final boolean after22w45a = testMCVersion(">=1.19.3-alpha.22.45.a");
-	/**
-	 * JOML, GridWidget, Tooltip changes.
-	 */
-	public static final boolean after22w43a = testMCVersion(">=1.19.3-alpha.22.43.a");
-
-	public static boolean testMCVersion(String versionPredicates) {
-		try {
-			return VersionPredicate.parse(versionPredicates).test(FabricLoader.getInstance().getModContainer("minecraft").get().getMetadata().getVersion());
-		} catch (VersionParsingException e) {
-			return false;
-		}
-	}
-
 	private static MCCompat INSTANCE = null;
 
 	private KeybindsHelper keybindsHelper;

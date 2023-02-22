@@ -1,6 +1,6 @@
 package com.terraformersmc.modmenu.mc_latest;
 
-import com.terraformersmc.modmenu.mixin.mc1193plus.IGridWidgetAccessor;
+import com.terraformersmc.modmenu.mixin.mc22w43aplus.IGridWidgetAccessor;
 import com.terraformersmc.modmenu.util.compat.ButtonHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
