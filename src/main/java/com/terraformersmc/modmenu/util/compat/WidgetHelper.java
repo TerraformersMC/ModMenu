@@ -15,14 +15,14 @@ import java.util.List;
 public abstract class WidgetHelper {
 	public abstract ButtonWidget createConfigureButton(
 			ModsScreen screen,
-			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip,
 			RenderOverride renderOverride
 	);
 
 	public abstract ButtonWidget createFiltersButton(
 			ModsScreen screen,
-			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip
 	);
 
@@ -31,15 +31,15 @@ public abstract class WidgetHelper {
 	);
 
 	public abstract ButtonWidget createModMenuTexturedButtonWidget(
-			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text message, boolean allowUpdateBadge
 	);
 
 	public ButtonWidget createModMenuTexturedButtonWidget(
-			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text message
 	) {
-		return this.createModMenuTexturedButtonWidget(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, false);
+		return this.createModMenuTexturedButtonWidget(x, y, width, height, u, v, hoveredVOffset, texture, uWidth, vHeight, onPress, message, false);
 	}
 
 	public abstract ButtonWidget createButtonWidget(

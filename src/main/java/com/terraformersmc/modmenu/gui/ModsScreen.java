@@ -133,7 +133,7 @@ public class ModsScreen extends Screen {
 
 		this.descriptionListWidget = MCCompat.getInstance().getDescriptionListWidgetHelper().createDescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = MCCompat.getInstance().getWidgetHelper().createConfigureButton(this, width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+		ButtonWidget configureButton = MCCompat.getInstance().getWidgetHelper().createConfigureButton(this, width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, 20, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String id = Objects.requireNonNull(selected).getMod().getId();
 			if (modHasConfigScreen.get(id)) {
 				Screen configScreen = ModMenu.getConfigScreen(id, this);
@@ -189,7 +189,7 @@ public class ModsScreen extends Screen {
 					button.active = button.visible && selected.getMod().getIssueTracker() != null;
 		});
 		this.addSelectableChild(this.searchBox);
-		ButtonWidget filtersButton = MCCompat.getInstance().getWidgetHelper().createFiltersButton(this, paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
+		ButtonWidget filtersButton = MCCompat.getInstance().getWidgetHelper().createFiltersButton(this, paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, 20, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.addDrawableChild(filtersButton);
 		}

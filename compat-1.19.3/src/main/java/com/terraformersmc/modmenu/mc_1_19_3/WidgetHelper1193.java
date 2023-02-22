@@ -1,14 +1,12 @@
-package com.terraformersmc.modmenu.mc_latest;
+package com.terraformersmc.modmenu.mc_1_19_3;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
-import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
 import com.terraformersmc.modmenu.util.compat.WidgetHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -17,7 +15,7 @@ import org.joml.Matrix4f;
 
 import java.util.function.Supplier;
 
-public class WidgetHelper1194 extends WidgetHelper {
+public class WidgetHelper1193 extends WidgetHelper {
 	@Override
 	public ButtonWidget createConfigureButton(
 			ModsScreen screen,
@@ -25,7 +23,7 @@ public class WidgetHelper1194 extends WidgetHelper {
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip,
 			RenderOverride renderOverride
 	) {
-		return new TexturedButtonWidget(x, y, width, height, u, v, hoveredVOffset, texture, uWidth, vHeight, onPress) {
+		return new ModMenuTexturedButtonWidget1193(x, y, width, height, u, v, texture, uWidth, vHeight, onPress) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 				renderOverride.render(this, matrices, mouseX, mouseY, delta);
@@ -47,7 +45,7 @@ public class WidgetHelper1194 extends WidgetHelper {
 			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip
 	) {
-		ButtonWidget widget = new TexturedButtonWidget(x, y, width, height, u, v, hoveredVOffset, texture, uWidth, vHeight, onPress, tooltip);
+		ButtonWidget widget = new ModMenuTexturedButtonWidget1193(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, tooltip);
 		widget.setTooltip(Tooltip.of(tooltip));
 		return widget;
 	}
@@ -62,7 +60,7 @@ public class WidgetHelper1194 extends WidgetHelper {
 			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text message, boolean allowUpdateBadge
 	) {
-		return new UpdateCheckerTexturedButtonWidget(x, y, width, height, u, v, hoveredVOffset, texture, uWidth, vHeight, onPress, message);
+		return new ModMenuTexturedButtonWidget1193(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, allowUpdateBadge);
 	}
 
 	@Override

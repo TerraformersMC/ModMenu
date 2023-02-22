@@ -10,7 +10,6 @@ public class ModMenuMCCompat implements CompatInitializer {
 
 			if (MCCompat.after22w45a) {
 				compat.setTooltipHelper(new TooltipHelper());
-				compat.setWidgetHelper(new WidgetHelper1194());
 
 				if (MCCompat.after22w46a) {
 					compat.setKeybindsHelper(new KeybindsHelper());
@@ -21,6 +20,10 @@ public class ModMenuMCCompat implements CompatInitializer {
 						compat.setButtonHelper(new ButtonHelper1194());
 						compat.setMcVersionHelper(new MCVersionHelper1194());
 						compat.setFocusHelper(new FocusHelper1194());
+
+						if (MCCompat.after23w05a) {
+							compat.setWidgetHelper(new WidgetHelper1194());
+						}
 					}
 				}
 			}

@@ -6,6 +6,10 @@ import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 
 public class MCCompat {
 	/**
+	 * Replace ModMenuTexturedButtonWidget with new vanilla TexturedButtonWidget.
+	 */
+	public static final boolean after23w05a = testMCVersion(">=1.19.4-alpha.23.5.a");
+	/**
 	 * RenderSystem.enable/disableTexture removal, GridWidget don't extend ClickableWidget anymore.
 	 * CreditsScreen ctr takes an additional argument.
 	 */

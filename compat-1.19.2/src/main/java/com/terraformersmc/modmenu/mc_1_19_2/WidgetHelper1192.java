@@ -15,7 +15,7 @@ public class WidgetHelper1192 extends WidgetHelper {
 	@Override
 	public ButtonWidget createConfigureButton(
 			ModsScreen screen,
-			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip,
 			RenderOverride renderOverride
 	) {
@@ -46,7 +46,7 @@ public class WidgetHelper1192 extends WidgetHelper {
 	@Override
 	public ButtonWidget createFiltersButton(
 			ModsScreen screen,
-			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text tooltip
 	) {
 		return new ModMenuTexturedButtonWidget1192(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, tooltip,
@@ -67,7 +67,7 @@ public class WidgetHelper1192 extends WidgetHelper {
 
 	@Override
 	public ButtonWidget createModMenuTexturedButtonWidget(
-			int x, int y, int width, int height, int u, int v, Identifier texture,
+			int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture,
 			int uWidth, int vHeight, ButtonWidget.PressAction onPress, Text message, boolean allowUpdateBadge
 	) {
 		return new ModMenuTexturedButtonWidget1192(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, message, allowUpdateBadge);

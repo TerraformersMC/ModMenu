@@ -84,7 +84,7 @@ public class ModMenuEventHandler {
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 					buttons.add(modsButtonIndex, MCCompat.getInstance().getWidgetHelper().createModMenuButtonWidget(screen.width / 2 + 2, buttonsY, 98, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, MCCompat.getInstance().getWidgetHelper().createModMenuTexturedButtonWidget(screen.width / 2 + 104, buttonsY, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText(), true));
+					buttons.add(modsButtonIndex, MCCompat.getInstance().getWidgetHelper().createModMenuTexturedButtonWidget(screen.width / 2 + 104, buttonsY, 20, 20, 0, 0, 20, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText(), true));
 				}
 			}
 		}
@@ -124,7 +124,7 @@ public class ModMenuEventHandler {
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					buttons.add(modsButtonIndex, MCCompat.getInstance().getWidgetHelper().createModMenuButtonWidget(screen.width / 2 - 102, buttonsY + spacing, 204, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, MCCompat.getInstance().getWidgetHelper().createModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 - 16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+					buttons.add(modsButtonIndex, MCCompat.getInstance().getWidgetHelper().createModMenuTexturedButtonWidget(screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 - 16, 20, 20, 0, 0, 20, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
 				}
 			}
 		}
