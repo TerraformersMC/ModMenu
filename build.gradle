@@ -12,7 +12,7 @@ class Versions {
 	}
 
 	public static final Versions[] VERSIONS = [
-			new Versions("23w05a", "23w05a+build.7", "0.73.4+1.19.4"),
+			new Versions("23w07a", "23w07a+build.10", "0.74.1+1.19.4"),
 			new Versions("1.19.3", "1.19.3+build.2", "0.74.0+1.19.3"),
 			new Versions("1.19.2", "1.19.2+build.28", "0.73.2+1.19.2")
 	]
