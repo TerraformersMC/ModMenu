@@ -8,6 +8,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.ChildEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
+import com.terraformersmc.modmenu.util.compat.ListWidgetCompat;
 import com.terraformersmc.modmenu.util.compat.MCCompat;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
@@ -25,7 +26,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable {
+public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable, ListWidgetCompat {
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
 	private final ModsScreen parent;
 	private List<Mod> mods = null;
@@ -190,7 +191,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 
 	@Override
-	protected void renderList(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	public void renderListCompat(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
@@ -205,7 +206,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				int entryLeft;
 				if (this.isSelectedEntry(index)) {
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
-					int selectionRight = this.getRowLeft() + rowWidth + 2;
+					int selectionRight = x + rowWidth + 2;
 					MCCompat.getInstance().getBlaze3DHelper().disableTexture();
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
 					RenderSystem.setShader(GameRenderer::getPositionProgram);

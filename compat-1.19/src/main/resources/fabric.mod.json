@@ -100,7 +100,7 @@
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
-    "mixins.modmenu1192.json"
+    "mixins.modmenu119.json"
   ],
   "custom": {
     "modmenu": {
@@ -111,6 +111,5 @@
     "loom:injected_interfaces": {
       "net/minecraft/class_339": ["com/terraformersmc/modmenu/util/compat/ButtonCompat"]
     }
-  },
-  "accessWidener": "modmenu1192.accesswidener"
+  }
 }

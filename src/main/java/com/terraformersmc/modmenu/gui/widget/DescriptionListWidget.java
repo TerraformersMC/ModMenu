@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.compat.DescriptionListWidgetHelper;
+import com.terraformersmc.modmenu.util.compat.ListWidgetCompat;
 import com.terraformersmc.modmenu.util.compat.MCCompat;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DescriptionListWidget<T extends EntryListWidget.Entry<T> & DescriptionListWidget.DescriptionListEntry<T>> extends EntryListWidget<T> {
+public class DescriptionListWidget<T extends EntryListWidget.Entry<T> & DescriptionListWidget.DescriptionListEntry<T>> extends EntryListWidget<T> implements ListWidgetCompat {
 
 	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
@@ -204,7 +205,9 @@ public class DescriptionListWidget<T extends EntryListWidget.Entry<T> & Descript
 				next();
 		tessellator.draw();
 
-		this.renderList(matrices, mouseX, mouseY, delta);
+		int k = this.getRowLeft();
+		int l = this.top + 4 - (int) this.getScrollAmount();
+		this.renderListCompat(matrices, k, l, mouseX, mouseY, delta);
 		this.renderScrollBar(bufferBuilder, tessellator);
 
 		MCCompat.getInstance().getBlaze3DHelper().enableTexture();
