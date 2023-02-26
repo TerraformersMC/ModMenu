@@ -86,10 +86,12 @@ public class ModrinthUtil {
 						var projectId = versionObj.get("project_id").getAsString();
 						var versionNumber = versionObj.get("version_number").getAsString();
 						var versionId = versionObj.get("id").getAsString();
-						var versionHash = asList(versionObj.get("files").getAsJsonArray())
-								.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst()
-								.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
-						if (!Objects.equals(versionHash, lookupHash)) {
+						var elem = asList(versionObj.get("files").getAsJsonArray())
+								.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst();
+						var versionHash = elem.isPresent() ?
+								elem.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString()
+								: "";
+						if (!versionHash.isEmpty() && !Objects.equals(versionHash, lookupHash)) {
 							// hashes different, there's an update.
 							HASH_TO_MOD.get(lookupHash).forEach(mod -> {
 								LOGGER.info("Update available for '{}@{}', (-> {})", mod.getId(), mod.getVersion(), versionNumber);
