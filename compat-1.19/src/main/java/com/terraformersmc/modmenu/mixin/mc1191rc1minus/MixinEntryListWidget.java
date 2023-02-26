@@ -26,7 +26,7 @@ public abstract class MixinEntryListWidget implements ListWidgetCompat {
 	@Inject(method = "renderList", at = @At("HEAD"), cancellable = true)
 	private void invokeCompat(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (((Object)this) instanceof ModListWidget) {
-			this.renderListCompat(matrices, this.getRowLeft(), -1, mouseX, mouseY, delta);
+			this.renderListCompat(matrices, x, y, mouseX, mouseY, delta);
 			ci.cancel();
 		}
 	}
