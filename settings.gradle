@@ -16,3 +16,4 @@ rootProject.name = "modmenu"
 
 include 'compat-1.19.3'
 include 'compat-1.19.2'
+include 'compat-1.19'

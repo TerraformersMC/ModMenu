@@ -14,6 +14,7 @@ public class MCCompat {
 	private ButtonHelper buttonHelper;
 	private MCVersionHelper mcVersionHelper;
 	private FocusHelper focusHelper;
+	private NarratorHelper narratorHelper;
 
 	private static void init() {
 		INSTANCE = new MCCompat();
@@ -98,5 +99,13 @@ public class MCCompat {
 
 	public void setFocusHelper(FocusHelper focusHelper) {
 		this.focusHelper = focusHelper;
+	}
+
+	public NarratorHelper getNarratorHelper() {
+		return narratorHelper;
+	}
+
+	public void setNarratorHelper(NarratorHelper narratorHelper) {
+		this.narratorHelper = narratorHelper;
 	}
 }

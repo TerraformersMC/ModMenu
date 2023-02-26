@@ -64,7 +64,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
+			MCCompat.getInstance().getNarratorHelper().getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
 		}
 	}
 

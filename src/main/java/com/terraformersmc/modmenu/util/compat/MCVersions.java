@@ -29,7 +29,12 @@ public enum MCVersions {
 	 */
 	MC22W43A("1.19.3-alpha.22.43.a"),
 	MC1_19_2("1.19.2"),
-	MC1_19_1("1.19.1");
+	MC1_19_1("1.19.1"),
+	/**
+	 * Narrator instance getter.
+	 */
+	MC1_19_1_PRE2("1.19.1-beta.2"),
+	MC1_19_1_RC1("1.19.1-rc.1");
 
 	final String mcVersion;
 	MCVersions(String mcVersion) {

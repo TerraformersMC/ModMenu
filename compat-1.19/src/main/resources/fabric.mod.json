@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "id": "modmenu-compat1192",
-  "name": "Mod Menu 1.19.2 Compat module",
+  "id": "modmenu-compat119",
+  "name": "Mod Menu 1.19 Compat module",
   "version": "$version",
   "environment": "client",
   "license": "MIT",
   "icon": "assets/modmenu/icon.png",
   "entrypoints": {
     "modmenu-mccompat": [
-      "com.terraformersmc.modmenu.mc_1_19_2.ModMenuMCCompat"
+      "com.terraformersmc.modmenu.mc_1_19.ModMenuMCCompat"
     ]
   },
   "contact": {

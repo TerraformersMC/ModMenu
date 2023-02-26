@@ -14,7 +14,8 @@ class Versions {
 	public static final Versions[] VERSIONS = [
 			new Versions("1.19.4-pre1", "1.19.4-pre1+build.1", "0.74.2+1.19.4"),
 			new Versions("1.19.3", "1.19.3+build.2", "0.74.0+1.19.3"),
-			new Versions("1.19.2", "1.19.2+build.28", "0.73.2+1.19.2")
+			new Versions("1.19.2", "1.19.2+build.28", "0.73.2+1.19.2"),
+			new Versions("1.19", "1.19+build.4", "0.58.0+1.19")
 	]
 }
 
