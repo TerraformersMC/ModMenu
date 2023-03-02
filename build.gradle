@@ -37,6 +37,11 @@ allprojects {
 	dependencies {
 		minecraft "com.mojang:minecraft:$infos.mc"
 		mappings "net.fabricmc:yarn:$infos.yarn:v2"
+//		mappings loom.layered() {
+//			for (final def version in Versions.VERSIONS.reverse()) {
+//				mappings("net.fabricmc:yarn:$version.yarn:v2")
+//			}
+//		}
 
 		mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
 		mod "fabric-api", fabricApi.module("fabric-api-base", infos.fabric)
