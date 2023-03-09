@@ -1,19 +1,17 @@
 package com.terraformersmc.modmenu.mc_latest;
 
-import com.google.common.util.concurrent.Runnables;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
 import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
 import com.terraformersmc.modmenu.util.compat.DescriptionListWidgetHelper;
 import com.terraformersmc.modmenu.util.compat.MCCompat;
+import net.minecraft.class_8219;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.CreditsScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Util;
@@ -28,13 +26,8 @@ public class DescriptionListWidgetHelper1194 extends DescriptionListWidgetHelper
 	}
 
 	@Override
-	public CreditsScreen createCreditsScreen(boolean endCredits, ModsScreen parent) {
-		return new CreditsScreen(endCredits, new LogoDrawer(false), Runnables.doNothing()) {
-			@Override
-			public void close() {
-				client.setScreen(parent);
-			}
-		};
+	public Screen createCreditsScreen(boolean endCredits, ModsScreen parent) {
+		return new class_8219(parent);
 	}
 
 	@Override

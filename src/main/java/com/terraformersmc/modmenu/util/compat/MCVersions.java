@@ -7,7 +7,11 @@ import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 public enum MCVersions {
 	MC1_19_4("1.19.4"),
 	/**
-	 * Replace ModMenuTexturedButtonWidget with new vanilla TexturedButtonWidget.
+	 * Changes to credits screen again.
+	 */
+	MC1_19_4_PRE4("1.19.4-beta.4"),
+	/**
+	 * Replace ModMenuTexturedButtonWidget with vanilla TexturedButtonWidget.
 	 */
 	MC23W05A("1.19.4-alpha.23.5.a"),
 	/**
@@ -34,7 +38,8 @@ public enum MCVersions {
 	 * Narrator instance getter.
 	 */
 	MC1_19_1_PRE2("1.19.1-beta.2"),
-	MC1_19_1_RC1("1.19.1-rc.1");
+	MC1_19_1_RC1("1.19.1-rc.1"),
+	MC1_19("1.19");
 
 	final String mcVersion;
 	MCVersions(String mcVersion) {

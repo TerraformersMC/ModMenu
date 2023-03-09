@@ -9,6 +9,7 @@ import com.terraformersmc.modmenu.util.compat.MCCompat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.CreditsScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -21,7 +22,7 @@ public class DescriptionListWidgetHelper1193 extends DescriptionListWidgetHelper
 	}
 
 	@Override
-	public CreditsScreen createCreditsScreen(boolean endCredits, ModsScreen parent) {
+	public Screen createCreditsScreen(boolean endCredits, ModsScreen parent) {
 		return new CreditsScreen(endCredits, Runnables.doNothing()) {
 			@Override
 			public void close() {

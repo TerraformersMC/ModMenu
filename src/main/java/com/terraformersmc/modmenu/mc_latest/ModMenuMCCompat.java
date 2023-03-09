@@ -19,13 +19,16 @@ public class ModMenuMCCompat implements CompatInitializer {
 
 						if (MCVersions.MC23W03A.laterIncluded()) {
 							compat.setBlaze3DHelper(new Blaze3DHelper());
-							compat.setDescriptionListWidgetHelper(new DescriptionListWidgetHelper1194());
 							compat.setButtonHelper(new ButtonHelper1194());
 							compat.setMcVersionHelper(new MCVersionHelper1194());
 							compat.setFocusHelper(new FocusHelper1194());
 
 							if (MCVersions.MC23W05A.laterIncluded()) {
 								compat.setWidgetHelper(new WidgetHelper1194());
+
+								if (MCVersions.MC1_19_4_PRE4.laterIncluded()) {
+									compat.setDescriptionListWidgetHelper(new DescriptionListWidgetHelper1194());
+								}
 							}
 						}
 					}
