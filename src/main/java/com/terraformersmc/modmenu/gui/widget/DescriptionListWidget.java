@@ -1,20 +1,18 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import com.google.common.util.concurrent.Runnables;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import net.minecraft.class_8219;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ElementListWidget;
@@ -298,19 +296,14 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			if (isMouseOver(mouseX, mouseY)) {
-				client.setScreen(new MinecraftCredits(false));
+				client.setScreen(new MinecraftCredits());
 			}
 			return super.mouseClicked(mouseX, mouseY, button);
 		}
 
-		class MinecraftCredits extends CreditsScreen {
-			public MinecraftCredits(boolean endCredits) {
-				super(endCredits, new LogoDrawer(false), Runnables.doNothing());
-			}
-
-			@Override
-			public void close() {
-				client.setScreen(parent);
+		class MinecraftCredits extends class_8219 {
+			public MinecraftCredits() {
+				super(parent);
 			}
 		}
 	}
