@@ -20,7 +20,8 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption COUNT_LIBRARIES = new BooleanConfigOption("count_libraries", true);
 	public static final BooleanConfigOption COMPACT_LIST = new BooleanConfigOption("compact_list", false);
 	public static final BooleanConfigOption COUNT_CHILDREN = new BooleanConfigOption("count_children", true);
-	public static final EnumConfigOption<ModsButtonStyle> MODS_BUTTON_STYLE = new EnumConfigOption<>("mods_button_style", ModsButtonStyle.CLASSIC);
+	public static final EnumConfigOption<TitleMenuButtonStyle> MODS_BUTTON_STYLE = new EnumConfigOption<>("mods_button_style", TitleMenuButtonStyle.CLASSIC);
+	public static final EnumConfigOption<GameMenuButtonStyle> GAME_MENU_BUTTON_STYLE = new EnumConfigOption<>("game_menu_button_style", GameMenuButtonStyle.REPLACE_BUGS);
 	public static final BooleanConfigOption COUNT_HIDDEN_MODS = new BooleanConfigOption("count_hidden_mods", true);
 	public static final EnumConfigOption<ModCountLocation> MOD_COUNT_LOCATION = new EnumConfigOption<>("mod_count_location", ModCountLocation.TITLE_SCREEN);
 	public static final BooleanConfigOption HIDE_MOD_LINKS = new BooleanConfigOption("hide_mod_links", false);
@@ -108,27 +109,23 @@ public class ModMenuConfig {
 		}
 	}
 
-	public enum ModsButtonStyle {
+	public enum TitleMenuButtonStyle {
 		@SerializedName("classic")
-		CLASSIC(false),
+		CLASSIC(),
 		@SerializedName("replace_realms")
-		REPLACE_REALMS(true),
+		REPLACE_REALMS(),
 		@SerializedName("shrink")
-		SHRINK(false),
+		SHRINK(),
 		@SerializedName("icon")
-		ICON(false);
+		ICON();
+	}
 
-		private final boolean titleScreenOnly;
-
-		ModsButtonStyle(boolean titleScreenOnly) {
-			this.titleScreenOnly = titleScreenOnly;
-		}
-
-		public ModsButtonStyle forGameMenu() {
-			if (titleScreenOnly) {
-				return CLASSIC;
-			}
-			return this;
-		}
+	public enum GameMenuButtonStyle {
+		@SerializedName("replace_bugs")
+		REPLACE_BUGS,
+		@SerializedName("below_bugs")
+		BELOW_BUGS,
+		@SerializedName("icon")
+		ICON;
 	}
 }

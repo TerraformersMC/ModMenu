@@ -29,7 +29,7 @@ public interface ModMenuApi {
 	 * @return The text that would be displayed on a Mods button
 	 */
 	static Text createModsButtonText() {
-		return ModMenu.createModsButtonText();
+		return ModMenu.createModsButtonText(true);
 	}
 
 	/**
