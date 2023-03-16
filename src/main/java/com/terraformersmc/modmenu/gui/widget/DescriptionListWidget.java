@@ -6,7 +6,6 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import net.minecraft.class_8219;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -15,6 +14,7 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.*;
@@ -301,7 +301,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			return super.mouseClicked(mouseX, mouseY, button);
 		}
 
-		class MinecraftCredits extends class_8219 {
+		class MinecraftCredits extends CreditsAndAttributionScreen {
 			public MinecraftCredits() {
 				super(parent);
 			}
