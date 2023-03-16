@@ -12,7 +12,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
@@ -193,7 +193,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 
 	@Override
-	protected void renderList(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+	protected void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
@@ -212,7 +212,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
 					RenderSystem.setShader(GameRenderer::getPositionProgram);
 					RenderSystem.setShaderColor(float_2, float_2, float_2, 1.0F);
-					Matrix4f matrix = drawableHelper.method_51448().peek().getPositionMatrix();
+					Matrix4f matrix = DrawContext.getMatrices().peek().getPositionMatrix();
 					buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
 					buffer.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).next();
 					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).next();
@@ -230,7 +230,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				}
 
 				entryLeft = this.getRowLeft();
-				entry.render(drawableHelper, index, entryTop, entryLeft, rowWidth, entryHeight, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPos(mouseX, mouseY), entry), delta);
+				entry.render(DrawContext, index, entryTop, entryLeft, rowWidth, entryHeight, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPos(mouseX, mouseY), entry), delta);
 			}
 		}
 	}

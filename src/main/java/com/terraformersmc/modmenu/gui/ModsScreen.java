@@ -13,7 +13,7 @@ import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -141,7 +141,7 @@ public class ModsScreen extends Screen {
 			}
 		}) {
 			@Override
-			public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 				String modId = selected.getMod().getId();
 				if (selected != null) {
 					active = modHasConfigScreen.get(modId);
@@ -156,14 +156,14 @@ public class ModsScreen extends Screen {
 				} else {
 					this.setTooltip(Tooltip.of(CONFIGURE));
 				}
-				super.render(drawableHelper, mouseX, mouseY, delta);
+				super.render(DrawContext, mouseX, mouseY, delta);
 			}
 
 			@Override
-			public void renderButton(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+			public void renderButton(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 				RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 				RenderSystem.setShaderColor(1, 1, 1, 1f);
-				super.renderButton(drawableHelper, mouseX, mouseY, delta);
+				super.renderButton(DrawContext, mouseX, mouseY, delta);
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
@@ -179,10 +179,10 @@ public class ModsScreen extends Screen {
 			}, mod.getWebsite(), false));
 		}, Supplier::get) {
 			@Override
-			public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
 				active = visible && selected.getMod().getWebsite() != null;
-				super.render(drawableHelper, mouseX, mouseY, delta);
+				super.render(DrawContext, mouseX, mouseY, delta);
 			}
 		};
 		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
@@ -196,10 +196,10 @@ public class ModsScreen extends Screen {
 			}, mod.getIssueTracker(), false));
 		}, Supplier::get) {
 			@Override
-			public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 				visible = selected != null;
 				active = visible && selected.getMod().getIssueTracker() != null;
-				super.render(drawableHelper, mouseX, mouseY, delta);
+				super.render(DrawContext, mouseX, mouseY, delta);
 			}
 		};
 		this.addSelectableChild(this.searchBox);
@@ -221,11 +221,11 @@ public class ModsScreen extends Screen {
 			modList.reloadFilters();
 		}, Supplier::get) {
 			@Override
-			public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-				drawableHelper.method_51448().translate(0, 0, 1);
+			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+				DrawContext.getMatrices().translate(0, 0, 1);
 				visible = filterOptionsShown;
 				this.setMessage(ModMenuConfig.SORTING.getButtonText());
-				super.render(drawableHelper, mouseX, mouseY, delta);
+				super.render(DrawContext, mouseX, mouseY, delta);
 			}
 		});
 		this.addDrawableChild(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
@@ -234,11 +234,11 @@ public class ModsScreen extends Screen {
 			modList.reloadFilters();
 		}, Supplier::get) {
 			@Override
-			public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-				drawableHelper.method_51448().translate(0, 0, 1);
+			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+				DrawContext.getMatrices().translate(0, 0, 1);
 				visible = filterOptionsShown;
 				this.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
-				super.render(drawableHelper, mouseX, mouseY, delta);
+				super.render(DrawContext, mouseX, mouseY, delta);
 			}
 		});
 		this.addSelectableChild(this.modList);
@@ -276,36 +276,36 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-		this.renderBackground(drawableHelper);
+	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+		this.renderBackground(DrawContext);
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
-			this.descriptionListWidget.render(drawableHelper, mouseX, mouseY, delta);
+			this.descriptionListWidget.render(DrawContext, mouseX, mouseY, delta);
 		}
-		this.modList.render(drawableHelper, mouseX, mouseY, delta);
-		this.searchBox.render(drawableHelper, mouseX, mouseY, delta);
+		this.modList.render(DrawContext, mouseX, mouseY, delta);
+		this.searchBox.render(DrawContext, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
-		drawableHelper.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
 		if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
-			drawableHelper.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1, 16777215);
-			drawableHelper.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 + 1, 16777215);
+			DrawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1, 16777215);
+			DrawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 + 1, 16777215);
 		}
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			Text fullModCount = computeModCountText(true);
 			if (!ModMenuConfig.CONFIG_MODE.getValue() && updateFiltersX()) {
 				if (filterOptionsShown) {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() || textRenderer.getWidth(fullModCount) <= filtersX - 5) {
-						drawableHelper.method_51430(textRenderer, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF, false);
 					} else {
-						drawableHelper.method_51430(textRenderer, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF, false);
-						drawableHelper.method_51430(textRenderer, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF, false);
 					}
 				} else {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() || textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-						drawableHelper.method_51430(textRenderer, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF, false);
 					} else {
-						drawableHelper.method_51430(textRenderer, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF, false);
-						drawableHelper.method_51430(textRenderer, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF, false);
 					}
 				}
 			}
@@ -314,11 +314,11 @@ public class ModsScreen extends Screen {
 			Mod mod = selectedEntry.getMod();
 			int x = rightPaneX;
 			if ("java".equals(mod.getId())) {
-				DrawingUtil.drawRandomVersionBackground(mod, drawableHelper, x, RIGHT_PANE_Y, 32, 32);
+				DrawingUtil.drawRandomVersionBackground(mod, DrawContext, x, RIGHT_PANE_Y, 32, 32);
 			}
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			RenderSystem.enableBlend();
-			drawableHelper.drawTexture(this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
+			DrawContext.drawTexture(this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
@@ -329,7 +329,7 @@ public class ModsScreen extends Screen {
 				StringVisitable ellipsis = StringVisitable.plain("...");
 				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
-			drawableHelper.method_51430(textRenderer, Language.getInstance().reorder(trimmedName), x + imageOffset, RIGHT_PANE_Y + 1, 0xFFFFFF, false);
+			DrawContext.drawText(textRenderer, Language.getInstance().reorder(trimmedName), x + imageOffset, RIGHT_PANE_Y + 1, 0xFFFFFF, false);
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 && mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				this.setTooltip(Text.translatable("modmenu.modIdToolTip", mod.getId()));
 			}
@@ -338,10 +338,10 @@ public class ModsScreen extends Screen {
 				init = false;
 			}
 			if (!ModMenuConfig.HIDE_BADGES.getValue()) {
-				modBadgeRenderer.draw(drawableHelper, mouseX, mouseY);
+				modBadgeRenderer.draw(DrawContext, mouseX, mouseY);
 			}
 			if (mod.isReal()) {
-				drawableHelper.method_51433(textRenderer, mod.getPrefixedVersion(), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing, 0x808080, false);
+				DrawContext.drawText(textRenderer, mod.getPrefixedVersion(), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing, 0x808080, false);
 			}
 			String authors;
 			List<String> names = mod.getAuthors();
@@ -352,10 +352,10 @@ public class ModsScreen extends Screen {
 				} else {
 					authors = names.get(0);
 				}
-				DrawingUtil.drawWrappedString(drawableHelper, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
+				DrawingUtil.drawWrappedString(DrawContext, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 			}
 		}
-		super.render(drawableHelper, mouseX, mouseY, delta);
+		super.render(DrawContext, mouseX, mouseY, delta);
 	}
 
 	private Text computeModCountText(boolean includeLibs) {
@@ -388,7 +388,7 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void renderBackground(DrawableHelper drawableHelper) {
+	public void renderBackground(DrawContext DrawContext) {
 		ModsScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, 255);
 	}
 
@@ -397,7 +397,7 @@ public class ModsScreen extends Screen {
 		BufferBuilder buffer = tessellator.getBuffer();
 		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, Screen.field_44669);
+		RenderSystem.setShaderTexture(0, Screen.OPTIONS_BACKGROUND_TEXTURE);
 		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
 		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();

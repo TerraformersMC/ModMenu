@@ -3,12 +3,11 @@ package com.terraformersmc.modmenu.gui;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
@@ -38,11 +37,11 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 	}
 
 	@Override
-	public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-		this.renderBackground(drawableHelper);
-		this.list.render(drawableHelper, mouseX, mouseY, delta);
-		drawableHelper.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
-		super.render(drawableHelper, mouseX, mouseY, delta);
+	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+		this.renderBackground(DrawContext);
+		this.list.render(DrawContext, mouseX, mouseY, delta);
+		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+		super.render(DrawContext, mouseX, mouseY, delta);
 	}
 
 	public void removed() {

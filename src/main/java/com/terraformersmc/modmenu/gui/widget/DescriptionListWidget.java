@@ -8,7 +8,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
@@ -65,7 +65,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		ModListEntry selectedEntry = parent.getSelectedEntry();
 		if (selectedEntry != lastSelected) {
 			lastSelected = selectedEntry;
@@ -151,7 +151,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		{
 			RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-			RenderSystem.setShaderTexture(0, Screen.field_44669);
+			RenderSystem.setShaderTexture(0, Screen.OPTIONS_BACKGROUND_TEXTURE);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 			bufferBuilder.vertex(this.left, this.bottom, 0.0D).texture(this.left / 32.0F, (this.bottom + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
@@ -210,9 +210,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				next();
 		tessellator.draw();
 
-		this.enableScissor(drawableHelper);
-		this.renderList(drawableHelper, mouseX, mouseY, delta);
-		drawableHelper.disableScissor();
+		this.enableScissor(DrawContext);
+		this.renderList(DrawContext, mouseX, mouseY, delta);
+		DrawContext.disableScissor();
 
 		this.renderScrollBar(bufferBuilder, tessellator);
 
@@ -269,12 +269,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 
 		@Override
-		public void render(DrawableHelper drawableHelper, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+		public void render(DrawContext DrawContext, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 			if (updateTextEntry) {
-				UpdateAvailableBadge.renderBadge(drawableHelper, x + indent, y);
+				UpdateAvailableBadge.renderBadge(DrawContext, x + indent, y);
 				x += 11;
 			}
-			drawableHelper.drawTextWithShadow(textRenderer, text, x + indent, y, 0xAAAAAA);
+			DrawContext.drawTextWithShadow(textRenderer, text, x + indent, y, 0xAAAAAA);
 		}
 
 		@Override
