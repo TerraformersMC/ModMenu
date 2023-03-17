@@ -66,13 +66,15 @@ public class ParentEntry extends ModListEntry {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int i) {
-		if (mouseX - list.getRowLeft() <= 32) {
+		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
+		if (mouseX - list.getRowLeft() <= iconSize) {
 			this.toggleChildren();
 			return true;
 		} else if (Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
 			this.toggleChildren();
 			return true;
 		} else {
+			this.sinceLastClick = Util.getMeasuringTimeMs();
 			return super.mouseClicked(mouseX, mouseY, i);
 		}
 	}

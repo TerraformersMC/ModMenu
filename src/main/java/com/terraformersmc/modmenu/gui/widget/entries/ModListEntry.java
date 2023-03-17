@@ -84,20 +84,21 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		}
 
 		if (!(this instanceof ParentEntry) && ModMenuConfig.QUICK_CONFIGURE.getValue() && (this.list.getParent().getModHasConfigScreen().get(modId) || this.list.getParent().modScreenErrors.containsKey(modId))) {
+			final int textureSize = ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256;
 			if (this.client.options.getTouchscreen().getValue() || hovered) {
-				DrawableHelper.fill(matrices, x, y, x + 32, y + 32, -1601138544);
-				boolean hoveringIcon = mouseX - x < 32;
-				int v = hoveringIcon ? 32 : 0;
+				DrawableHelper.fill(matrices, x, y, x + iconSize, y + iconSize, -1601138544);
+				boolean hoveringIcon = mouseX - x < iconSize;
+				int v = hoveringIcon ? iconSize : 0;
 				if (this.list.getParent().modScreenErrors.containsKey(modId)) {
 					RenderSystem.setShaderTexture(0, ERROR_ICON);
-					DrawableHelper.drawTexture(matrices, x, y, 96.0F, (float) v, 32, 32, 256, 256);
+					DrawableHelper.drawTexture(matrices, x, y, 96.0F, (float) v, iconSize, iconSize, textureSize, textureSize);
 					if (hoveringIcon) {
 						Throwable e = this.list.getParent().modScreenErrors.get(modId);
 						this.list.getParent().setTooltip(this.client.textRenderer.wrapLines(Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED), 175));
 					}
 				} else {
 					RenderSystem.setShaderTexture(0, MOD_CONFIGURATION_ICON);
-					DrawableHelper.drawTexture(matrices, x, y, 0.0F, (float) v, 32, 32, 256, 256);
+					DrawableHelper.drawTexture(matrices, x, y, 0.0F, (float) v, iconSize, iconSize, textureSize, textureSize);
 				}
 			}
 		}
@@ -107,7 +108,8 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public boolean mouseClicked(double mouseX, double mouseY, int delta) {
 		list.select(this);
 		if (ModMenuConfig.QUICK_CONFIGURE.getValue() && this.list.getParent().getModHasConfigScreen().get(this.mod.getId())) {
-			if (mouseX - list.getRowLeft() <= 32) {
+			int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
+			if (mouseX - list.getRowLeft() <= iconSize) {
 				this.openConfig();
 			} else if (Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
 				this.openConfig();
