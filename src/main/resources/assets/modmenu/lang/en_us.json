@@ -158,5 +158,8 @@
   "option.modmenu.update_checker.false": "Disabled",
   "option.modmenu.button_update_badge": "Update Indicator",
   "option.modmenu.button_update_badge.true": "Shown",
-  "option.modmenu.button_update_badge.false": "Hidden"
+  "option.modmenu.button_update_badge.false": "Hidden",
+  "option.modmenu.quick_configure": "Quick Configure",
+  "option.modmenu.quick_configure.true": "Enabled",
+  "option.modmenu.quick_configure.false": "Disabled"
 }

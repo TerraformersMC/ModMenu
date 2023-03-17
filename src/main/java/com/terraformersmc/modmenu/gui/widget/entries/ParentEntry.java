@@ -11,6 +11,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
@@ -65,16 +66,25 @@ public class ParentEntry extends ModListEntry {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int i) {
-		if (hoveringIcon) {
-			String id = getMod().getId();
-			if (list.getParent().showModChildren.contains(id)) {
-				list.getParent().showModChildren.remove(id);
-			} else {
-				list.getParent().showModChildren.add(id);
-			}
-			list.filter(list.getParent().getSearchInput(), false);
+		if (mouseX - list.getRowLeft() <= 32) {
+			this.toggleChildren();
+			return true;
+		} else if (Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
+			this.toggleChildren();
+			return true;
+		} else {
+			return super.mouseClicked(mouseX, mouseY, i);
 		}
-		return super.mouseClicked(mouseX, mouseY, i);
+	}
+
+	private void toggleChildren() {
+		String id = getMod().getId();
+		if (list.getParent().showModChildren.contains(id)) {
+			list.getParent().showModChildren.remove(id);
+		} else {
+			list.getParent().showModChildren.add(id);
+		}
+		list.filter(list.getParent().getSearchInput(), false);
 	}
 
 	@Override
