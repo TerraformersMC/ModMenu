@@ -83,6 +83,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					if (mod.getModrinthData() != null) {
 						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
 						children().add(new DescriptionEntry(Text.translatable("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
+						children().add(new DescriptionEntry(Text.translatable("modmenu.experimental").formatted(Formatting.GOLD).asOrderedText(), this, 8));
 						children().add(new LinkEntry(
 								Text.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), Text.translatable("modmenu.modrinth"))
 										.formatted(Formatting.BLUE)
