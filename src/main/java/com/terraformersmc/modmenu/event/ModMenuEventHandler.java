@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -99,17 +100,20 @@ public class ModMenuEventHandler {
 		}
 	}
 
-	public static boolean buttonHasText(ClickableWidget button, String translationKey) {
-		Text text = button.getMessage();
-		TextContent textContent = text.getContent();
-		return textContent instanceof TranslatableTextContent && ((TranslatableTextContent) textContent).getKey().equals(translationKey);
+	public static boolean buttonHasText(Widget widget, String translationKey) {
+		if(widget instanceof ClickableWidget button) {
+			Text text = button.getMessage();
+			TextContent textContent = text.getContent();
+			return textContent instanceof TranslatableTextContent && ((TranslatableTextContent) textContent).getKey().equals(translationKey);
+		}
+		return false;
 	}
 
-	public static void shiftButtons(ClickableWidget button, boolean shiftUp, int spacing) {
+	public static void shiftButtons(Widget widget, boolean shiftUp, int spacing) {
 		if (shiftUp) {
-			button.setY(button.getY() - spacing / 2);
-		} else if (!button.getMessage().equals(TitleScreen.COPYRIGHT)) {
-			button.setY(button.getY() + spacing / 2);
+			widget.setY(widget.getY() - spacing / 2);
+		} else if (!(widget instanceof ClickableWidget button && button.getMessage().equals(TitleScreen.COPYRIGHT))) {
+			widget.setY(widget.getY() + spacing / 2);
 		}
 	}
 }
