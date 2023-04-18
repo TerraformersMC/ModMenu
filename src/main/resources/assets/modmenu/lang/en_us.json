@@ -59,6 +59,7 @@
   "modmenu.links": "Links:",
   "modmenu.source": "Source",
   "modmenu.hasUpdate": "An update is available:",
+  "modmenu.experimental": "(Mod Menu update checker is experimental!)",
   "modmenu.childHasUpdate": "A child of this mod has an update available.",
   "modmenu.updateText": "v%s on %s",
 
