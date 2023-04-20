@@ -19,7 +19,7 @@ import java.util.Random;
 public class DrawingUtil {
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-	public static void drawRandomVersionBackground(Mod mod, MatrixStack matrices, int x, int y, int width, int height) {
+	public static void drawRandomVersionBackground(Mod mod, DrawableHelper drawableHelper, int x, int y, int width, int height) {
 		int seed = mod.getName().hashCode() + mod.getVersion().hashCode();
 		Random random = new Random(seed);
 		int color = 0xFF000000 | MathHelper.hsvToRgb(random.nextFloat(1f), random.nextFloat(0.7f, 0.8f), 0.9f);
@@ -27,10 +27,10 @@ public class DrawingUtil {
 			color = 0xFFDD5656;
 		}
 		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-		DrawableHelper.fill(matrices, x, y, x + width, y + height, color);
+		drawableHelper.fill(x, y, x + width, y + height, color);
 	}
 
-	public static void drawWrappedString(MatrixStack matrices, String string, int x, int y, int wrapWidth, int lines, int color) {
+	public static void drawWrappedString(DrawableHelper drawableHelper, String string, int x, int y, int wrapWidth, int lines, int color) {
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
@@ -49,16 +49,16 @@ public class DrawingUtil {
 				int width = CLIENT.textRenderer.getWidth(line);
 				x1 += (float) (wrapWidth - width);
 			}
-			CLIENT.textRenderer.draw(matrices, line, x1, y + i * CLIENT.textRenderer.fontHeight, color);
+			drawableHelper.method_51430(CLIENT.textRenderer, line, x1, y + i * CLIENT.textRenderer.fontHeight, color, false);
 		}
 	}
 
-	public static void drawBadge(MatrixStack matrices, int x, int y, int tagWidth, OrderedText text, int outlineColor, int fillColor, int textColor) {
-		DrawableHelper.fill(matrices, x + 1, y - 1, x + tagWidth, y, outlineColor);
-		DrawableHelper.fill(matrices, x, y, x + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
-		DrawableHelper.fill(matrices, x + 1, y + 1 + CLIENT.textRenderer.fontHeight - 1, x + tagWidth, y + CLIENT.textRenderer.fontHeight + 1, outlineColor);
-		DrawableHelper.fill(matrices, x + tagWidth, y, x + tagWidth + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
-		DrawableHelper.fill(matrices, x + 1, y, x + tagWidth, y + CLIENT.textRenderer.fontHeight, fillColor);
-		CLIENT.textRenderer.draw(matrices, text, (x + 1 + (tagWidth - CLIENT.textRenderer.getWidth(text)) / (float) 2), y + 1, textColor);
+	public static void drawBadge(DrawableHelper drawableHelper, int x, int y, int tagWidth, OrderedText text, int outlineColor, int fillColor, int textColor) {
+		drawableHelper.fill(x + 1, y - 1, x + tagWidth, y, outlineColor);
+		drawableHelper.fill(x, y, x + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
+		drawableHelper.fill(x + 1, y + 1 + CLIENT.textRenderer.fontHeight - 1, x + tagWidth, y + CLIENT.textRenderer.fontHeight + 1, outlineColor);
+		drawableHelper.fill( x + tagWidth, y, x + tagWidth + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
+		drawableHelper.fill( x + 1, y, x + tagWidth, y + CLIENT.textRenderer.fontHeight, fillColor);
+		drawableHelper.method_51430(CLIENT.textRenderer, text, (int) (x + 1 + (tagWidth - CLIENT.textRenderer.getWidth(text)) / (float) 2), y + 1, textColor, false);
 	}
 }

@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.gui;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -36,11 +37,12 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 						.build());
 	}
 
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		this.renderBackground(matrices);
-		this.list.render(matrices, mouseX, mouseY, delta);
-		drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
-		super.render(matrices, mouseX, mouseY, delta);
+	@Override
+	public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+		this.renderBackground(drawableHelper);
+		this.list.render(drawableHelper, mouseX, mouseY, delta);
+		drawableHelper.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+		super.render(drawableHelper, mouseX, mouseY, delta);
 	}
 
 	public void removed() {

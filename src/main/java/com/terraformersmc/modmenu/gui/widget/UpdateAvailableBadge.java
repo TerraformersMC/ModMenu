@@ -9,13 +9,12 @@ import net.minecraft.util.Util;
 public class UpdateAvailableBadge {
 	private static final Identifier UPDATE_ICON = new Identifier("realms", "textures/gui/realms/trial_icon.png");
 
-	public static void renderBadge(MatrixStack matrices, int x, int y) {
-		RenderSystem.setShaderTexture(0, UPDATE_ICON);
+	public static void renderBadge(DrawableHelper drawableHelper, int x, int y) {
 		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		int animOffset = 0;
 		if ((Util.getMeasuringTimeMs() / 800L & 1L) == 1L) {
 			animOffset = 8;
 		}
-		DrawableHelper.drawTexture(matrices, x, y, 0f, animOffset, 8, 8, 8, 16);
+		drawableHelper.drawTexture(UPDATE_ICON, x, y, 0f, animOffset, 8, 8, 8, 16);
 	}
 }
