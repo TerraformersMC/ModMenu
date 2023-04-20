@@ -42,8 +42,7 @@ public class ModMenu implements ClientModInitializer {
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
 	public static boolean modUpdateAvailable = false;
 
-	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
-	private static List<Supplier<Map<String, ConfigScreenFactory<?>>>> dynamicScreenFactories = new ArrayList<>();
+	private static Map<String, ConfigScreenFactory<?>> configScreenFactories = new HashMap<>();
 
 	private static int cachedDisplayedModCount = -1;
 	public static boolean runningQuilt = false;
@@ -55,12 +54,6 @@ public class ModMenu implements ClientModInitializer {
 		ConfigScreenFactory<?> factory = configScreenFactories.get(modid);
 		if (factory != null) {
 			return factory.create(menuScreen);
-		}
-		for (Supplier<Map<String, ConfigScreenFactory<?>>> dynamicFactoriesSupplier : dynamicScreenFactories) {
-			factory = dynamicFactoriesSupplier.get().get(modid);
-			if (factory != null) {
-				return factory.create(menuScreen);
-			}
 		}
 		return null;
 	}
@@ -76,7 +69,8 @@ public class ModMenu implements ClientModInitializer {
 			try {
 				ModMenuApi api = entrypoint.getEntrypoint();
 				factories.put(modId, api.getModConfigScreenFactory());
-				dynamicScreenFactories.add(api::getProvidedConfigScreenFactories);
+				Map<String, ConfigScreenFactory<?>> providedConfigScreenFactories = api.getProvidedConfigScreenFactories();
+				providedConfigScreenFactories.forEach(configScreenFactories::putIfAbsent);
 				api.attachModpackBadges(modpackMods::add);
 			} catch (Throwable e) {
 				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);

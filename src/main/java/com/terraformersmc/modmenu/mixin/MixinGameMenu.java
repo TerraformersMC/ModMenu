@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +30,7 @@ public abstract class MixinGameMenu extends Screen {
 	@Inject(method = "initWidgets", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget;forEachChild(Ljava/util/function/Consumer;)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	private void onInitWidgets(CallbackInfo ci, GridWidget gridWidget, GridWidget.Adder adder, Text text) {
 		if (gridWidget != null) {
-			final List<ClickableWidget> buttons = ((AccessorGridWidget) gridWidget).getChildren();
+			final List<Widget> buttons = ((AccessorGridWidget) gridWidget).getChildren();
 			if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 				int modsButtonIndex = -1;
 				final int spacing = 24;
@@ -37,24 +38,24 @@ public abstract class MixinGameMenu extends Screen {
 				ModMenuConfig.GameMenuButtonStyle style = ModMenuConfig.GAME_MENU_BUTTON_STYLE.getValue();
 				int reportBugsY = this.height / 4 + 72 - 16 + 1;
 				for (int i = 0; i < buttons.size(); i++) {
-					ClickableWidget button = buttons.get(i);
+					Widget widget = buttons.get(i);
 					if (style == ModMenuConfig.GameMenuButtonStyle.BELOW_BUGS) {
-						if (button.visible) {
-							ModMenuEventHandler.shiftButtons(button, modsButtonIndex == -1, spacing);
+						if (!(widget instanceof ClickableWidget button) || button.visible) {
+							ModMenuEventHandler.shiftButtons(widget, modsButtonIndex == -1, spacing);
 							if (modsButtonIndex == -1) {
-								buttonsY = button.getY();
+								buttonsY = widget.getY();
 							}
 						}
 					}
-					if (ModMenuEventHandler.buttonHasText(button, "menu.reportBugs")) {
+					if (ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs")) {
 						modsButtonIndex = i + 1;
-						reportBugsY = button.getY();
+						reportBugsY = widget.getY();
 						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_BUGS) {
-							buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), this));
+							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this));
 						} else {
 							modsButtonIndex = i + 1;
-							if (button.visible) {
-								buttonsY = button.getY();
+							if (!(widget instanceof ClickableWidget button) || button.visible) {
+								buttonsY = widget.getY();
 							}
 						}
 					}
