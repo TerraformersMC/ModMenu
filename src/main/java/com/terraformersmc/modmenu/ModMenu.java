@@ -43,11 +43,16 @@ public class ModMenu implements ClientModInitializer {
 	public static boolean modUpdateAvailable = false;
 
 	private static Map<String, ConfigScreenFactory<?>> configScreenFactories = new HashMap<>();
+	private static List<Map<String, ConfigScreenFactory<?>>> delayedScreenFactoryProviders = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
 	public static boolean runningQuilt = false;
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
+		if(!delayedScreenFactoryProviders.isEmpty()) {
+			delayedScreenFactoryProviders.forEach(map -> map.forEach(configScreenFactories::putIfAbsent));
+			delayedScreenFactoryProviders.clear();
+		}
 		if (ModMenuConfig.HIDDEN_CONFIGS.getValue().contains(modid)) {
 			return null;
 		}
@@ -61,23 +66,19 @@ public class ModMenu implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
-		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
 		Set<String> modpackMods = new HashSet<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(entrypoint -> {
 			ModMetadata metadata = entrypoint.getProvider().getMetadata();
 			String modId = metadata.getId();
 			try {
 				ModMenuApi api = entrypoint.getEntrypoint();
-				factories.put(modId, api.getModConfigScreenFactory());
-				Map<String, ConfigScreenFactory<?>> providedConfigScreenFactories = api.getProvidedConfigScreenFactories();
-				providedConfigScreenFactories.forEach(configScreenFactories::putIfAbsent);
+				configScreenFactories.put(modId, api.getModConfigScreenFactory());
+				delayedScreenFactoryProviders.add(api.getProvidedConfigScreenFactories());
 				api.attachModpackBadges(modpackMods::add);
 			} catch (Throwable e) {
 				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
 			}
 		});
-		configScreenFactories = ImmutableMap.copyOf(factories);
-
 
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
