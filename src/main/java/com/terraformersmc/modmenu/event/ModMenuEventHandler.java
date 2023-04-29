@@ -6,19 +6,16 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
-import com.terraformersmc.modmenu.mixin.AccessorGridWidget;
 import com.terraformersmc.modmenu.util.ModrinthUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -58,28 +55,31 @@ public class ModMenuEventHandler {
 			final int spacing = 24;
 			int buttonsY = screen.height / 4 + 48;
 			for (int i = 0; i < buttons.size(); i++) {
-				ClickableWidget button = buttons.get(i);
-				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.CLASSIC) {
-					if (button.visible) {
-						shiftButtons(button, modsButtonIndex == -1, spacing);
-						if (modsButtonIndex == -1) {
-							buttonsY = button.getY();
-						}
-					}
-				}
-				if (buttonHasText(button, "menu.online")) {
-					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.REPLACE_REALMS) {
-						buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
-					} else {
-						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
-							button.setWidth(98);
-						}
-						modsButtonIndex = i + 1;
+				ClickableWidget widget = buttons.get(i);
+				if (widget instanceof ButtonWidget button) {
+					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.CLASSIC) {
 						if (button.visible) {
-							buttonsY = button.getY();
+							shiftButtons(button, modsButtonIndex == -1, spacing);
+							if (modsButtonIndex == -1) {
+								buttonsY = button.getY();
+							}
+						}
+					}
+					if (buttonHasText(button, "menu.online")) {
+						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.REPLACE_REALMS) {
+							buttons.set(i, new ModMenuButtonWidget(button.getX(), button.getY(), button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						} else {
+							if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
+								button.setWidth(98);
+							}
+							modsButtonIndex = i + 1;
+							if (button.visible) {
+								buttonsY = button.getY();
+							}
 						}
 					}
 				}
+
 			}
 			if (modsButtonIndex != -1) {
 				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.CLASSIC) {
@@ -101,7 +101,7 @@ public class ModMenuEventHandler {
 	}
 
 	public static boolean buttonHasText(Widget widget, String translationKey) {
-		if(widget instanceof ClickableWidget button) {
+		if (widget instanceof ButtonWidget button) {
 			Text text = button.getMessage();
 			TextContent textContent = text.getContent();
 			return textContent instanceof TranslatableTextContent && ((TranslatableTextContent) textContent).getKey().equals(translationKey);
