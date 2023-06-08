@@ -19,6 +19,7 @@
   "modmenu.searchTerms.deprecated": "deprecated outdated old vananenud aegunud",
   "modmenu.searchTerms.clientside": "clientside gameside mängupoolne kliendipoolne klient",
   "modmenu.searchTerms.configurable": "configurations configs configures configurable options seadistused kohandused valikud sätted",
+  "modmenu.searchTerms.hasUpdate": "uuendused versioonid",
   "modmenu.toggleFilterOptions": "Lülita filtreerimisvalikuid",
   "modmenu.showingMods.n": "Kuvatakse %s modi",
   "modmenu.showingMods.1": "Kuvatakse %s modi",
@@ -43,6 +44,7 @@
   "modmenu.authorPrefix": "Autorilt %s",
   "modmenu.config": "Muuda seadistust",
   "modmenu.configure": "Seadista...",
+  "modmenu.configure.error": "\"%s\" seadistuskuva laadimine ebaõnnestus.\nTeata modile \"%s\", mitte Mod Menule",
   "modmenu.website": "Veebileht",
   "modmenu.issues": "Probleemid",
   "modmenu.credits": "Tiitrid:",
@@ -50,6 +52,9 @@
   "modmenu.license": "Litsents:",
   "modmenu.links": "Lingid:",
   "modmenu.source": "Lähtekood",
+  "modmenu.hasUpdate": "Uuendus on saadaval:",
+  "modmenu.childHasUpdate": "Selle modi alammodil on saadaolev uuendus.",
+  "modmenu.updateText": "v%s platvormil %s",
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -133,5 +138,11 @@
   "option.modmenu.translate_names.false": "tõlkimata",
   "option.modmenu.translate_descriptions": "Kirjeldused",
   "option.modmenu.translate_descriptions.true": "tõlgitud",
-  "option.modmenu.translate_descriptions.false": "tõlkimata"
+  "option.modmenu.translate_descriptions.false": "tõlkimata",
+  "option.modmenu.update_checker": "Uuenduste kontroll",
+  "option.modmenu.update_checker.true": "lubatud",
+  "option.modmenu.update_checker.false": "keelatud",
+  "option.modmenu.button_update_badge": "Uuenduste indikaator",
+  "option.modmenu.button_update_badge.true": "kuvatud",
+  "option.modmenu.button_update_badge.false": "peidetud"
 }
