@@ -13,6 +13,7 @@ import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
+import com.terraformersmc.modmenu.util.mod.search.ModSearch;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
@@ -52,6 +53,7 @@ public class ModsScreen extends Screen {
 	private static final Text CONFIGURE = Text.translatable("modmenu.configure");
 	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
 	private TextFieldWidget searchBox;
+	private ModSearch search;
 	private DescriptionListWidget descriptionListWidget;
 	private final Screen previousScreen;
 	private ModListWidget modList;
@@ -105,7 +107,6 @@ public class ModsScreen extends Screen {
 		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - filtersButtonSize / 2;
 		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, Text.translatable("modmenu.search"));
-		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
 
 		for (Mod mod : ModMenu.MODS.values()) {
 			String id = mod.getId();
@@ -126,8 +127,9 @@ public class ModsScreen extends Screen {
 		}
 
 		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY, this.height - 36, ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36, this.searchBox.getText(), this.modList, this);
+		this.search = new ModSearch(this, this.modList, this.searchBox);
 		this.modList.setLeftPos(0);
-		modList.reloadFilters();
+		modList.refreshEntries();
 
 		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
@@ -218,7 +220,7 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
 			ModMenuConfig.SORTING.cycleValue();
 			ModMenuConfigManager.save();
-			modList.reloadFilters();
+			modList.refreshEntries();
 		}, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -231,7 +233,7 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
 			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
 			ModMenuConfigManager.save();
-			modList.reloadFilters();
+			modList.refreshEntries();
 		}, Supplier::get) {
 			@Override
 			public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -431,8 +433,8 @@ public class ModsScreen extends Screen {
 		this.scrollPercent = scrollPercent;
 	}
 
-	public String getSearchInput() {
-		return searchBox.getText();
+	public ModSearch getSearch() {
+		return search;
 	}
 
 	private boolean updateFiltersX() {

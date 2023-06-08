@@ -10,7 +10,6 @@ import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
-import com.terraformersmc.modmenu.util.mod.ModSearch;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
@@ -42,7 +41,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		if (list != null) {
 			this.mods = list.mods;
 		}
-		this.filter(searchTerm, false);
 		setScrollAmount(parent.getScrollPercent() * Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
 	}
 
@@ -108,16 +106,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		return super.remove(index);
 	}
 
-	public void reloadFilters() {
-		filter(parent.getSearchInput(), true, false);
-	}
-
-
-	public void filter(String searchTerm, boolean refresh) {
-		filter(searchTerm, refresh, true);
-	}
-
-	private void filter(String searchTerm, boolean refresh, boolean search) {
+	public void refreshEntries() {
 		this.clearEntries();
 		addedMods.clear();
 		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> {
@@ -136,13 +125,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 //			mods.addAll(TestModContainer.getTestModContainers());
 		}
 
-		if (this.mods == null || refresh) {
+		if (this.mods == null) {
 			this.mods = new ArrayList<>();
 			this.mods.addAll(mods);
 			this.mods.sort(ModMenuConfig.SORTING.getValue().getComparator());
 		}
 
-		List<Mod> matched = ModSearch.search(parent, searchTerm, this.mods);
+		List<Mod> matched = this.parent.getSearch().getResults(mods);
 
 		for (Mod mod : matched) {
 			String modId = mod.getId();
@@ -157,11 +146,14 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					//Add parent mods when not searching
 					List<Mod> children = ModMenu.PARENT_MAP.get(mod);
 					children.sort(ModMenuConfig.SORTING.getValue().getComparator());
-					ParentEntry parent = new ParentEntry(mod, children, this);
+
+					//Get valid children
+					List<Mod> validChildren = children.stream().filter(matched::contains).collect(Collectors.toList());
+
+					ParentEntry parent = new ParentEntry(mod, children, validChildren.size(), this);
 					this.addEntry(parent);
 					//Add children if they are meant to be shown
 					if (this.parent.showModChildren.contains(modId)) {
-						List<Mod> validChildren = ModSearch.search(this.parent, searchTerm, children);
 						for (Mod child : validChildren) {
 							this.addEntry(new ChildEntry(child, parent, this, validChildren.indexOf(child) == validChildren.size() - 1));
 						}

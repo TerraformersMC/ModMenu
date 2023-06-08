@@ -5,7 +5,6 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import com.terraformersmc.modmenu.util.mod.ModSearch;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
@@ -20,12 +19,14 @@ import java.util.Objects;
 public class ParentEntry extends ModListEntry {
 	private static final Identifier PARENT_MOD_TEXTURE = new Identifier(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
 	protected List<Mod> children;
+	protected int shownChildren;
 	protected ModListWidget list;
 	protected boolean hoveringIcon = false;
 
-	public ParentEntry(Mod parent, List<Mod> children, ModListWidget list) {
+	public ParentEntry(Mod parent, List<Mod> children, int shownChildren, ModListWidget list) {
 		super(parent, list);
 		this.children = children;
+		this.shownChildren = shownChildren;
 		this.list = list;
 	}
 
@@ -35,7 +36,6 @@ public class ParentEntry extends ModListEntry {
 		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
-		int shownChildren = ModSearch.search(list.getParent(), list.getParent().getSearchInput(), getChildren()).size();
 		Text str = shownChildren == children.size() ? Text.literal(String.valueOf(shownChildren)) : Text.literal(shownChildren + "/" + children.size());
 		int childrenWidth = font.getWidth(str) - 1;
 		if (childrenBadgeWidth < childrenWidth + 4) {
@@ -72,7 +72,7 @@ public class ParentEntry extends ModListEntry {
 			} else {
 				list.getParent().showModChildren.add(id);
 			}
-			list.filter(list.getParent().getSearchInput(), false);
+			list.refreshEntries();
 		}
 		return super.mouseClicked(mouseX, mouseY, i);
 	}
@@ -86,18 +86,18 @@ public class ParentEntry extends ModListEntry {
 			} else {
 				list.getParent().showModChildren.add(modId);
 			}
-			list.filter(list.getParent().getSearchInput(), false);
+			list.refreshEntries();
 			return true;
 		} else if (keyCode == GLFW.GLFW_KEY_LEFT) {
 			if (list.getParent().showModChildren.contains(modId)) {
 				list.getParent().showModChildren.remove(modId);
-				list.filter(list.getParent().getSearchInput(), false);
+				list.refreshEntries();
 			}
 			return true;
 		} else if (keyCode == GLFW.GLFW_KEY_RIGHT) {
 			if (!list.getParent().showModChildren.contains(modId)) {
 				list.getParent().showModChildren.add(modId);
-				list.filter(list.getParent().getSearchInput(), false);
+				list.refreshEntries();
 			} else {
 				return list.keyPressed(GLFW.GLFW_KEY_DOWN, 0, 0);
 			}

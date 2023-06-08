@@ -8,6 +8,7 @@ import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.QuiltLoader;
@@ -115,22 +116,26 @@ public interface Mod {
 	boolean getChildHasUpdate();
 
 	enum Badge {
-		LIBRARY("modmenu.badge.library", 0xff107454, 0xff093929, "library"),
-		CLIENT("modmenu.badge.clientsideOnly", 0xff2b4b7c, 0xff0e2a55, null),
-		DEPRECATED("modmenu.badge.deprecated", 0xff841426, 0xff530C17, "deprecated"),
-		PATCHWORK_FORGE("modmenu.badge.forge", 0xff1f2d42, 0xff101721, null),
-		MODPACK("modmenu.badge.modpack", 0xff7a2b7c, 0xff510d54, null),
-		MINECRAFT("modmenu.badge.minecraft", 0xff6f6c6a, 0xff31302f, null);
+		LIBRARY("modmenu.badge.library", "modmenu.searchTerms.library", 0xff107454, 0xff093929, 0xff4ce6b5, "library"),
+		CLIENT("modmenu.badge.clientsideOnly", "modmenu.searchTerms.clientside", 0xff2b4b7c, 0xff0e2a55, 0xff3484fe, null),
+		DEPRECATED("modmenu.badge.deprecated", "modmenu.searchTerms.deprecated", 0xff841426, 0xff530C17, 0xffe44e66, "deprecated"),
+		PATCHWORK_FORGE("modmenu.badge.forge", "modmenu.searchTerms.patchwork", 0xff1f2d42, 0xff101721, 0xff7a93b8, null),
+		MODPACK("modmenu.badge.modpack", "modmenu.searchTerms.modpack", 0xff7a2b7c, 0xff510d54, 0xffc868ca, null),
+		MINECRAFT("modmenu.badge.minecraft", null, 0xff6f6c6a, 0xff31302f, 0xff9b9997, null);
 
 		private final Text text;
 		private final int outlineColor, fillColor;
+		private final TextColor searchColor;
 		private final String key;
+		private final String searchKey;
 		private static final Map<String, Badge> KEY_MAP = new HashMap<>();
 
-		Badge(String translationKey, int outlineColor, int fillColor, String key) {
+		Badge(String translationKey, String searchKey, int outlineColor, int fillColor, int searchColor, String key) {
 			this.text = Text.translatable(translationKey);
+			this.searchKey = searchKey;
 			this.outlineColor = outlineColor;
 			this.fillColor = fillColor;
+			this.searchColor = TextColor.fromRgb(searchColor);
 			this.key = key;
 		}
 
@@ -144,6 +149,14 @@ public interface Mod {
 
 		public int getFillColor() {
 			return this.fillColor;
+		}
+
+		public TextColor getSearchColor() {
+			return this.searchColor;
+		}
+
+		public String getSearchKey() {
+			return this.searchKey;
 		}
 
 		public static Set<Badge> convert(Set<String> badgeKeys) {
