@@ -110,10 +110,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				this.openConfig();
 			} else if (Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
 				this.openConfig();
-			} else {
-				this.sinceLastClick = Util.getMeasuringTimeMs();
 			}
 		}
+		this.sinceLastClick = Util.getMeasuringTimeMs();
 		return true;
 	}
 
