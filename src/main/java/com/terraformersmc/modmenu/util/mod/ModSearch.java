@@ -3,7 +3,9 @@ package com.terraformersmc.modmenu.util.mod;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.util.Pair;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -19,11 +21,14 @@ public class ModSearch {
 			return candidates;
 		}
 		return candidates.stream()
-				.filter(modContainer -> passesFilters(screen, modContainer, query.toLowerCase(Locale.ROOT)))
+				.map(modContainer -> new Pair<>(modContainer, passesFilters(screen, modContainer, query.toLowerCase(Locale.ROOT))))
+				.filter(pair -> pair.getRight() > 0)
+				.sorted((a, b) -> b.getRight() - a.getRight())
+				.map(Pair::getLeft)
 				.collect(Collectors.toList());
 	}
 
-	private static boolean passesFilters(ModsScreen screen, Mod mod, String query) {
+	private static int passesFilters(ModsScreen screen, Mod mod, String query) {
 		String modId = mod.getId();
 		String modName = mod.getName();
 		String modTranslatedName = mod.getTranslatedName();
@@ -43,7 +48,11 @@ public class ModSearch {
 		if (modName.toLowerCase(Locale.ROOT).contains(query) // Search default mod name
 				|| modTranslatedName.toLowerCase(Locale.ROOT).contains(query) // Search localized mod name
 				|| modId.toLowerCase(Locale.ROOT).contains(query) // Search mod ID
-				|| modDescription.toLowerCase(Locale.ROOT).contains(query) // Search default mod description
+		) {
+			return query.length() >= 3 ? 2 : 1;
+		}
+
+		if (modDescription.toLowerCase(Locale.ROOT).contains(query) // Search default mod description
 				|| modTranslatedDescription.toLowerCase(Locale.ROOT).contains(query) // Search localized mod description
 				|| modSummary.toLowerCase(Locale.ROOT).contains(query) // Search mod summary
 				|| authorMatches(mod, query) // Search via author
@@ -55,18 +64,20 @@ public class ModSearch {
 				|| configurable.contains(query) && screen.getModHasConfigScreen().get(modId) // Search for mods that can be configured
 				|| hasUpdate.contains(query) && mod.getModrinthData() != null // Search for mods that have updates
 		) {
-			return true;
+			return 1;
 		}
 
 		// Allow parent to pass filter if a child passes
 		if (ModMenu.PARENT_MAP.keySet().contains(mod)) {
 			for (Mod child : ModMenu.PARENT_MAP.get(mod)) {
-				if (passesFilters(screen, child, query)) {
-					return true;
+				int result = passesFilters(screen, child, query);
+
+				if (result > 0) {
+					return result;
 				}
 			}
 		}
-		return false;
+		return 0;
 	}
 
 	private static boolean authorMatches(Mod mod, String query) {
