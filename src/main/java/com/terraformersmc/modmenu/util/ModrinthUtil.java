@@ -81,9 +81,15 @@ public class ModrinthUtil {
 						var projectId = versionObj.get("project_id").getAsString();
 						var versionNumber = versionObj.get("version_number").getAsString();
 						var versionId = versionObj.get("id").getAsString();
-						var versionHash = versionObj.get("files").getAsJsonArray().asList()
-								.stream().filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst()
-								.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
+						var primaryFile = versionObj.get("files").getAsJsonArray().asList().stream()
+								.filter(file -> file.getAsJsonObject().get("primary").getAsBoolean()).findFirst();
+
+						if (primaryFile.isEmpty()) {
+							return;
+						}
+
+						var versionHash = primaryFile.get().getAsJsonObject().get("hashes").getAsJsonObject().get("sha512").getAsString();
+
 						if (!Objects.equals(versionHash, lookupHash)) {
 							// hashes different, there's an update.
 							HASH_TO_MOD.get(lookupHash).forEach(mod -> {
