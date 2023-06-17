@@ -277,7 +277,7 @@ public class ModsScreen extends Screen {
 
 	@Override
 	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		this.renderBackground(DrawContext);
+		this.renderBackgroundTexture(DrawContext);
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
 			this.descriptionListWidget.render(DrawContext, mouseX, mouseY, delta);
@@ -385,25 +385,6 @@ public class ModsScreen extends Screen {
 			return new int[]{total};
 		}
 		return new int[]{visible, total};
-	}
-
-	@Override
-	public void renderBackground(DrawContext DrawContext) {
-		ModsScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, 255);
-	}
-
-	static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
-		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, Screen.OPTIONS_BACKGROUND_TEXTURE);
-		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
-		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
-		buffer.vertex(x2, y1, 0.0D).texture(x2 / 32.0F, y1 / 32.0F).color(red, green, blue, startAlpha).next();
-		buffer.vertex(x1, y1, 0.0D).texture(x1 / 32.0F, y1 / 32.0F).color(red, green, blue, startAlpha).next();
-		tessellator.draw();
 	}
 
 	@Override
