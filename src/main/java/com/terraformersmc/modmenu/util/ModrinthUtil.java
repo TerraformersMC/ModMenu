@@ -49,13 +49,16 @@ public class ModrinthUtil {
 							LOGGER.error("Error checking for updates: ", e);
 						}
 					});
-			String loader = ModMenu.runningQuilt ? "quilt" : "fabric";
+
+			String primaryLoader = ModMenu.runningQuilt ? "quilt" : "fabric";
+			List<String> loaders = ModMenu.runningQuilt ? List.of("fabric", "quilt") : List.of("fabric");
+
 			String mcVer = SharedConstants.getGameVersion().getName();
 			String[] splitVersion = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID)
 					.get().getMetadata().getVersion().getFriendlyString().split("\\+", 1); // Strip build metadata for privacy
 			final var modMenuVersion = splitVersion.length > 1 ? splitVersion[1] : splitVersion[0];
-			final var userAgent = "%s/%s (%s/%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, mcVer, loader);
-			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(HASH_TO_MOD.keySet(), loader, mcVer));
+			final var userAgent = "%s/%s (%s/%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, mcVer, primaryLoader);
+			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(HASH_TO_MOD.keySet(), loaders, mcVer));
 			LOGGER.debug("User agent: " + userAgent);
 			LOGGER.debug("Body: " + body);
 			var latestVersionsRequest = HttpRequest.newBuilder()
@@ -123,9 +126,9 @@ public class ModrinthUtil {
 		@SerializedName("game_versions")
 		public Collection<String> gameVersions;
 
-		public LatestVersionsFromHashesBody(Collection<String> hashes, String loader, String mcVersion) {
+		public LatestVersionsFromHashesBody(Collection<String> hashes, Collection<String> loaders, String mcVersion) {
 			this.hashes = hashes;
-			this.loaders = Set.of(loader);
+			this.loaders = loaders;
 			this.gameVersions = Set.of(mcVersion);
 		}
 	}

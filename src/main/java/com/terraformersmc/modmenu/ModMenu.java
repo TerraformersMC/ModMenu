@@ -46,7 +46,7 @@ public class ModMenu implements ClientModInitializer {
 	private static List<Map<String, ConfigScreenFactory<?>>> delayedScreenFactoryProviders = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
-	public static boolean runningQuilt = false;
+	public static boolean runningQuilt = FabricLoader.getInstance().isModLoaded("quilt_loader");
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
 		if(!delayedScreenFactoryProviders.isEmpty()) {
