@@ -6,6 +6,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.util.OptionalUtil;
+import com.terraformersmc.modmenu.util.VersionUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
@@ -190,15 +191,7 @@ public class FabricMod implements Mod {
 	}
 
 	public @NotNull String getPrefixedVersion() {
-		String version = getVersion().trim();
-		if (version.startsWith("version")) {
-			version = "v" + version.substring("version".length());
-		} else if (version.startsWith("ver")) {
-			version = "v" + version.substring("ver".length());
-		} else if (!version.startsWith("v")) {
-			version = "v" + version;
-		}
-		return version.trim();
+		return VersionUtil.getPrefixedVersion(getVersion());
 	}
 
 	@Override
