@@ -29,26 +29,34 @@ public class ModrinthUtil {
 	private static final HttpClient client = HttpClient.newHttpClient();
 	private static boolean apiV2Deprecated = false;
 
+	private static boolean allowsUpdateChecks(Mod mod) {
+		return mod.allowsUpdateChecks();
+	}
+
 	public static void checkForUpdates() {
+		if (apiV2Deprecated || !ModMenuConfig.UPDATE_CHECKER.getValue()) {
+			return;
+		}
+
 		Util.getMainWorkerExecutor().execute(() -> {
 			LOGGER.info("Checking mod updates...");
-			Map<String, Set<Mod>> HASH_TO_MOD = new HashMap<>();
-			new ArrayList<>(ModMenu.MODS.values()).stream().filter(mod -> mod.allowsUpdateChecks() &&
-							ModMenuConfig.UPDATE_CHECKER.getValue() &&
-							!ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId()) &&
-							!apiV2Deprecated)
-					.forEach(mod -> {
-						try {
-							String hash = mod.getSha512Hash();
-							if (hash != null) {
-								LOGGER.debug("Hash for {} is {}", mod.getId(), hash);
-								HASH_TO_MOD.putIfAbsent(hash, new HashSet<>());
-								HASH_TO_MOD.get(hash).add(mod);
-							}
-						} catch (IOException e) {
-							LOGGER.error("Error checking for updates: ", e);
-						}
-					});
+
+			Map<String, Set<Mod>> modHashes = new HashMap<>();
+			new ArrayList<>(ModMenu.MODS.values()).stream().filter(ModrinthUtil::allowsUpdateChecks).forEach(mod -> {
+				String modId = mod.getId();
+
+				try {
+					String hash = mod.getSha512Hash();
+
+					if (hash != null) {
+						LOGGER.debug("Hash for {} is {}", modId, hash);
+						modHashes.putIfAbsent(hash, new HashSet<>());
+						modHashes.get(hash).add(mod);
+					}
+				} catch (IOException e) {
+					LOGGER.error("Error getting mod hash for mod {}: ", modId, e);
+				}
+			});
 
 			String environment = ModMenu.devEnvironment ? "/development": "";
 			String primaryLoader = ModMenu.runningQuilt ? "quilt" : "fabric";
@@ -59,7 +67,7 @@ public class ModrinthUtil {
 					.get().getMetadata().getVersion().getFriendlyString().split("\\+", 1); // Strip build metadata for privacy
 			final var modMenuVersion = splitVersion.length > 1 ? splitVersion[1] : splitVersion[0];
 			final var userAgent = "%s/%s (%s/%s%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, mcVer, primaryLoader, environment);
-			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(HASH_TO_MOD.keySet(), loaders, mcVer));
+			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(modHashes.keySet(), loaders, mcVer));
 			LOGGER.debug("User agent: " + userAgent);
 			LOGGER.debug("Body: " + body);
 			var latestVersionsRequest = HttpRequest.newBuilder()
@@ -96,10 +104,9 @@ public class ModrinthUtil {
 
 						if (!Objects.equals(versionHash, lookupHash)) {
 							// hashes different, there's an update.
-							HASH_TO_MOD.get(lookupHash).forEach(mod -> {
+							modHashes.get(lookupHash).forEach(mod -> {
 								LOGGER.info("Update available for '{}@{}', (-> {})", mod.getId(), mod.getVersion(), versionNumber);
 								mod.setModrinthData(new ModrinthData(projectId, versionId, versionNumber));
-								ModMenu.modUpdateAvailable = true;
 							});
 						}
 					});
