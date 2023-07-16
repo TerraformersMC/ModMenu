@@ -101,9 +101,6 @@ public class ModMenu implements ClientModInitializer {
 
 		// Initialize parent map
 		for (Mod mod : MODS.values()) {
-			if (mod.isHidden()) {
-				continue;
-			}
 			String parentId = mod.getParent();
 			if (parentId != null) {
 				Mod parent = MODS.getOrDefault(parentId, dummyParents.get(parentId));

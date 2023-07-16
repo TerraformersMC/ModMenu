@@ -118,6 +118,16 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		filter(searchTerm, refresh, true);
 	}
 
+	private boolean hasVisibleChildMods(Mod parent) {
+		// All child mods shown, skip further checks
+		if (ModMenuConfig.SHOW_LIBRARIES.getValue()) {
+			return true;
+		}
+
+		List<Mod> children = ModMenu.PARENT_MAP.get(parent);
+		return !children.stream().allMatch(child -> child.getBadges().contains(Mod.Badge.LIBRARY));
+	}
+
 	private void filter(String searchTerm, boolean refresh, boolean search) {
 		this.clearEntries();
 		addedMods.clear();
@@ -129,6 +139,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					return false;
 				}
 			}
+
 			return !mod.isHidden();
 		}).collect(Collectors.toSet());
 
@@ -154,7 +165,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			}
 
 			if (!ModMenu.PARENT_MAP.values().contains(mod)) {
-				if (ModMenu.PARENT_MAP.keySet().contains(mod)) {
+				if (ModMenu.PARENT_MAP.keySet().contains(mod) && hasVisibleChildMods(mod)) {
 					//Add parent mods when not searching
 					List<Mod> children = ModMenu.PARENT_MAP.get(mod);
 					children.sort(ModMenuConfig.SORTING.getValue().getComparator());

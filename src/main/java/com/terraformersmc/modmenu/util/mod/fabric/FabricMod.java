@@ -44,8 +44,6 @@ public class FabricMod implements Mod {
 
 	protected boolean childHasUpdate = false;
 
-	protected boolean hidesItself = false;
-
 	public FabricMod(ModContainer modContainer, Set<String> modpackMods) {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
@@ -89,7 +87,6 @@ public class FabricMod implements Mod {
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
-			hidesItself = CustomValueUtil.getBoolean("hidden", modMenuObject).orElse(false);
 		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
@@ -335,7 +332,7 @@ public class FabricMod implements Mod {
 
 	@Override
 	public boolean isHidden() {
-		return this.hidesItself || ModMenuConfig.HIDDEN_MODS.getValue().contains(this.getId());
+		return ModMenuConfig.HIDDEN_MODS.getValue().contains(this.getId());
 	}
 
 	static class ModMenuData {
