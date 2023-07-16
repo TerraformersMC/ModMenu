@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthData;
@@ -42,6 +43,8 @@ public class FabricMod implements Mod {
 	protected boolean allowsUpdateChecks = true;
 
 	protected boolean childHasUpdate = false;
+
+	protected boolean hidesItself = false;
 
 	public FabricMod(ModContainer modContainer, Set<String> modpackMods) {
 		this.container = modContainer;
@@ -86,6 +89,7 @@ public class FabricMod implements Mod {
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
+			hidesItself = CustomValueUtil.getBoolean("hidden", modMenuObject).orElse(false);
 		}
 		this.modMenuData = new ModMenuData(
 				badgeNames,
@@ -327,6 +331,11 @@ public class FabricMod implements Mod {
 	@Override
 	public void setChildHasUpdate() {
 		this.childHasUpdate = true;
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidesItself || ModMenuConfig.HIDDEN_MODS.getValue().contains(this.getId());
 	}
 
 	static class ModMenuData {

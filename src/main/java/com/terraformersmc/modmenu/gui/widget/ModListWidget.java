@@ -129,7 +129,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					return false;
 				}
 			}
-			return !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId());
+			return !mod.isHidden();
 		}).collect(Collectors.toSet());
 
 		if (DEBUG) {
