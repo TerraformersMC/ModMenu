@@ -83,15 +83,15 @@ public class ModMenu implements ClientModInitializer {
 
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
-			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
-				if (FabricLoader.getInstance().isModLoaded("quilt_loader")) {
-					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
-					MODS.put(mod.getId(), mod);
-				} else {
-					FabricMod mod = new FabricMod(modContainer, modpackMods);
-					MODS.put(mod.getId(), mod);
-				}
+			Mod mod;
+
+			if (runningQuilt) {
+				mod = new QuiltMod(modContainer, modpackMods);
+			} else {
+				mod = new FabricMod(modContainer, modpackMods);
 			}
+
+			MODS.put(mod.getId(), mod);
 		}
 
 		if (ModMenuConfig.UPDATE_CHECKER.getValue()) {
@@ -130,7 +130,7 @@ public class ModMenu implements ClientModInitializer {
 			cachedDisplayedModCount = Math.toIntExact(MODS.values().stream().filter(mod ->
 					(ModMenuConfig.COUNT_CHILDREN.getValue() || mod.getParent() == null) &&
 							(ModMenuConfig.COUNT_LIBRARIES.getValue() || !mod.getBadges().contains(Mod.Badge.LIBRARY)) &&
-							(ModMenuConfig.COUNT_HIDDEN_MODS.getValue() || !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId()))
+							(ModMenuConfig.COUNT_HIDDEN_MODS.getValue() || !mod.isHidden())
 			).count());
 		}
 		return NumberFormat.getInstance().format(cachedDisplayedModCount);
