@@ -47,6 +47,7 @@ public class ModMenu implements ClientModInitializer {
 
 	private static int cachedDisplayedModCount = -1;
 	public static boolean runningQuilt = FabricLoader.getInstance().isModLoaded("quilt_loader");
+	public static boolean devEnvironment = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
 		if (ModMenuConfig.HIDDEN_CONFIGS.getValue().contains(modid)) {
