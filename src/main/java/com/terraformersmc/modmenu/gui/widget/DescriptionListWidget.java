@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
+import com.terraformersmc.modmenu.util.VersionUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -110,7 +111,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 							children().add(new DescriptionEntry(line, 8));
 						}
 
-						Text updateText = Text.translatable("modmenu.updateText", mod.getModrinthData().versionNumber(), MODRINTH_TEXT)
+						Text updateText = Text.translatable("modmenu.updateText", VersionUtil.stripPrefix(mod.getModrinthData().versionNumber()), MODRINTH_TEXT)
 							.formatted(Formatting.BLUE)
 							.formatted(Formatting.UNDERLINE);
 
