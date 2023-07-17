@@ -40,7 +40,6 @@ public class ModMenu implements ClientModInitializer {
 	public static final Map<String, Mod> MODS = new HashMap<>();
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
-	public static boolean modUpdateAvailable = false;
 
 	private static Map<String, ConfigScreenFactory<?>> configScreenFactories = new HashMap<>();
 	private static List<Map<String, ConfigScreenFactory<?>>> delayedScreenFactoryProviders = new ArrayList<>();
@@ -94,9 +93,7 @@ public class ModMenu implements ClientModInitializer {
 			MODS.put(mod.getId(), mod);
 		}
 
-		if (ModMenuConfig.UPDATE_CHECKER.getValue()) {
-			ModrinthUtil.checkForUpdates();
-		}
+		ModrinthUtil.checkForUpdates();
 
 		Map<String, Mod> dummyParents = new HashMap<>();
 
@@ -122,6 +119,28 @@ public class ModMenu implements ClientModInitializer {
 
 	public static void clearModCountCache() {
 		cachedDisplayedModCount = -1;
+	}
+
+	public static boolean areModUpdatesAvailable() {
+		if (!ModMenuConfig.UPDATE_CHECKER.getValue()) {
+			return false;
+		}
+
+		for (Mod mod : MODS.values()) {
+			if (mod.isHidden()) {
+				continue;
+			}
+
+			if (!ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
+				continue;
+			}
+
+			if (mod.getModrinthData() != null || mod.getChildHasUpdate()) {
+				return true; // At least one currently visible mod has an update
+			}
+		}
+
+		return false;
 	}
 
 	public static String getDisplayedModCount() {
