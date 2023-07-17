@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthData;
@@ -327,6 +328,11 @@ public class FabricMod implements Mod {
 	@Override
 	public void setChildHasUpdate() {
 		this.childHasUpdate = true;
+	}
+
+	@Override
+	public boolean isHidden() {
+		return ModMenuConfig.HIDDEN_MODS.getValue().contains(this.getId());
 	}
 
 	static class ModMenuData {

@@ -360,10 +360,10 @@ public class ModsScreen extends Screen {
 	}
 
 	private Text computeModCountText(boolean includeLibs) {
-		int[] rootMods = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> !mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
+		int[] rootMods = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
 
 		if (includeLibs && ModMenuConfig.SHOW_LIBRARIES.getValue()) {
-			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
+			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
 			return TranslationUtil.translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
 		} else {
 			return TranslationUtil.translateNumeric("modmenu.showingMods", rootMods);
@@ -372,7 +372,7 @@ public class ModsScreen extends Screen {
 
 	private Text computeLibraryCountText() {
 		if (ModMenuConfig.SHOW_LIBRARIES.getValue()) {
-			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
+			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
 			return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
 			return Text.literal(null);
