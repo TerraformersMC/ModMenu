@@ -221,6 +221,10 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			tessellator.draw();
 		}
 
+		this.enableScissor(DrawContext);
+		this.renderList(DrawContext, mouseX, mouseY, delta);
+		DrawContext.disableScissor();
+
 		RenderSystem.depthFunc(515);
 		RenderSystem.disableDepthTest();
 		RenderSystem.enableBlend();
@@ -269,10 +273,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 				next();
 		tessellator.draw();
-
-		this.enableScissor(DrawContext);
-		this.renderList(DrawContext, mouseX, mouseY, delta);
-		DrawContext.disableScissor();
 
 		this.renderScrollBar(bufferBuilder, tessellator);
 
