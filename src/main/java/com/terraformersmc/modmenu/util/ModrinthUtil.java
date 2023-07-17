@@ -50,6 +50,7 @@ public class ModrinthUtil {
 						}
 					});
 
+			String environment = ModMenu.devEnvironment ? "/development": "";
 			String primaryLoader = ModMenu.runningQuilt ? "quilt" : "fabric";
 			List<String> loaders = ModMenu.runningQuilt ? List.of("fabric", "quilt") : List.of("fabric");
 
@@ -57,7 +58,7 @@ public class ModrinthUtil {
 			String[] splitVersion = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID)
 					.get().getMetadata().getVersion().getFriendlyString().split("\\+", 1); // Strip build metadata for privacy
 			final var modMenuVersion = splitVersion.length > 1 ? splitVersion[1] : splitVersion[0];
-			final var userAgent = "%s/%s (%s/%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, mcVer, primaryLoader);
+			final var userAgent = "%s/%s (%s/%s%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, mcVer, primaryLoader, environment);
 			String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(HASH_TO_MOD.keySet(), loaders, mcVer));
 			LOGGER.debug("User agent: " + userAgent);
 			LOGGER.debug("Body: " + body);
