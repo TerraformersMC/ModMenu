@@ -18,7 +18,7 @@ public class UpdateCheckerTexturedButtonWidget extends TexturedButtonWidget {
 	@Override
 	public void renderButton(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		super.renderButton(DrawContext, mouseX, mouseY, delta);
-		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.modUpdateAvailable) {
+		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
 			UpdateAvailableBadge.renderBadge(DrawContext, this.getX() + this.width - 5, this.getY() - 3);
 		}
 	}

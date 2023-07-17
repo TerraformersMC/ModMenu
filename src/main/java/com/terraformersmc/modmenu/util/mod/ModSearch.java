@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.util.mod;
 
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Pair;
@@ -42,6 +43,11 @@ public class ModSearch {
 		String deprecated = I18n.translate("modmenu.searchTerms.deprecated");
 		String clientside = I18n.translate("modmenu.searchTerms.clientside");
 		String configurable = I18n.translate("modmenu.searchTerms.configurable");
+
+		// Libraries are currently hidden, ignore them entirely
+		if (!ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
+			return 0;
+		}
 
 		// Some basic search, could do with something more advanced but this will do for now
 		if (modName.toLowerCase(Locale.ROOT).contains(query) // Search default mod name

@@ -40,13 +40,13 @@ public class ModMenu implements ClientModInitializer {
 	public static final Map<String, Mod> MODS = new HashMap<>();
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
-	public static boolean modUpdateAvailable = false;
 
 	private static Map<String, ConfigScreenFactory<?>> configScreenFactories = new HashMap<>();
 	private static List<Map<String, ConfigScreenFactory<?>>> delayedScreenFactoryProviders = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
 	public static boolean runningQuilt = FabricLoader.getInstance().isModLoaded("quilt_loader");
+	public static boolean devEnvironment = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
 		if(!delayedScreenFactoryProviders.isEmpty()) {
@@ -82,20 +82,18 @@ public class ModMenu implements ClientModInitializer {
 
 		// Fill mods map
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
-			if (!ModMenuConfig.HIDDEN_MODS.getValue().contains(modContainer.getMetadata().getId())) {
-				if (FabricLoader.getInstance().isModLoaded("quilt_loader")) {
-					QuiltMod mod = new QuiltMod(modContainer, modpackMods);
-					MODS.put(mod.getId(), mod);
-				} else {
-					FabricMod mod = new FabricMod(modContainer, modpackMods);
-					MODS.put(mod.getId(), mod);
-				}
+			Mod mod;
+
+			if (runningQuilt) {
+				mod = new QuiltMod(modContainer, modpackMods);
+			} else {
+				mod = new FabricMod(modContainer, modpackMods);
 			}
+
+			MODS.put(mod.getId(), mod);
 		}
 
-		if (ModMenuConfig.UPDATE_CHECKER.getValue()) {
-			ModrinthUtil.checkForUpdates();
-		}
+		ModrinthUtil.checkForUpdates();
 
 		Map<String, Mod> dummyParents = new HashMap<>();
 
@@ -123,13 +121,35 @@ public class ModMenu implements ClientModInitializer {
 		cachedDisplayedModCount = -1;
 	}
 
+	public static boolean areModUpdatesAvailable() {
+		if (!ModMenuConfig.UPDATE_CHECKER.getValue()) {
+			return false;
+		}
+
+		for (Mod mod : MODS.values()) {
+			if (mod.isHidden()) {
+				continue;
+			}
+
+			if (!ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
+				continue;
+			}
+
+			if (mod.getModrinthData() != null || mod.getChildHasUpdate()) {
+				return true; // At least one currently visible mod has an update
+			}
+		}
+
+		return false;
+	}
+
 	public static String getDisplayedModCount() {
 		if (cachedDisplayedModCount == -1) {
 			// listen, if you have >= 2^32 mods then that's on you
 			cachedDisplayedModCount = Math.toIntExact(MODS.values().stream().filter(mod ->
 					(ModMenuConfig.COUNT_CHILDREN.getValue() || mod.getParent() == null) &&
 							(ModMenuConfig.COUNT_LIBRARIES.getValue() || !mod.getBadges().contains(Mod.Badge.LIBRARY)) &&
-							(ModMenuConfig.COUNT_HIDDEN_MODS.getValue() || !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId()))
+							(ModMenuConfig.COUNT_HIDDEN_MODS.getValue() || !mod.isHidden())
 			).count());
 		}
 		return NumberFormat.getInstance().format(cachedDisplayedModCount);
