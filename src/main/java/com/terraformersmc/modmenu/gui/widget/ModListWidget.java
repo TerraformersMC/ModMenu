@@ -119,13 +119,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	private boolean hasVisibleChildMods(Mod parent) {
-		// All child mods shown, skip further checks
-		if (ModMenuConfig.SHOW_LIBRARIES.getValue()) {
-			return true;
-		}
-
 		List<Mod> children = ModMenu.PARENT_MAP.get(parent);
-		return !children.stream().allMatch(child -> child.getBadges().contains(Mod.Badge.LIBRARY));
+		boolean hideLibraries = !ModMenuConfig.SHOW_LIBRARIES.getValue();
+
+		return !children.stream().allMatch(child -> child.isHidden() || hideLibraries && child.getBadges().contains(Mod.Badge.LIBRARY));
 	}
 
 	private void filter(String searchTerm, boolean refresh, boolean search) {
