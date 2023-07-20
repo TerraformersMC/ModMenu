@@ -39,6 +39,12 @@ public class FabricIconHandler implements Closeable {
 				return tex;
 			}
 
+		} catch (IllegalStateException e) {
+			if (e.getMessage().equals("Must be square icon")) {
+				LOGGER.error("Mod icon must be a square for icon source {}: {}", iconSource.getMetadata().getId(), iconPath, e);
+			}
+
+			return null;
 		} catch (Throwable t) {
 			if (!iconPath.equals("assets/" + iconSource.getMetadata().getId() + "/icon.png")) {
 				LOGGER.error("Invalid mod icon for icon source {}: {}", iconSource.getMetadata().getId(), iconPath, t);
