@@ -21,6 +21,7 @@
   "modmenu.searchTerms.deprecated": "искергән иске борынгы әүвәл",
   "modmenu.searchTerms.clientside": "клиент клиентлы",
   "modmenu.searchTerms.configurable": "көйләүләр көйләнелә торган көйләнмә көйләү көйләнеш",
+  "modmenu.searchTerms.hasUpdate": "яңартулар версия яңарту",
   
   "modmenu.toggleFilterOptions": "Фильтрлар",
   "modmenu.showingMods.n": "%s мод күрсәтелә",
@@ -59,7 +60,8 @@
   "modmenu.links": "Сылтамалар:",
   "modmenu.source": "Чыганак",
   "modmenu.hasUpdate": "Яңарту бар:",
-  "modmenu.childHasUpdate": "Бүлендек мод өчен яңарту бар.",
+  "modmenu.experimental": "(Mod Menu яңарту тикшерүчесе — эксперименталь функция!)",
+  "modmenu.childHasUpdate": "Бу модның бала өчен яңарту бар.",
   "modmenu.updateText": "%2$s сайтында %1$s версиясе",
   
   "modmenu.buymeacoffee": "Buy Me a Coffee",
@@ -140,6 +142,10 @@
   "option.modmenu.mods_button_style.replace_realms": "[Realms] урнына",
   "option.modmenu.mods_button_style.shrink": "[Realms] уңда",
   "option.modmenu.mods_button_style.icon": "Тамгачык",
+  "option.modmenu.game_menu_button_style": "Менюда",
+  "option.modmenu.game_menu_button_style.below_bugs": "Хаталар астына",
+  "option.modmenu.game_menu_button_style.replace_bugs": "Хаталар алыштыру",
+  "option.modmenu.game_menu_button_style.icon": "Тамгачык",
   "option.modmenu.random_java_colors": "Java төсе",
   "option.modmenu.random_java_colors.true": "Җитештерүчедән",
   "option.modmenu.random_java_colors.false": "Һәрвакыт кызыл",
