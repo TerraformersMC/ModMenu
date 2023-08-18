@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 public class UpdateAvailableBadge {
-	private static final Identifier UPDATE_ICON = new Identifier("realms", "textures/gui/realms/trial_icon.png");
+	private static final Identifier UPDATE_ICON = new Identifier("icon/trial_available");
 
 	public static void renderBadge(DrawContext DrawContext, int x, int y) {
 		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -15,6 +15,6 @@ public class UpdateAvailableBadge {
 		if ((Util.getMeasuringTimeMs() / 800L & 1L) == 1L) {
 			animOffset = 8;
 		}
-		DrawContext.drawTexture(UPDATE_ICON, x, y, 0f, animOffset, 8, 8, 8, 16);
+		DrawContext.drawGuiTexture(UPDATE_ICON, x, y, 8, 8);
 	}
 }
