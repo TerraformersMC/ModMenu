@@ -38,10 +38,14 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 
 	@Override
 	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		this.renderBackgroundTexture(DrawContext);
+		super.render(DrawContext, mouseX, mouseY, delta);
 		this.list.render(DrawContext, mouseX, mouseY, delta);
 		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
-		super.render(DrawContext, mouseX, mouseY, delta);
+	}
+
+	@Override
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+		this.renderBackgroundTexture(context);
 	}
 
 	public void removed() {

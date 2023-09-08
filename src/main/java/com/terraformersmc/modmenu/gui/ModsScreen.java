@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
+import com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
@@ -19,7 +20,6 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
@@ -79,19 +79,14 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
 		if (modList.isMouseOver(mouseX, mouseY)) {
-			return this.modList.mouseScrolled(mouseX, mouseY, amount);
+			return this.modList.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 		}
 		if (descriptionListWidget.isMouseOver(mouseX, mouseY)) {
-			return this.descriptionListWidget.mouseScrolled(mouseX, mouseY, amount);
+			return this.descriptionListWidget.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 		}
 		return false;
-	}
-
-	@Override
-	public void tick() {
-		this.searchBox.tick();
 	}
 
 	@Override
@@ -131,7 +126,7 @@ public class ModsScreen extends Screen {
 
 		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = new TexturedButtonWidget(width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, 20, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
+		ButtonWidget configureButton = new LegacyTexturedButtonWidget(width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, 20, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
 			final String id = Objects.requireNonNull(selected).getMod().getId();
 			if (modHasConfigScreen.get(id)) {
 				Screen configScreen = ModMenu.getConfigScreen(id, this);
@@ -203,7 +198,7 @@ public class ModsScreen extends Screen {
 			}
 		};
 		this.addSelectableChild(this.searchBox);
-		ButtonWidget filtersButton = new TexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, 20, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
+		ButtonWidget filtersButton = new LegacyTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, 20, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
 		filtersButton.setTooltip(Tooltip.of(TOGGLE_FILTER_OPTIONS));
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.addDrawableChild(filtersButton);
@@ -277,7 +272,7 @@ public class ModsScreen extends Screen {
 
 	@Override
 	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		this.renderBackgroundTexture(DrawContext);
+		super.render(DrawContext, mouseX, mouseY, delta);
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
 			this.descriptionListWidget.render(DrawContext, mouseX, mouseY, delta);
@@ -355,7 +350,11 @@ public class ModsScreen extends Screen {
 				DrawingUtil.drawWrappedString(DrawContext, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 			}
 		}
-		super.render(DrawContext, mouseX, mouseY, delta);
+	}
+
+	@Override
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+		this.renderBackgroundTexture(context);
 	}
 
 	private Text computeModCountText(boolean includeLibs) {
