@@ -46,7 +46,7 @@ public class ModSearch {
 		String hasUpdate = I18n.translate("modmenu.searchTerms.hasUpdate");
 
 		// Libraries are currently hidden, ignore them entirely
-		if (!ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
+		if (mod.isHidden() || !ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
 			return 0;
 		}
 
