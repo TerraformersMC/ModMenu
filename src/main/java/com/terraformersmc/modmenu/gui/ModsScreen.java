@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
+import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
@@ -128,6 +129,10 @@ public class ModsScreen extends Screen {
 		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY, this.height - 36, ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36, this.searchBox.getText(), this.modList, this);
 		this.modList.setLeftPos(0);
 		modList.reloadFilters();
+		String text = ModMenuEventHandler.getMemorizedModScreenSearchText();
+		if (text != null) {
+			this.searchBox.setText(text);
+		}
 
 		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setLeftPos(rightPaneX);
@@ -429,6 +434,10 @@ public class ModsScreen extends Screen {
 
 	public void updateScrollPercent(double scrollPercent) {
 		this.scrollPercent = scrollPercent;
+	}
+
+	public ModListWidget getModList() {
+		return modList;
 	}
 
 	public String getSearchInput() {

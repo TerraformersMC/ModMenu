@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
+import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.ModrinthUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -40,6 +41,44 @@ public class ModMenuEventHandler {
 		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
 
 		ScreenEvents.AFTER_INIT.register(ModMenuEventHandler::afterScreenInit);
+
+		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::setMemorizedModScreenSearchText);
+		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::setMemorizedModScreenScrollAmount);
+		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::setMemorizedModScreenSelectedModListEntry);
+	}
+
+	private static String modScreenSearchText;
+	private static double modScreenScrollAmount;
+	private static ModListEntry modScreenModListEntry;
+
+	public static String getMemorizedModScreenSearchText() {
+		return modScreenSearchText;
+	}
+
+	public static double getMemorizedModScreenScrollAmount() {
+		return modScreenScrollAmount;
+	}
+
+	public static ModListEntry getMemorizedModScreenSelectedModListEntry() {
+		return modScreenModListEntry;
+	}
+
+	private static void setMemorizedModScreenSearchText(MinecraftClient client) {
+		if (client.currentScreen instanceof ModsScreen screen) {
+			modScreenSearchText = screen.getSearchInput();
+		}
+	}
+
+	private static void setMemorizedModScreenScrollAmount(MinecraftClient client) {
+		if (client.currentScreen instanceof ModsScreen screen) {
+			modScreenScrollAmount = screen.getModList().getScrollAmount();
+		}
+	}
+
+	private static void setMemorizedModScreenSelectedModListEntry(MinecraftClient client) {
+		if (client.currentScreen instanceof ModsScreen screen) {
+			modScreenModListEntry = screen.getSelectedEntry();
+		}
 	}
 
 	public static void afterScreenInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {

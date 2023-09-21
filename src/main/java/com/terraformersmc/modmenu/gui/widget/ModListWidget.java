@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.gui.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ChildEntry;
 import com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry;
@@ -43,17 +44,22 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			this.mods = list.mods;
 		}
 		this.filter(searchTerm, false);
-		setScrollAmount(parent.getScrollPercent() * Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
+        setScrollAmount(ModMenuEventHandler.getMemorizedModScreenScrollAmount());
+		ModListEntry entry = ModMenuEventHandler.getMemorizedModScreenSelectedModListEntry();
+		select(entry);
 	}
 
 	@Override
 	public void setScrollAmount(double amount) {
 		super.setScrollAmount(amount);
 		int denominator = Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4));
+		if (getScrollAmount() > denominator) {
+			super.setScrollAmount(denominator);
+		}
 		if (denominator <= 0) {
 			parent.updateScrollPercent(0);
 		} else {
-			parent.updateScrollPercent(getScrollAmount() / Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
+			parent.updateScrollPercent(getScrollAmount() / denominator);
 		}
 	}
 
@@ -63,8 +69,8 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	public void select(ModListEntry entry) {
-		this.setSelected(entry);
 		if (entry != null) {
+			this.setSelected(entry);
 			Mod mod = entry.getMod();
 			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
 		}
