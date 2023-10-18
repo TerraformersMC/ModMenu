@@ -266,8 +266,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					this.setDragging(true);
 					return true;
 				}
-			} else if (int_1 == 0) {
-				this.clickedHeader((int) (double_1 - (double) (this.left + this.width / 2 - this.getRowWidth() / 2)), (int) (double_2 - (double) this.top) + (int) this.getScrollAmount() - 4);
+			} else if (int_1 == 0 && this.clickedHeader((int) (double_1 - (double) (this.left + this.width / 2 - this.getRowWidth() / 2)), (int) (double_2 - (double) this.top) + (int) this.getScrollAmount() - 4)) {
 				return true;
 			}
 
