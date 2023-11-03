@@ -35,7 +35,6 @@ import net.minecraft.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -244,7 +243,7 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
 		this.addDrawableChild(
-				ButtonWidget.builder(Text.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")))
+				ButtonWidget.builder(Text.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(FabricLoader.getInstance().getGameDir().resolve("mods").toUri()))
 						.position(this.width / 2 - 154, this.height - 28)
 						.size(150, 20)
 						.narrationSupplier(Supplier::get)

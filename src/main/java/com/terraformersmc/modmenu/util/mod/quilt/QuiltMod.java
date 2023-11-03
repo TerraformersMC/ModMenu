@@ -2,7 +2,6 @@ package com.terraformersmc.modmenu.util.mod.quilt;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
 import com.terraformersmc.modmenu.util.ModrinthUtil;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +13,7 @@ import org.quiltmc.loader.api.QuiltLoader;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -75,11 +75,11 @@ public class QuiltMod extends FabricMod {
 					List<Path> jars = paths.stream().filter(p -> p.toString().toLowerCase(Locale.ROOT).endsWith(".jar")).toList();
 
 					if (jars.size() == 1 && jars.get(0).getFileSystem() == FileSystems.getDefault()) {
-						var file = jars.get(0).toFile();
+						var path = jars.get(0);
 
-						if (file.exists()) {
+						if (Files.exists(path)) {
 							ModrinthUtil.LOGGER.debug("Found {} hash", getId());
-							return Files.asByteSource(file).hash(Hashing.sha512()).toString();
+							return com.google.common.io.Files.asByteSource(path.toFile()).hash(Hashing.sha512()).toString();
 						}
 					}
 				}
