@@ -47,7 +47,11 @@ public abstract class MixinGameMenu extends Screen {
 							}
 						}
 					}
-					if (ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs")) {
+					if (ModMenuEventHandler.buttonHasText(widget, "menu.sendFeedback")) {
+						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_FEEDBACK) {
+							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this));
+						}
+					} else if (ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs")) {
 						modsButtonIndex = i + 1;
 						reportBugsY = widget.getY();
 						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_BUGS) {

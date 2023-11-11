@@ -122,6 +122,8 @@ public class ModMenuConfig {
 	}
 
 	public enum GameMenuButtonStyle {
+		@SerializedName("replace_feedback")
+		REPLACE_FEEDBACK,
 		@SerializedName("replace_bugs")
 		REPLACE_BUGS,
 		@SerializedName("below_bugs")
