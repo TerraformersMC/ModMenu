@@ -60,7 +60,7 @@ public class ModMenuConfig {
 				try {
 					options.add(((OptionConvertable) field.get(null)).asOption());
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					ModMenu.LOGGER.error(e.getMessage(), e);
 				}
 			}
 		}
