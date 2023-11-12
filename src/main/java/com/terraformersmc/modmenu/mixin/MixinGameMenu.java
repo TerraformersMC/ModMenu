@@ -6,14 +6,20 @@ import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.GameMenuScreen;
+import net.minecraft.client.gui.screen.OpenToLanScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.multiplayer.SocialInteractionsScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -47,19 +53,20 @@ public abstract class MixinGameMenu extends Screen {
 							}
 						}
 					}
-					if (ModMenuEventHandler.buttonHasText(widget, "menu.sendFeedback")) {
-						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_FEEDBACK) {
-							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this));
-						}
-					} else if (ModMenuEventHandler.buttonHasText(widget, "menu.shareToLan") || ModMenuEventHandler.buttonHasText(widget, "menu.playerReporting")) {
-						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_LAN_REPORTING) {
-							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this));
+					if (ModMenuEventHandler.buttonHasText(widget, "menu.sendFeedback") && style == ModMenuConfig.GameMenuButtonStyle.REPLACE_FEEDBACK) {
+						Screen altScreen = createConfirmLinkScreen(SharedConstants.getGameVersion().isStable() ? "https://aka.ms/javafeedback?ref=game" : "https://aka.ms/snapshotfeedback?ref=game");
+						buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this, altScreen));
+					} else if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_LAN_REPORTING) {
+						if (ModMenuEventHandler.buttonHasText(widget, "menu.shareToLan") || ModMenuEventHandler.buttonHasText(widget, "menu.playerReporting")) {
+							Screen altScreen = ModMenuEventHandler.buttonHasText(widget, "menu.shareToLan") ? new OpenToLanScreen(this) : new SocialInteractionsScreen();
+							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this, altScreen));
 						}
 					} else if (ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs")) {
 						modsButtonIndex = i + 1;
 						reportBugsY = widget.getY();
 						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_BUGS) {
-							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this));
+							Screen altScreen = createConfirmLinkScreen("https://aka.ms/snapshotbugs?ref=game");
+							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this, altScreen));
 						} else {
 							modsButtonIndex = i + 1;
 							if (!(widget instanceof ClickableWidget button) || button.visible) {
@@ -79,5 +86,16 @@ public abstract class MixinGameMenu extends Screen {
 				}
 			}
 		}
+	}
+	@Unique
+	private ConfirmLinkScreen createConfirmLinkScreen(String url) {
+		return new ConfirmLinkScreen((confirmed) -> {
+			if (confirmed) {
+				Util.getOperatingSystem().open(url);
+			}
+
+            assert this.client != null;
+            this.client.setScreen(this);
+		}, url, true);
 	}
 }
