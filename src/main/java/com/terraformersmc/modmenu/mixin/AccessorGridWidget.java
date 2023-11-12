@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.mixin;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.Widget;
 import org.spongepowered.asm.mixin.Mixin;

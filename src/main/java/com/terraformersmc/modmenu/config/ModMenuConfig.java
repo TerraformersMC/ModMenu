@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.config;
 
 import com.google.gson.annotations.SerializedName;
+import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.option.BooleanConfigOption;
 import com.terraformersmc.modmenu.config.option.EnumConfigOption;
 import com.terraformersmc.modmenu.config.option.OptionConvertable;
@@ -10,10 +11,7 @@ import net.minecraft.client.option.SimpleOption;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.*;
 
 public class ModMenuConfig {
 	public static final EnumConfigOption<Sorting> SORTING = new EnumConfigOption<>("sorting", Sorting.ASCENDING);
@@ -112,13 +110,15 @@ public class ModMenuConfig {
 
 	public enum TitleMenuButtonStyle {
 		@SerializedName("classic")
-		CLASSIC(),
+		CLASSIC,
 		@SerializedName("replace_realms")
-		REPLACE_REALMS(),
+		REPLACE_REALMS,
 		@SerializedName("shrink")
-		SHRINK(),
+		SHRINK,
 		@SerializedName("icon")
-		ICON()
+		ICON,
+		@SerializedName("icon_left")
+		ICON_LEFT
 	}
 
 	public enum GameMenuButtonStyle {
@@ -132,7 +132,7 @@ public class ModMenuConfig {
 		BELOW_BUGS,
 		@SerializedName("icon")
 		ICON,
-		@SerializedName("icon")
+		@SerializedName("icon_left")
 		ICON_LEFT
 	}
 }
