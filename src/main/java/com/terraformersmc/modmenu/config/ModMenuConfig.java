@@ -118,7 +118,7 @@ public class ModMenuConfig {
 		@SerializedName("shrink")
 		SHRINK(),
 		@SerializedName("icon")
-		ICON();
+		ICON()
 	}
 
 	public enum GameMenuButtonStyle {
@@ -126,9 +126,13 @@ public class ModMenuConfig {
 		REPLACE_FEEDBACK,
 		@SerializedName("replace_bugs")
 		REPLACE_BUGS,
+		@SerializedName("replace_lan_reporting")
+		REPLACE_LAN_REPORTING,
 		@SerializedName("below_bugs")
 		BELOW_BUGS,
 		@SerializedName("icon")
-		ICON;
+		ICON,
+		@SerializedName("icon")
+		ICON_LEFT
 	}
 }

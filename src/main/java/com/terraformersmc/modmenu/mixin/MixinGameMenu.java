@@ -51,6 +51,10 @@ public abstract class MixinGameMenu extends Screen {
 						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_FEEDBACK) {
 							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this));
 						}
+					} else if (ModMenuEventHandler.buttonHasText(widget, "menu.shareToLan") || ModMenuEventHandler.buttonHasText(widget, "menu.playerReporting")) {
+						if (style == ModMenuConfig.GameMenuButtonStyle.REPLACE_LAN_REPORTING) {
+							buttons.set(i, new ModMenuButtonWidget(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), ModMenuApi.createModsButtonText(), this));
+						}
 					} else if (ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs")) {
 						modsButtonIndex = i + 1;
 						reportBugsY = widget.getY();
@@ -69,6 +73,8 @@ public abstract class MixinGameMenu extends Screen {
 						buttons.add(modsButtonIndex, new ModMenuButtonWidget(this.width / 2 - 102, buttonsY + spacing, 204, 20, ModMenuApi.createModsButtonText(), this));
 					} else if (style == ModMenuConfig.GameMenuButtonStyle.ICON) {
 						buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(this.width / 2 + 4 + 100 + 2, reportBugsY, 20, 20, 0, 0, 20, ModMenuEventHandler.FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(this)), ModMenuApi.createModsButtonText()));
+					} else if (style == ModMenuConfig.GameMenuButtonStyle.ICON_LEFT) {
+						buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(this.width / 2 - 4 - 100 - 22, reportBugsY, 20, 20, 0, 0, 20, ModMenuEventHandler.FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(this)), ModMenuApi.createModsButtonText()));
 					}
 				}
 			}
