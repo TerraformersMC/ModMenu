@@ -37,24 +37,22 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private boolean scrolling;
 	private final FabricIconHandler iconHandler = new FabricIconHandler();
 
-	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, String searchTerm, ModListWidget list, ModsScreen parent) {
-		super(client, width, height, y1, y2, entryHeight);
+	public ModListWidget(MinecraftClient client, int width, int height, int y, int itemHeight, ModListWidget list, ModsScreen parent) {
+		super(client, width, height, y, itemHeight);
 		this.parent = parent;
 		if (list != null) {
 			this.mods = list.mods;
 		}
-		this.filter(searchTerm, false);
-		setScrollAmount(parent.getScrollPercent() * Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
 	}
 
 	@Override
 	public void setScrollAmount(double amount) {
 		super.setScrollAmount(amount);
-		int denominator = Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4));
+		int denominator = Math.max(0, this.getMaxPosition() - (this.getBottom() - this.getY() - 4));
 		if (denominator <= 0) {
 			parent.updateScrollPercent(0);
 		} else {
-			parent.updateScrollPercent(getScrollAmount() / Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
+			parent.updateScrollPercent(getScrollAmount() / Math.max(0, this.getMaxPosition() - (this.getBottom() - this.getY() - 4)));
 		}
 	}
 
@@ -194,8 +192,8 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			}
 		}
 
-		if (getScrollAmount() > Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4))) {
-			setScrollAmount(Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
+		if (getScrollAmount() > Math.max(0, this.getMaxPosition() - (this.getBottom() - this.getY() - 4))) {
+			setScrollAmount(Math.max(0, this.getMaxPosition() - (this.getBottom() - this.getY() - 4)));
 		}
 	}
 
@@ -209,7 +207,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowTop(index) + this.itemHeight;
-			if (entryBottom >= this.top && entryTop <= this.bottom) {
+			if (entryBottom >= this.getY() && entryTop <= this.getBottom()) {
 				int entryHeight = this.itemHeight - 4;
 				ModListEntry entry = this.getEntry(index);
 				int rowWidth = this.getRowWidth();
@@ -266,7 +264,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					this.setDragging(true);
 					return true;
 				}
-			} else if (int_1 == 0 && this.clickedHeader((int) (double_1 - (double) (this.left + this.width / 2 - this.getRowWidth() / 2)), (int) (double_2 - (double) this.top) + (int) this.getScrollAmount() - 4)) {
+			} else if (int_1 == 0 && this.clickedHeader((int) (double_1 - (double) (this.getX() + this.width / 2 - this.getRowWidth() / 2)), (int) (double_2 - (double) this.getY()) + (int) this.getScrollAmount() - 4)) {
 				return true;
 			}
 
@@ -285,7 +283,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	public final ModListEntry getEntryAtPos(double x, double y) {
-		int int_5 = MathHelper.floor(y - (double) this.top) - this.headerHeight + (int) this.getScrollAmount() - 4;
+		int int_5 = MathHelper.floor(y - (double) this.getY()) - this.headerHeight + (int) this.getScrollAmount() - 4;
 		int index = int_5 / this.itemHeight;
 		return x < (double) this.getScrollbarPositionX() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? this.children().get(index) : null;
 	}
@@ -297,12 +295,12 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	@Override
 	public int getRowWidth() {
-		return this.width - (Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)) > 0 ? 18 : 12);
+		return this.width - (Math.max(0, this.getMaxPosition() - (this.getBottom() - this.getY() - 4)) > 0 ? 18 : 12);
 	}
 
 	@Override
 	public int getRowLeft() {
-		return left + 6;
+		return this.getX() + 6;
 	}
 
 	public int getWidth() {
@@ -310,7 +308,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	public int getTop() {
-		return this.top;
+		return this.getY();
 	}
 
 	public ModsScreen getParent() {

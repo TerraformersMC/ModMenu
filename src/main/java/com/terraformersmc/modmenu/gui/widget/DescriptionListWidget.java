@@ -48,8 +48,8 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
 
-	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModsScreen parent) {
-		super(client, width, height, top, bottom, entryHeight);
+	public DescriptionListWidget(MinecraftClient client, int width, int height, int y, int itemHeight, ModsScreen parent) {
+		super(client, width, height, y, itemHeight);
 		this.parent = parent;
 		this.textRenderer = client.textRenderer;
 	}
@@ -66,17 +66,17 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 	@Override
 	protected int getScrollbarPositionX() {
-		return this.width - 6 + left;
+		return this.width - 6 + this.getX();
 	}
 
 	@Override
-	public void appendNarrations(NarrationMessageBuilder builder) {
+	public void appendClickableNarrations(NarrationMessageBuilder builder) {
 		Mod mod = parent.getSelectedEntry().getMod();
 		builder.put(NarrationPart.TITLE, mod.getTranslatedName() + " " + mod.getPrefixedVersion());
 	}
 
 	@Override
-	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+	public void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		ModListEntry selectedEntry = parent.getSelectedEntry();
 		if (selectedEntry != lastSelected) {
 			lastSelected = selectedEntry;
@@ -215,15 +215,15 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			RenderSystem.setShaderTexture(0, Screen.OPTIONS_BACKGROUND_TEXTURE);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-			bufferBuilder.vertex(this.left, this.bottom, 0.0D).texture(this.left / 32.0F, (this.bottom + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-			bufferBuilder.vertex(this.right, this.bottom, 0.0D).texture(this.right / 32.0F, (this.bottom + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-			bufferBuilder.vertex(this.right, this.top, 0.0D).texture(this.right / 32.0F, (this.top + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-			bufferBuilder.vertex(this.left, this.top, 0.0D).texture(this.left / 32.0F, (this.top + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0D).texture(this.getX() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0D).texture(this.getRight() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			bufferBuilder.vertex(this.getRight(), this.getY(), 0.0D).texture(this.getRight() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+			bufferBuilder.vertex(this.getX(), this.getY(), 0.0D).texture(this.getX() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
 			tessellator.draw();
 		}
 
 		this.enableScissor(DrawContext);
-		this.renderList(DrawContext, mouseX, mouseY, delta);
+		super.renderList(DrawContext, mouseX, mouseY, delta);
 		DrawContext.disableScissor();
 
 		RenderSystem.depthFunc(515);
@@ -233,42 +233,42 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-		bufferBuilder.vertex(this.left, (this.top + 4), 0.0D).
+		bufferBuilder.vertex(this.getX(), (this.getY() + 4), 0.0D).
 
 				color(0, 0, 0, 0).
 
 				next();
-		bufferBuilder.vertex(this.right, (this.top + 4), 0.0D).
+		bufferBuilder.vertex(this.getRight(), (this.getY() + 4), 0.0D).
 
 				color(0, 0, 0, 0).
 
 				next();
-		bufferBuilder.vertex(this.right, this.top, 0.0D).
+		bufferBuilder.vertex(this.getRight(), this.getY(), 0.0D).
 
 				color(0, 0, 0, 255).
 
 				next();
-		bufferBuilder.vertex(this.left, this.top, 0.0D).
+		bufferBuilder.vertex(this.getX(), this.getY(), 0.0D).
 
 				color(0, 0, 0, 255).
 
 				next();
-		bufferBuilder.vertex(this.left, this.bottom, 0.0D).
+		bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0D).
 
 				color(0, 0, 0, 255).
 
 				next();
-		bufferBuilder.vertex(this.right, this.bottom, 0.0D).
+		bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0D).
 
 				color(0, 0, 0, 255).
 
 				next();
-		bufferBuilder.vertex(this.right, (this.bottom - 4), 0.0D).
+		bufferBuilder.vertex(this.getRight(), (this.getBottom() - 4), 0.0D).
 
 				color(0, 0, 0, 0).
 
 				next();
-		bufferBuilder.vertex(this.left, (this.bottom - 4), 0.0D).
+		bufferBuilder.vertex(this.getX(), (this.getBottom() - 4), 0.0D).
 
 				color(0, 0, 0, 0).
 
@@ -285,19 +285,19 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		int scrollbarEndX = scrollbarStartX + 6;
 		int maxScroll = this.getMaxScroll();
 		if (maxScroll > 0) {
-			int p = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top)) / (float) this.getMaxPosition());
-			p = MathHelper.clamp(p, 32, this.bottom - this.top - 8);
-			int q = (int) this.getScrollAmount() * (this.bottom - this.top - p) / maxScroll + this.top;
-			if (q < this.top) {
-				q = this.top;
+			int p = (int) ((float) ((this.getBottom() - this.getY()) * (this.getBottom() - this.getY())) / (float) this.getMaxPosition());
+			p = MathHelper.clamp(p, 32, this.getBottom() - this.getY() - 8);
+			int q = (int) this.getScrollAmount() * (this.getBottom() - this.getY() - p) / maxScroll + this.getY();
+			if (q < this.getY()) {
+				q = this.getY();
 			}
 
 			RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-			bufferBuilder.vertex(scrollbarStartX, this.bottom, 0.0D).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, this.bottom, 0.0D).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, this.top, 0.0D).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, this.top, 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, this.getBottom(), 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, this.getBottom(), 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarEndX, this.getY(), 0.0D).color(0, 0, 0, 255).next();
+			bufferBuilder.vertex(scrollbarStartX, this.getY(), 0.0D).color(0, 0, 0, 255).next();
 			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0D).color(128, 128, 128, 255).next();
 			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0D).color(128, 128, 128, 255).next();
 			bufferBuilder.vertex(scrollbarEndX, q, 0.0D).color(128, 128, 128, 255).next();

@@ -10,6 +10,7 @@ import com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
+import com.terraformersmc.modmenu.util.ModMenuScreenTexts;
 import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
@@ -19,6 +20,7 @@ import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.render.*;
@@ -32,6 +34,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +42,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
@@ -47,19 +49,14 @@ public class ModsScreen extends Screen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 
-	private static final Text TOGGLE_FILTER_OPTIONS = Text.translatable("modmenu.toggleFilterOptions");
-	private static final Text CONFIGURE = Text.translatable("modmenu.configure");
 	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
-	private TextFieldWidget searchBox;
-	private DescriptionListWidget descriptionListWidget;
 	private final Screen previousScreen;
-	private ModListWidget modList;
 	private ModListEntry selected;
 	private ModBadgeRenderer modBadgeRenderer;
 	private double scrollPercent = 0;
+	private boolean keepFilterOptionsShown = false;
 	private boolean init = false;
 	private boolean filterOptionsShown = false;
-	private int paneY;
 	private static final int RIGHT_PANE_Y = 48;
 	private int paneWidth;
 	private int rightPaneX;
@@ -69,11 +66,23 @@ public class ModsScreen extends Screen {
 	private int searchRowWidth;
 	public final Set<String> showModChildren = new HashSet<>();
 
+	private TextFieldWidget searchBox;
+	private @Nullable ClickableWidget filtersButton;
+	private ClickableWidget sortingButton;
+	private ClickableWidget librariesButton;
+	private ModListWidget modList;
+	private @Nullable ClickableWidget configureButton;
+	private ClickableWidget websiteButton;
+	private ClickableWidget issuesButton;
+	private DescriptionListWidget descriptionListWidget;
+	private ClickableWidget modsFolderButton;
+	private ClickableWidget doneButton;
+
 	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
 	public final Map<String, Throwable> modScreenErrors = new HashMap<>();
 
 	public ModsScreen(Screen previousScreen) {
-		super(Text.translatable("modmenu.title"));
+		super(ModMenuScreenTexts.TITLE);
 		this.previousScreen = previousScreen;
 	}
 
@@ -90,17 +99,6 @@ public class ModsScreen extends Screen {
 
 	@Override
 	protected void init() {
-		paneY = ModMenuConfig.CONFIG_MODE.getValue() ? 48 : 48 + 19;
-		paneWidth = this.width / 2 - 8;
-		rightPaneX = width - paneWidth;
-
-		int filtersButtonSize = (ModMenuConfig.CONFIG_MODE.getValue() ? 0 : 22);
-		int searchWidthMax = paneWidth - 32 - filtersButtonSize;
-		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
-		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - filtersButtonSize / 2;
-		this.searchBox = new TextFieldWidget(this.textRenderer, searchBoxX, 22, searchBoxWidth, 20, this.searchBox, Text.translatable("modmenu.search"));
-		this.searchBox.setChangedListener((string_1) -> this.modList.filter(string_1, false));
-
 		for (Mod mod : ModMenu.MODS.values()) {
 			String id = mod.getId();
 			if (!modHasConfigScreen.containsKey(id)) {
@@ -119,144 +117,170 @@ public class ModsScreen extends Screen {
 			}
 		}
 
-		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY, this.height - 36, ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36, this.searchBox.getText(), this.modList, this);
-		this.modList.setLeftPos(0);
-		modList.reloadFilters();
+		int paneY = ModMenuConfig.CONFIG_MODE.getValue() ? 48 : 48 + 19;
+		this.paneWidth = this.width / 2 - 8;
+		this.rightPaneX = this.width - this.paneWidth;
 
-		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, RIGHT_PANE_Y + 60, this.height - 36, textRenderer.fontHeight + 1, this);
-		this.descriptionListWidget.setLeftPos(rightPaneX);
-		ButtonWidget configureButton = new LegacyTexturedButtonWidget(width - 24, RIGHT_PANE_Y, 20, 20, 0, 0, 20, CONFIGURE_BUTTON_LOCATION, 32, 64, button -> {
-			final String id = Objects.requireNonNull(selected).getMod().getId();
-			if (modHasConfigScreen.get(id)) {
-				Screen configScreen = ModMenu.getConfigScreen(id, this);
-				client.setScreen(configScreen);
-			} else {
-				button.active = false;
-			}
-		}) {
-			@Override
-			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-				String modId = selected.getMod().getId();
-				if (selected != null) {
-					active = modHasConfigScreen.get(modId);
-				} else {
-					active = false;
-					visible = false;
-				}
-				visible = selected != null && modHasConfigScreen.get(modId) || modScreenErrors.containsKey(modId);
-				if (modScreenErrors.containsKey(modId)) {
-					Throwable e = modScreenErrors.get(modId);
-					this.setTooltip(Tooltip.of(Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED)));
-				} else {
-					this.setTooltip(Tooltip.of(CONFIGURE));
-				}
-				super.render(DrawContext, mouseX, mouseY, delta);
-			}
+		// Mod list (initialized early for updateFiltersX)
+		this.modList = new ModListWidget(this.client, this.paneWidth, this.height - paneY - 36, paneY, ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36, this.modList, this);
+		this.modList.setX(0);
 
-			@Override
-			public void renderButton(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-				RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-				RenderSystem.setShaderColor(1, 1, 1, 1f);
-				super.renderButton(DrawContext, mouseX, mouseY, delta);
-			}
-		};
-		int urlButtonWidths = paneWidth / 2 - 2;
+		// Search box
+		int filtersButtonSize = (ModMenuConfig.CONFIG_MODE.getValue() ? 0 : 22);
+		int searchWidthMax = this.paneWidth - 32 - filtersButtonSize;
+		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
+
+		this.searchBoxX = this.paneWidth / 2 - searchBoxWidth / 2 - filtersButtonSize / 2;
+
+		this.searchBox = new TextFieldWidget(this.textRenderer, this.searchBoxX, 22, searchBoxWidth, 20, this.searchBox, ModMenuScreenTexts.SEARCH);
+		this.searchBox.setChangedListener(text -> {
+			this.modList.filter(text, false);
+		});
+
+		// Filters button
+		Text sortingText = ModMenuConfig.SORTING.getButtonText();
+		Text librariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
+
+		int sortingWidth = textRenderer.getWidth(sortingText) + 20;
+		int librariesWidth = textRenderer.getWidth(librariesText) + 20;
+
+		this.filtersWidth = librariesWidth + sortingWidth + 2;
+		this.searchRowWidth = this.searchBoxX + searchBoxWidth + 22;
+
+		this.updateFiltersX();
+
+		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
+			this.filtersButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS, button -> {
+				this.setFilterOptionsShown(!this.filterOptionsShown);
+			})
+					.position(this.paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22)
+					.size(20, 20)
+					.uv(0, 0, 20)
+					.texture(FILTERS_BUTTON_LOCATION, 32, 64)
+					.build();
+
+			this.filtersButton.setTooltip(Tooltip.of(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS));
+		}
+
+		// Sorting button
+		this.sortingButton = ButtonWidget.builder(sortingText, button -> {
+			ModMenuConfig.SORTING.cycleValue();
+			ModMenuConfigManager.save();
+			modList.reloadFilters();
+			button.setMessage(ModMenuConfig.SORTING.getButtonText());
+		})
+				.position(this.filtersX, 45)
+				.size(sortingWidth, 20)
+				.build();
+
+		// Show libraries button
+		this.librariesButton = ButtonWidget.builder(librariesText, button -> {
+			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
+			ModMenuConfigManager.save();
+			modList.reloadFilters();
+			button.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
+		})
+				.position(this.filtersX + sortingWidth + 2, 45)
+				.size(librariesWidth, 20)
+				.build();
+
+		// Configure button
+		if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
+			this.configureButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ScreenTexts.EMPTY, button -> {
+				final String id = Objects.requireNonNull(selected).getMod().getId();
+				if (modHasConfigScreen.get(id)) {
+					Screen configScreen = ModMenu.getConfigScreen(id, this);
+					client.setScreen(configScreen);
+				} else {
+					button.active = false;
+				}
+			})
+					.position(width - 24, RIGHT_PANE_Y)
+					.size(20, 20)
+					.uv(0, 0, 20)
+					.texture(CONFIGURE_BUTTON_LOCATION, 32, 64)
+					.build();
+		}
+
+		// Website button
+		int urlButtonWidths = this.paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
-		ButtonWidget websiteButton = new ButtonWidget(rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
-				Text.translatable("modmenu.website"), button -> {
+
+		this.websiteButton = ButtonWidget.builder(ModMenuScreenTexts.WEBSITE, button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
-			this.client.setScreen(new ConfirmLinkScreen((bool) -> {
-				if (bool) {
+			this.client.setScreen(new ConfirmLinkScreen(confirmed -> {
+				if (confirmed) {
 					Util.getOperatingSystem().open(mod.getWebsite());
 				}
 				this.client.setScreen(this);
 			}, mod.getWebsite(), false));
-		}, Supplier::get) {
-			@Override
-			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-				visible = selected != null;
-				active = visible && selected.getMod().getWebsite() != null;
-				super.render(DrawContext, mouseX, mouseY, delta);
-			}
-		};
-		ButtonWidget issuesButton = new ButtonWidget(rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36, Math.min(urlButtonWidths, 200), 20,
-				Text.translatable("modmenu.issues"), button -> {
+		})
+				.position(this.rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36)
+				.size(Math.min(urlButtonWidths, 200), 20)
+				.build();
+
+		// Issues button
+		this.issuesButton = ButtonWidget.builder(ModMenuScreenTexts.ISSUES, button -> {
 			final Mod mod = Objects.requireNonNull(selected).getMod();
-			this.client.setScreen(new ConfirmLinkScreen((bool) -> {
-				if (bool) {
+			this.client.setScreen(new ConfirmLinkScreen(confirmed -> {
+				if (confirmed) {
 					Util.getOperatingSystem().open(mod.getIssueTracker());
 				}
 				this.client.setScreen(this);
 			}, mod.getIssueTracker(), false));
-		}, Supplier::get) {
-			@Override
-			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-				visible = selected != null;
-				active = visible && selected.getMod().getIssueTracker() != null;
-				super.render(DrawContext, mouseX, mouseY, delta);
-			}
-		};
-		this.addSelectableChild(this.searchBox);
-		ButtonWidget filtersButton = new LegacyTexturedButtonWidget(paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, 20, FILTERS_BUTTON_LOCATION, 32, 64, button -> filterOptionsShown = !filterOptionsShown, TOGGLE_FILTER_OPTIONS);
-		filtersButton.setTooltip(Tooltip.of(TOGGLE_FILTER_OPTIONS));
-		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
-			this.addDrawableChild(filtersButton);
-		}
-		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
-		Text sortingText = ModMenuConfig.SORTING.getButtonText();
-		int showLibrariesWidth = textRenderer.getWidth(showLibrariesText) + 20;
-		int sortingWidth = textRenderer.getWidth(sortingText) + 20;
-		filtersWidth = showLibrariesWidth + sortingWidth + 2;
-		searchRowWidth = searchBoxX + searchBoxWidth + 22;
-		updateFiltersX();
-		this.addDrawableChild(new ButtonWidget(filtersX, 45, sortingWidth, 20, sortingText, button -> {
-			ModMenuConfig.SORTING.cycleValue();
-			ModMenuConfigManager.save();
-			modList.reloadFilters();
-		}, Supplier::get) {
-			@Override
-			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-				DrawContext.getMatrices().translate(0, 0, 1);
-				visible = filterOptionsShown;
-				this.setMessage(ModMenuConfig.SORTING.getButtonText());
-				super.render(DrawContext, mouseX, mouseY, delta);
-			}
-		});
-		this.addDrawableChild(new ButtonWidget(filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
-			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
-			ModMenuConfigManager.save();
-			modList.reloadFilters();
-		}, Supplier::get) {
-			@Override
-			public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-				DrawContext.getMatrices().translate(0, 0, 1);
-				visible = filterOptionsShown;
-				this.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
-				super.render(DrawContext, mouseX, mouseY, delta);
-			}
-		});
-		this.addSelectableChild(this.modList);
-		if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
-			this.addDrawableChild(configureButton);
-		}
-		this.addDrawableChild(websiteButton);
-		this.addDrawableChild(issuesButton);
-		this.addSelectableChild(this.descriptionListWidget);
-		this.addDrawableChild(
-				ButtonWidget.builder(Text.translatable("modmenu.modsFolder"), button -> Util.getOperatingSystem().open(FabricLoader.getInstance().getGameDir().resolve("mods").toUri()))
-						.position(this.width / 2 - 154, this.height - 28)
-						.size(150, 20)
-						.narrationSupplier(Supplier::get)
-						.build());
-		this.addDrawableChild(
-				ButtonWidget.builder(ScreenTexts.DONE, button -> client.setScreen(previousScreen))
-						.position(this.width / 2 + 4, this.height - 28)
-						.size(150, 20)
-						.narrationSupplier(Supplier::get)
-						.build());
-		this.searchBox.setFocused(true);
+		})
+				.position(this.rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36)
+				.size(Math.min(urlButtonWidths, 200), 20)
+				.build();
 
-		init = true;
+		// Description list
+		this.descriptionListWidget = new DescriptionListWidget(this.client, this.paneWidth, this.height - RIGHT_PANE_Y - 96, RIGHT_PANE_Y + 60, textRenderer.fontHeight + 1, this);
+		this.descriptionListWidget.setX(this.rightPaneX);
+
+		// Mods folder button
+		this.modsFolderButton = ButtonWidget.builder(ModMenuScreenTexts.MODS_FOLDER, button -> {
+			Util.getOperatingSystem().open(FabricLoader.getInstance().getGameDir().resolve("mods").toUri());
+		})
+				.position(this.width / 2 - 154, this.height - 28)
+				.size(150, 20)
+				.build();
+
+		// Done button
+		this.doneButton = ButtonWidget.builder(ScreenTexts.DONE, button -> {
+			client.setScreen(previousScreen);
+		})
+				.position(this.width / 2 + 4, this.height - 28)
+				.size(150, 20)
+				.build();
+
+		// Initialize data
+		modList.reloadFilters();
+		this.setFilterOptionsShown(this.keepFilterOptionsShown ? this.filterOptionsShown : false);
+
+		// Add children
+		this.addSelectableChild(this.searchBox);
+		this.setInitialFocus(this.searchBox);
+
+		if (this.filtersButton != null) {
+			this.addDrawableChild(this.filtersButton);
+		}
+
+		this.addDrawableChild(this.sortingButton);
+		this.addDrawableChild(this.librariesButton);
+		this.addSelectableChild(this.modList);
+
+		if (this.configureButton != null) {
+			this.addDrawableChild(this.configureButton);
+		}
+
+		this.addDrawableChild(this.websiteButton);
+		this.addDrawableChild(this.issuesButton);
+		this.addSelectableChild(this.descriptionListWidget);
+		this.addDrawableChild(this.modsFolderButton);
+		this.addDrawableChild(this.doneButton);
+
+		this.init = true;
+		this.keepFilterOptionsShown = true;
 	}
 
 	@Override
@@ -281,32 +305,32 @@ public class ModsScreen extends Screen {
 		RenderSystem.disableBlend();
 		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
 		if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
-			DrawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("modmenu.dropInfo.line1").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1, 16777215);
-			DrawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("modmenu.dropInfo.line2").formatted(Formatting.GRAY), this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 + 1, 16777215);
+			DrawContext.drawCenteredTextWithShadow(this.textRenderer, ModMenuScreenTexts.DROP_INFO_LINE_1, this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1, Formatting.GRAY.getColorValue());
+			DrawContext.drawCenteredTextWithShadow(this.textRenderer, ModMenuScreenTexts.DROP_INFO_LINE_2, this.width - this.modList.getWidth() / 2, RIGHT_PANE_Y / 2 + 1, Formatting.GRAY.getColorValue());
 		}
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
-			Text fullModCount = computeModCountText(true);
-			if (!ModMenuConfig.CONFIG_MODE.getValue() && updateFiltersX()) {
-				if (filterOptionsShown) {
-					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() || textRenderer.getWidth(fullModCount) <= filtersX - 5) {
-						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF, false);
+			Text fullModCount = this.computeModCountText(true);
+			if (!ModMenuConfig.CONFIG_MODE.getValue() && this.updateFiltersX()) {
+				if (this.filterOptionsShown) {
+					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() || textRenderer.getWidth(fullModCount) <= this.filtersX - 5) {
+						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), this.searchBoxX, 52, 0xFFFFFF, false);
 					} else {
-						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF, false);
-						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), this.searchBoxX, 46, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), this.searchBoxX, 57, 0xFFFFFF, false);
 					}
 				} else {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() || textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), searchBoxX, 52, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), this.searchBoxX, 52, 0xFFFFFF, false);
 					} else {
-						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), searchBoxX, 46, 0xFFFFFF, false);
-						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), searchBoxX, 57, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), this.searchBoxX, 46, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), this.searchBoxX, 57, 0xFFFFFF, false);
 					}
 				}
 			}
 		}
 		if (selectedEntry != null) {
 			Mod mod = selectedEntry.getMod();
-			int x = rightPaneX;
+			int x = this.rightPaneX;
 			if ("java".equals(mod.getId())) {
 				DrawingUtil.drawRandomVersionBackground(mod, DrawContext, x, RIGHT_PANE_Y, 32, 32);
 			}
@@ -325,11 +349,11 @@ public class ModsScreen extends Screen {
 			}
 			DrawContext.drawText(textRenderer, Language.getInstance().reorder(trimmedName), x + imageOffset, RIGHT_PANE_Y + 1, 0xFFFFFF, false);
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 && mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
-				this.setTooltip(Text.translatable("modmenu.modIdToolTip", mod.getId()));
+				this.setTooltip(ModMenuScreenTexts.modIdTooltip(mod.getId()));
 			}
-			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
+			if (this.init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2, RIGHT_PANE_Y, width - 28, selectedEntry.mod, this);
-				init = false;
+				this.init = false;
 			}
 			if (!ModMenuConfig.HIDE_BADGES.getValue()) {
 				modBadgeRenderer.draw(DrawContext, mouseX, mouseY);
@@ -346,7 +370,7 @@ public class ModsScreen extends Screen {
 				} else {
 					authors = names.get(0);
 				}
-				DrawingUtil.drawWrappedString(DrawContext, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
+				DrawingUtil.drawWrappedString(DrawContext, I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing * 2, this.paneWidth - imageOffset - 4, 1, 0x808080);
 			}
 		}
 	}
@@ -377,7 +401,7 @@ public class ModsScreen extends Screen {
 	}
 
 	private int[] formatModCount(Set<String> set) {
-		int visible = modList.getDisplayedCountFor(set);
+		int visible = this.modList.getDisplayedCountFor(set);
 		int total = set.size();
 		if (visible == total) {
 			return new int[]{total};
@@ -391,6 +415,13 @@ public class ModsScreen extends Screen {
 		this.client.setScreen(this.previousScreen);
 	}
 
+	private void setFilterOptionsShown(boolean filterOptionsShown) {
+		this.filterOptionsShown = filterOptionsShown;
+
+		this.sortingButton.visible = filterOptionsShown;
+		this.librariesButton.visible = filterOptionsShown;
+	}
+
 	public ModListEntry getSelectedEntry() {
 		return selected;
 	}
@@ -398,6 +429,26 @@ public class ModsScreen extends Screen {
 	public void updateSelectedEntry(ModListEntry entry) {
 		if (entry != null) {
 			this.selected = entry;
+
+			if (this.configureButton != null) {
+				String modId = selected.getMod().getId();
+
+				this.configureButton.active = modHasConfigScreen.get(modId);
+				this.configureButton.visible = selected != null && modHasConfigScreen.get(modId) || modScreenErrors.containsKey(modId);
+
+				if (modScreenErrors.containsKey(modId)) {
+					Throwable e = modScreenErrors.get(modId);
+					this.configureButton.setTooltip(Tooltip.of(ModMenuScreenTexts.configureError(modId, e)));
+				} else {
+					this.configureButton.setTooltip(Tooltip.of(ModMenuScreenTexts.CONFIGURE));
+				}
+			}
+
+			this.websiteButton.visible = true;
+			this.websiteButton.active = selected.getMod().getWebsite() != null;
+
+			this.issuesButton.visible = true;
+			this.issuesButton.active = selected.getMod().getIssueTracker() != null;
 		}
 	}
 
@@ -410,15 +461,15 @@ public class ModsScreen extends Screen {
 	}
 
 	public String getSearchInput() {
-		return searchBox.getText();
+		return this.searchBox.getText();
 	}
 
 	private boolean updateFiltersX() {
-		if ((filtersWidth + textRenderer.getWidth(computeModCountText(true)) + 20) >= searchRowWidth && ((filtersWidth + textRenderer.getWidth(computeModCountText(false)) + 20) >= searchRowWidth || (filtersWidth + textRenderer.getWidth(computeLibraryCountText()) + 20) >= searchRowWidth)) {
-			filtersX = paneWidth / 2 - filtersWidth / 2;
+		if ((this.filtersWidth + textRenderer.getWidth(this.computeModCountText(true)) + 20) >= this.searchRowWidth && ((this.filtersWidth + textRenderer.getWidth(computeModCountText(false)) + 20) >= this.searchRowWidth || (this.filtersWidth + textRenderer.getWidth(this.computeLibraryCountText()) + 20) >= this.searchRowWidth)) {
+			this.filtersX = this.paneWidth / 2 - this.filtersWidth / 2;
 			return !filterOptionsShown;
 		} else {
-			filtersX = searchRowWidth - filtersWidth + 1;
+			this.filtersX = this.searchRowWidth - this.filtersWidth + 1;
 			return true;
 		}
 	}
@@ -457,11 +508,11 @@ public class ModsScreen extends Screen {
 				}
 
 				if (allSuccessful) {
-					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, Text.translatable("modmenu.dropSuccessful.line1"), Text.translatable("modmenu.dropSuccessful.line2"));
+					SystemToast.add(client.getToastManager(), SystemToast.Type.TUTORIAL_HINT, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_1, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_1);
 				}
 			}
 			this.client.setScreen(this);
-		}, Text.translatable("modmenu.dropConfirm"), Text.literal(modList)));
+		}, ModMenuScreenTexts.DROP_CONFIRM, Text.literal(modList)));
 	}
 
 	private static boolean isFabricMod(Path mod) {
@@ -473,6 +524,6 @@ public class ModsScreen extends Screen {
 	}
 
 	public Map<String, Boolean> getModHasConfigScreen() {
-		return modHasConfigScreen;
+		return this.modHasConfigScreen;
 	}
 }
