@@ -24,7 +24,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 
 
 	protected void init() {
-		this.list = new OptionListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
+		this.list = new OptionListWidget(this.client, this.width, this.height - 64, 32, 25);
 		this.list.addAll(ModMenuConfig.asOptions());
 		this.addSelectableChild(this.list);
 		this.addDrawableChild(
