@@ -30,7 +30,7 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 	}
 
 	@Override
-	public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
 		int v = this.v;
 
 		if (!this.isNarratable()) {

@@ -16,8 +16,8 @@ public class ModMenuButtonWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void renderButton(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		super.renderButton(DrawContext, mouseX, mouseY, delta);
+	public void renderWidget(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+		super.renderWidget(DrawContext, mouseX, mouseY, delta);
 		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
 			UpdateAvailableBadge.renderBadge(DrawContext, this.width + this.getX() - 16, this.height / 2 + this.getY() - 4);
 		}
