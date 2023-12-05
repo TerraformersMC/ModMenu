@@ -10,7 +10,7 @@ import com.terraformersmc.modmenu.api.UpdateChecker;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
-import com.terraformersmc.modmenu.util.ModrinthUtil;
+import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
@@ -96,7 +96,7 @@ public class ModMenu implements ClientModInitializer {
 			MODS.put(mod.getId(), mod);
 		}
 
-		ModrinthUtil.checkForUpdates();
+		UpdateCheckerUtil.checkForUpdates();
 
 		Map<String, Mod> dummyParents = new HashMap<>();
 

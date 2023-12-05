@@ -24,11 +24,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
 
-public class ModrinthUtil {
+public class UpdateCheckerUtil {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu/Update Checker");
 
 	private static final HttpClient client = HttpClient.newHttpClient();
-	private static boolean apiV2Deprecated = false;
+	private static boolean modrinthApiV2Deprecated = false;
 
 	private static boolean allowsUpdateChecks(Mod mod) {
 		return mod.allowsUpdateChecks();
@@ -47,7 +47,7 @@ public class ModrinthUtil {
 	}
 
 	public static void checkForCustomUpdates() {
-		ModMenu.MODS.values().stream().filter(ModrinthUtil::allowsUpdateChecks).forEach(mod -> {
+		ModMenu.MODS.values().stream().filter(UpdateCheckerUtil::allowsUpdateChecks).forEach(mod -> {
 			UpdateChecker updateChecker = mod.getUpdateChecker();
 			if (updateChecker == null) {
 				return;
@@ -57,12 +57,12 @@ public class ModrinthUtil {
 	}
 
 	public static void checkForModrinthUpdates() {
-		if (apiV2Deprecated) {
+		if (modrinthApiV2Deprecated) {
 			return;
 		}
 
 		Map<String, Set<Mod>> modHashes = new HashMap<>();
-		new ArrayList<>(ModMenu.MODS.values()).stream().filter(ModrinthUtil::allowsUpdateChecks).filter(mod -> mod.getUpdateChecker() == null).forEach(mod -> {
+		new ArrayList<>(ModMenu.MODS.values()).stream().filter(UpdateCheckerUtil::allowsUpdateChecks).filter(mod -> mod.getUpdateChecker() == null).forEach(mod -> {
 			String modId = mod.getId();
 
 			try {
@@ -103,7 +103,7 @@ public class ModrinthUtil {
 			int status = latestVersionsResponse.statusCode();
 			LOGGER.debug("Status: " + status);
 			if (status == 410) {
-				apiV2Deprecated = true;
+				modrinthApiV2Deprecated = true;
 				LOGGER.warn("Modrinth API v2 is deprecated, unable to check for mod updates.");
 			} else if (status == 200) {
 				JsonObject responseObject = JsonParser.parseString(latestVersionsResponse.body()).getAsJsonObject();
@@ -137,7 +137,7 @@ public class ModrinthUtil {
 	}
 
 	public static void triggerV2DeprecatedToast() {
-		if (apiV2Deprecated && ModMenuConfig.UPDATE_CHECKER.getValue()) {
+		if (modrinthApiV2Deprecated && ModMenuConfig.UPDATE_CHECKER.getValue()) {
 			MinecraftClient.getInstance().getToastManager().add(new SystemToast(
 					SystemToast.Type.PERIODIC_NOTIFICATION,
 					Text.translatable("modmenu.modrinth.v2_deprecated.title"),
