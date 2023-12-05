@@ -1,12 +1,12 @@
 package com.terraformersmc.modmenu;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import com.terraformersmc.modmenu.api.UpdateChecker;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
@@ -49,7 +48,7 @@ public class ModMenu implements ClientModInitializer {
 	public static boolean devEnvironment = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
-		if(!delayedScreenFactoryProviders.isEmpty()) {
+		if (!delayedScreenFactoryProviders.isEmpty()) {
 			delayedScreenFactoryProviders.forEach(map -> map.forEach(configScreenFactories::putIfAbsent));
 			delayedScreenFactoryProviders.clear();
 		}
@@ -67,6 +66,7 @@ public class ModMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Set<String> modpackMods = new HashSet<>();
+		Map<String, UpdateChecker> updateCheckers = new HashMap<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(entrypoint -> {
 			ModMetadata metadata = entrypoint.getProvider().getMetadata();
 			String modId = metadata.getId();
@@ -74,6 +74,7 @@ public class ModMenu implements ClientModInitializer {
 				ModMenuApi api = entrypoint.getEntrypoint();
 				configScreenFactories.put(modId, api.getModConfigScreenFactory());
 				delayedScreenFactoryProviders.add(api.getProvidedConfigScreenFactories());
+				updateCheckers.put(modId, api.getUpdateChecker());
 				api.attachModpackBadges(modpackMods::add);
 			} catch (Throwable e) {
 				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
@@ -89,6 +90,8 @@ public class ModMenu implements ClientModInitializer {
 			} else {
 				mod = new FabricMod(modContainer, modpackMods);
 			}
+
+			mod.setUpdateChecker(updateCheckers.get(mod.getId()));
 
 			MODS.put(mod.getId(), mod);
 		}
@@ -135,7 +138,7 @@ public class ModMenu implements ClientModInitializer {
 				continue;
 			}
 
-			if (mod.getModrinthData() != null || mod.getChildHasUpdate()) {
+			if (mod.hasUpdate() || mod.getChildHasUpdate()) {
 				return true; // At least one currently visible mod has an update
 			}
 		}

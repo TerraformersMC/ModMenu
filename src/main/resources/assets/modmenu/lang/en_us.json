@@ -63,6 +63,8 @@
   "modmenu.experimental": "(Mod Menu update checker is experimental!)",
   "modmenu.childHasUpdate": "A child of this mod has an update available.",
   "modmenu.updateText": "v%s on %s",
+  "modmenu.downloadLink": "Download",
+  "modmenu.noDownloadLink": "Download link not available",
 
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
