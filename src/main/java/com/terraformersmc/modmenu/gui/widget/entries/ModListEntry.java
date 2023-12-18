@@ -24,7 +24,8 @@ import net.minecraft.util.Util;
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> {
 	public static final Identifier UNKNOWN_ICON = new Identifier("textures/misc/unknown_pack.png");
 	private static final Identifier MOD_CONFIGURATION_ICON = new Identifier("modmenu", "textures/gui/mod_configuration.png");
-	private static final Identifier ERROR_ICON = new Identifier("minecraft", "textures/gui/world_selection.png");
+	private static final Identifier ERROR_ICON = new Identifier("minecraft", "world_list/error");
+	private static final Identifier ERROR_HIGHLIGHTED_ICON = new Identifier("minecraft", "world_list/error_highlighted");
 
 	protected final MinecraftClient client;
 	public final Mod mod;
@@ -87,14 +88,14 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			if (this.client.options.getTouchscreen().getValue() || hovered) {
 				DrawContext.fill(x, y, x + iconSize, y + iconSize, -1601138544);
 				boolean hoveringIcon = mouseX - x < iconSize;
-				int v = hoveringIcon ? iconSize : 0;
 				if (this.list.getParent().modScreenErrors.containsKey(modId)) {
-					DrawContext.drawTexture(ERROR_ICON, x, y, 96.0F, (float) v, iconSize, iconSize, textureSize, textureSize);
+					DrawContext.drawGuiTexture(hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON, x, y, iconSize, iconSize);
 					if (hoveringIcon) {
 						Throwable e = this.list.getParent().modScreenErrors.get(modId);
 						this.list.getParent().setTooltip(this.client.textRenderer.wrapLines(Text.translatable("modmenu.configure.error", modId, modId).copy().append("\n\n").append(e.toString()).formatted(Formatting.RED), 175));
 					}
 				} else {
+					int v = hoveringIcon ? iconSize : 0;
 					DrawContext.drawTexture(MOD_CONFIGURATION_ICON, x, y, 0.0F, (float) v, iconSize, iconSize, textureSize, textureSize);
 				}
 			}
