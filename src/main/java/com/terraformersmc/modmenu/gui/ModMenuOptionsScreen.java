@@ -24,7 +24,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 
 
 	protected void init() {
-		this.list = new OptionListWidget(this.client, this.width, this.height - 64, 32, 25);
+		this.list = new OptionListWidget(this.client, this.width, this.height - 64, this);
 		this.list.addAll(ModMenuConfig.asOptions());
 		this.addSelectableChild(this.list);
 		this.addDrawableChild(
@@ -43,10 +43,10 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
 	}
 
-	@Override
-	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-		this.renderBackgroundTexture(context);
-	}
+//	@Override
+//	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+//		this.renderBackgroundTexture(context);
+//	}
 
 	public void removed() {
 		ModMenuConfigManager.save();

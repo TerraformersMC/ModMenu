@@ -20,7 +20,6 @@
     "issues": "https://github.com/TerraformersMC/ModMenu/issues"
   },
   "depends": {
-    "fabric-resource-loader-v0": "*",
     "fabric-screen-api-v1": ">=1.0.4",
     "fabric-key-binding-api-v1": "*",
     "fabric-lifecycle-events-v1": "*",

@@ -112,7 +112,7 @@ public class ModMenuEventHandler {
 	public static void shiftButtons(Widget widget, boolean shiftUp, int spacing) {
 		if (shiftUp) {
 			widget.setY(widget.getY() - spacing / 2);
-		} else if (!(widget instanceof ClickableWidget button && button.getMessage().equals(TitleScreen.COPYRIGHT))) {
+		} else if (!(widget instanceof ClickableWidget button && button.getMessage().equals(Text.translatable("title.credits")))) {
 			widget.setY(widget.getY() + spacing / 2);
 		}
 	}
