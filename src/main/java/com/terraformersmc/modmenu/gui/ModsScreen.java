@@ -375,11 +375,6 @@ public class ModsScreen extends Screen {
 		}
 	}
 
-//	@Override
-//	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-//		this.renderBackgroundTexture(context);
-//	}
-
 	private Text computeModCountText(boolean includeLibs) {
 		int[] rootMods = formatModCount(ModMenu.ROOT_MODS.values().stream().filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY)).map(Mod::getId).collect(Collectors.toSet()));
 
