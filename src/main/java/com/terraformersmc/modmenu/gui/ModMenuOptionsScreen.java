@@ -13,41 +13,33 @@ import net.minecraft.text.Text;
 
 public class ModMenuOptionsScreen extends GameOptionsScreen {
 
-	private Screen previous;
 	private OptionListWidget list;
 
-	@SuppressWarnings("resource")
 	public ModMenuOptionsScreen(Screen previous) {
 		super(previous, MinecraftClient.getInstance().options, Text.translatable("modmenu.options"));
-		this.previous = previous;
 	}
 
 
+	@Override
 	protected void init() {
-		this.list = new OptionListWidget(this.client, this.width, this.height - 64, this);
+		this.list = this.addDrawableChild(new OptionListWidget(this.client, this.width, this.height, this));
 		this.list.addAll(ModMenuConfig.asOptions());
-		this.addSelectableChild(this.list);
-		this.addDrawableChild(
-				ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
-							ModMenuConfigManager.save();
-							this.client.setScreen(this.previous);
-						}).position(this.width / 2 - 100, this.height - 27)
-						.size(200, 20)
-						.build());
+		super.init();
+	}
+
+	@Override
+	protected void initTabNavigation() {
+		super.initTabNavigation();
+		this.list.method_57712(this.width, this.field_49503);
 	}
 
 	@Override
 	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		super.render(DrawContext, mouseX, mouseY, delta);
 		this.list.render(DrawContext, mouseX, mouseY, delta);
-		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
 	}
 
-//	@Override
-//	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-//		this.renderBackgroundTexture(context);
-//	}
-
+	@Override
 	public void removed() {
 		ModMenuConfigManager.save();
 	}
