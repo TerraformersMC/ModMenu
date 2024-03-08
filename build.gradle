@@ -2,7 +2,7 @@ plugins {
 	id 'fabric-loom' version '1.1-SNAPSHOT'
 }
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5+no-cf/ferry.gradle'
+apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/ferry.gradle'
 
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"

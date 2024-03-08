@@ -45,7 +45,7 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
       - name: Build
-        run: ./gradlew generateChangelog build publish github modrinth --stacktrace --parallel -PlastTag="v${{ github.event.inputs.previousVersion }}" -PcurrentTag="v${{ github.event.inputs.version }}"
+        run: ./gradlew generateChangelog build publish github modrinth curseforge --stacktrace --parallel -PlastTag="v${{ github.event.inputs.previousVersion }}" -PcurrentTag="v${{ github.event.inputs.version }}"
         env:
           MAVEN_URL: ${{ secrets.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}

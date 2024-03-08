@@ -30,7 +30,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 	@Override
 	protected void initTabNavigation() {
 		super.initTabNavigation();
-		this.list.method_57712(this.width, this.field_49503);
+		this.list.position(this.width, this.layout);
 	}
 
 	@Override
