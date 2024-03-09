@@ -67,7 +67,7 @@ public class ModSearch {
 				|| deprecated.contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED) // Search for deprecated mods
 				|| clientside.contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT) // Search for clientside mods
 				|| configurable.contains(query) && screen.getModHasConfigScreen().get(modId) // Search for mods that can be configured
-				|| hasUpdate.contains(query) && hasUpdate() // Search for mods that have updates
+				|| hasUpdate.contains(query) && mod.hasUpdate() // Search for mods that have updates
 		) {
 			return 1;
 		}
