@@ -5,11 +5,12 @@ import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.api.UpdateChecker;
+import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.VersionUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.*;
@@ -37,7 +38,8 @@ public class FabricMod implements Mod {
 
 	protected final Map<String, String> links = new HashMap<>();
 
-	protected @Nullable ModrinthData modrinthData = null;
+	protected @Nullable UpdateChecker updateChecker = null;
+	protected @Nullable UpdateInfo updateInfo = null;
 
 	protected boolean defaultIconWarning = true;
 
@@ -277,20 +279,30 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @Nullable ModrinthData getModrinthData() {
-		return this.modrinthData;
-	}
-
-	@Override
 	public boolean allowsUpdateChecks() {
 		return this.allowsUpdateChecks || ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(this.getId());
 	}
 
 	@Override
-	public void setModrinthData(ModrinthData modrinthData) {
-		this.modrinthData = modrinthData;
+	public @Nullable UpdateChecker getUpdateChecker() {
+		return updateChecker;
+	}
+
+	@Override
+	public void setUpdateChecker(@Nullable UpdateChecker updateChecker) {
+		this.updateChecker = updateChecker;
+	}
+
+	@Override
+	public @Nullable UpdateInfo getUpdateInfo() {
+		return updateInfo;
+	}
+
+	@Override
+	public void setUpdateInfo(@Nullable UpdateInfo updateInfo) {
+		this.updateInfo = updateInfo;
 		String parent = getParent();
-		if (parent != null && modrinthData != null) {
+		if (parent != null && updateInfo != null && updateInfo.isUpdateAvailable()) {
 			ModMenu.MODS.get(parent).setChildHasUpdate();
 		}
 	}

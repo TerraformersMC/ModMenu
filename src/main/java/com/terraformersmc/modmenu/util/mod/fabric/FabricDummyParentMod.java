@@ -1,9 +1,10 @@
 package com.terraformersmc.modmenu.util.mod.fabric;
 
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.api.UpdateChecker;
+import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import com.terraformersmc.modmenu.util.mod.ModrinthData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -157,18 +158,28 @@ public class FabricDummyParentMod implements Mod {
 	}
 
 	@Override
-	public @Nullable ModrinthData getModrinthData() {
+	public boolean allowsUpdateChecks() {
+		return false;
+	}
+
+	@Override
+	public @Nullable UpdateChecker getUpdateChecker() {
 		return null;
 	}
 
 	@Override
-	public void setModrinthData(ModrinthData modrinthData) {
-		// Not a real mod, won't exist on Modrinth
+	public void setUpdateChecker(@Nullable UpdateChecker updateChecker) {
+
 	}
 
 	@Override
-	public boolean allowsUpdateChecks() {
-		return false;
+	public @Nullable UpdateInfo getUpdateInfo() {
+		return null;
+	}
+
+	@Override
+	public void setUpdateInfo(@Nullable UpdateInfo updateInfo) {
+
 	}
 
 	@Override

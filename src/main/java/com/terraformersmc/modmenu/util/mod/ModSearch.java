@@ -6,7 +6,6 @@ import com.terraformersmc.modmenu.gui.ModsScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Pair;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -68,7 +67,7 @@ public class ModSearch {
 				|| deprecated.contains(query) && mod.getBadges().contains(Mod.Badge.DEPRECATED) // Search for deprecated mods
 				|| clientside.contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT) // Search for clientside mods
 				|| configurable.contains(query) && screen.getModHasConfigScreen().get(modId) // Search for mods that can be configured
-				|| hasUpdate.contains(query) && mod.getModrinthData() != null // Search for mods that have updates
+				|| hasUpdate.contains(query) && mod.hasUpdate() // Search for mods that have updates
 		) {
 			return 1;
 		}
