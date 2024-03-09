@@ -19,11 +19,8 @@ public interface UpdateInfo {
 	}
 
 	/**
-	 * @return The URL to the mod download or <code>null</code> if there is no download link available.
+	 * @return The URL to the mod download.
 	 */
-	@Nullable
-	default String getDownloadLink() {
-		return null;
-	}
+	String getDownloadLink();
 
 }

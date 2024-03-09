@@ -40,7 +40,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	private static final Text EXPERIMENTAL_TEXT = Text.translatable("modmenu.experimental").formatted(Formatting.GOLD);
 	private static final Text MODRINTH_TEXT = Text.translatable("modmenu.modrinth");
 	private static final Text DOWNLOAD_TEXT = Text.translatable("modmenu.downloadLink").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE);
-	private static final Text NO_DOWNLOAD_TEXT = Text.translatable("modmenu.noDownloadLink");
 	private static final Text CHILD_HAS_UPDATE_TEXT = Text.translatable("modmenu.childHasUpdate");
 	private static final Text LINKS_TEXT = Text.translatable("modmenu.links");
 	private static final Text SOURCE_TEXT = Text.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE);
@@ -127,9 +126,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						} else {
 							Text updateMessage = updateInfo.getUpdateMessage();
 							String downloadLink = updateInfo.getDownloadLink();
-							if (updateMessage == null && downloadLink == null) {
-								updateMessage = NO_DOWNLOAD_TEXT;
-							} else if (updateMessage == null) {
+							if (updateMessage == null) {
 								updateMessage = DOWNLOAD_TEXT;
 							} else {
 								if (downloadLink != null) {
