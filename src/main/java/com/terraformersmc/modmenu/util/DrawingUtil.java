@@ -49,7 +49,7 @@ public class DrawingUtil {
 				int width = CLIENT.textRenderer.getWidth(line);
 				x1 += (float) (wrapWidth - width);
 			}
-			DrawContext.drawText(CLIENT.textRenderer, line, x1, y + i * CLIENT.textRenderer.fontHeight, color, false);
+			DrawContext.drawText(CLIENT.textRenderer, line, x1, y + i * CLIENT.textRenderer.fontHeight, color, true);
 		}
 	}
 

@@ -313,17 +313,17 @@ public class ModsScreen extends Screen {
 			if (!ModMenuConfig.CONFIG_MODE.getValue() && this.updateFiltersX()) {
 				if (this.filterOptionsShown) {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() || textRenderer.getWidth(fullModCount) <= this.filtersX - 5) {
-						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), this.searchBoxX, 52, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), this.searchBoxX, 52, 0xFFFFFF, true);
 					} else {
-						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), this.searchBoxX, 46, 0xFFFFFF, false);
-						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), this.searchBoxX, 57, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), this.searchBoxX, 46, 0xFFFFFF, true);
+						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), this.searchBoxX, 57, 0xFFFFFF, true);
 					}
 				} else {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() || textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), this.searchBoxX, 52, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, fullModCount.asOrderedText(), this.searchBoxX, 52, 0xFFFFFF, true);
 					} else {
-						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), this.searchBoxX, 46, 0xFFFFFF, false);
-						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), this.searchBoxX, 57, 0xFFFFFF, false);
+						DrawContext.drawText(textRenderer, computeModCountText(false).asOrderedText(), this.searchBoxX, 46, 0xFFFFFF, true);
+						DrawContext.drawText(textRenderer, computeLibraryCountText().asOrderedText(), this.searchBoxX, 57, 0xFFFFFF, true);
 					}
 				}
 			}
@@ -347,7 +347,7 @@ public class ModsScreen extends Screen {
 				StringVisitable ellipsis = StringVisitable.plain("...");
 				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
-			DrawContext.drawText(textRenderer, Language.getInstance().reorder(trimmedName), x + imageOffset, RIGHT_PANE_Y + 1, 0xFFFFFF, false);
+			DrawContext.drawText(textRenderer, Language.getInstance().reorder(trimmedName), x + imageOffset, RIGHT_PANE_Y + 1, 0xFFFFFF, true);
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 && mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				this.setTooltip(ModMenuScreenTexts.modIdTooltip(mod.getId()));
 			}
@@ -359,7 +359,7 @@ public class ModsScreen extends Screen {
 				modBadgeRenderer.draw(DrawContext, mouseX, mouseY);
 			}
 			if (mod.isReal()) {
-				DrawContext.drawText(textRenderer, mod.getPrefixedVersion(), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing, 0x808080, false);
+				DrawContext.drawText(textRenderer, mod.getPrefixedVersion(), x + imageOffset, RIGHT_PANE_Y + 2 + lineSpacing, 0x808080, true);
 			}
 			String authors;
 			List<String> names = mod.getAuthors();
