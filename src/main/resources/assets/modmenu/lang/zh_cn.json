@@ -56,6 +56,7 @@
   "modmenu.experimental": "(更新检测器处于实验阶段！)",
   "modmenu.childHasUpdate": "此模组的一个子模组有更新。",
   "modmenu.updateText": "%2$s中的v%1$s",
+  "modmenu.downloadLink": "下载",
   "modmenu.buymeacoffee": "给我买一杯咖啡",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -77,6 +78,13 @@
   "modmenu.twitter": "推特（Twitter）",
   "modmenu.wiki": "百科",
   "modmenu.youtube": "YouTube",
+  "modmenu.credits.role.author": "作者",
+  "modmenu.credits.role.contributor": "贡献者",
+  "modmenu.credits.role.translator": "翻译者",
+  "modmenu.credits.role.maintainer": "维护者",
+  "modmenu.credits.role.playtester": "游戏测试员",
+  "modmenu.credits.role.illustrator": "画师",
+  "modmenu.credits.role.owner": "所有者",
   "modmenu.modsFolder": "打开模组文件夹",
   "modmenu.configsFolder": "打开配置文件夹",
   "modmenu.nameTranslation.minecraft": "Minecraft",
@@ -153,4 +161,8 @@
   "option.modmenu.quick_configure": "快速配置",
   "option.modmenu.quick_configure.true": "启用",
   "option.modmenu.quick_configure.false": "禁用"
+  "option.modmenu.update_channel": "更新频道",
+  "option.modmenu.update_channel.alpha": "全部",
+  "option.modmenu.update_channel.beta": "正式版和测试版",
+  "option.modmenu.update_channel.release": "仅正式版"
 }
