@@ -22,9 +22,9 @@ import net.minecraft.util.Util;
 
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> {
 	public static final Identifier UNKNOWN_ICON = Identifier.of("textures/misc/unknown_pack.png");
-	private static final Identifier MOD_CONFIGURATION_ICON = Identifier.of("modmenu", "textures/gui/mod_configuration.png");
-	private static final Identifier ERROR_ICON = Identifier.of("minecraft", "world_list/error");
-	private static final Identifier ERROR_HIGHLIGHTED_ICON = Identifier.of("minecraft", "world_list/error_highlighted");
+	private static final Identifier MOD_CONFIGURATION_ICON = Identifier.of(ModMenu.MOD_ID, "textures/gui/mod_configuration.png");
+	private static final Identifier ERROR_ICON = Identifier.of("world_list/error");
+	private static final Identifier ERROR_HIGHLIGHTED_ICON = Identifier.of("world_list/error_highlighted");
 
 	protected final MinecraftClient client;
 	public final Mod mod;
