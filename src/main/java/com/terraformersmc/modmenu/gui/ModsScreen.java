@@ -23,10 +23,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
@@ -46,8 +44,8 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public class ModsScreen extends Screen {
-	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/filters_button.png");
-	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/configure_button.png");
+	private static final Identifier FILTERS_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID, "textures/gui/filters_button.png");
+	private static final Identifier CONFIGURE_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 
 	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
 	private final Screen previousScreen;

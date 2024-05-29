@@ -14,12 +14,7 @@ import com.terraformersmc.modmenu.util.mod.ModSearch;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.joml.Matrix4f;
@@ -202,7 +197,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	protected void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
+		BufferBuilder buffer;
 
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
@@ -219,20 +214,33 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					RenderSystem.setShader(GameRenderer::getPositionProgram);
 					RenderSystem.setShaderColor(float_2, float_2, float_2, 1.0F);
 					Matrix4f matrix = DrawContext.getMatrices().peek().getPositionMatrix();
-					buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).next();
-					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).next();
-					buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F).next();
-					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F).next();
-					tessellator.draw();
+					BuiltBuffer builtBuffer;
+					buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+					buffer.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F);
+					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F);
+					buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F);
+					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F);
+					try
+					{
+						builtBuffer = buffer.end();
+						BufferRenderer.drawWithGlobalProgram(builtBuffer);
+						builtBuffer.close();
+					}
+					catch (Exception ignored) {}
 					RenderSystem.setShader(GameRenderer::getPositionProgram);
 					RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-					buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F).next();
-					buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).next();
-					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).next();
-					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).next();
-					tessellator.draw();
+					buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+					buffer.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F);
+					buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F);
+					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F);
+					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F);
+					try
+					{
+						builtBuffer = buffer.end();
+						BufferRenderer.drawWithGlobalProgram(builtBuffer);
+						builtBuffer.close();
+					}
+					catch (Exception ignored) {}
 				}
 
 				entryLeft = this.getRowLeft();

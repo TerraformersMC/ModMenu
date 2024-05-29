@@ -27,7 +27,7 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class ModMenuEventHandler {
-	public static final Identifier FABRIC_ICON_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/mods_button.png");
+	public static final Identifier FABRIC_ICON_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID, "textures/gui/mods_button.png");
 	private static KeyBinding MENU_KEY_BIND;
 
 	public static void register() {

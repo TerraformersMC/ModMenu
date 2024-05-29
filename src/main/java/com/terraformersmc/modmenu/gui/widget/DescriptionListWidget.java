@@ -15,7 +15,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
@@ -28,10 +27,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
@@ -248,17 +244,18 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBuffer();
+		BufferBuilder bufferBuilder;
+		BuiltBuffer builtBuffer;
 
 //		{
 //			RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 //			RenderSystem.setShaderTexture(0, Screen.OPTIONS_BACKGROUND_TEXTURE);
 //			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 //			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-//			bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0D).texture(this.getX() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-//			bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0D).texture(this.getRight() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-//			bufferBuilder.vertex(this.getRight(), this.getY(), 0.0D).texture(this.getRight() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-//			bufferBuilder.vertex(this.getX(), this.getY(), 0.0D).texture(this.getX() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+//			bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0D).texture(this.getX() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
+//			bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0D).texture(this.getRight() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
+//			bufferBuilder.vertex(this.getRight(), this.getY(), 0.0D).texture(this.getRight() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
+//			bufferBuilder.vertex(this.getX(), this.getY(), 0.0D).texture(this.getX() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
 //			tessellator.draw();
 //		}
 
@@ -272,55 +269,52 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
 		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-		bufferBuilder.vertex(this.getX(), (this.getY() + 4), 0.0D).
+		bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(this.getX(), (this.getY() + 4), 0.0F).
 
-				color(0, 0, 0, 0).
+				color(0, 0, 0, 0);
 
-				next();
-		bufferBuilder.vertex(this.getRight(), (this.getY() + 4), 0.0D).
+		bufferBuilder.vertex(this.getRight(), (this.getY() + 4), 0.0F).
 
-				color(0, 0, 0, 0).
+				color(0, 0, 0, 0);
+		
+		bufferBuilder.vertex(this.getRight(), this.getY(), 0.0F).
 
-				next();
-		bufferBuilder.vertex(this.getRight(), this.getY(), 0.0D).
+				color(0, 0, 0, 255);
+		
+		bufferBuilder.vertex(this.getX(), this.getY(), 0.0F).
 
-				color(0, 0, 0, 255).
+				color(0, 0, 0, 255);
+		
+		bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0F).
 
-				next();
-		bufferBuilder.vertex(this.getX(), this.getY(), 0.0D).
+				color(0, 0, 0, 255);
+		
+		bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0F).
+			
+				color(0, 0, 0, 255);
+		
+		bufferBuilder.vertex(this.getRight(), (this.getBottom() - 4), 0.0F).
 
-				color(0, 0, 0, 255).
+				color(0, 0, 0, 0);
+		
+		bufferBuilder.vertex(this.getX(), (this.getBottom() - 4), 0.0F).
 
-				next();
-		bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0D).
-
-				color(0, 0, 0, 255).
-
-				next();
-		bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0D).
-
-				color(0, 0, 0, 255).
-
-				next();
-		bufferBuilder.vertex(this.getRight(), (this.getBottom() - 4), 0.0D).
-
-				color(0, 0, 0, 0).
-
-				next();
-		bufferBuilder.vertex(this.getX(), (this.getBottom() - 4), 0.0D).
-
-				color(0, 0, 0, 0).
-
-				next();
-		tessellator.draw();
-
+				color(0, 0, 0, 0);
+		
+		try {
+			builtBuffer = bufferBuilder.end();
+			BufferRenderer.drawWithGlobalProgram(builtBuffer);
+			builtBuffer.close();
+		}
+		catch (Exception ignored) { }
 		this.renderScrollBar(bufferBuilder, tessellator);
 
 		RenderSystem.disableBlend();
 	}
 
 	public void renderScrollBar(BufferBuilder bufferBuilder, Tessellator tessellator) {
+		BuiltBuffer builtBuffer;
 		int scrollbarStartX = this.getScrollbarX();
 		int scrollbarEndX = scrollbarStartX + 6;
 		int maxScroll = this.getMaxScroll();
@@ -333,20 +327,25 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			}
 
 			RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-			bufferBuilder.vertex(scrollbarStartX, this.getBottom(), 0.0D).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, this.getBottom(), 0.0D).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, this.getY(), 0.0D).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, this.getY(), 0.0D).color(0, 0, 0, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0D).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0D).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarEndX, q, 0.0D).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).color(128, 128, 128, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q + p - 1, 0.0D).color(192, 192, 192, 255).next();
-			bufferBuilder.vertex(scrollbarEndX - 1, q + p - 1, 0.0D).color(192, 192, 192, 255).next();
-			bufferBuilder.vertex(scrollbarEndX - 1, q, 0.0D).color(192, 192, 192, 255).next();
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0D).color(192, 192, 192, 255).next();
-			tessellator.draw();
+			bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+			bufferBuilder.vertex(scrollbarStartX, this.getBottom(), 0.0F).color(0, 0, 0, 255);
+			bufferBuilder.vertex(scrollbarEndX, this.getBottom(), 0.0F).color(0, 0, 0, 255);
+			bufferBuilder.vertex(scrollbarEndX, this.getY(), 0.0F).color(0, 0, 0, 255);
+			bufferBuilder.vertex(scrollbarStartX, this.getY(), 0.0F).color(0, 0, 0, 255);
+			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0F).color(128, 128, 128, 255);
+			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0F).color(128, 128, 128, 255);
+			bufferBuilder.vertex(scrollbarEndX, q, 0.0F).color(128, 128, 128, 255);
+			bufferBuilder.vertex(scrollbarStartX, q, 0.0F).color(128, 128, 128, 255);
+			bufferBuilder.vertex(scrollbarStartX, q + p - 1, 0.0F).color(192, 192, 192, 255);
+			bufferBuilder.vertex(scrollbarEndX - 1, q + p - 1, 0.0F).color(192, 192, 192, 255);
+			bufferBuilder.vertex(scrollbarEndX - 1, q, 0.0F).color(192, 192, 192, 255);
+			bufferBuilder.vertex(scrollbarStartX, q, 0.0F).color(192, 192, 192, 255);
+			try {
+				builtBuffer = bufferBuilder.end();
+				BufferRenderer.drawWithGlobalProgram(builtBuffer);
+				builtBuffer.close();
+			}
+			catch (Exception ignored) { }
 		}
 	}
 

@@ -14,7 +14,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -22,10 +21,10 @@ import net.minecraft.util.Language;
 import net.minecraft.util.Util;
 
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> {
-	public static final Identifier UNKNOWN_ICON = new Identifier("textures/misc/unknown_pack.png");
-	private static final Identifier MOD_CONFIGURATION_ICON = new Identifier("modmenu", "textures/gui/mod_configuration.png");
-	private static final Identifier ERROR_ICON = new Identifier("minecraft", "world_list/error");
-	private static final Identifier ERROR_HIGHLIGHTED_ICON = new Identifier("minecraft", "world_list/error_highlighted");
+	public static final Identifier UNKNOWN_ICON = Identifier.of("textures/misc/unknown_pack.png");
+	private static final Identifier MOD_CONFIGURATION_ICON = Identifier.of("modmenu", "textures/gui/mod_configuration.png");
+	private static final Identifier ERROR_ICON = Identifier.of("minecraft", "world_list/error");
+	private static final Identifier ERROR_HIGHLIGHTED_ICON = Identifier.of("minecraft", "world_list/error_highlighted");
 
 	protected final MinecraftClient client;
 	public final Mod mod;
@@ -127,7 +126,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	public Identifier getIconTexture() {
 		if (this.iconLocation == null) {
-			this.iconLocation = new Identifier(ModMenu.MOD_ID, mod.getId() + "_icon");
+			this.iconLocation = Identifier.of(ModMenu.MOD_ID, mod.getId() + "_icon");
 			NativeImageBackedTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.getGuiScale().getValue());
 			if (icon != null) {
 				this.client.getTextureManager().registerTexture(this.iconLocation, icon);
