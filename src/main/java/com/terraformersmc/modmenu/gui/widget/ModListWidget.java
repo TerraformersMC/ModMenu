@@ -220,13 +220,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F);
 					buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F);
 					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F);
-					try
-					{
+					try {
 						builtBuffer = buffer.end();
 						BufferRenderer.drawWithGlobalProgram(builtBuffer);
 						builtBuffer.close();
+					} catch (Exception e) {
+						// Ignored
 					}
-					catch (Exception ignored) {}
 					RenderSystem.setShader(GameRenderer::getPositionProgram);
 					RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
 					buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
