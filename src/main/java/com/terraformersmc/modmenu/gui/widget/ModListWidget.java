@@ -234,13 +234,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F);
 					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F);
 					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F);
-					try
-					{
+					try {
 						builtBuffer = buffer.end();
 						BufferRenderer.drawWithGlobalProgram(builtBuffer);
 						builtBuffer.close();
+					} catch (Exception e) {
+						// Ignored
 					}
-					catch (Exception ignored) {}
 				}
 
 				entryLeft = this.getRowLeft();
