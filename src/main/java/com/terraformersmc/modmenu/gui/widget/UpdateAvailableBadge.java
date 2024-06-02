@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 public class UpdateAvailableBadge {
-	private static final Identifier UPDATE_ICON = Identifier.of("icon/trial_available");
+	private static final Identifier UPDATE_ICON = Identifier.ofVanilla("icon/trial_available");
 
 	public static void renderBadge(DrawContext DrawContext, int x, int y) {
 		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
