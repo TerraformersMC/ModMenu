@@ -345,8 +345,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				builtBuffer = bufferBuilder.end();
 				BufferRenderer.drawWithGlobalProgram(builtBuffer);
 				builtBuffer.close();
+			} catch (Exception e) {
+				// Ignored
 			}
-			catch (Exception ignored) { }
 		}
 	}
 
