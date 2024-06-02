@@ -27,8 +27,7 @@ public class ModMenuOptionsScreen extends GameOptionsScreen {
 	}
 
 	@Override
-	protected void addOptions()
-	{
+	protected void addOptions() {
 		// NO-OP
 	}
 
