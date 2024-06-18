@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "modmenu-api",
+  "name": "Mod Menu API",
+  "version": "$version",
+  "environment": "client",
+  "license": "MIT",
+  "icon": "assets/modmenu/icon.png",
+  "depends": {
+    "fabricloader": ">=0.15.10",
+    "minecraft": ">=1.21"
+  },
+  "description": "The API used for defining config screens and update checkers in Mod Menu."
+}

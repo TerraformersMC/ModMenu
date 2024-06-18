@@ -12,6 +12,12 @@
     ],
     "modmenu": [
       "com.terraformersmc.modmenu.ModMenuModMenuCompat"
+    ],
+    "modmenu-gui": [
+      "com.terraformersmc.modmenu.ModMenuModMenuGuiProviderAndUpdatePreferences"
+    ],
+    "modmenu-update-preferences": [
+      "com.terraformersmc.modmenu.ModMenuModMenuGuiProviderAndUpdatePreferences"
     ]
   },
   "contact": {

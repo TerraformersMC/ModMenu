@@ -1,37 +1,75 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id 'java'
+	id 'idea'
+	id 'eclipse'
+	id 'maven-publish'
+	id 'fabric-loom' version '1.6.+'
 }
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.7/ferry.gradle'
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: 'eclipse'
+	apply plugin: 'maven-publish'
+	apply plugin: 'fabric-loom'
+
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+
+	repositories {
+		maven {
+			name = 'Nucleoid'
+			url = 'https://maven.nucleoid.xyz/'
+		}
+	}
+
+	ext {
+		mod = { String localOverrideKey, Object dep ->
+			File file = file("../.${localOverrideKey}-local");
+			if (file.exists()) {
+				dependencies.implementation(dep)
+			} else {
+				dependencies.modImplementation(dep)
+			}
+		}
+
+		includeMod = { String localOverrideKey, Object dep ->
+			mod(localOverrideKey, dep)
+			dependencies.include(dep)
+		}
+	}
+
+	dependencies {
+		minecraft "com.mojang:minecraft:$project.minecraft_version"
+		mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
+
+		mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		it.options.release = 21
+		it.options.encoding = "UTF-8"
+	}
+
+	java {
+		withSourcesJar()
+
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
+	}
+
+	jar {
+		from "LICENSE"
+	}
+}
 
 dependencies {
-	minecraft "com.mojang:minecraft:$project.minecraft_version"
-	mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "eu.pb4:placeholder-api:${project.text_placeholder_api_version}"
 
-	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
-
-	includeMod "fabric-api", fabricApi.module("fabric-api-base", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-screen-api-v1", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-key-binding-api-v1", project.fabric_version)
-	includeMod "fabric-api", fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version)
-
-	includeMod "text-placeholder-api", "eu.pb4:placeholder-api:${project.text_placeholder_api_version}"
-
-	compileOnly "org.quiltmc:quilt-loader:$project.quilt_loader_version"
-}
-
-repositories {
-	maven {
-		name = 'TerraformersMC'
-		url = 'https://maven.terraformersmc.com/'
-	}
-	maven {
-		name = 'Quilt'
-		url = 'https://maven.quiltmc.org/repository/release'
-	}
-	maven {
-		name = 'Nucleoid'
-		url = 'https://maven.nucleoid.xyz/'
+	afterEvaluate {
+		subprojects.each {
+			implementation project(path: ":${it.path}", configuration: "namedElements")
+		}
 	}
 }

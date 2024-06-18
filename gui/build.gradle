@@ -1,0 +1,21 @@
+repositories {
+	maven {
+		name = 'Quilt'
+		url = 'https://maven.quiltmc.org/repository/release'
+	}
+}
+
+dependencies {
+	include(modImplementation fabricApi.module("fabric-api-base", project.fabric_version))
+	include(modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+	include(modImplementation fabricApi.module("fabric-screen-api-v1", project.fabric_version))
+	include(modImplementation fabricApi.module("fabric-key-binding-api-v1", project.fabric_version))
+	include(modImplementation fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+
+	include(modImplementation "eu.pb4:placeholder-api:${project.text_placeholder_api_version}")
+
+	// For supporting extra Quilt APIs
+	compileOnly "org.quiltmc:quilt-loader:$project.quilt_loader_version"
+
+	implementation project(path: ":api", configuration: "namedElements")
+}

@@ -1,0 +1,355 @@
+buildscript {
+	repositories {
+		maven {
+			name = 'TerraformersMC'
+			url = 'https://maven.terraformersmc.com/'
+		}
+	}
+
+	dependencies {
+		classpath "org.kohsuke:github-api:1.114"
+	}
+}
+
+plugins {
+	id 'com.modrinth.minotaur' version '2.+' // Modrinth publishing
+	id 'com.matthewprenger.cursegradle' version '1.4.0' // CurseForge publishing
+	id 'org.ajoberstar.grgit' version '4.1.0' // Reading changelogs from git commits
+	id 'net.dumbcode.gradlehook' version '1.3.1' // Discord release webhook
+}
+
+version = getVersion()
+
+ext.curseReleaseType = "release"
+ext.releaseChangelog = "No Changelog Available"
+ext.stabilitySuffix = ""
+ext.curseforgeDownloadLink = null
+ext.modrinthDownloadLink = null
+ext.githubDownloadLink = null
+ext.releaseType = project.default_release_type
+
+tasks.register('generateChangelog') {
+	def changes = StringBuilder.newInstance()
+	if (!project.hasProperty("lastTag") || !project.hasProperty("currentTag")) {
+		println "Missing lastTag or currentTag parameters, aborting changelog creation"
+		return;
+	}
+	def lastTag = project.getProperty("lastTag")
+	def currentTag = project.getProperty("currentTag")
+	def commits = "git log --max-count=$project.changelog_max_commit_search --pretty=format:\"%b\" $lastTag..$currentTag".execute()
+	println "Last version: $lastTag"
+	println "Current version: $currentTag"
+
+	if (currentTag.contains("-alpha")) {
+		releaseType = "alpha"
+		curseReleaseType = "alpha"
+		stabilitySuffix = " (Alpha)"
+	} else if (currentTag.contains("-beta")) {
+		releaseType = "beta"
+		curseReleaseType = "beta"
+		stabilitySuffix = " (Beta)"
+	} else if (currentTag.contains("-pre")) {
+		releaseType = "pre"
+		curseReleaseType = "beta"
+		stabilitySuffix = " (Pre-Release)"
+	} else if (currentTag.contains("-rc")) {
+		releaseType = "rc"
+		curseReleaseType = "beta"
+		stabilitySuffix = " (Release Candidate)"
+	} else if (!currentTag.contains("-")) {
+		releaseType = "stable"
+	}
+	println "Release type: $releaseType"
+
+	commits.in.eachLine { line -> // Loops over the lines the git log command returns
+		def processedLine = line.toString()
+		if (processedLine.startsWith("\"")) {
+			processedLine = processedLine.substring(1)
+		}
+		if (processedLine.endsWith("\"")) {
+			processedLine = processedLine.substring(0, processedLine.length() - 1)
+		}
+		println "Reading line: $processedLine"
+
+		if (processedLine.startsWith("- ")) {
+			println "Adding changelog line:"
+			println "  $processedLine"
+			if (changes.length() == 0) {
+				changes << processedLine
+			} else {
+				changes << "\n$processedLine"
+			}
+		}
+	}
+	commits.err.eachLine { line -> println line }
+	commits.waitFor()
+	println "Changelog:"
+	releaseChangelog = changes.toString()
+	if (releaseChangelog.isEmpty()) {
+		releaseChangelog = "No Changelog Available"
+	}
+	println releaseChangelog
+}
+
+processResources {
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+curseforge {
+	if (System.getenv().CURSEFORGE_TOKEN) {
+		apiKey = System.getenv().CURSEFORGE_TOKEN
+	} else {
+		println "No CURSEFORGE_TOKEN specified"
+	}
+	project {
+		id = project.curseforge_id
+		releaseType = curseReleaseType
+		project.curseforge_game_versions.split(", ").each {
+			String gameVersion -> addGameVersion gameVersion
+		}
+		changelog = releaseChangelog
+		mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+		mainArtifact.displayName = "$project.project_name v$version for $project.minecraft_version"
+		if (!project.curseforge_required_dependencies.isEmpty() || !project.curseforge_optional_dependencies.isEmpty()) {
+			relations {
+				if (!project.curseforge_required_dependencies.isEmpty()) {
+					project.curseforge_required_dependencies.split(", ").each {
+						String dep -> requiredDependency dep
+					}
+				}
+				if (!project.curseforge_optional_dependencies.isEmpty()) {
+					project.curseforge_optional_dependencies.split(", ").each {
+						String dep -> optionalDependency dep
+					}
+				}
+			}
+		}
+		afterEvaluate {
+			uploadTask.dependsOn(remapJar)
+		}
+	}
+	options {
+		forgeGradleIntegration = false
+	}
+}
+
+tasks.getByName("curseforge").doLast {
+	def fileId = (tasks.getByName("curseforge$curseforge_id").property("mainArtifact"))['fileID']
+	curseforgeDownloadLink = "https://www.curseforge.com/minecraft/mc-mods/$project.curseforge_slug/files/$fileId";
+	sendDiscordWebhook()
+}
+
+tasks.register('github') {
+	dependsOn build
+
+	onlyIf {
+		System.getenv().GITHUB_TOKEN
+	}
+
+	doLast {
+		def github = org.kohsuke.github.GitHub.connectUsingOAuth(System.getenv().GITHUB_TOKEN as String)
+		def repository = github.getRepository(System.getenv().GITHUB_REPOSITORY)
+
+		def releaseBuilder = new org.kohsuke.github.GHReleaseBuilder(repository, project.getProperty("currentTag"))
+		releaseBuilder.name("$project.project_name v$version for $project.minecraft_version")
+		releaseBuilder.body(releaseChangelog)
+		releaseBuilder.commitish(getBranch())
+		if (releaseType != "stable") {
+			releaseBuilder.prerelease(true)
+		}
+
+		def ghRelease = releaseBuilder.create()
+		ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
+		githubDownloadLink = ghRelease.getHtmlUrl()
+		sendDiscordWebhook()
+	}
+}
+
+// Truncates changelogs for the Discord Webhook
+ext.createDiscordChangelog = { fullChangelogUrl ->
+	def webhookChangelog = StringBuilder.newInstance()
+	def changelogLines = releaseChangelog.split("\n")
+	def maxLines = Integer.decode(project.discord_webhook_changelog_line_limit)
+	if (changelogLines.length <= maxLines) {
+		return releaseChangelog
+	} else {
+		def lines = 0
+		changelogLines.find { line ->
+			if (webhookChangelog.length() == 0) {
+				webhookChangelog << line
+			} else {
+				webhookChangelog << "\n$line"
+			}
+			lines++
+			if (lines >= maxLines) {
+				webhookChangelog << "\n(+ " + (changelogLines.length - lines) + " more) See [Full Changelog]($fullChangelogUrl)"
+				return true;
+			}
+		}
+	}
+	return webhookChangelog.toString()
+}
+
+void sendDiscordWebhook() {
+	println "CurseForge download: $curseforgeDownloadLink"
+	println "Modrinth download: $modrinthDownloadLink"
+	println "GitHub download: $githubDownloadLink"
+	if (curseforgeDownloadLink != null && modrinthDownloadLink != null && githubDownloadLink != null && System.getenv().DISCORD_ANNOUNCEMENT_WEBHOOK) {
+		println "Preparing webhook"
+		def release_url = modrinthDownloadLink
+		def discordChangelog = createDiscordChangelog(release_url)
+
+		def result = DiscordBuilder.createForm {
+			if (project.use_project_username.toBoolean()) {
+				avatar_url = project.project_logo
+				username = project.project_name
+			}
+			embed {
+				color = Integer.decode(project.project_color)
+				author {
+					name = project.project_name + stabilitySuffix
+					url = project.project_url
+				}
+				thumbnail { url = project.project_logo }
+				title = "$project.project_name v$version for $project.minecraft_version Released"
+				url = release_url
+				field {
+					name = "Changes:"
+					value = discordChangelog
+				}
+				field {
+					name = "Downloads:"
+					value = "[$modrinth_emote Modrinth]($modrinthDownloadLink)\n[$curseforge_emote CurseForge]($curseforgeDownloadLink)\n[$github_emote GitHub]($githubDownloadLink)"
+				}
+				footer {
+					text = "A $project.loader_name Mod"
+					icon_url = project.loader_icon
+				}
+			}
+		}.send(System.getenv().DISCORD_ANNOUNCEMENT_WEBHOOK)
+
+		println "Discord Webhook Response: " + result.responseCode
+	}
+}
+
+String getBranch() {
+	def ENV = System.getenv()
+	if (ENV.GITHUB_REF) {
+		def branch = ENV.GITHUB_REF
+		return branch.substring(branch.lastIndexOf("/") + 1)
+	}
+
+	if (grgit == null) {
+		return "unknown"
+	}
+
+	def branch = grgit.branch.current().name
+	return branch.substring(branch.lastIndexOf("/") + 1)
+}
+
+modrinth {
+	projectId = project.modrinth_id
+	versionName = "$project.project_name v$version for $project.minecraft_version"
+	uploadFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
+	changelog = releaseChangelog
+	versionType = curseReleaseType
+	project.modrinth_game_versions.split(", ").each {
+		gameVersions.add it
+	}
+	project.modrinth_mod_loaders.split(", ").each {
+		loaders.add it
+	}
+	dependencies {
+		if (project.hasProperty("modrinth_required_dependencies")) {
+			project.modrinth_required_dependencies.split(", ").each { dep ->
+				required.project dep.trim()
+			}
+		}
+		if (project.hasProperty("modrinth_optional_dependencies")) {
+			project.modrinth_optional_dependencies.split(", ").each { dep ->
+				optional.project dep.trim()
+			}
+		}
+		if (project.hasProperty("modrinth_incompatible_dependencies")) {
+			project.modrinth_incompatible_dependencies.split(", ").each { dep ->
+				incompatible.project dep.trim()
+			}
+		}
+		if (project.hasProperty("modrinth_embedded_dependencies")) {
+			project.modrinth_embedded_dependencies.split(", ").each { dep ->
+				embedded.project dep.trim()
+			}
+		}
+	}
+}
+
+tasks.modrinth.doLast {
+	if (tasks.modrinth.wasUploadSuccessful()) {
+		modrinthDownloadLink = "https://modrinth.com/mod/$project.modrinth_slug/version/$version"
+		sendDiscordWebhook()
+	}
+}
+
+String getVersion() {
+	def version = "unknown"
+	if (project.hasProperty("currentTag")) {
+		return project.currentTag.replace("v", "")
+	}
+	def branchLines = "git branch --show-current".execute().in.readLines()
+	if (!branchLines.isEmpty()) {
+		version = branchLines.get(0)
+	}
+
+	def tagLines = "git describe --tags --exact-match --abbrev=0".execute().in.readLines()
+	def release = false
+	if (!tagLines.isEmpty()) {
+		def line = tagLines.get(0)
+		def regex = /v([0-9].[0-9].[0-9])/
+		if (line.matches(regex)) {
+			version = (line =~ regex)[0][1] // gets 1st match group of 1st match
+			release = true
+		}
+	}
+	if (!release) {
+		def lastTag = "git describe --tags --abbrev=0".execute().in.readLines()
+		def lastCommit = "git rev-parse --short HEAD".execute().in.readLines()
+		if (!lastTag.isEmpty() && !lastCommit.isEmpty()) {
+			version = lastTag.get(0) + "+" + version + "." + lastCommit.get(0)
+		}
+	}
+	return version
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+
+			afterEvaluate {
+				artifact remapJar
+			}
+		}
+	}
+
+	setupRepositories(repositories)
+}
+
+static void setupRepositories(RepositoryHandler repositories) {
+	//repositories.mavenLocal() // uncomment for testing
+	def ENV = System.getenv()
+	if (ENV.MAVEN_URL) {
+		repositories.maven {
+			url ENV.MAVEN_URL
+			credentials {
+				username ENV.MAVEN_USERNAME
+				password ENV.MAVEN_PASSWORD
+			}
+		}
+	}
+}

@@ -1,7 +1,5 @@
 package com.terraformersmc.modmenu.api;
 
-import com.terraformersmc.modmenu.ModMenu;
-import com.terraformersmc.modmenu.gui.ModsScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
@@ -18,7 +16,7 @@ public interface ModMenuApi {
 	 * @return A "Mods" Screen
 	 */
 	static Screen createModsScreen(Screen previous) {
-		return new ModsScreen(previous);
+		return ModMenuApiImpl.getGuiProvider().createModsScreen(previous);
 	}
 
 	/**
@@ -28,7 +26,7 @@ public interface ModMenuApi {
 	 * @return The text that would be displayed on a Mods button
 	 */
 	static Text createModsButtonText() {
-		return ModMenu.createModsButtonText(true);
+		return ModMenuApiImpl.getGuiProvider().createModsButtonText();
 	}
 
 	/**
