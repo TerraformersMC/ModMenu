@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.terraformersmc.modmenu.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_21",
   "client": [
     "AccessorGridWidget",
     "MixinGameMenu",
