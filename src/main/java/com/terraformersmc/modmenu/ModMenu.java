@@ -127,21 +127,46 @@ public class ModMenu implements ClientModInitializer {
 		Map<String, Mod> dummyParents = new HashMap<>();
 
 		// Initialize parent map
+		HashSet<String> modParentSet = new HashSet<>();
 		for (Mod mod : MODS.values()) {
 			String parentId = mod.getParent();
-			if (parentId != null) {
-				Mod parent = MODS.getOrDefault(parentId, dummyParents.get(parentId));
+			if (parentId == null) {
+				ROOT_MODS.put(mod.getId(), mod);
+				continue;
+			}
+
+			Mod parent;
+			modParentSet.clear();
+			while (true) {
+				parent = MODS.getOrDefault(parentId, dummyParents.get(parentId));
 				if (parent == null) {
 					if (mod instanceof FabricMod) {
 						parent = new FabricDummyParentMod((FabricMod) mod, parentId);
 						dummyParents.put(parentId, parent);
 					}
 				}
-				PARENT_MAP.put(parent, mod);
-			} else {
-				ROOT_MODS.put(mod.getId(), mod);
+
+				parentId = parent != null ? parent.getParent() : null;
+				if (parentId == null) {
+					// It will most likely end here in the first iteration
+					break;
+				}
+
+				if (modParentSet.contains(parentId)) {
+					LOGGER.warn("Mods contain each other as parents: {}", modParentSet);
+					parent = null;
+					break;
+				}
+				modParentSet.add(parentId);
 			}
+
+			if (parent == null) {
+				ROOT_MODS.put(mod.getId(), mod);
+				continue;
+			}
+			PARENT_MAP.put(parent, mod);
 		}
+
 		MODS.putAll(dummyParents);
 		ModMenuEventHandler.register();
 	}
