@@ -19,13 +19,13 @@ on:
 
 jobs:
   crowdin:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
       matrix:
         branch: ["1.17", "1.18", "1.19", "1.19.3", "1.19.4"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ matrix.branch }}
     - uses: crowdin/github-action@master
