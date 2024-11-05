@@ -13,6 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
@@ -69,7 +70,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		}
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.enableBlend();
-		DrawContext.drawTexture(this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
+		DrawContext.drawTexture(RenderLayer::getGuiTextured, this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
 		Text name = Text.literal(mod.getTranslatedName());
 		StringVisitable trimmedName = name;
@@ -132,7 +133,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				DrawContext.fill(x, y, x + iconSize, y + iconSize, -1601138544);
 				boolean hoveringIcon = mouseX - x < iconSize;
 				if (this.list.getParent().modScreenErrors.containsKey(modId)) {
-					DrawContext.drawGuiTexture(hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON,
+					DrawContext.drawGuiTexture(RenderLayer::getGuiTextured, hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON,
 						x,
 						y,
 						iconSize,
@@ -148,7 +149,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 					}
 				} else {
 					int v = hoveringIcon ? iconSize : 0;
-					DrawContext.drawTexture(MOD_CONFIGURATION_ICON,
+					DrawContext.drawTexture(RenderLayer::getGuiTextured, MOD_CONFIGURATION_ICON,
 						x,
 						y,
 						0.0F,

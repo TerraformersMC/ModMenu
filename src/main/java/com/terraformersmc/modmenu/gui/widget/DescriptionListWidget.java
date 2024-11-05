@@ -9,6 +9,7 @@ import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -289,7 +290,8 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			GlStateManager.SrcFactor.ZERO,
 			GlStateManager.DstFactor.ONE
 		);
-		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+//		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+		RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
 
 		bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		bufferBuilder.vertex(this.getX(), (this.getY() + 4), 0.0F).
@@ -349,7 +351,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				q = this.getY();
 			}
 
-			RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 			bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 			bufferBuilder.vertex(scrollbarStartX, this.getBottom(), 0.0F).color(0, 0, 0, 255);
 			bufferBuilder.vertex(scrollbarEndX, this.getBottom(), 0.0F).color(0, 0, 0, 255);

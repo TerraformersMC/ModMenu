@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -14,6 +15,6 @@ public class UpdateAvailableBadge {
 		if ((Util.getMeasuringTimeMs() / 800L & 1L) == 1L) {
 			animOffset = 8;
 		}
-		DrawContext.drawGuiTexture(UPDATE_ICON, x, y, 8, 8);
+		DrawContext.drawGuiTexture(RenderLayer::getGuiTextured, UPDATE_ICON, x, y, 8, 8);
 	}
 }
