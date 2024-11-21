@@ -147,7 +147,7 @@ public class ModsScreen extends Screen {
 		this.filtersWidth = librariesWidth + sortingWidth + 2;
 		this.searchRowWidth = this.searchBoxX + searchBoxWidth + 22;
 
-		this.updateFiltersX();
+		this.updateFiltersX(true);
 
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.filtersButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS,
@@ -322,8 +322,8 @@ public class ModsScreen extends Screen {
 			);
 		}
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
-			Text fullModCount = this.computeModCountText(true);
-			if (!ModMenuConfig.CONFIG_MODE.getValue() && this.updateFiltersX()) {
+			Text fullModCount = this.computeModCountText(true, false);
+			if (!ModMenuConfig.CONFIG_MODE.getValue() && this.updateFiltersX(false)) {
 				if (this.filterOptionsShown) {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
 						textRenderer.getWidth(fullModCount) <= this.filtersX - 5) {
@@ -336,14 +336,14 @@ public class ModsScreen extends Screen {
 						);
 					} else {
 						DrawContext.drawText(textRenderer,
-							computeModCountText(false).asOrderedText(),
+							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
 							0xFFFFFF,
 							true
 						);
 						DrawContext.drawText(textRenderer,
-							computeLibraryCountText().asOrderedText(),
+							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
 							0xFFFFFF,
@@ -362,14 +362,14 @@ public class ModsScreen extends Screen {
 						);
 					} else {
 						DrawContext.drawText(textRenderer,
-							computeModCountText(false).asOrderedText(),
+							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
 							0xFFFFFF,
 							true
 						);
 						DrawContext.drawText(textRenderer,
-							computeLibraryCountText().asOrderedText(),
+							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
 							0xFFFFFF,
@@ -455,42 +455,42 @@ public class ModsScreen extends Screen {
 		}
 	}
 
-	private Text computeModCountText(boolean includeLibs) {
+	private Text computeModCountText(boolean includeLibs, boolean onInit) {
 		int[] rootMods = formatModCount(ModMenu.ROOT_MODS.values()
 			.stream()
 			.filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY))
 			.map(Mod::getId)
-			.collect(Collectors.toSet()));
+			.collect(Collectors.toSet()), onInit);
 
-		if (includeLibs && ModMenuConfig.SHOW_LIBRARIES.getValue()) {
+		if (includeLibs && ModMenuConfig.SHOW_LIBRARIES.getValue() && !onInit) {
 			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
 				.stream()
 				.filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY))
 				.map(Mod::getId)
-				.collect(Collectors.toSet()));
+				.collect(Collectors.toSet()), false);
 			return TranslationUtil.translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
 		} else {
 			return TranslationUtil.translateNumeric("modmenu.showingMods", rootMods);
 		}
 	}
 
-	private Text computeLibraryCountText() {
-		if (ModMenuConfig.SHOW_LIBRARIES.getValue()) {
+	private Text computeLibraryCountText(boolean onInit) {
+		if (ModMenuConfig.SHOW_LIBRARIES.getValue() && !onInit) {
 			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
 				.stream()
 				.filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY))
 				.map(Mod::getId)
-				.collect(Collectors.toSet()));
+				.collect(Collectors.toSet()), false);
 			return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
 			return Text.literal(null);
 		}
 	}
 
-	private int[] formatModCount(Set<String> set) {
+	private int[] formatModCount(Set<String> set, boolean allVisible) {
 		int visible = this.modList.getDisplayedCountFor(set);
 		int total = set.size();
-		if (visible == total) {
+		if (visible == total || allVisible) {
 			return new int[]{ total };
 		}
 		return new int[]{ visible, total };
@@ -562,10 +562,10 @@ public class ModsScreen extends Screen {
 		return this.searchBox.getText();
 	}
 
-	private boolean updateFiltersX() {
-		if ((this.filtersWidth + textRenderer.getWidth(this.computeModCountText(true)) + 20) >= this.searchRowWidth &&
-			((this.filtersWidth + textRenderer.getWidth(computeModCountText(false)) + 20) >= this.searchRowWidth ||
-				(this.filtersWidth + textRenderer.getWidth(this.computeLibraryCountText()) + 20) >= this.searchRowWidth
+	private boolean updateFiltersX(boolean onInit) {
+		if ((this.filtersWidth + textRenderer.getWidth(this.computeModCountText(true, onInit)) + 20) >= this.searchRowWidth &&
+			((this.filtersWidth + textRenderer.getWidth(this.computeModCountText(false, onInit)) + 20) >= this.searchRowWidth ||
+				(this.filtersWidth + textRenderer.getWidth(this.computeLibraryCountText(onInit)) + 20) >= this.searchRowWidth
 			)) {
 			this.filtersX = this.paneWidth / 2 - this.filtersWidth / 2;
 			return !filterOptionsShown;
