@@ -30,7 +30,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private List<Mod> mods = null;
 	private final Set<Mod> addedMods = new HashSet<>();
 	private String selectedModId = null;
-	private boolean scrolling;
+	//private boolean scrolling;
 	private final FabricIconHandler iconHandler = new FabricIconHandler();
 
 	public ModListWidget(
@@ -278,7 +278,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		super.ensureVisible(entry);
 	}
 
-	// FIXME --> Was removed from super class
+	// FIXME --> Was removed from super class (updateScrollingState / mouseClicked)
 	/*
 	@Override
 	protected void updateScrollingState(double double_1, double double_2, int int_1) {
