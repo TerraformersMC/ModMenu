@@ -17,6 +17,7 @@ public final class EnumToLowerCaseJsonConverter implements JsonSerializer<Enum<?
 		return new JsonPrimitive(src.name().toLowerCase());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Enum<?> deserialize(
 		final JsonElement json,

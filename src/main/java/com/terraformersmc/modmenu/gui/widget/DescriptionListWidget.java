@@ -93,7 +93,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		if (selectedEntry != lastSelected) {
 			lastSelected = selectedEntry;
 			clearEntries();
-			setScrollAmount(-Double.MAX_VALUE);
+			setScrollY(-Double.MAX_VALUE);
 			if (lastSelected != null) {
 				DescriptionEntry emptyEntry = new DescriptionEntry(OrderedText.EMPTY);
 				int wrapWidth = getRowWidth() - 5;
@@ -342,11 +342,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		BuiltBuffer builtBuffer;
 		int scrollbarStartX = this.getScrollbarX();
 		int scrollbarEndX = scrollbarStartX + 6;
-		int maxScroll = this.getMaxScroll();
+		int maxScroll = this.getMaxScrollY();
 		if (maxScroll > 0) {
-			int p = (int) ((float) ((this.getBottom() - this.getY()) * (this.getBottom() - this.getY())) / (float) this.getMaxPosition());
+			int p = (int) ((float) ((this.getBottom() - this.getY()) * (this.getBottom() - this.getY())) / (float) this.getContentsHeightWithPadding());
 			p = MathHelper.clamp(p, 32, this.getBottom() - this.getY() - 8);
-			int q = (int) this.getScrollAmount() * (this.getBottom() - this.getY() - p) / maxScroll + this.getY();
+			int q = (int) this.getScrollY() * (this.getBottom() - this.getY() - p) / maxScroll + this.getY();
 			if (q < this.getY()) {
 				q = this.getY();
 			}

@@ -576,7 +576,7 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void filesDragged(List<Path> paths) {
+	public void onFilesDropped(List<Path> paths) {
 		Path modsDirectory = FabricLoader.getInstance().getGameDir().resolve("mods");
 
 		// Filter out none mods
