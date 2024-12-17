@@ -80,7 +80,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	@Override
 	public void setSelected(ModListEntry entry) {
 		super.setSelected(entry);
-		selectedModId = entry.getMod().getId();
+		selectedModId = entry == null ? "" : entry.getMod().getId();
 		parent.updateSelectedEntry(getSelectedOrNull());
 	}
 
