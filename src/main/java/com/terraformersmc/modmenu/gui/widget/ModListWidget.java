@@ -18,6 +18,7 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
@@ -78,9 +79,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	@Override
-	public void setSelected(ModListEntry entry) {
+	public void setSelected(@Nullable ModListEntry entry) {
 		super.setSelected(entry);
-		selectedModId = entry.getMod().getId();
+		if (entry == null) {
+			selectedModId = null;
+		} else {
+			selectedModId = entry.getMod().getId();
+		}
 		parent.updateSelectedEntry(getSelectedOrNull());
 	}
 
