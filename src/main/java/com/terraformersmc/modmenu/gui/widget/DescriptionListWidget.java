@@ -9,7 +9,9 @@ import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.GlUsage;
 import net.minecraft.client.gl.ShaderProgramKeys;
+import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -328,8 +330,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		try {
 			builtBuffer = bufferBuilder.end();
-			BufferRenderer.drawWithGlobalProgram(builtBuffer);
-			builtBuffer.close();
+
+			try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
+				vertexBuffer.bind();
+				vertexBuffer.upload(builtBuffer);
+				vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
+				builtBuffer.close();
+			}
 		} catch (Exception e) {
 			// Ignored
 		}
@@ -366,8 +373,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			bufferBuilder.vertex(scrollbarStartX, q, 0.0F).color(192, 192, 192, 255);
 			try {
 				builtBuffer = bufferBuilder.end();
-				BufferRenderer.drawWithGlobalProgram(builtBuffer);
-				builtBuffer.close();
+
+				try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
+					vertexBuffer.bind();
+					vertexBuffer.upload(builtBuffer);
+					vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
+					builtBuffer.close();
+				}
 			} catch (Exception e) {
 				// Ignored
 			}

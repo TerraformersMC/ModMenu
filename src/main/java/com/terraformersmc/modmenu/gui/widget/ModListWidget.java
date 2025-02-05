@@ -12,7 +12,9 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.GlUsage;
 import net.minecraft.client.gl.ShaderProgramKeys;
+import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.*;
@@ -242,8 +244,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F);
 					try {
 						builtBuffer = buffer.end();
-						BufferRenderer.drawWithGlobalProgram(builtBuffer);
-						builtBuffer.close();
+
+						try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
+							vertexBuffer.bind();
+							vertexBuffer.upload(builtBuffer);
+							vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
+							builtBuffer.close();
+						}
 					} catch (Exception e) {
 						// Ignored
 					}
@@ -256,8 +263,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F);
 					try {
 						builtBuffer = buffer.end();
-						BufferRenderer.drawWithGlobalProgram(builtBuffer);
-						builtBuffer.close();
+
+						try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
+							vertexBuffer.bind();
+							vertexBuffer.upload(builtBuffer);
+							vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
+							builtBuffer.close();
+						}
 					} catch (Exception e) {
 						// Ignored
 					}
