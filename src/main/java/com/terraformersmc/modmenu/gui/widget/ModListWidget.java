@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -12,16 +11,12 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.GlUsage;
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -216,79 +211,55 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 
 	@Override
-	protected void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+	protected void renderList(DrawContext context, int mouseX, int mouseY, float delta) {
+		int entryX = this.getRowLeft();
+		int entryWidth = this.getRowWidth();
+
+		int entryHeight = this.itemHeight - 4;
+
 		int entryCount = this.getEntryCount();
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer;
 
-		for (int index = 0; index < entryCount; ++index) {
-			int entryTop = this.getRowTop(index) + 2;
-			int entryBottom = this.getRowTop(index) + this.itemHeight;
-			if (entryBottom >= this.getY() && entryTop <= this.getBottom()) {
-				int entryHeight = this.itemHeight - 4;
+		for (int index = 0; index < entryCount; index++) {
+			int entryY = this.getRowTop(index) + 2;
+			int entryBottom = this.getRowBottom(index);
+
+			// Skip rendering entries not scrolled on screen
+			if (entryBottom >= this.getY() && entryY <= this.getBottom()) {
 				ModListEntry entry = this.getEntry(index);
-				int rowWidth = this.getRowWidth();
-				int entryLeft;
+
+				// Draw the selection highlight, shifting right to account for the parent lines
 				if (this.isSelectedEntry(index)) {
-					entryLeft = getRowLeft() - 2 + entry.getXOffset();
-					int selectionRight = this.getRowLeft() + rowWidth + 2;
-					float float_2 = this.isFocused() ? 1.0F : 0.5F;
-					RenderSystem.setShader(ShaderProgramKeys.POSITION);
-					RenderSystem.setShaderColor(float_2, float_2, float_2, 1.0F);
-					Matrix4f matrix = DrawContext.getMatrices().peek().getPositionMatrix();
-					BuiltBuffer builtBuffer;
-					buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F);
-					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F);
-					buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F);
-					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F);
-					try {
-						builtBuffer = buffer.end();
+					int entryContentX = entryX + entry.getXOffset() - 2;
+					int entryContentWidth = entryWidth - entry.getXOffset() + 4;
 
-						try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
-							vertexBuffer.bind();
-							vertexBuffer.upload(builtBuffer);
-							vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
-							builtBuffer.close();
-						}
-					} catch (Exception e) {
-						// Ignored
-					}
-					RenderSystem.setShader(ShaderProgramKeys.POSITION);
-					RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-					buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F);
-					buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F);
-					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F);
-					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F);
-					try {
-						builtBuffer = buffer.end();
+					int outlineColor = this.isFocused() ? Colors.WHITE : Colors.GRAY;
 
-						try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
-							vertexBuffer.bind();
-							vertexBuffer.upload(builtBuffer);
-							vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
-							builtBuffer.close();
-						}
-					} catch (Exception e) {
-						// Ignored
-					}
+					this.drawSelectionHighlight(context, entryContentX, entryY, entryContentWidth, entryHeight, outlineColor, Colors.BLACK);
 				}
 
-				entryLeft = this.getRowLeft();
-				entry.render(DrawContext,
+				boolean hovered = this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPos(mouseX, mouseY), entry);
+
+				entry.render(context,
 					index,
-					entryTop,
-					entryLeft,
-					rowWidth,
+					entryY,
+					entryX,
+					entryWidth,
 					entryHeight,
 					mouseX,
 					mouseY,
-					this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPos(mouseX, mouseY), entry),
+					hovered,
 					delta
 				);
 			}
 		}
+	}
+
+	/**
+	 * Version of {@link #drawSelectionHighlight(DrawContext, int, int, int, int, int)} with unconstrained positioning and sizing.
+	 */
+	protected void drawSelectionHighlight(DrawContext context, int x, int y, int width, int height, int borderColor, int fillColor) {
+		context.fill(x, y - 2, x + width, y + height + 2, borderColor);
+		context.fill(x + 1, y - 1, x + width - 1, y + height + 1, fillColor);
 	}
 
 	public void ensureVisible(ModListEntry entry) {

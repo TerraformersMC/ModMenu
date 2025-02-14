@@ -1,11 +1,11 @@
 package com.terraformersmc.modmenu.util;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
@@ -21,9 +21,11 @@ import java.util.Random;
 public class DrawingUtil {
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
+	private static final StringVisitable ELLIPSIS = StringVisitable.plain("...");
+
 	public static void drawRandomVersionBackground(
 		Mod mod,
-		DrawContext DrawContext,
+		DrawContext context,
 		int x,
 		int y,
 		int width,
@@ -35,12 +37,11 @@ public class DrawingUtil {
 		if (!ModMenuConfig.RANDOM_JAVA_COLORS.getValue()) {
 			color = 0xFFDD5656;
 		}
-		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-		DrawContext.fill(x, y, x + width, y + height, color);
+		context.fill(x, y, x + width, y + height, color);
 	}
 
 	public static void drawWrappedString(
-		DrawContext DrawContext,
+		DrawContext context,
 		String string,
 		int x,
 		int y,
@@ -59,7 +60,7 @@ public class DrawingUtil {
 			}
 			StringVisitable renderable = strings.get(i);
 			if (i == lines - 1 && strings.size() > lines) {
-				renderable = StringVisitable.concat(strings.get(i), StringVisitable.plain("..."));
+				renderable = StringVisitable.concat(strings.get(i), ELLIPSIS);
 			}
 			OrderedText line = Language.getInstance().reorder(renderable);
 			int x1 = x;
@@ -67,12 +68,12 @@ public class DrawingUtil {
 				int width = CLIENT.textRenderer.getWidth(line);
 				x1 += (float) (wrapWidth - width);
 			}
-			DrawContext.drawText(CLIENT.textRenderer, line, x1, y + i * CLIENT.textRenderer.fontHeight, color, true);
+			context.drawText(CLIENT.textRenderer, line, x1, y + i * CLIENT.textRenderer.fontHeight, color, true);
 		}
 	}
 
 	public static void drawBadge(
-		DrawContext DrawContext,
+		DrawContext context,
 		int x,
 		int y,
 		int tagWidth,
@@ -81,22 +82,33 @@ public class DrawingUtil {
 		int fillColor,
 		int textColor
 	) {
-		DrawContext.fill(x + 1, y - 1, x + tagWidth, y, outlineColor);
-		DrawContext.fill(x, y, x + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
-		DrawContext.fill(x + 1,
+		context.fill(x + 1, y - 1, x + tagWidth, y, outlineColor);
+		context.fill(x, y, x + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
+		context.fill(x + 1,
 			y + 1 + CLIENT.textRenderer.fontHeight - 1,
 			x + tagWidth,
 			y + CLIENT.textRenderer.fontHeight + 1,
 			outlineColor
 		);
-		DrawContext.fill(x + tagWidth, y, x + tagWidth + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
-		DrawContext.fill(x + 1, y, x + tagWidth, y + CLIENT.textRenderer.fontHeight, fillColor);
-		DrawContext.drawText(CLIENT.textRenderer,
+		context.fill(x + tagWidth, y, x + tagWidth + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
+		context.fill(x + 1, y, x + tagWidth, y + CLIENT.textRenderer.fontHeight, fillColor);
+		context.drawText(CLIENT.textRenderer,
 			text,
 			(int) (x + 1 + (tagWidth - CLIENT.textRenderer.getWidth(text)) / (float) 2),
 			y + 1,
 			textColor,
 			false
 		);
+	}
+
+	public static StringVisitable getTrimmedName(StringVisitable name, int maxWidth, TextRenderer textRenderer) {
+		if (textRenderer.getWidth(name) > maxWidth) {
+			int ellipsisWidth = textRenderer.getWidth(ELLIPSIS);
+
+			StringVisitable trimmed = textRenderer.trimToWidth(name, maxWidth - ellipsisWidth);
+			return StringVisitable.concat(trimmed, ELLIPSIS);
+		}
+
+		return name;
 	}
 }

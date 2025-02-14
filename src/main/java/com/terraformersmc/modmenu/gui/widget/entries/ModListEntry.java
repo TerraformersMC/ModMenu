@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -50,7 +49,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	@Override
 	public void render(
-		DrawContext DrawContext,
+		DrawContext context,
 		int index,
 		int y,
 		int x,
@@ -66,23 +65,13 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
 		String modId = mod.getId();
 		if ("java".equals(modId)) {
-			DrawingUtil.drawRandomVersionBackground(mod, DrawContext, x, y, iconSize, iconSize);
+			DrawingUtil.drawRandomVersionBackground(mod, context, x, y, iconSize, iconSize);
 		}
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.enableBlend();
-		DrawContext.drawTexture(RenderLayer::getGuiTextured, this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
-		RenderSystem.disableBlend();
+		context.drawTexture(RenderLayer::getGuiTextured, this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		Text name = Text.literal(mod.getTranslatedName());
-		StringVisitable trimmedName = name;
-		int maxNameWidth = rowWidth - iconSize - 3;
 		TextRenderer font = this.client.textRenderer;
-		if (font.getWidth(name) > maxNameWidth) {
-			StringVisitable ellipsis = StringVisitable.plain("...");
-			trimmedName = StringVisitable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)),
-				ellipsis
-			);
-		}
-		DrawContext.drawText(font,
+		StringVisitable trimmedName = DrawingUtil.getTrimmedName(name, rowWidth - iconSize - 3, font);
+		context.drawText(font,
 			Language.getInstance().reorder(trimmedName),
 			x + iconSize + 3,
 			y + 1,
@@ -92,7 +81,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		var updateBadgeXOffset = 0;
 		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue()
 			.contains(modId) && (mod.hasUpdate() || mod.getChildHasUpdate())) {
-			UpdateAvailableBadge.renderBadge(DrawContext, x + iconSize + 3 + font.getWidth(name) + 2, y);
+			UpdateAvailableBadge.renderBadge(context, x + iconSize + 3 + font.getWidth(name) + 2, y);
 			updateBadgeXOffset = 11;
 		}
 		if (!ModMenuConfig.HIDE_BADGES.getValue()) {
@@ -101,11 +90,11 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				x + rowWidth,
 				mod,
 				list.getParent()
-			).draw(DrawContext, mouseX, mouseY);
+			).draw(context, mouseX, mouseY);
 		}
 		if (!ModMenuConfig.COMPACT_LIST.getValue()) {
 			String summary = mod.getSummary();
-			DrawingUtil.drawWrappedString(DrawContext,
+			DrawingUtil.drawWrappedString(context,
 				summary,
 				(x + iconSize + 3 + 4),
 				(y + client.textRenderer.fontHeight + 2),
@@ -114,7 +103,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				0x808080
 			);
 		} else {
-			DrawingUtil.drawWrappedString(DrawContext,
+			DrawingUtil.drawWrappedString(context,
 				mod.getPrefixedVersion(),
 				(x + iconSize + 3),
 				(y + client.textRenderer.fontHeight + 2),
@@ -130,10 +119,10 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				(int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) :
 				256;
 			if (this.client.options.getTouchscreen().getValue() || hovered) {
-				DrawContext.fill(x, y, x + iconSize, y + iconSize, -1601138544);
+				context.fill(x, y, x + iconSize, y + iconSize, -1601138544);
 				boolean hoveringIcon = mouseX - x < iconSize;
 				if (this.list.getParent().modScreenErrors.containsKey(modId)) {
-					DrawContext.drawGuiTexture(RenderLayer::getGuiTextured, hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON,
+					context.drawGuiTexture(RenderLayer::getGuiTextured, hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON,
 						x,
 						y,
 						iconSize,
@@ -149,7 +138,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 					}
 				} else {
 					int v = hoveringIcon ? iconSize : 0;
-					DrawContext.drawTexture(RenderLayer::getGuiTextured, MOD_CONFIGURATION_ICON,
+					context.drawTexture(RenderLayer::getGuiTextured, MOD_CONFIGURATION_ICON,
 						x,
 						y,
 						0.0F,

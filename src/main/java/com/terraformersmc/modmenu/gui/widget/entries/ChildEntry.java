@@ -17,7 +17,7 @@ public class ChildEntry extends ModListEntry {
 
 	@Override
 	public void render(
-		DrawContext DrawContext,
+		DrawContext context,
 		int index,
 		int y,
 		int x,
@@ -28,11 +28,11 @@ public class ChildEntry extends ModListEntry {
 		boolean isSelected,
 		float delta
 	) {
-		super.render(DrawContext, index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
+		super.render(context, index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
 		x += 4;
 		int color = 0xFFA0A0A0;
-		DrawContext.fill(x, y - 2, x + 1, y + (bottomChild ? rowHeight / 2 : rowHeight + 2), color);
-		DrawContext.fill(x, y + rowHeight / 2, x + 7, y + rowHeight / 2 + 1, color);
+		context.fill(x, y - 2, x + 1, y + (bottomChild ? rowHeight / 2 : rowHeight + 2), color);
+		context.fill(x, y + rowHeight / 2, x + 7, y + rowHeight / 2 + 1, color);
 	}
 
 	@Override

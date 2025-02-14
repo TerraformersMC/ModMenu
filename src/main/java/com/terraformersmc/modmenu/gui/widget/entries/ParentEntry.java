@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -32,7 +31,7 @@ public class ParentEntry extends ModListEntry {
 
 	@Override
 	public void render(
-		DrawContext DrawContext,
+		DrawContext context,
 		int index,
 		int y,
 		int x,
@@ -43,7 +42,7 @@ public class ParentEntry extends ModListEntry {
 		boolean isSelected,
 		float delta
 	) {
-		super.render(DrawContext, index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
+		super.render(context, index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
 		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
@@ -60,37 +59,37 @@ public class ParentEntry extends ModListEntry {
 		int childrenBadgeY = y + iconSize - childrenBadgeHeight;
 		int childrenOutlineColor = 0xff107454;
 		int childrenFillColor = 0xff093929;
-		DrawContext.fill(childrenBadgeX + 1,
+		context.fill(childrenBadgeX + 1,
 			childrenBadgeY,
 			childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + 1,
 			childrenOutlineColor
 		);
-		DrawContext.fill(childrenBadgeX,
+		context.fill(childrenBadgeX,
 			childrenBadgeY + 1,
 			childrenBadgeX + 1,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenOutlineColor
 		);
-		DrawContext.fill(childrenBadgeX + childrenBadgeWidth - 1,
+		context.fill(childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + 1,
 			childrenBadgeX + childrenBadgeWidth,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenOutlineColor
 		);
-		DrawContext.fill(childrenBadgeX + 1,
+		context.fill(childrenBadgeX + 1,
 			childrenBadgeY + 1,
 			childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenFillColor
 		);
-		DrawContext.fill(childrenBadgeX + 1,
+		context.fill(childrenBadgeX + 1,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + childrenBadgeHeight,
 			childrenOutlineColor
 		);
-		DrawContext.drawText(font,
+		context.drawText(font,
 			str.asOrderedText(),
 			(int) (childrenBadgeX + (float) childrenBadgeWidth / 2 - (float) childrenWidth / 2),
 			childrenBadgeY + 1,
@@ -99,11 +98,10 @@ public class ParentEntry extends ModListEntry {
 		);
 		this.hoveringIcon = mouseX >= x - 1 && mouseX <= x - 1 + iconSize && mouseY >= y - 1 && mouseY <= y - 1 + iconSize;
 		if (isMouseOver(mouseX, mouseY)) {
-			DrawContext.fill(x, y, x + iconSize, y + iconSize, 0xA0909090);
+			context.fill(x, y, x + iconSize, y + iconSize, 0xA0909090);
 			int xOffset = list.getParent().showModChildren.contains(getMod().getId()) ? iconSize : 0;
 			int yOffset = hoveringIcon ? iconSize : 0;
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			DrawContext.drawTexture(RenderLayer::getGuiTextured, PARENT_MOD_TEXTURE,
+			context.drawTexture(RenderLayer::getGuiTextured, PARENT_MOD_TEXTURE,
 				x,
 				y,
 				xOffset,

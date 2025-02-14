@@ -1,7 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -9,9 +7,6 @@ import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.GlUsage;
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -21,12 +16,11 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.render.*;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +44,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		.formatted(Formatting.BLUE)
 		.formatted(Formatting.UNDERLINE);
 	private static final Text CREDITS_TEXT = Text.translatable("modmenu.credits");
+
+	private static final int BLACK = Colors.BLACK;
+	private static final int TRANSPARENT = 0x00000000;
+
+	private static final int SHADOW_HEIGHT = 4;
+	private static final int SHADOW_Z = 200;
 
 	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
@@ -90,7 +90,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+	public void renderList(DrawContext context, int mouseX, int mouseY, float delta) {
 		ModListEntry selectedEntry = parent.getSelectedEntry();
 		if (selectedEntry != lastSelected) {
 			lastSelected = selectedEntry;
@@ -264,126 +264,18 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			}
 		}
 
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder;
-		BuiltBuffer builtBuffer;
-
-		//		{
-		//			RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-		//			RenderSystem.setShaderTexture(0, Screen.OPTIONS_BACKGROUND_TEXTURE);
-		//			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		//			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-		//			bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0D).texture(this.getX() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
-		//			bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0D).texture(this.getRight() / 32.0F, (this.getBottom() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
-		//			bufferBuilder.vertex(this.getRight(), this.getY(), 0.0D).texture(this.getRight() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
-		//			bufferBuilder.vertex(this.getX(), this.getY(), 0.0D).texture(this.getX() / 32.0F, (this.getY() + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255);
-		//			tessellator.draw();
-		//		}
-
-		this.enableScissor(DrawContext);
-		super.renderList(DrawContext, mouseX, mouseY, delta);
-		DrawContext.disableScissor();
-
-		RenderSystem.depthFunc(515);
-		RenderSystem.disableDepthTest();
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA,
-			GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA,
-			GlStateManager.SrcFactor.ZERO,
-			GlStateManager.DstFactor.ONE
-		);
-//		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-		RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-
-		bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-		bufferBuilder.vertex(this.getX(), (this.getY() + 4), 0.0F).
-
-			color(0, 0, 0, 0);
-
-		bufferBuilder.vertex(this.getRight(), (this.getY() + 4), 0.0F).
-
-			color(0, 0, 0, 0);
-
-		bufferBuilder.vertex(this.getRight(), this.getY(), 0.0F).
-
-			color(0, 0, 0, 255);
-
-		bufferBuilder.vertex(this.getX(), this.getY(), 0.0F).
-
-			color(0, 0, 0, 255);
-
-		bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0F).
-
-			color(0, 0, 0, 255);
-
-		bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0F).
-
-			color(0, 0, 0, 255);
-
-		bufferBuilder.vertex(this.getRight(), (this.getBottom() - 4), 0.0F).
-
-			color(0, 0, 0, 0);
-
-		bufferBuilder.vertex(this.getX(), (this.getBottom() - 4), 0.0F).
-
-			color(0, 0, 0, 0);
-
-		try {
-			builtBuffer = bufferBuilder.end();
-
-			try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
-				vertexBuffer.bind();
-				vertexBuffer.upload(builtBuffer);
-				vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
-				builtBuffer.close();
-			}
-		} catch (Exception e) {
-			// Ignored
-		}
-		this.renderScrollBar(bufferBuilder, tessellator);
-
-		RenderSystem.disableBlend();
+		super.renderList(context, mouseX, mouseY, delta);
 	}
 
-	public void renderScrollBar(BufferBuilder bufferBuilder, Tessellator tessellator) {
-		BuiltBuffer builtBuffer;
-		int scrollbarStartX = this.getScrollbarX();
-		int scrollbarEndX = scrollbarStartX + 6;
-		int maxScroll = this.getMaxScrollY();
-		if (maxScroll > 0) {
-			int p = (int) ((float) ((this.getBottom() - this.getY()) * (this.getBottom() - this.getY())) / (float) this.getContentsHeightWithPadding());
-			p = MathHelper.clamp(p, 32, this.getBottom() - this.getY() - 8);
-			int q = (int) this.getScrollY() * (this.getBottom() - this.getY() - p) / maxScroll + this.getY();
-			if (q < this.getY()) {
-				q = this.getY();
-			}
+	@Override
+	protected void drawScrollbar(DrawContext context) {
+		int startX = this.getX();
+		int endX = this.overflows() ? this.getScrollbarX() : this.getRight();
 
-			bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-			bufferBuilder.vertex(scrollbarStartX, this.getBottom(), 0.0F).color(0, 0, 0, 255);
-			bufferBuilder.vertex(scrollbarEndX, this.getBottom(), 0.0F).color(0, 0, 0, 255);
-			bufferBuilder.vertex(scrollbarEndX, this.getY(), 0.0F).color(0, 0, 0, 255);
-			bufferBuilder.vertex(scrollbarStartX, this.getY(), 0.0F).color(0, 0, 0, 255);
-			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0F).color(128, 128, 128, 255);
-			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0F).color(128, 128, 128, 255);
-			bufferBuilder.vertex(scrollbarEndX, q, 0.0F).color(128, 128, 128, 255);
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0F).color(128, 128, 128, 255);
-			bufferBuilder.vertex(scrollbarStartX, q + p - 1, 0.0F).color(192, 192, 192, 255);
-			bufferBuilder.vertex(scrollbarEndX - 1, q + p - 1, 0.0F).color(192, 192, 192, 255);
-			bufferBuilder.vertex(scrollbarEndX - 1, q, 0.0F).color(192, 192, 192, 255);
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0F).color(192, 192, 192, 255);
-			try {
-				builtBuffer = bufferBuilder.end();
+		context.fillGradient(startX, this.getY(), endX, this.getY() + SHADOW_HEIGHT, SHADOW_Z, BLACK, TRANSPARENT);
+		context.fillGradient(startX, this.getBottom() - SHADOW_HEIGHT, endX, this.getBottom(), SHADOW_Z, TRANSPARENT, BLACK);
 
-				try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
-					vertexBuffer.bind();
-					vertexBuffer.upload(builtBuffer);
-					vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
-					builtBuffer.close();
-				}
-			} catch (Exception e) {
-				// Ignored
-			}
-		}
+		super.drawScrollbar(context);
 	}
 
 	private Text creditsRoleText(String roleName) {
@@ -420,7 +312,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		@Override
 		public void render(
-			DrawContext DrawContext,
+			DrawContext context,
 			int index,
 			int y,
 			int x,
@@ -432,10 +324,10 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			float delta
 		) {
 			if (updateTextEntry) {
-				UpdateAvailableBadge.renderBadge(DrawContext, x + indent, y);
+				UpdateAvailableBadge.renderBadge(context, x + indent, y);
 				x += 11;
 			}
-			DrawContext.drawTextWithShadow(textRenderer, text, x + indent, y, 0xAAAAAA);
+			context.drawTextWithShadow(textRenderer, text, x + indent, y, 0xAAAAAA);
 		}
 
 		@Override

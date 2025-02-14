@@ -1,7 +1,6 @@
 package com.terraformersmc.modmenu.gui;
 
 import com.google.common.base.Joiner;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
@@ -297,24 +296,23 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		super.render(DrawContext, mouseX, mouseY, delta);
+	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+		super.render(context, mouseX, mouseY, delta);
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
-			this.descriptionListWidget.render(DrawContext, mouseX, mouseY, delta);
+			this.descriptionListWidget.render(context, mouseX, mouseY, delta);
 		}
-		this.modList.render(DrawContext, mouseX, mouseY, delta);
-		this.searchBox.render(DrawContext, mouseX, mouseY, delta);
-		RenderSystem.disableBlend();
-		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		this.modList.render(context, mouseX, mouseY, delta);
+		this.searchBox.render(context, mouseX, mouseY, delta);
+		context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
 		if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
-			DrawContext.drawCenteredTextWithShadow(this.textRenderer,
+			context.drawCenteredTextWithShadow(this.textRenderer,
 				ModMenuScreenTexts.DROP_INFO_LINE_1,
 				this.width - this.modList.getWidth() / 2,
 				RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1,
 				Formatting.GRAY.getColorValue()
 			);
-			DrawContext.drawCenteredTextWithShadow(this.textRenderer,
+			context.drawCenteredTextWithShadow(this.textRenderer,
 				ModMenuScreenTexts.DROP_INFO_LINE_2,
 				this.width - this.modList.getWidth() / 2,
 				RIGHT_PANE_Y / 2 + 1,
@@ -327,7 +325,7 @@ public class ModsScreen extends Screen {
 				if (this.filterOptionsShown) {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
 						textRenderer.getWidth(fullModCount) <= this.filtersX - 5) {
-						DrawContext.drawText(textRenderer,
+						context.drawText(textRenderer,
 							fullModCount.asOrderedText(),
 							this.searchBoxX,
 							52,
@@ -335,14 +333,14 @@ public class ModsScreen extends Screen {
 							true
 						);
 					} else {
-						DrawContext.drawText(textRenderer,
+						context.drawText(textRenderer,
 							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
 							0xFFFFFF,
 							true
 						);
-						DrawContext.drawText(textRenderer,
+						context.drawText(textRenderer,
 							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
@@ -353,7 +351,7 @@ public class ModsScreen extends Screen {
 				} else {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
 						textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-						DrawContext.drawText(textRenderer,
+						context.drawText(textRenderer,
 							fullModCount.asOrderedText(),
 							this.searchBoxX,
 							52,
@@ -361,14 +359,14 @@ public class ModsScreen extends Screen {
 							true
 						);
 					} else {
-						DrawContext.drawText(textRenderer,
+						context.drawText(textRenderer,
 							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
 							0xFFFFFF,
 							true
 						);
-						DrawContext.drawText(textRenderer,
+						context.drawText(textRenderer,
 							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
@@ -383,24 +381,14 @@ public class ModsScreen extends Screen {
 			Mod mod = selectedEntry.getMod();
 			int x = this.rightPaneX;
 			if ("java".equals(mod.getId())) {
-				DrawingUtil.drawRandomVersionBackground(mod, DrawContext, x, RIGHT_PANE_Y, 32, 32);
+				DrawingUtil.drawRandomVersionBackground(mod, context, x, RIGHT_PANE_Y, 32, 32);
 			}
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			RenderSystem.enableBlend();
-			DrawContext.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
-			RenderSystem.disableBlend();
+			context.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			Text name = Text.literal(mod.getTranslatedName());
-			StringVisitable trimmedName = name;
-			int maxNameWidth = this.width - (x + imageOffset);
-			if (textRenderer.getWidth(name) > maxNameWidth) {
-				StringVisitable ellipsis = StringVisitable.plain("...");
-				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name,
-					maxNameWidth - textRenderer.getWidth(ellipsis)
-				), ellipsis);
-			}
-			DrawContext.drawText(textRenderer,
+			StringVisitable trimmedName = DrawingUtil.getTrimmedName(name, this.width - (x + imageOffset), this.textRenderer);
+			context.drawText(textRenderer,
 				Language.getInstance().reorder(trimmedName),
 				x + imageOffset,
 				RIGHT_PANE_Y + 1,
@@ -423,10 +411,10 @@ public class ModsScreen extends Screen {
 				this.init = false;
 			}
 			if (!ModMenuConfig.HIDE_BADGES.getValue()) {
-				modBadgeRenderer.draw(DrawContext, mouseX, mouseY);
+				modBadgeRenderer.draw(context, mouseX, mouseY);
 			}
 			if (mod.isReal()) {
-				DrawContext.drawText(textRenderer,
+				context.drawText(textRenderer,
 					mod.getPrefixedVersion(),
 					x + imageOffset,
 					RIGHT_PANE_Y + 2 + lineSpacing,
@@ -443,7 +431,7 @@ public class ModsScreen extends Screen {
 				} else {
 					authors = names.get(0);
 				}
-				DrawingUtil.drawWrappedString(DrawContext,
+				DrawingUtil.drawWrappedString(context,
 					I18n.translate("modmenu.authorPrefix", authors),
 					x + imageOffset,
 					RIGHT_PANE_Y + 2 + lineSpacing * 2,
