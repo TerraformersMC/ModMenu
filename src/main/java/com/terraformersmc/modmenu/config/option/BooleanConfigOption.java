@@ -5,7 +5,7 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
-public class BooleanConfigOption implements OptionConvertable {
+public class BooleanConfigOption implements OptionConvertible {
 	private final String key, translationKey;
 	private final boolean defaultValue;
 	private final Text enabledText;
@@ -45,15 +45,14 @@ public class BooleanConfigOption implements OptionConvertable {
 	}
 
 	public Text getButtonText() {
-		return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey),
-			getValue() ? enabledText : disabledText
-		);
+		return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText);
 	}
 
 	@Override
 	public SimpleOption<Boolean> asOption() {
 		if (enabledText != null && disabledText != null) {
-			return new SimpleOption<>(translationKey,
+			return new SimpleOption<>(
+				translationKey,
 				SimpleOption.emptyTooltip(),
 				(text, value) -> value ? enabledText : disabledText,
 				SimpleOption.BOOLEAN,
@@ -61,7 +60,9 @@ public class BooleanConfigOption implements OptionConvertable {
 				newValue -> ConfigOptionStorage.setBoolean(key, newValue)
 			);
 		}
-		return SimpleOption.ofBoolean(translationKey,
+
+		return SimpleOption.ofBoolean(
+			translationKey,
 			getValue(),
 			(value) -> ConfigOptionStorage.setBoolean(key, value)
 		);

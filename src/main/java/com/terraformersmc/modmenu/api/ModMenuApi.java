@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public interface ModMenuApi {
-
 	/**
 	 * Used for creating a {@link Screen} instance of the Mod Menu
 	 * "Mods" screen

@@ -15,7 +15,6 @@ public class JsonUtil {
 		}
 
 		var value = parent.get(field);
-
 		if (!value.isJsonPrimitive() || !((JsonPrimitive) value).isString()) {
 			return Optional.empty();
 		}
@@ -29,7 +28,6 @@ public class JsonUtil {
 		}
 
 		var value = parent.get(field);
-
 		if (!value.isJsonPrimitive() || !((JsonPrimitive) value).isBoolean()) {
 			return Optional.empty();
 		}

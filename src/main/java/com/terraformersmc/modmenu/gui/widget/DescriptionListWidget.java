@@ -80,7 +80,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+	public void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
 		ModListEntry selectedEntry = parent.getSelectedEntry();
 		if (selectedEntry != lastSelected) {
 			lastSelected = selectedEntry;
@@ -234,9 +234,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			}
 		}
 
-		this.enableScissor(DrawContext);
-		super.renderList(DrawContext, mouseX, mouseY, delta);
-		DrawContext.disableScissor();
+		this.enableScissor(drawContext);
+		super.renderList(drawContext, mouseX, mouseY, delta);
+		drawContext.disableScissor();
 
 		BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		final int black = ColorHelper.fullAlpha(0);
@@ -320,7 +320,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		@Override
 		public void render(
-			DrawContext DrawContext,
+			DrawContext drawContext,
 			int index,
 			int y,
 			int x,
@@ -332,11 +332,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			float delta
 		) {
 			if (updateTextEntry) {
-				UpdateAvailableBadge.renderBadge(DrawContext, x + indent, y);
+				UpdateAvailableBadge.renderBadge(drawContext, x + indent, y);
 				x += 11;
 			}
 
-			DrawContext.drawTextWithShadow(textRenderer, text, x + indent, y, 0xAAAAAA);
+			drawContext.drawTextWithShadow(textRenderer, text, x + indent, y, 0xAAAAAA);
 		}
 
 		@Override

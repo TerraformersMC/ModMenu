@@ -46,14 +46,15 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 	@Override
 	public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
 		int v = this.v;
-
 		if (!this.isNarratable()) {
 			v += this.hoveredVOffset * 2;
 		} else if (this.isSelected()) {
 			v += this.hoveredVOffset;
 		}
 
-		context.drawTexture(RenderLayer::getGuiTextured, this.texture,
+		context.drawTexture(
+			RenderLayer::getGuiTextured,
+			this.texture,
 			this.getX(),
 			this.getY(),
 			this.u,
@@ -96,37 +97,32 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		public Builder position(int x, int y) {
 			this.x = x;
 			this.y = y;
-
 			return this;
 		}
 
 		public Builder size(int width, int height) {
 			this.width = width;
 			this.height = height;
-
 			return this;
 		}
 
 		public Builder uv(int u, int v, int hoveredVOffset) {
 			this.u = u;
 			this.v = v;
-
 			this.hoveredVOffset = hoveredVOffset;
-
 			return this;
 		}
 
 		public Builder texture(Identifier texture, int textureWidth, int textureHeight) {
 			this.texture = texture;
-
 			this.textureWidth = textureWidth;
 			this.textureHeight = textureHeight;
-
 			return this;
 		}
 
 		public LegacyTexturedButtonWidget build() {
-			return new LegacyTexturedButtonWidget(this.x,
+			return new LegacyTexturedButtonWidget(
+				this.x,
 				this.y,
 				this.width,
 				this.height,

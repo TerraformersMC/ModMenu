@@ -26,7 +26,6 @@ public class QuiltMod extends FabricMod {
 		super(fabricModContainer, modpackMods);
 		this.container = QuiltLoader.getModContainer(fabricModContainer.getMetadata().getId()).get();
 		this.metadata = container.metadata();
-
 		if ("quilt_loader".equals(metadata.id())) {
 			badges.add(Badge.LIBRARY);
 		}
@@ -45,6 +44,7 @@ public class QuiltMod extends FabricMod {
 				.findFirst()
 				.ifPresent(modContributor -> authors.add(modContributor.name()));
 		}
+
 		if (authors.isEmpty()) {
 			if ("minecraft".equals(getId())) {
 				return Lists.newArrayList("Mojang Studios");
@@ -52,6 +52,7 @@ public class QuiltMod extends FabricMod {
 				return Lists.newArrayList(System.getProperty("java.vendor"));
 			}
 		}
+
 		return authors;
 	}
 

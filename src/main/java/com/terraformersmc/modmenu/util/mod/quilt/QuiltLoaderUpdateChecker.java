@@ -7,7 +7,7 @@ import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.util.HttpUtil;
 import com.terraformersmc.modmenu.util.JsonUtil;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.Version;
 import org.quiltmc.loader.api.VersionFormatException;
@@ -26,7 +26,6 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 	@Override
 	public UpdateInfo checkForUpdates() {
 		UpdateInfo result = null;
-
 		try {
 			result = checkForUpdates0();
 		} catch (InterruptedException e) {
@@ -45,28 +44,24 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 		var response = HttpUtil.request(request, HttpResponse.BodyHandlers.ofString());
 
 		var status = response.statusCode();
-
 		if (status != 200) {
 			LOGGER.warn("Quilt Meta responded with a non-200 status: {}!", status);
 			return null;
 		}
 
 		var contentType = response.headers().firstValue("Content-Type");
-
 		if (contentType.isEmpty() || !contentType.get().contains("application/json")) {
 			LOGGER.warn("Quilt Meta responded with a non-json content type, aborting loader update check!");
 			return null;
 		}
 
 		var data = JsonParser.parseString(response.body());
-
 		if (!data.isJsonArray()) {
 			LOGGER.warn("Received invalid data from Quilt Meta, aborting loader update check!");
 			return null;
 		}
 
 		Version.Semantic match = null;
-
 		for (var child : data.getAsJsonArray()) {
 			if (!child.isJsonObject()) {
 				continue;
@@ -74,20 +69,18 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 
 			var object = child.getAsJsonObject();
 			var version = JsonUtil.getString(object, "version");
-
 			if (version.isEmpty()) {
 				continue;
 			}
 
 			Version.Semantic parsed;
-
 			try {
 				parsed = Version.Semantic.of(version.get());
 			} catch (VersionFormatException e) {
 				continue;
 			}
 
-			if (preferredChannel == UpdateChannel.RELEASE && !parsed.preRelease().equals("")) {
+			if (preferredChannel == UpdateChannel.RELEASE && !parsed.preRelease().isEmpty()) {
 				continue;
 			} else if (preferredChannel == UpdateChannel.BETA && !isStableOrBeta(parsed.preRelease())) {
 				continue;
@@ -99,7 +92,6 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 		}
 
 		Version.Semantic current = getCurrentVersion();
-
 		if (match == null || !isNewer(match, current)) {
 			LOGGER.debug("Quilt Loader is up to date.");
 			return null;
@@ -122,20 +114,14 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 			preRelease.startsWith("rc");
 	}
 
-	private static class QuiltLoaderUpdateInfo implements UpdateInfo {
-		private final Version.Semantic version;
-
-		private QuiltLoaderUpdateInfo(Version.Semantic version) {
-			this.version = version;
-		}
-
+	private record QuiltLoaderUpdateInfo(Version.Semantic version) implements UpdateInfo {
 		@Override
 		public boolean isUpdateAvailable() {
 			return true;
 		}
 
 		@Override
-		public @Nullable Text getUpdateMessage() {
+		public @NotNull Text getUpdateMessage() {
 			return Text.translatable("modmenu.install_version", this.version.raw());
 		}
 
@@ -145,9 +131,8 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 		}
 
 		@Override
-		public UpdateChannel getUpdateChannel() {
+		public UpdateChannel updateChannel() {
 			var preRelease = this.version.preRelease();
-
 			if (preRelease.isEmpty()) {
 				return UpdateChannel.RELEASE;
 			} else if (isStableOrBeta(preRelease)) {

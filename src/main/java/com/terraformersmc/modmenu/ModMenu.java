@@ -40,10 +40,7 @@ public class ModMenu implements ClientModInitializer {
 	public static final Gson GSON_MINIFIED;
 
 	static {
-		GsonBuilder builder = new GsonBuilder().registerTypeHierarchyAdapter(Enum.class,
-				new EnumToLowerCaseJsonConverter()
-			)
-			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+		GsonBuilder builder = new GsonBuilder().registerTypeHierarchyAdapter(Enum.class, new EnumToLowerCaseJsonConverter()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
 		GSON = builder.setPrettyPrinting().create();
 		GSON_MINIFIED = builder.create();
 	}
@@ -68,8 +65,9 @@ public class ModMenu implements ClientModInitializer {
 		ConfigScreenFactory<?> factory = getConfigScreenFactory(modId);
 		if (factory != null) {
 			return factory.create(parent);
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	private static @Nullable ConfigScreenFactory<?> getConfigScreenFactory(String modId) {
@@ -116,7 +114,6 @@ public class ModMenu implements ClientModInitializer {
 		//noinspection deprecation
 		for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
 			Mod mod;
-
 			if (RUNNING_QUILT) {
 				mod = new QuiltMod(modContainer, modpackMods);
 			} else {
@@ -124,7 +121,6 @@ public class ModMenu implements ClientModInitializer {
 			}
 
 			var updateChecker = updateCheckers.get(mod.getId());
-
 			if (updateChecker == null) {
 				updateChecker = providedUpdateCheckers.get(mod.getId());
 			}
@@ -168,6 +164,7 @@ public class ModMenu implements ClientModInitializer {
 					parent = null;
 					break;
 				}
+
 				modParentSet.add(parentId);
 			}
 
@@ -175,6 +172,7 @@ public class ModMenu implements ClientModInitializer {
 				ROOT_MODS.put(mod.getId(), mod);
 				continue;
 			}
+
 			PARENT_MAP.put(parent, mod);
 		}
 
@@ -224,13 +222,16 @@ public class ModMenu implements ClientModInitializer {
 				if (!includeChildren && isChild) {
 					return false;
 				}
+
 				boolean isLibrary = mod.getBadges().contains(Mod.Badge.LIBRARY);
 				if (!includeLibraries && isLibrary) {
 					return false;
 				}
+
 				return includeHidden || !mod.isHidden();
 			}).count());
 		}
+
 		return NumberFormat.getInstance().format(cachedDisplayedModCount);
 	}
 

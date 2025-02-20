@@ -16,22 +16,24 @@ public class MixinTitleScreen {
 			return height - 51;
 		} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.REPLACE_REALMS || ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
 			return -99999;
+		} else {
+			return height;
 		}
-		return height;
 	}
 
 	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I", ordinal = 0))
 	private String onRender(String string) {
-		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue()
-			.isOnTitleScreen()) {
+		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnTitleScreen()) {
 			String count = ModMenu.getDisplayedModCount();
 			String specificKey = "modmenu.mods." + count;
 			String replacementKey = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.mods.n";
 			if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
 				replacementKey = specificKey + ".secret";
 			}
+
 			return string.replace(I18n.translate(I18n.translate("menu.modded")), I18n.translate(replacementKey, count));
+		} else {
+			return string;
 		}
-		return string;
 	}
 }

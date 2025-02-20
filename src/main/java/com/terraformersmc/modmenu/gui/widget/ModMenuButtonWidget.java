@@ -11,7 +11,8 @@ import net.minecraft.text.Text;
 
 public class ModMenuButtonWidget extends ButtonWidget {
 	public ModMenuButtonWidget(int x, int y, int width, int height, Text text, Screen screen) {
-		super(x,
+		super(
+			x,
 			y,
 			width,
 			height,
@@ -22,10 +23,11 @@ public class ModMenuButtonWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void renderWidget(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		super.renderWidget(DrawContext, mouseX, mouseY, delta);
+	public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+		super.renderWidget(drawContext, mouseX, mouseY, delta);
 		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
-			UpdateAvailableBadge.renderBadge(DrawContext,
+			UpdateAvailableBadge.renderBadge(
+				drawContext,
 				this.width + this.getX() - 16,
 				this.height / 2 + this.getY() - 4
 			);

@@ -25,5 +25,5 @@ public interface UpdateInfo {
 	/**
 	 * @return The update channel this update is available for.
 	 */
-	UpdateChannel getUpdateChannel();
+	UpdateChannel updateChannel();
 }

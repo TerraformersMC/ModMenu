@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.text.Text;
 
 public class ModMenuOptionsScreen extends GameOptionsScreen {
-
 	public ModMenuOptionsScreen(Screen previous) {
 		super(previous, MinecraftClient.getInstance().options, Text.translatable("modmenu.options"));
 	}

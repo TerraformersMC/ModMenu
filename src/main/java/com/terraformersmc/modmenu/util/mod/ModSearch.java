@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class ModSearch {
-
 	public static boolean validSearchQuery(String query) {
 		return query != null && !query.isEmpty();
 	}
@@ -19,15 +18,16 @@ public class ModSearch {
 	public static List<Mod> search(ModsScreen screen, String query, List<Mod> candidates) {
 		if (!validSearchQuery(query)) {
 			return candidates;
+		} else {
+			return candidates.stream()
+				.map(modContainer -> new Pair<>(modContainer,
+					passesFilters(screen, modContainer, query.toLowerCase(Locale.ROOT))
+				))
+				.filter(pair -> pair.getRight() > 0)
+				.sorted((a, b) -> b.getRight() - a.getRight())
+				.map(Pair::getLeft)
+				.collect(Collectors.toList());
 		}
-		return candidates.stream()
-			.map(modContainer -> new Pair<>(modContainer,
-				passesFilters(screen, modContainer, query.toLowerCase(Locale.ROOT))
-			))
-			.filter(pair -> pair.getRight() > 0)
-			.sorted((a, b) -> b.getRight() - a.getRight())
-			.map(Pair::getLeft)
-			.collect(Collectors.toList());
 	}
 
 	private static int passesFilters(ModsScreen screen, Mod mod, String query) {
@@ -78,12 +78,12 @@ public class ModSearch {
 		if (ModMenu.PARENT_MAP.keySet().contains(mod)) {
 			for (Mod child : ModMenu.PARENT_MAP.get(mod)) {
 				int result = passesFilters(screen, child, query);
-
 				if (result > 0) {
 					return result;
 				}
 			}
 		}
+
 		return 0;
 	}
 
@@ -93,5 +93,4 @@ public class ModSearch {
 			.map(s -> s.toLowerCase(Locale.ROOT))
 			.anyMatch(s -> s.contains(query.toLowerCase(Locale.ROOT)));
 	}
-
 }

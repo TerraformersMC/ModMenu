@@ -50,7 +50,6 @@ public class ConfigOptionStorage {
 		return cycleEnum(key, typeClass, 1);
 	}
 
-
 	public static <E extends Enum<E>> E cycleEnum(String key, Class<E> typeClass, int amount) {
 		E[] values = typeClass.getEnumConstants();
 		E currentValue = getEnum(key, typeClass);

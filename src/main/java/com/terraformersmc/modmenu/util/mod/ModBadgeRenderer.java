@@ -23,34 +23,31 @@ public class ModBadgeRenderer {
 		this.client = MinecraftClient.getInstance();
 	}
 
-	public void draw(DrawContext DrawContext, int mouseX, int mouseY) {
+	public void draw(DrawContext drawContext, int mouseX, int mouseY) {
 		this.badgeX = startX;
 		this.badgeY = startY;
 		Set<Mod.Badge> badges = mod.getBadges();
-		badges.forEach(badge -> drawBadge(DrawContext, badge, mouseX, mouseY));
+		badges.forEach(badge -> drawBadge(drawContext, badge, mouseX, mouseY));
 	}
 
-	public void drawBadge(DrawContext DrawContext, Mod.Badge badge, int mouseX, int mouseY) {
-		this.drawBadge(DrawContext,
+	public void drawBadge(DrawContext drawContext, Mod.Badge badge, int mouseX, int mouseY) {
+		this.drawBadge(
+			drawContext,
 			badge.getText().asOrderedText(),
 			badge.getOutlineColor(),
-			badge.getFillColor(),
-			mouseX,
-			mouseY
+			badge.getFillColor()
 		);
 	}
 
 	public void drawBadge(
-		DrawContext DrawContext,
+		DrawContext drawContext,
 		OrderedText text,
 		int outlineColor,
-		int fillColor,
-		int mouseX,
-		int mouseY
+		int fillColor
 	) {
 		int width = client.textRenderer.getWidth(text) + 6;
 		if (badgeX + width < badgeMax) {
-			DrawingUtil.drawBadge(DrawContext, badgeX, badgeY, width, text, outlineColor, fillColor, 0xCACACA);
+			DrawingUtil.drawBadge(drawContext, badgeX, badgeY, width, text, outlineColor, fillColor, 0xCACACA);
 			badgeX += width + 3;
 		}
 	}

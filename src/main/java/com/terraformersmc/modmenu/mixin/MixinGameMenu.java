@@ -38,7 +38,6 @@ public abstract class MixinGameMenu extends Screen {
 				ModMenuConfig.GameMenuButtonStyle style = ModMenuConfig.GAME_MENU_BUTTON_STYLE.getValue();
 				int vanillaButtonsY = this.height / 4 + 72 - 16 + 1;
 				final int fullWidthButton = 204;
-
 				for (int i = 0; i < buttons.size(); i++) {
 					Widget widget = buttons.get(i);
 					if (style == ModMenuConfig.GameMenuButtonStyle.INSERT) {
@@ -49,9 +48,9 @@ public abstract class MixinGameMenu extends Screen {
 							}
 						}
 					}
+
 					boolean isShortFeedback = ModMenuEventHandler.buttonHasText(widget, "menu.feedback");
 					boolean isLongFeedback = ModMenuEventHandler.buttonHasText(widget, "menu.sendFeedback");
-
 					if (isShortFeedback || isLongFeedback) {
 						modsButtonIndex = i + 1;
 						vanillaButtonsY = widget.getY();
@@ -80,6 +79,7 @@ public abstract class MixinGameMenu extends Screen {
 						}
 					}
 				}
+				
 				if (modsButtonIndex != -1) {
 					if (style == ModMenuConfig.GameMenuButtonStyle.INSERT) {
 						buttons.add(modsButtonIndex, new ModMenuButtonWidget(

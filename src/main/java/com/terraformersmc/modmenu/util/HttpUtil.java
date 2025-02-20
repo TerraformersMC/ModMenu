@@ -37,7 +37,6 @@ public class HttpUtil {
 
 	private static String getModMenuVersion() {
 		var container = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID);
-
 		if (container.isEmpty()) {
 			throw new RuntimeException("Unable to find Modmenu's own mod container!");
 		}

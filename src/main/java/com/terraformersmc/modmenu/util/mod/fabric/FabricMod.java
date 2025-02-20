@@ -52,7 +52,6 @@ public class FabricMod implements Mod {
 		this.metadata = modContainer.getMetadata();
 
 		String id = metadata.getId();
-
 		if ("minecraft".equals(id) || "java".equals(id)) {
 			allowsUpdateChecks = false;
 		}
@@ -85,7 +84,7 @@ public class FabricMod implements Mod {
 							throw new RuntimeException("Mod declared itself as its own parent");
 						}
 					} catch (Throwable t) {
-						LOGGER.error("Error loading parent data from mod: " + id, t);
+						LOGGER.error("Error loading parent data from mod: {}", id, t);
 					}
 				}
 			}
@@ -93,6 +92,7 @@ public class FabricMod implements Mod {
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
 			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
 		}
+
 		this.modMenuData = new ModMenuData(badgeNames, parentId, parentData, id);
 
 		/* Hardcode parents and badges for Fabric API & Fabric Loader */
@@ -103,6 +103,7 @@ public class FabricMod implements Mod {
 			} else {
 				modMenuData.fillParentIfEmpty("fabric");
 			}
+
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
 		if (id.startsWith("fabric") && (id.equals("fabricloader") || metadata.getProvides()
@@ -117,21 +118,26 @@ public class FabricMod implements Mod {
 		if (this.metadata.getEnvironment() == ModEnvironment.CLIENT) {
 			badges.add(Badge.CLIENT);
 		}
+
 		if (OptionalUtil.isPresentAndTrue(CustomValueUtil.getBoolean(
 			"fabric-loom:generated",
 			metadata
 		)) || "java".equals(id)) {
 			badges.add(Badge.LIBRARY);
 		}
+
 		if ("deprecated".equals(CustomValueUtil.getString("fabric-api:module-lifecycle", metadata).orElse(null))) {
 			badges.add(Badge.DEPRECATED);
 		}
+
 		if (metadata.containsCustomValue("patchwork:patcherMeta")) {
 			badges.add(Badge.PATCHWORK_FORGE);
 		}
+
 		if (modpackMods.contains(getId()) && !"builtin".equals(this.metadata.getType())) {
 			badges.add(Badge.MODPACK);
 		}
+
 		if ("minecraft".equals(getId())) {
 			badges.add(Badge.MINECRAFT);
 		}
@@ -162,16 +168,19 @@ public class FabricMod implements Mod {
 			iconSourceId = ModMenu.MOD_ID;
 			iconPath = "assets/" + ModMenu.MOD_ID + "/java_icon.png";
 		}
+
 		final String finalIconSourceId = iconSourceId;
 		ModContainer iconSource = FabricLoader.getInstance()
 			.getModContainer(iconSourceId)
 			.orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
+
 		NativeImageBackedTexture icon = iconHandler.createIcon(iconSource, iconPath);
 		if (icon == null) {
 			if (defaultIconWarning) {
 				LOGGER.warn("Warning! Mod {} has a broken icon, loading default icon", metadata.getId());
 				defaultIconWarning = false;
 			}
+
 			return iconHandler.createIcon(
 				FabricLoader.getInstance()
 					.getModContainer(ModMenu.MOD_ID)
@@ -193,6 +202,7 @@ public class FabricMod implements Mod {
 		if (getId().equals("java")) {
 			description = description + "\n" + I18n.translate("modmenu.javaDistributionName", getName());
 		}
+
 		return description;
 	}
 
@@ -200,8 +210,9 @@ public class FabricMod implements Mod {
 	public @NotNull String getVersion() {
 		if ("java".equals(getId())) {
 			return System.getProperty("java.version");
+		} else {
+			return metadata.getVersion().getFriendlyString();
 		}
-		return metadata.getVersion().getFriendlyString();
 	}
 
 	public @NotNull String getPrefixedVersion() {
@@ -210,7 +221,7 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @NotNull List<String> getAuthors() {
-		List<String> authors = metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
+		var authors = metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
 		if (authors.isEmpty()) {
 			if ("minecraft".equals(getId())) {
 				return Lists.newArrayList("Mojang Studios");
@@ -218,13 +229,13 @@ public class FabricMod implements Mod {
 				return Lists.newArrayList(System.getProperty("java.vendor"));
 			}
 		}
+
 		return authors;
 	}
 
 	@Override
 	public @NotNull Map<String, Collection<String>> getContributors() {
-		Map<String, Collection<String>> contributors = new LinkedHashMap<>();
-
+		var contributors = new LinkedHashMap<String, Collection<String>>();
 		for (var contributor : this.metadata.getContributors()) {
 			contributors.put(contributor.getName(), List.of("Contributor"));
 		}
@@ -238,7 +249,6 @@ public class FabricMod implements Mod {
 
 		var authors = this.getAuthors();
 		var contributors = this.getContributors();
-
 		for (var author : authors) {
 			contributors.put(author, List.of("Author"));
 		}
@@ -264,16 +274,18 @@ public class FabricMod implements Mod {
 			return "https://www.minecraft.net/";
 		} else if ("java".equals(getId())) {
 			return System.getProperty("java.vendor.url");
+		} else {
+			return metadata.getContact().get("homepage").orElse(null);
 		}
-		return metadata.getContact().get("homepage").orElse(null);
 	}
 
 	@Override
 	public @Nullable String getIssueTracker() {
 		if ("minecraft".equals(getId())) {
 			return "https://aka.ms/snapshotbugs?ref=game";
+		} else {
+			return metadata.getContact().get("issues").orElse(null);
 		}
-		return metadata.getContact().get("issues").orElse(null);
 	}
 
 	@Override
@@ -290,8 +302,9 @@ public class FabricMod implements Mod {
 	public @NotNull Set<String> getLicense() {
 		if ("minecraft".equals(getId())) {
 			return Sets.newHashSet("Minecraft EULA");
+		} else {
+			return Sets.newHashSet(metadata.getLicense());
 		}
-		return Sets.newHashSet(metadata.getLicense());
 	}
 
 	@Override
@@ -308,9 +321,9 @@ public class FabricMod implements Mod {
 	public boolean allowsUpdateChecks() {
 		if (ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(this.getId())) {
 			return false;
+		} else {
+			return this.allowsUpdateChecks;
 		}
-
-		return this.allowsUpdateChecks;
 	}
 
 	@Override
@@ -354,6 +367,7 @@ public class FabricMod implements Mod {
 				}
 			}
 		}
+
 		return null;
 	}
 

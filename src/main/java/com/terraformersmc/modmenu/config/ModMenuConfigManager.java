@@ -25,10 +25,9 @@ public class ModMenuConfigManager {
 	private static Path path;
 
 	private static void prepareConfigPath() {
-		if (path != null) {
-			return;
+		if (path == null) {
+			path = FabricLoader.getInstance().getConfigDir().resolve(ModMenu.MOD_ID + ".json");
 		}
-		path = FabricLoader.getInstance().getConfigDir().resolve(ModMenu.MOD_ID + ".json");
 	}
 
 	public static void initializeConfig() {
@@ -43,10 +42,10 @@ public class ModMenuConfigManager {
 			if (!Files.exists(path)) {
 				save();
 			}
+
 			if (Files.exists(path)) {
 				BufferedReader br = Files.newBufferedReader(path);
-				JsonObject json = new JsonParser().parse(br).getAsJsonObject();
-
+				JsonObject json = JsonParser.parseReader(br).getAsJsonObject();
 				for (Field field : ModMenuConfig.class.getDeclaredFields()) {
 					if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers())) {
 						if (StringSetConfigOption.class.isAssignableFrom(field.getType())) {
@@ -62,15 +61,13 @@ public class ModMenuConfigManager {
 								);
 							}
 						} else if (BooleanConfigOption.class.isAssignableFrom(field.getType())) {
-							JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive(field.getName()
-								.toLowerCase(Locale.ROOT));
+							JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive(field.getName().toLowerCase(Locale.ROOT));
 							if (jsonPrimitive != null && jsonPrimitive.isBoolean()) {
 								BooleanConfigOption option = (BooleanConfigOption) field.get(null);
 								ConfigOptionStorage.setBoolean(option.getKey(), jsonPrimitive.getAsBoolean());
 							}
 						} else if (EnumConfigOption.class.isAssignableFrom(field.getType()) && field.getGenericType() instanceof ParameterizedType) {
-							JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive(field.getName()
-								.toLowerCase(Locale.ROOT));
+							JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive(field.getName().toLowerCase(Locale.ROOT));
 							if (jsonPrimitive != null && jsonPrimitive.isString()) {
 								Type generic = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
 								if (generic instanceof Class<?>) {
@@ -82,6 +79,7 @@ public class ModMenuConfigManager {
 											break;
 										}
 									}
+
 									if (found != null) {
 										ConfigOptionStorage.setEnumTypeless(option.getKey(), found);
 									}
@@ -101,17 +99,13 @@ public class ModMenuConfigManager {
 	public static void save() {
 		ModMenu.clearModCountCache();
 		prepareConfigPath();
-
 		JsonObject config = new JsonObject();
-
 		try {
 			for (Field field : ModMenuConfig.class.getDeclaredFields()) {
 				if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers())) {
 					if (BooleanConfigOption.class.isAssignableFrom(field.getType())) {
 						BooleanConfigOption option = (BooleanConfigOption) field.get(null);
-						config.addProperty(field.getName().toLowerCase(Locale.ROOT),
-							ConfigOptionStorage.getBoolean(option.getKey())
-						);
+						config.addProperty(field.getName().toLowerCase(Locale.ROOT), ConfigOptionStorage.getBoolean(option.getKey()));
 					} else if (StringSetConfigOption.class.isAssignableFrom(field.getType())) {
 						StringSetConfigOption option = (StringSetConfigOption) field.get(null);
 						JsonArray array = new JsonArray();
@@ -121,11 +115,7 @@ public class ModMenuConfigManager {
 						Type generic = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
 						if (generic instanceof Class<?>) {
 							EnumConfigOption<?> option = (EnumConfigOption<?>) field.get(null);
-							config.addProperty(field.getName().toLowerCase(Locale.ROOT),
-								ConfigOptionStorage.getEnumTypeless(option.getKey(), (Class<Enum<?>>) generic)
-									.name()
-									.toLowerCase(Locale.ROOT)
-							);
+							config.addProperty(field.getName().toLowerCase(Locale.ROOT), ConfigOptionStorage.getEnumTypeless(option.getKey(), (Class<Enum<?>>) generic).name().toLowerCase(Locale.ROOT));
 						}
 					}
 				}
@@ -135,7 +125,6 @@ public class ModMenuConfigManager {
 		}
 
 		String jsonString = ModMenu.GSON.toJson(config);
-
 		try (BufferedWriter fileWriter = Files.newBufferedWriter(path)) {
 			fileWriter.write(jsonString);
 		} catch (IOException e) {

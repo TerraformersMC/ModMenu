@@ -54,13 +54,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	public void setScrollY(double amount) {
 		super.setScrollY(amount);
 		int denominator = Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4));
-		if (denominator <= 0) {
+		if (denominator == 0) {
 			parent.updateScrollPercent(0);
 		} else {
-			parent.updateScrollPercent(getScrollY() / Math.max(
-				0,
-				this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4)
-			));
+			parent.updateScrollPercent(getScrollY() / Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4)));
 		}
 	}
 
@@ -73,8 +70,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			this.client.getNarratorManager()
-				.narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
+			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
 		}
 	}
 
@@ -86,6 +82,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		} else {
 			selectedModId = entry.getMod().getId();
 		}
+
 		parent.updateSelectedEntry(getSelectedOrNull());
 	}
 
@@ -100,11 +97,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		if (addedMods.contains(entry.mod)) {
 			return 0;
 		}
+
 		addedMods.add(entry.mod);
 		int i = super.addEntry(entry);
 		if (entry.getMod().getId().equals(selectedModId)) {
 			setSelected(entry);
 		}
+
 		return i;
 	}
 
@@ -124,7 +123,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		filter(parent.getSearchInput(), true, false);
 	}
 
-
 	public void filter(String searchTerm, boolean refresh) {
 		filter(searchTerm, refresh, true);
 	}
@@ -132,9 +130,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private boolean hasVisibleChildMods(Mod parent) {
 		List<Mod> children = ModMenu.PARENT_MAP.get(parent);
 		boolean hideLibraries = !ModMenuConfig.SHOW_LIBRARIES.getValue();
-
-		return !children.stream()
-			.allMatch(child -> child.isHidden() || hideLibraries && child.getBadges().contains(Mod.Badge.LIBRARY));
+		return !children.stream().allMatch(child -> child.isHidden() || hideLibraries && child.getBadges().contains(Mod.Badge.LIBRARY));
 	}
 
 	private void filter(String searchTerm, boolean refresh, boolean search) {
@@ -143,14 +139,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> {
 			if (ModMenuConfig.CONFIG_MODE.getValue()) {
 				return !parent.getModHasConfigScreen(mod.getId());
+			} else {
+				return !mod.isHidden();
 			}
-
-			return !mod.isHidden();
 		}).collect(Collectors.toSet());
 
 		if (DEBUG) {
 			mods = new ArrayList<>(mods);
-			//			mods.addAll(TestModContainer.getTestModContainers());
 		}
 
 		if (this.mods == null || refresh) {
@@ -159,9 +154,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			this.mods.sort(ModMenuConfig.SORTING.getValue().getComparator());
 		}
 
-		List<Mod> matched = ModSearch.search(parent, searchTerm, this.mods);
-
-		for (Mod mod : matched) {
+		for (Mod mod : ModSearch.search(parent, searchTerm, this.mods)) {
 			String modId = mod.getId();
 
 			//Hide parent lib mods when the config is set to hide
@@ -180,11 +173,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					if (this.parent.showModChildren.contains(modId)) {
 						List<Mod> validChildren = ModSearch.search(this.parent, searchTerm, children);
 						for (Mod child : validChildren) {
-							this.addEntry(new ChildEntry(child,
-								parent,
-								this,
-								validChildren.indexOf(child) == validChildren.size() - 1
-							));
+							this.addEntry(new ChildEntry(child, parent, this, validChildren.indexOf(child) == validChildren.size() - 1));
 						}
 					}
 				} else {
@@ -194,8 +183,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			}
 		}
 
-		if (parent.getSelectedEntry() != null && !children().isEmpty() || this.getSelectedOrNull() != null && getSelectedOrNull().getMod() != parent.getSelectedEntry()
-			.getMod()) {
+		if (parent.getSelectedEntry() != null && !children().isEmpty() || this.getSelectedOrNull() != null && getSelectedOrNull().getMod() != parent.getSelectedEntry().getMod()) {
 			for (ModListEntry entry : children()) {
 				if (entry.getMod().equals(parent.getSelectedEntry().getMod())) {
 					setSelected(entry);
@@ -213,7 +201,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	@Override
-	protected void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+	protected void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
 		Tessellator tessellator = Tessellator.getInstance();
 		for (int index = 0; index < entryCount; ++index) {
@@ -225,7 +213,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				int rowWidth = this.getRowWidth();
 				int entryLeft;
 				if (this.isSelectedEntry(index)) {
-					Matrix4f matrix = DrawContext.getMatrices().peek().getPositionMatrix();
+					Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
 					int selectionRight = this.getRowLeft() + rowWidth + 2;
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
@@ -251,7 +239,8 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				}
 
 				entryLeft = this.getRowLeft();
-				entry.render(DrawContext,
+				entry.render(
+					drawContext,
 					index,
 					entryTop,
 					entryLeft,
@@ -306,18 +295,18 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
 			return super.keyPressed(keyCode, scanCode, modifiers);
 		}
+
 		if (getSelectedOrNull() != null) {
 			return getSelectedOrNull().keyPressed(keyCode, scanCode, modifiers);
 		}
+
 		return false;
 	}
 
 	public final ModListEntry getEntryAtPos(double x, double y) {
 		int int_5 = MathHelper.floor(y - (double) this.getY()) - this.headerHeight + (int) this.getScrollY() - 4;
 		int index = int_5 / this.itemHeight;
-		return x < (double) this.getScrollbarX() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ?
-			this.children().get(index) :
-			null;
+		return x < (double) this.getScrollbarX() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? this.children().get(index) : null;
 	}
 
 	@Override
@@ -333,10 +322,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	@Override
 	public int getRowLeft() {
 		return this.getX() + 6;
-	}
-
-	public int getWidth() {
-		return width;
 	}
 
 	public int getTop() {
@@ -359,6 +344,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				count++;
 			}
 		}
+		
 		return count;
 	}
 

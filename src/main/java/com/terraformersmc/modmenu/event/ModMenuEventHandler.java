@@ -32,13 +32,13 @@ public class ModMenuEventHandler {
 	private static KeyBinding MENU_KEY_BIND;
 
 	public static void register() {
-		MENU_KEY_BIND = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.modmenu.open_menu",
+		MENU_KEY_BIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+			"key.modmenu.open_menu",
 			InputUtil.Type.KEYSYM,
 			InputUtil.UNKNOWN_KEY.getCode(),
 			"key.categories.misc"
 		));
 		ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
-
 		ScreenEvents.AFTER_INIT.register(ModMenuEventHandler::afterScreenInit);
 	}
 
@@ -65,10 +65,11 @@ public class ModMenuEventHandler {
 							}
 						}
 					}
+
 					if (buttonHasText(button, "menu.online")) {
-						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() ==
-							ModMenuConfig.TitleMenuButtonStyle.REPLACE_REALMS) {
-							buttons.set(i, new ModMenuButtonWidget(button.getX(),
+						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.REPLACE_REALMS) {
+							buttons.set(i, new ModMenuButtonWidget(
+								button.getX(),
 								button.getY(),
 								button.getWidth(),
 								button.getHeight(),
@@ -76,10 +77,10 @@ public class ModMenuEventHandler {
 								screen
 							));
 						} else {
-							if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() ==
-								ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
+							if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
 								button.setWidth(98);
 							}
+
 							modsButtonIndex = i + 1;
 							if (button.visible) {
 								buttonsY = button.getY();
@@ -87,11 +88,12 @@ public class ModMenuEventHandler {
 						}
 					}
 				}
-
 			}
+
 			if (modsButtonIndex != -1) {
 				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.CLASSIC) {
-					buttons.add(modsButtonIndex, new ModMenuButtonWidget(screen.width / 2 - 100,
+					buttons.add(modsButtonIndex, new ModMenuButtonWidget(
+						screen.width / 2 - 100,
 						buttonsY + spacing,
 						200,
 						20,
@@ -100,7 +102,8 @@ public class ModMenuEventHandler {
 					));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
 					buttons.add(modsButtonIndex,
-						new ModMenuButtonWidget(screen.width / 2 + 2,
+						new ModMenuButtonWidget(
+							screen.width / 2 + 2,
 							buttonsY,
 							98,
 							20,
@@ -109,7 +112,8 @@ public class ModMenuEventHandler {
 						)
 					);
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(screen.width / 2 + 104,
+					buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(
+						screen.width / 2 + 104,
 						buttonsY,
 						20,
 						20,
@@ -138,19 +142,16 @@ public class ModMenuEventHandler {
 		if (widget instanceof ButtonWidget button) {
 			Text text = button.getMessage();
 			TextContent textContent = text.getContent();
-
-			return textContent instanceof TranslatableTextContent && Arrays.stream(translationKeys)
-				.anyMatch(s -> ((TranslatableTextContent) textContent).getKey().equals(s));
+			return textContent instanceof TranslatableTextContent && Arrays.stream(translationKeys).anyMatch(s -> ((TranslatableTextContent) textContent).getKey().equals(s));
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	public static void shiftButtons(Widget widget, boolean shiftUp, int spacing) {
 		if (shiftUp) {
 			widget.setY(widget.getY() - spacing / 2);
-		} else if (!(widget instanceof ClickableWidget button &&
-			button.getMessage().equals(Text.translatable("title.credits"))
-		)) {
+		} else if (!(widget instanceof ClickableWidget button && button.getMessage().equals(Text.translatable("title.credits")))) {
 			widget.setY(widget.getY() + spacing / 2);
 		}
 	}

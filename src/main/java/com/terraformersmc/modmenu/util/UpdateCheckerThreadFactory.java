@@ -10,7 +10,6 @@ public class UpdateCheckerThreadFactory implements ThreadFactory {
 
 	@Override
 	public Thread newThread(@NotNull Runnable r) {
-		var index = COUNT.incrementAndGet();
-		return Thread.ofVirtual().name("ModMenu/Update Checker/%s".formatted(index)).unstarted(r);
+		return Thread.ofVirtual().name("ModMenu/Update Checker/%s".formatted(COUNT.incrementAndGet())).unstarted(r);
 	}
 }

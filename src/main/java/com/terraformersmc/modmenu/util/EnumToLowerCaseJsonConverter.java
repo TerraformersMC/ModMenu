@@ -14,6 +14,7 @@ public final class EnumToLowerCaseJsonConverter implements JsonSerializer<Enum<?
 		if (src == null) {
 			return JsonNull.INSTANCE;
 		}
+
 		return new JsonPrimitive(src.name().toLowerCase());
 	}
 

@@ -32,7 +32,7 @@ public class ParentEntry extends ModListEntry {
 
 	@Override
 	public void render(
-		DrawContext DrawContext,
+		DrawContext drawContext,
 		int index,
 		int y,
 		int x,
@@ -43,7 +43,7 @@ public class ParentEntry extends ModListEntry {
 		boolean isSelected,
 		float delta
 	) {
-		super.render(DrawContext, index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
+		super.render(drawContext, index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
 		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
@@ -60,62 +60,67 @@ public class ParentEntry extends ModListEntry {
 		int childrenBadgeY = y + iconSize - childrenBadgeHeight;
 		int childrenOutlineColor = 0xff107454;
 		int childrenFillColor = 0xff093929;
-		DrawContext.fill(childrenBadgeX + 1,
+		drawContext.fill(
+			childrenBadgeX + 1,
 			childrenBadgeY,
 			childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + 1,
 			childrenOutlineColor
 		);
-		DrawContext.fill(childrenBadgeX,
+		drawContext.fill(
+			childrenBadgeX,
 			childrenBadgeY + 1,
 			childrenBadgeX + 1,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenOutlineColor
 		);
-		DrawContext.fill(childrenBadgeX + childrenBadgeWidth - 1,
+		drawContext.fill(
+			childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + 1,
 			childrenBadgeX + childrenBadgeWidth,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenOutlineColor
 		);
-		DrawContext.fill(childrenBadgeX + 1,
+		drawContext.fill(
+			childrenBadgeX + 1,
 			childrenBadgeY + 1,
 			childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenFillColor
 		);
-		DrawContext.fill(childrenBadgeX + 1,
+		drawContext.fill(
+			childrenBadgeX + 1,
 			childrenBadgeY + childrenBadgeHeight - 1,
 			childrenBadgeX + childrenBadgeWidth - 1,
 			childrenBadgeY + childrenBadgeHeight,
 			childrenOutlineColor
 		);
-		DrawContext.drawText(font,
+		drawContext.drawText(
+			font,
 			str.asOrderedText(),
 			(int) (childrenBadgeX + (float) childrenBadgeWidth / 2 - (float) childrenWidth / 2),
 			childrenBadgeY + 1,
 			0xCACACA,
 			false
 		);
+
 		this.hoveringIcon = mouseX >= x - 1 && mouseX <= x - 1 + iconSize && mouseY >= y - 1 && mouseY <= y - 1 + iconSize;
 		if (isMouseOver(mouseX, mouseY)) {
-			DrawContext.fill(x, y, x + iconSize, y + iconSize, 0xA0909090);
+			drawContext.fill(x, y, x + iconSize, y + iconSize, 0xA0909090);
 			int xOffset = list.getParent().showModChildren.contains(getMod().getId()) ? iconSize : 0;
 			int yOffset = hoveringIcon ? iconSize : 0;
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			DrawContext.drawTexture(RenderLayer::getGuiTextured, PARENT_MOD_TEXTURE,
+			drawContext.drawTexture(
+				RenderLayer::getGuiTextured,
+				PARENT_MOD_TEXTURE,
 				x,
 				y,
 				xOffset,
 				yOffset,
 				iconSize + xOffset,
 				iconSize + yOffset,
-				ModMenuConfig.COMPACT_LIST.getValue() ?
-					(int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) :
-					256,
-				ModMenuConfig.COMPACT_LIST.getValue() ?
-					(int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) :
-					256
+				ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256,
+				ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256
 			);
 		}
 	}
@@ -142,6 +147,7 @@ public class ParentEntry extends ModListEntry {
 		} else {
 			list.getParent().showModChildren.add(id);
 		}
+
 		list.filter(list.getParent().getSearchInput(), false);
 	}
 
@@ -154,6 +160,7 @@ public class ParentEntry extends ModListEntry {
 			} else {
 				list.getParent().showModChildren.add(modId);
 			}
+
 			list.filter(list.getParent().getSearchInput(), false);
 			return true;
 		} else if (keyCode == GLFW.GLFW_KEY_LEFT) {
@@ -161,16 +168,18 @@ public class ParentEntry extends ModListEntry {
 				list.getParent().showModChildren.remove(modId);
 				list.filter(list.getParent().getSearchInput(), false);
 			}
+
 			return true;
 		} else if (keyCode == GLFW.GLFW_KEY_RIGHT) {
 			if (!list.getParent().showModChildren.contains(modId)) {
 				list.getParent().showModChildren.add(modId);
 				list.filter(list.getParent().getSearchInput(), false);
+				return true;
 			} else {
 				return list.keyPressed(GLFW.GLFW_KEY_DOWN, 0, 0);
 			}
-			return true;
 		}
+
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 

@@ -30,7 +30,10 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
-import net.minecraft.util.*;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Language;
+import net.minecraft.util.Urls;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +46,8 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public class ModsScreen extends Screen {
-	private static final Identifier FILTERS_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID,
-		"textures/gui/filters_button.png"
-	);
-	private static final Identifier CONFIGURE_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID,
-		"textures/gui/configure_button.png"
-	);
+	private static final Identifier FILTERS_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID, "textures/gui/filters_button.png");
+	private static final Identifier CONFIGURE_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 
 	private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
 	private final Screen previousScreen;
@@ -76,8 +75,6 @@ public class ModsScreen extends Screen {
 	private ClickableWidget websiteButton;
 	private ClickableWidget issuesButton;
 	private DescriptionListWidget descriptionListWidget;
-	private ClickableWidget modsFolderButton;
-	private ClickableWidget doneButton;
 
 	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
 	public final Map<String, Throwable> modScreenErrors = new HashMap<>();
@@ -95,9 +92,11 @@ public class ModsScreen extends Screen {
 		if (modList.isMouseOver(mouseX, mouseY)) {
 			return this.modList.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 		}
+
 		if (descriptionListWidget.isMouseOver(mouseX, mouseY)) {
 			return this.descriptionListWidget.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 		}
+
 		return false;
 	}
 
@@ -124,7 +123,6 @@ public class ModsScreen extends Screen {
 		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
 
 		this.searchBoxX = this.paneWidth / 2 - searchBoxWidth / 2 - filtersButtonSize / 2;
-
 		this.searchBox = new TextFieldWidget(this.textRenderer,
 			this.searchBoxX,
 			22,
@@ -200,11 +198,9 @@ public class ModsScreen extends Screen {
 		// Website button
 		int urlButtonWidths = this.paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
-
 		this.websiteButton = ButtonWidget.builder(ModMenuScreenTexts.WEBSITE, button -> {
 				final Mod mod = Objects.requireNonNull(selected).getMod();
 				boolean isMinecraft = selected.getMod().getId().equals("minecraft");
-
 				if (isMinecraft) {
 					var url = SharedConstants.getGameVersion().isStable() ? Urls.JAVA_FEEDBACK : Urls.SNAPSHOT_FEEDBACK;
 					ConfirmLinkScreen.open(this, url, true);
@@ -221,7 +217,6 @@ public class ModsScreen extends Screen {
 		this.issuesButton = ButtonWidget.builder(ModMenuScreenTexts.ISSUES, button -> {
 				final Mod mod = Objects.requireNonNull(selected).getMod();
 				boolean isMinecraft = selected.getMod().getId().equals("minecraft");
-
 				if (isMinecraft) {
 					ConfirmLinkScreen.open(this, Urls.SNAPSHOT_BUGS, true);
 				} else {
@@ -229,14 +224,13 @@ public class ModsScreen extends Screen {
 					ConfirmLinkScreen.open(this, url, false);
 				}
 			})
-			.position(this.rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2),
-				RIGHT_PANE_Y + 36
-			)
+			.position(this.rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36)
 			.size(Math.min(urlButtonWidths, 200), 20)
 			.build();
 
 		// Description list
-		this.descriptionListWidget = new DescriptionListWidget(this.client,
+		this.descriptionListWidget = new DescriptionListWidget(
+			this.client,
 			this.paneWidth,
 			this.height - RIGHT_PANE_Y - 96,
 			RIGHT_PANE_Y + 60,
@@ -246,14 +240,10 @@ public class ModsScreen extends Screen {
 		this.descriptionListWidget.setX(this.rightPaneX);
 
 		// Mods folder button
-		this.modsFolderButton = ButtonWidget.builder(ModMenuScreenTexts.MODS_FOLDER, button -> {
-			Util.getOperatingSystem().open(FabricLoader.getInstance().getGameDir().resolve("mods").toUri());
-		}).position(this.width / 2 - 154, this.height - 28).size(150, 20).build();
+		ClickableWidget modsFolderButton = ButtonWidget.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Util.getOperatingSystem().open(FabricLoader.getInstance().getGameDir().resolve("mods").toUri())).position(this.width / 2 - 154, this.height - 28).size(150, 20).build();
 
 		// Done button
-		this.doneButton = ButtonWidget.builder(ScreenTexts.DONE, button -> {
-			client.setScreen(previousScreen);
-		}).position(this.width / 2 + 4, this.height - 28).size(150, 20).build();
+		ClickableWidget doneButton = ButtonWidget.builder(ScreenTexts.DONE, button -> client.setScreen(previousScreen)).position(this.width / 2 + 4, this.height - 28).size(150, 20).build();
 
 		// Initialize data
 		modList.reloadFilters();
@@ -262,7 +252,6 @@ public class ModsScreen extends Screen {
 		// Add children
 		this.addSelectableChild(this.searchBox);
 		this.setInitialFocus(this.searchBox);
-
 		if (this.filtersButton != null) {
 			this.addDrawableChild(this.filtersButton);
 		}
@@ -270,7 +259,6 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(this.sortingButton);
 		this.addDrawableChild(this.librariesButton);
 		this.addSelectableChild(this.modList);
-
 		if (this.configureButton != null) {
 			this.addDrawableChild(this.configureButton);
 		}
@@ -278,8 +266,8 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(this.websiteButton);
 		this.addDrawableChild(this.issuesButton);
 		this.addSelectableChild(this.descriptionListWidget);
-		this.addDrawableChild(this.modsFolderButton);
-		this.addDrawableChild(this.doneButton);
+		this.addDrawableChild(modsFolderButton);
+		this.addDrawableChild(doneButton);
 
 		this.init = true;
 		this.keepFilterOptionsShown = true;
@@ -287,8 +275,7 @@ public class ModsScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		return super.keyPressed(keyCode, scanCode, modifiers) ||
-			this.searchBox.keyPressed(keyCode, scanCode, modifiers);
+		return super.keyPressed(keyCode, scanCode, modifiers) || this.searchBox.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override
@@ -297,37 +284,44 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		super.render(DrawContext, mouseX, mouseY, delta);
+	public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+		super.render(drawContext, mouseX, mouseY, delta);
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
-			this.descriptionListWidget.render(DrawContext, mouseX, mouseY, delta);
+			this.descriptionListWidget.render(drawContext, mouseX, mouseY, delta);
 		}
-		this.modList.render(DrawContext, mouseX, mouseY, delta);
-		this.searchBox.render(DrawContext, mouseX, mouseY, delta);
+
+		this.modList.render(drawContext, mouseX, mouseY, delta);
+		this.searchBox.render(drawContext, mouseX, mouseY, delta);
 		RenderSystem.disableBlend();
-		DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		assert client != null;
+		int grayColor = 11184810;
 		if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
-			DrawContext.drawCenteredTextWithShadow(this.textRenderer,
+			drawContext.drawCenteredTextWithShadow(
+				this.textRenderer,
 				ModMenuScreenTexts.DROP_INFO_LINE_1,
 				this.width - this.modList.getWidth() / 2,
 				RIGHT_PANE_Y / 2 - client.textRenderer.fontHeight - 1,
-				Formatting.GRAY.getColorValue()
+				grayColor
 			);
-			DrawContext.drawCenteredTextWithShadow(this.textRenderer,
+			drawContext.drawCenteredTextWithShadow(
+				this.textRenderer,
 				ModMenuScreenTexts.DROP_INFO_LINE_2,
 				this.width - this.modList.getWidth() / 2,
 				RIGHT_PANE_Y / 2 + 1,
-				Formatting.GRAY.getColorValue()
+				grayColor
 			);
 		}
+
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			Text fullModCount = this.computeModCountText(true, false);
 			if (!ModMenuConfig.CONFIG_MODE.getValue() && this.updateFiltersX(false)) {
 				if (this.filterOptionsShown) {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
 						textRenderer.getWidth(fullModCount) <= this.filtersX - 5) {
-						DrawContext.drawText(textRenderer,
+						drawContext.drawText(
+							textRenderer,
 							fullModCount.asOrderedText(),
 							this.searchBoxX,
 							52,
@@ -335,14 +329,16 @@ public class ModsScreen extends Screen {
 							true
 						);
 					} else {
-						DrawContext.drawText(textRenderer,
+						drawContext.drawText(
+							textRenderer,
 							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
 							0xFFFFFF,
 							true
 						);
-						DrawContext.drawText(textRenderer,
+						drawContext.drawText(
+							textRenderer,
 							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
@@ -353,7 +349,7 @@ public class ModsScreen extends Screen {
 				} else {
 					if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
 						textRenderer.getWidth(fullModCount) <= modList.getWidth() - 5) {
-						DrawContext.drawText(textRenderer,
+						drawContext.drawText(textRenderer,
 							fullModCount.asOrderedText(),
 							this.searchBoxX,
 							52,
@@ -361,14 +357,16 @@ public class ModsScreen extends Screen {
 							true
 						);
 					} else {
-						DrawContext.drawText(textRenderer,
+						drawContext.drawText(
+							textRenderer,
 							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
 							0xFFFFFF,
 							true
 						);
-						DrawContext.drawText(textRenderer,
+						drawContext.drawText(
+							textRenderer,
 							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
@@ -379,15 +377,17 @@ public class ModsScreen extends Screen {
 				}
 			}
 		}
+
 		if (selectedEntry != null) {
 			Mod mod = selectedEntry.getMod();
 			int x = this.rightPaneX;
 			if ("java".equals(mod.getId())) {
-				DrawingUtil.drawRandomVersionBackground(mod, DrawContext, x, RIGHT_PANE_Y, 32, 32);
+				DrawingUtil.drawRandomVersionBackground(mod, drawContext, x, RIGHT_PANE_Y, 32, 32);
 			}
+
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			RenderSystem.enableBlend();
-			DrawContext.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
+			drawContext.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
 			RenderSystem.disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
@@ -396,25 +396,27 @@ public class ModsScreen extends Screen {
 			int maxNameWidth = this.width - (x + imageOffset);
 			if (textRenderer.getWidth(name) > maxNameWidth) {
 				StringVisitable ellipsis = StringVisitable.plain("...");
-				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name,
-					maxNameWidth - textRenderer.getWidth(ellipsis)
-				), ellipsis);
+				trimmedName = StringVisitable.concat(textRenderer.trimToWidth(name, maxNameWidth - textRenderer.getWidth(ellipsis)), ellipsis);
 			}
-			DrawContext.drawText(textRenderer,
+
+			drawContext.drawText(
+				textRenderer,
 				Language.getInstance().reorder(trimmedName),
 				x + imageOffset,
 				RIGHT_PANE_Y + 1,
 				0xFFFFFF,
 				true
 			);
+
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 &&
 				mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight &&
 				mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
 				this.setTooltip(ModMenuScreenTexts.modIdTooltip(mod.getId()));
 			}
+
 			if (this.init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(
-					x + imageOffset + this.client.textRenderer.getWidth(trimmedName) + 2,
+					x + imageOffset + client.textRenderer.getWidth(trimmedName) + 2,
 					RIGHT_PANE_Y,
 					width - 28,
 					selectedEntry.mod,
@@ -422,11 +424,14 @@ public class ModsScreen extends Screen {
 				);
 				this.init = false;
 			}
+
 			if (!ModMenuConfig.HIDE_BADGES.getValue()) {
-				modBadgeRenderer.draw(DrawContext, mouseX, mouseY);
+				modBadgeRenderer.draw(drawContext, mouseX, mouseY);
 			}
+
 			if (mod.isReal()) {
-				DrawContext.drawText(textRenderer,
+				drawContext.drawText(
+					textRenderer,
 					mod.getPrefixedVersion(),
 					x + imageOffset,
 					RIGHT_PANE_Y + 2 + lineSpacing,
@@ -434,16 +439,18 @@ public class ModsScreen extends Screen {
 					true
 				);
 			}
+
 			String authors;
 			List<String> names = mod.getAuthors();
-
 			if (!names.isEmpty()) {
 				if (names.size() > 1) {
 					authors = Joiner.on(", ").join(names);
 				} else {
-					authors = names.get(0);
+					authors = names.getFirst();
 				}
-				DrawingUtil.drawWrappedString(DrawContext,
+
+				DrawingUtil.drawWrappedString(
+					drawContext,
 					I18n.translate("modmenu.authorPrefix", authors),
 					x + imageOffset,
 					RIGHT_PANE_Y + 2 + lineSpacing * 2,
@@ -461,7 +468,6 @@ public class ModsScreen extends Screen {
 			.filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY))
 			.map(Mod::getId)
 			.collect(Collectors.toSet()), onInit);
-
 		if (includeLibs && ModMenuConfig.SHOW_LIBRARIES.getValue() && !onInit) {
 			int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
 				.stream()
@@ -483,7 +489,7 @@ public class ModsScreen extends Screen {
 				.collect(Collectors.toSet()), false);
 			return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);
 		} else {
-			return Text.literal(null);
+			return Text.empty();
 		}
 	}
 
@@ -491,9 +497,10 @@ public class ModsScreen extends Screen {
 		int visible = this.modList.getDisplayedCountFor(set);
 		int total = set.size();
 		if (visible == total || allVisible) {
-			return new int[]{ total };
+			return new int[]{total};
+		} else {
+			return new int[]{visible, total};
 		}
-		return new int[]{ visible, total };
 	}
 
 	@Override
@@ -504,7 +511,6 @@ public class ModsScreen extends Screen {
 
 	private void setFilterOptionsShown(boolean filterOptionsShown) {
 		this.filterOptionsShown = filterOptionsShown;
-
 		this.sortingButton.visible = filterOptionsShown;
 		this.librariesButton.visible = filterOptionsShown;
 	}
@@ -517,13 +523,9 @@ public class ModsScreen extends Screen {
 		if (entry != null) {
 			this.selected = entry;
 			String modId = selected.getMod().getId();
-
 			if (this.configureButton != null) {
-
 				this.configureButton.active = getModHasConfigScreen(modId);
-				this.configureButton.visible =
-					selected != null && getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
-
+				this.configureButton.visible = selected != null && getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
 				if (modScreenErrors.containsKey(modId)) {
 					Throwable e = modScreenErrors.get(modId);
 					this.configureButton.setTooltip(Tooltip.of(ModMenuScreenTexts.configureError(modId, e)));
@@ -533,7 +535,6 @@ public class ModsScreen extends Screen {
 			}
 
 			var isMinecraft = modId.equals("minecraft");
-
 			if (isMinecraft) {
 				this.websiteButton.setMessage(SEND_FEEDBACK_TEXT);
 				this.issuesButton.setMessage(REPORT_BUGS_TEXT);
@@ -580,26 +581,21 @@ public class ModsScreen extends Screen {
 		Path modsDirectory = FabricLoader.getInstance().getGameDir().resolve("mods");
 
 		// Filter out none mods
-		List<Path> mods = paths.stream().filter(ModsScreen::isValidMod).collect(Collectors.toList());
-
+		List<Path> mods = paths.stream().filter(ModsScreen::isValidMod).toList();
 		if (mods.isEmpty()) {
 			return;
 		}
 
 		String modList = mods.stream().map(Path::getFileName).map(Path::toString).collect(Collectors.joining(", "));
-
+		assert this.client != null;
 		this.client.setScreen(new ConfirmScreen((value) -> {
 			if (value) {
 				boolean allSuccessful = true;
-
 				for (Path path : mods) {
 					try {
 						Files.copy(path, modsDirectory.resolve(path.getFileName()));
 					} catch (IOException e) {
-						LOGGER.warn("Failed to copy mod from {} to {}",
-							path,
-							modsDirectory.resolve(path.getFileName())
-						);
+						LOGGER.warn("Failed to copy mod from {} to {}", path, modsDirectory.resolve(path.getFileName()));
 						SystemToast.addPackCopyFailure(client, path.toString());
 						allSuccessful = false;
 						break;
@@ -607,11 +603,7 @@ public class ModsScreen extends Screen {
 				}
 
 				if (allSuccessful) {
-					SystemToast.add(client.getToastManager(),
-						SystemToast.Type.PERIODIC_NOTIFICATION,
-						ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_1,
-						ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_2
-					);
+					SystemToast.add(client.getToastManager(), SystemToast.Type.PERIODIC_NOTIFICATION, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_1, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_2);
 				}
 			}
 			this.client.setScreen(this);
@@ -621,7 +613,6 @@ public class ModsScreen extends Screen {
 	private static boolean isValidMod(Path mod) {
 		try (JarFile jarFile = new JarFile(mod.toFile())) {
 			var isFabricMod = jarFile.getEntry("fabric.mod.json") != null;
-
 			if (!ModMenu.RUNNING_QUILT) {
 				return isFabricMod;
 			} else {
@@ -643,17 +634,15 @@ public class ModsScreen extends Screen {
 	public void safelyOpenConfigScreen(String modId) {
 		try {
 			Screen screen = ModMenu.getConfigScreen(modId, this);
-
 			if (screen != null) {
+				assert this.client != null;
 				this.client.setScreen(screen);
 			}
 		} catch (java.lang.NoClassDefFoundError e) {
-			LOGGER.warn(
-				"The '" + modId + "' mod config screen is not available because " + e.getLocalizedMessage() +
-					" is missing.");
+			LOGGER.warn("The '{}' mod config screen is not available because {} is missing.", modId, e.getLocalizedMessage());
 			modScreenErrors.put(modId, e);
 		} catch (Throwable e) {
-			LOGGER.error("Error from mod '" + modId + "'", e);
+			LOGGER.error("Error from mod '{}'", modId, e);
 			modScreenErrors.put(modId, e);
 		}
 	}

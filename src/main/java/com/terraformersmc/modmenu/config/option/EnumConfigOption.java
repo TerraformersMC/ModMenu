@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import java.util.Arrays;
 import java.util.Locale;
 
-public class EnumConfigOption<E extends Enum<E>> implements OptionConvertable {
+public class EnumConfigOption<E extends Enum<E>> implements OptionConvertible {
 	private final String key, translationKey;
 	private final Class<E> enumClass;
 	private final E defaultValue;
