@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -12,13 +11,12 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.GlUsage;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -214,13 +212,10 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		}
 	}
 
-
 	@Override
 	protected void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer;
-
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowTop(index) + this.itemHeight;
@@ -230,48 +225,28 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				int rowWidth = this.getRowWidth();
 				int entryLeft;
 				if (this.isSelectedEntry(index)) {
+					Matrix4f matrix = DrawContext.getMatrices().peek().getPositionMatrix();
 					entryLeft = getRowLeft() - 2 + entry.getXOffset();
 					int selectionRight = this.getRowLeft() + rowWidth + 2;
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
-					RenderSystem.setShader(ShaderProgramKeys.POSITION);
-					RenderSystem.setShaderColor(float_2, float_2, float_2, 1.0F);
-					Matrix4f matrix = DrawContext.getMatrices().peek().getPositionMatrix();
-					BuiltBuffer builtBuffer;
-					buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F);
-					buffer.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F);
-					buffer.vertex(matrix, selectionRight, entryTop - 2, 0.0F);
-					buffer.vertex(matrix, entryLeft, entryTop - 2, 0.0F);
-					try {
-						builtBuffer = buffer.end();
-
-						try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
-							vertexBuffer.bind();
-							vertexBuffer.upload(builtBuffer);
-							vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
-							builtBuffer.close();
-						}
-					} catch (Exception e) {
-						// Ignored
-					}
-					RenderSystem.setShader(ShaderProgramKeys.POSITION);
-					RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-					buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-					buffer.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F);
-					buffer.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F);
-					buffer.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F);
-					buffer.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F);
-					try {
-						builtBuffer = buffer.end();
-
-						try (VertexBuffer vertexBuffer = new VertexBuffer(GlUsage.STATIC_WRITE)) {
-							vertexBuffer.bind();
-							vertexBuffer.upload(builtBuffer);
-							vertexBuffer.draw(RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
-							builtBuffer.close();
-						}
-					} catch (Exception e) {
-						// Ignored
+					final int topColor = ColorHelper.fromFloats(1.0F, float_2, float_2, float_2);
+					final int bottomColor = ColorHelper.fromFloats(1.0F, 0.0F, 0.0F, 0.0F);
+					BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+					bufferBuilder.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).color(topColor);
+					bufferBuilder.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).color(topColor);
+					bufferBuilder.vertex(matrix, selectionRight, entryTop - 2, 0.0F).color(topColor);
+					bufferBuilder.vertex(matrix, entryLeft, entryTop - 2, 0.0F).color(topColor);
+					bufferBuilder.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
+					bufferBuilder.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
+					bufferBuilder.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).color(bottomColor);
+					bufferBuilder.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).color(bottomColor);
+					BuiltBuffer builtBuffer = bufferBuilder.endNullable();
+					if (builtBuffer != null) {
+						VertexBuffer vertexBuffer = builtBuffer.getDrawParameters().format().getBuffer();
+						vertexBuffer.bind();
+						vertexBuffer.upload(builtBuffer);
+						VertexBuffer.unbind();
+						vertexBuffer.draw(RenderLayer.getGui());
 					}
 				}
 
@@ -295,7 +270,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		super.ensureVisible(entry);
 	}
 
-	// FIXME --> Was removed from super class (updateScrollingState / mouseClicked)
+// FIXME --> Was removed from super class (updateScrollingState / mouseClicked)
 	/*
 	@Override
 	protected void updateScrollingState(double double_1, double double_2, int int_1) {
