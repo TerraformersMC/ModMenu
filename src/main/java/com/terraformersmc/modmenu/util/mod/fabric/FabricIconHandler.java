@@ -27,18 +27,19 @@ public class FabricIconHandler implements Closeable {
 			if (cachedIcon != null) {
 				return cachedIcon;
 			}
+
 			cachedIcon = getCachedModIcon(path);
 			if (cachedIcon != null) {
 				return cachedIcon;
 			}
+
 			try (InputStream inputStream = Files.newInputStream(path)) {
 				NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
 				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-				NativeImageBackedTexture tex = new NativeImageBackedTexture(image);
+				NativeImageBackedTexture tex = new NativeImageBackedTexture(null, image);
 				cacheModIcon(path, tex);
 				return tex;
 			}
-
 		} catch (IllegalStateException e) {
 			if (e.getMessage().equals("Must be square icon")) {
 				LOGGER.error("Mod icon must be a square for icon source {}: {}",
