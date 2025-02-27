@@ -1,13 +1,15 @@
 package com.terraformersmc.modmenu.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import net.minecraft.class_10883;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.VertexBuffer;
+import net.minecraft.client.gl.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -25,10 +27,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 	private static final Text HAS_UPDATE_TEXT = Text.translatable("modmenu.hasUpdate");
@@ -251,11 +250,19 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.renderScrollBar(bufferBuilder);
 		BuiltBuffer builtBuffer = bufferBuilder.endNullable();
 		if (builtBuffer != null) {
-			VertexBuffer vertexBuffer = builtBuffer.getDrawParameters().format().getBuffer();
-			vertexBuffer.bind();
-			vertexBuffer.upload(builtBuffer);
-			VertexBuffer.unbind();
-			vertexBuffer.draw(RenderLayer.getGuiOverlay());
+			VertexFormat.DrawMode drawMode = builtBuffer.getDrawParameters().mode();
+			Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
+			class_10883 renderPass = RenderSystem.getDevice().method_68389().method_68368(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty()); // createCommandEncoder().createRenderPass
+			try (GpuBuffer gpuBuffer = RenderSystem.getDevice().method_68386(() -> "Description List", GlBufferTarget.VERTICES, GlUsage.DYNAMIC_WRITE, 786432)) { // createBuffer
+				RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(drawMode);
+				renderPass.method_68412(ShaderPipelines.GUI); // setRenderPipeline
+				renderPass.method_68410(0, gpuBuffer); // setVertexBuffer
+				renderPass.method_68411(autoStorageIndexBuffer.method_68274(builtBuffer.getDrawParameters().indexCount()), autoStorageIndexBuffer.getIndexType()); // setIndexBuffer
+				RenderSystem.getDevice().method_68389().method_68350(gpuBuffer, builtBuffer.getBuffer(), 0); // createCommandEncoder().writeToBuffer
+				builtBuffer.close();
+				renderPass.method_68408(0, builtBuffer.getDrawParameters().indexCount()); // drawIndexed
+				renderPass.close();
+			}
 		}
 	}
 

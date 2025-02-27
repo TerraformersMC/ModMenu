@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
@@ -68,9 +69,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		}
 
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.enableBlend();
+		GlStateManager._enableBlend();
 		drawContext.drawTexture(RenderLayer::getGuiTextured, this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
-		RenderSystem.disableBlend();
+		GlStateManager._disableBlend();
 
 		Text name = Text.literal(mod.getTranslatedName());
 		StringVisitable trimmedName = name;

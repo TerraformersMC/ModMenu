@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.gui;
 
 import com.google.common.base.Joiner;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
@@ -293,7 +294,7 @@ public class ModsScreen extends Screen {
 
 		this.modList.render(drawContext, mouseX, mouseY, delta);
 		this.searchBox.render(drawContext, mouseX, mouseY, delta);
-		RenderSystem.disableBlend();
+		GlStateManager._disableBlend();
 		drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
 		assert client != null;
 		int grayColor = 11184810;
@@ -386,9 +387,9 @@ public class ModsScreen extends Screen {
 			}
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			RenderSystem.enableBlend();
+			GlStateManager._enableBlend();
 			drawContext.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
-			RenderSystem.disableBlend();
+			GlStateManager._disableBlend();
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			Text name = Text.literal(mod.getTranslatedName());

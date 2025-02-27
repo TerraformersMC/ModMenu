@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -10,8 +11,9 @@ import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
+import net.minecraft.class_10883;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.VertexBuffer;
+import net.minecraft.client.gl.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.*;
@@ -230,11 +232,19 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					bufferBuilder.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).color(bottomColor);
 					BuiltBuffer builtBuffer = bufferBuilder.endNullable();
 					if (builtBuffer != null) {
-						VertexBuffer vertexBuffer = builtBuffer.getDrawParameters().format().getBuffer();
-						vertexBuffer.bind();
-						vertexBuffer.upload(builtBuffer);
-						VertexBuffer.unbind();
-						vertexBuffer.draw(RenderLayer.getGui());
+						VertexFormat.DrawMode drawMode = builtBuffer.getDrawParameters().mode();
+						Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
+						class_10883 renderPass = RenderSystem.getDevice().method_68389().method_68368(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty());
+						try (GpuBuffer gpuBuffer = RenderSystem.getDevice().method_68386(() -> "Mod List", GlBufferTarget.VERTICES, GlUsage.DYNAMIC_WRITE, 786432)) {
+							RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(drawMode);
+							renderPass.method_68412(ShaderPipelines.GUI);
+							renderPass.method_68410(0, gpuBuffer);
+							renderPass.method_68411(autoStorageIndexBuffer.method_68274(builtBuffer.getDrawParameters().indexCount()), autoStorageIndexBuffer.getIndexType());
+							RenderSystem.getDevice().method_68389().method_68350(gpuBuffer, builtBuffer.getBuffer(), 0);
+							builtBuffer.close();
+							renderPass.method_68408(0, builtBuffer.getDrawParameters().indexCount());
+							renderPass.close();
+						}
 					}
 				}
 
@@ -344,7 +354,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				count++;
 			}
 		}
-		
+
 		return count;
 	}
 
