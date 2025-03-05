@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
-import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -51,7 +50,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
-	private Mod lastSelectedMod = null;
+	private Mod selectedMod = null;
 
 	public DescriptionListWidget(
 		MinecraftClient client,
@@ -67,10 +66,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.textRenderer = client.textRenderer;
 
 		if(copyFrom != null) {
-			this.lastSelectedMod = copyFrom.lastSelectedMod;
-			clearEntries();
-			buildUIFromLastSelected();
+			updateSelectedModIfRequired(copyFrom.selectedMod);
 			setScrollY(copyFrom.getScrollY());
+		}
+
+		if(parent.getSelectedEntry() != null) {
+			updateSelectedModIfRequired(parent.getSelectedEntry().getMod());
 		}
 	}
 
@@ -91,19 +92,22 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 	@Override
 	public void appendClickableNarrations(NarrationMessageBuilder builder) {
-		Mod mod = parent.getSelectedEntry().getMod();
-		builder.put(NarrationPart.TITLE, mod.getTranslatedName() + " " + mod.getPrefixedVersion());
+		if(selectedMod != null) {
+			builder.put(
+				NarrationPart.TITLE,
+				selectedMod.getTranslatedName() + " " + selectedMod.getPrefixedVersion());
+		}
 	}
 
-	private void buildUIFromLastSelected() {
-		if (lastSelectedMod == null) {
+	private void rebuildUI() {
+		if (selectedMod == null) {
 			return;
 		}
 
 		DescriptionEntry emptyEntry = new DescriptionEntry(OrderedText.EMPTY);
 		int wrapWidth = getRowWidth() - 5;
 
-		Mod mod = lastSelectedMod;
+		Mod mod = selectedMod;
 		Text description = mod.getFormattedDescription();
 		if (!description.getString().isEmpty()) {
 			for (OrderedText line : textRenderer.wrapLines(description, wrapWidth)) {
@@ -266,16 +270,17 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 	}
 
-	@Override
-	public void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		ModListEntry selectedEntry = parent.getSelectedEntry();
-		if (selectedEntry.getMod() != lastSelectedMod) {
-			lastSelectedMod = selectedEntry.getMod();
+	public void updateSelectedModIfRequired(Mod mod) {
+		if (mod != selectedMod) {
+			selectedMod = mod;
 			clearEntries();
 			setScrollY(-Double.MAX_VALUE);
-			buildUIFromLastSelected();
+			rebuildUI();
 		}
+	}
 
+	@Override
+	public void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder;
 		BuiltBuffer builtBuffer;
