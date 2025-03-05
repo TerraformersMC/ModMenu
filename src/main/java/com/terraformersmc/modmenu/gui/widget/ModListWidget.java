@@ -33,6 +33,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private String selectedModId = null;
 	//private boolean scrolling;
 	private final FabricIconHandler iconHandler = new FabricIconHandler();
+	private Double restoreScrollY = null;
 
 	public ModListWidget(
 		MinecraftClient client,
@@ -47,6 +48,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.parent = parent;
 		if (list != null) {
 			this.mods = list.mods;
+			this.restoreScrollY = list.getScrollY();
 		}
 	}
 
@@ -118,6 +120,14 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	protected ModListEntry remove(int index) {
 		addedMods.remove(getEntry(index).mod);
 		return super.remove(index);
+	}
+
+	public void finalizeInit() {
+		reloadFilters();
+		if(restoreScrollY != null) {
+			setScrollY(restoreScrollY);
+			restoreScrollY = null;
+		}
 	}
 
 	public void reloadFilters() {

@@ -256,7 +256,7 @@ public class ModsScreen extends Screen {
 		}).position(this.width / 2 + 4, this.height - 28).size(150, 20).build();
 
 		// Initialize data
-		modList.reloadFilters();
+		modList.finalizeInit();
 		this.setFilterOptionsShown(this.keepFilterOptionsShown && this.filterOptionsShown);
 
 		// Add children
