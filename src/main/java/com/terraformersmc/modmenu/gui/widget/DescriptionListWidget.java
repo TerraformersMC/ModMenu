@@ -51,7 +51,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
-	private ModListEntry lastSelected = null;
+	private Mod lastSelectedMod = null;
 
 	public DescriptionListWidget(
 		MinecraftClient client,
@@ -59,11 +59,19 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		int height,
 		int y,
 		int itemHeight,
+		DescriptionListWidget copyFrom,
 		ModsScreen parent
 	) {
 		super(client, width, height, y, itemHeight);
 		this.parent = parent;
 		this.textRenderer = client.textRenderer;
+
+		if(copyFrom != null) {
+			this.lastSelectedMod = copyFrom.lastSelectedMod;
+			clearEntries();
+			buildUIFromLastSelected();
+			setScrollY(copyFrom.getScrollY());
+		}
 	}
 
 	@Override
@@ -87,179 +95,185 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		builder.put(NarrationPart.TITLE, mod.getTranslatedName() + " " + mod.getPrefixedVersion());
 	}
 
-	@Override
-	public void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
-		ModListEntry selectedEntry = parent.getSelectedEntry();
-		if (selectedEntry != lastSelected) {
-			lastSelected = selectedEntry;
-			clearEntries();
-			setScrollY(-Double.MAX_VALUE);
-			if (lastSelected != null) {
-				DescriptionEntry emptyEntry = new DescriptionEntry(OrderedText.EMPTY);
-				int wrapWidth = getRowWidth() - 5;
+	private void buildUIFromLastSelected() {
+		if (lastSelectedMod == null) {
+			return;
+		}
 
-				Mod mod = lastSelected.getMod();
-				Text description = mod.getFormattedDescription();
-				if (!description.getString().isEmpty()) {
-					for (OrderedText line : textRenderer.wrapLines(description, wrapWidth)) {
-						children().add(new DescriptionEntry(line));
+		DescriptionEntry emptyEntry = new DescriptionEntry(OrderedText.EMPTY);
+		int wrapWidth = getRowWidth() - 5;
+
+		Mod mod = lastSelectedMod;
+		Text description = mod.getFormattedDescription();
+		if (!description.getString().isEmpty()) {
+			for (OrderedText line : textRenderer.wrapLines(description, wrapWidth)) {
+				children().add(new DescriptionEntry(line));
+			}
+		}
+
+		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue()
+			.contains(mod.getId())) {
+			UpdateInfo updateInfo = mod.getUpdateInfo();
+			if (updateInfo != null && updateInfo.isUpdateAvailable()) {
+				children().add(emptyEntry);
+
+				int index = 0;
+				for (OrderedText line : textRenderer.wrapLines(HAS_UPDATE_TEXT, wrapWidth - 11)) {
+					DescriptionEntry entry = new DescriptionEntry(line);
+					if (index == 0) {
+						entry.setUpdateTextEntry();
 					}
+
+					children().add(entry);
+					index += 1;
 				}
 
-				if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue()
-					.contains(mod.getId())) {
-					UpdateInfo updateInfo = mod.getUpdateInfo();
-					if (updateInfo != null && updateInfo.isUpdateAvailable()) {
-						children().add(emptyEntry);
-
-						int index = 0;
-						for (OrderedText line : textRenderer.wrapLines(HAS_UPDATE_TEXT, wrapWidth - 11)) {
-							DescriptionEntry entry = new DescriptionEntry(line);
-							if (index == 0) {
-								entry.setUpdateTextEntry();
-							}
-
-							children().add(entry);
-							index += 1;
-						}
-
-						for (OrderedText line : textRenderer.wrapLines(EXPERIMENTAL_TEXT, wrapWidth - 16)) {
-							children().add(new DescriptionEntry(line, 8));
-						}
-
-
-						Text updateMessage = updateInfo.getUpdateMessage();
-						String downloadLink = updateInfo.getDownloadLink();
-						if (updateMessage == null) {
-							updateMessage = DOWNLOAD_TEXT;
-						} else {
-							if (downloadLink != null) {
-								updateMessage = updateMessage.copy()
-									.formatted(Formatting.BLUE)
-									.formatted(Formatting.UNDERLINE);
-							}
-						}
-						for (OrderedText line : textRenderer.wrapLines(updateMessage, wrapWidth - 16)) {
-							if (downloadLink != null) {
-								children().add(new LinkEntry(line, downloadLink, 8));
-							} else {
-								children().add(new DescriptionEntry(line, 8));
-
-							}
-						}
-					}
-					if (mod.getChildHasUpdate()) {
-						children().add(emptyEntry);
-
-						int index = 0;
-						for (OrderedText line : textRenderer.wrapLines(CHILD_HAS_UPDATE_TEXT, wrapWidth - 11)) {
-							DescriptionEntry entry = new DescriptionEntry(line);
-							if (index == 0) {
-								entry.setUpdateTextEntry();
-							}
-
-							children().add(entry);
-							index += 1;
-						}
-					}
+				for (OrderedText line : textRenderer.wrapLines(EXPERIMENTAL_TEXT, wrapWidth - 16)) {
+					children().add(new DescriptionEntry(line, 8));
 				}
 
-				Map<String, String> links = mod.getLinks();
-				String sourceLink = mod.getSource();
-				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
+
+				Text updateMessage = updateInfo.getUpdateMessage();
+				String downloadLink = updateInfo.getDownloadLink();
+				if (updateMessage == null) {
+					updateMessage = DOWNLOAD_TEXT;
+				} else {
+					if (downloadLink != null) {
+						updateMessage = updateMessage.copy()
+							.formatted(Formatting.BLUE)
+							.formatted(Formatting.UNDERLINE);
+					}
+				}
+				for (OrderedText line : textRenderer.wrapLines(updateMessage, wrapWidth - 16)) {
+					if (downloadLink != null) {
+						children().add(new LinkEntry(line, downloadLink, 8));
+					} else {
+						children().add(new DescriptionEntry(line, 8));
+
+					}
+				}
+			}
+			if (mod.getChildHasUpdate()) {
+				children().add(emptyEntry);
+
+				int index = 0;
+				for (OrderedText line : textRenderer.wrapLines(CHILD_HAS_UPDATE_TEXT, wrapWidth - 11)) {
+					DescriptionEntry entry = new DescriptionEntry(line);
+					if (index == 0) {
+						entry.setUpdateTextEntry();
+					}
+
+					children().add(entry);
+					index += 1;
+				}
+			}
+		}
+
+		Map<String, String> links = mod.getLinks();
+		String sourceLink = mod.getSource();
+		if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
+			children().add(emptyEntry);
+
+			for (OrderedText line : textRenderer.wrapLines(LINKS_TEXT, wrapWidth)) {
+				children().add(new DescriptionEntry(line));
+			}
+
+			if (sourceLink != null) {
+				int indent = 8;
+				for (OrderedText line : textRenderer.wrapLines(SOURCE_TEXT, wrapWidth - 16)) {
+					children().add(new LinkEntry(line, sourceLink, indent));
+					indent = 16;
+				}
+			}
+
+			links.forEach((key, value) -> {
+				int indent = 8;
+				for (OrderedText line : textRenderer.wrapLines(Text.translatable(key)
+						.formatted(Formatting.BLUE)
+						.formatted(Formatting.UNDERLINE),
+					wrapWidth - 16
+				)) {
+					children().add(new LinkEntry(line, value, indent));
+					indent = 16;
+				}
+			});
+		}
+
+		Set<String> licenses = mod.getLicense();
+		if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
+			children().add(emptyEntry);
+
+			for (OrderedText line : textRenderer.wrapLines(LICENSE_TEXT, wrapWidth)) {
+				children().add(new DescriptionEntry(line));
+			}
+
+			for (String license : licenses) {
+				int indent = 8;
+				for (OrderedText line : textRenderer.wrapLines(Text.literal(license), wrapWidth - 16)) {
+					children().add(new DescriptionEntry(line, indent));
+					indent = 16;
+				}
+			}
+		}
+
+		if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
+			if ("minecraft".equals(mod.getId())) {
+				children().add(emptyEntry);
+
+				for (OrderedText line : textRenderer.wrapLines(VIEW_CREDITS_TEXT, wrapWidth)) {
+					children().add(new MojangCreditsEntry(line));
+				}
+			} else if (!"java".equals(mod.getId())) {
+				var credits = mod.getCredits();
+
+				if (!credits.isEmpty()) {
 					children().add(emptyEntry);
 
-					for (OrderedText line : textRenderer.wrapLines(LINKS_TEXT, wrapWidth)) {
+					for (OrderedText line : textRenderer.wrapLines(CREDITS_TEXT, wrapWidth)) {
 						children().add(new DescriptionEntry(line));
 					}
 
-					if (sourceLink != null) {
-						int indent = 8;
-						for (OrderedText line : textRenderer.wrapLines(SOURCE_TEXT, wrapWidth - 16)) {
-							children().add(new LinkEntry(line, sourceLink, indent));
-							indent = 16;
-						}
-					}
+					var iterator = credits.entrySet().iterator();
 
-					links.forEach((key, value) -> {
+					while (iterator.hasNext()) {
 						int indent = 8;
-						for (OrderedText line : textRenderer.wrapLines(Text.translatable(key)
-								.formatted(Formatting.BLUE)
-								.formatted(Formatting.UNDERLINE),
+
+						var role = iterator.next();
+						var roleName = role.getKey();
+
+						for (var line : textRenderer.wrapLines(this.creditsRoleText(roleName),
 							wrapWidth - 16
 						)) {
-							children().add(new LinkEntry(line, value, indent));
-							indent = 16;
-						}
-					});
-				}
-
-				Set<String> licenses = mod.getLicense();
-				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
-					children().add(emptyEntry);
-
-					for (OrderedText line : textRenderer.wrapLines(LICENSE_TEXT, wrapWidth)) {
-						children().add(new DescriptionEntry(line));
-					}
-
-					for (String license : licenses) {
-						int indent = 8;
-						for (OrderedText line : textRenderer.wrapLines(Text.literal(license), wrapWidth - 16)) {
 							children().add(new DescriptionEntry(line, indent));
 							indent = 16;
 						}
-					}
-				}
 
-				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
-					if ("minecraft".equals(mod.getId())) {
-						children().add(emptyEntry);
+						for (var contributor : role.getValue()) {
+							indent = 16;
 
-						for (OrderedText line : textRenderer.wrapLines(VIEW_CREDITS_TEXT, wrapWidth)) {
-							children().add(new MojangCreditsEntry(line));
+							for (var line : textRenderer.wrapLines(Text.literal(contributor), wrapWidth - 24)) {
+								children().add(new DescriptionEntry(line, indent));
+								indent = 24;
+							}
 						}
-					} else if (!"java".equals(mod.getId())) {
-						var credits = mod.getCredits();
 
-						if (!credits.isEmpty()) {
+						if (iterator.hasNext()) {
 							children().add(emptyEntry);
-
-							for (OrderedText line : textRenderer.wrapLines(CREDITS_TEXT, wrapWidth)) {
-								children().add(new DescriptionEntry(line));
-							}
-
-							var iterator = credits.entrySet().iterator();
-
-							while (iterator.hasNext()) {
-								int indent = 8;
-
-								var role = iterator.next();
-								var roleName = role.getKey();
-
-								for (var line : textRenderer.wrapLines(this.creditsRoleText(roleName),
-									wrapWidth - 16
-								)) {
-									children().add(new DescriptionEntry(line, indent));
-									indent = 16;
-								}
-
-								for (var contributor : role.getValue()) {
-									indent = 16;
-
-									for (var line : textRenderer.wrapLines(Text.literal(contributor), wrapWidth - 24)) {
-										children().add(new DescriptionEntry(line, indent));
-										indent = 24;
-									}
-								}
-
-								if (iterator.hasNext()) {
-									children().add(emptyEntry);
-								}
-							}
 						}
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	public void renderList(DrawContext DrawContext, int mouseX, int mouseY, float delta) {
+		ModListEntry selectedEntry = parent.getSelectedEntry();
+		if (selectedEntry.getMod() != lastSelectedMod) {
+			lastSelectedMod = selectedEntry.getMod();
+			clearEntries();
+			setScrollY(-Double.MAX_VALUE);
+			buildUIFromLastSelected();
 		}
 
 		Tessellator tessellator = Tessellator.getInstance();

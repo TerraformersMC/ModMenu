@@ -241,6 +241,7 @@ public class ModsScreen extends Screen {
 			this.height - RIGHT_PANE_Y - 96,
 			RIGHT_PANE_Y + 60,
 			textRenderer.fontHeight + 1,
+			this.descriptionListWidget,
 			this
 		);
 		this.descriptionListWidget.setX(this.rightPaneX);
