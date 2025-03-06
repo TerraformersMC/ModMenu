@@ -11,7 +11,6 @@ import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
-import net.minecraft.class_10883;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.*;
 import net.minecraft.client.gui.DrawContext;
@@ -230,20 +229,17 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					bufferBuilder.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
 					bufferBuilder.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).color(bottomColor);
 					bufferBuilder.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).color(bottomColor);
-					BuiltBuffer builtBuffer = bufferBuilder.endNullable();
-					if (builtBuffer != null) {
+					try (BuiltBuffer builtBuffer = bufferBuilder.end()) {
 						VertexFormat.DrawMode drawMode = builtBuffer.getDrawParameters().mode();
 						Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
-						class_10883 renderPass = RenderSystem.getDevice().method_68389().method_68368(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty());
-						try (GpuBuffer gpuBuffer = RenderSystem.getDevice().method_68386(() -> "Mod List", GlBufferTarget.VERTICES, GlUsage.DYNAMIC_WRITE, 786432)) {
+						try (RenderPass renderPass = RenderSystem.getDevice().getResourceManager().newRenderPass(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty());
+							 GpuBuffer gpuBuffer = RenderSystem.getDevice().createBuffer(() -> "Mod List", GlBufferTarget.VERTICES, GlUsage.DYNAMIC_WRITE, 786432)) { // createBuffer
 							RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(drawMode);
-							renderPass.method_68412(ShaderPipelines.GUI);
-							renderPass.method_68410(0, gpuBuffer);
-							renderPass.method_68411(autoStorageIndexBuffer.method_68274(builtBuffer.getDrawParameters().indexCount()), autoStorageIndexBuffer.getIndexType());
-							RenderSystem.getDevice().method_68389().method_68350(gpuBuffer, builtBuffer.getBuffer(), 0);
-							builtBuffer.close();
-							renderPass.method_68408(0, builtBuffer.getDrawParameters().indexCount());
-							renderPass.close();
+							renderPass.bindShader(ShaderPipelines.GUI);
+							renderPass.setVertexBuffer(0, gpuBuffer);
+							renderPass.setIndexBuffer(autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount()), autoStorageIndexBuffer.getIndexType());
+							RenderSystem.getDevice().getResourceManager().copyDataInto(gpuBuffer, builtBuffer.getBuffer(), 0);
+							renderPass.drawObjects(0, builtBuffer.getDrawParameters().indexCount());
 						}
 					}
 				}
