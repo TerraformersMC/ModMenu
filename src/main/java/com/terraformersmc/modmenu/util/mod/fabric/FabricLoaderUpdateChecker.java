@@ -147,7 +147,7 @@ public class FabricLoaderUpdateChecker implements UpdateChecker {
 		}
 
 		@Override
-		public UpdateChannel updateChannel() {
+		public UpdateChannel getUpdateChannel() {
 			return this.isStable ? UpdateChannel.RELEASE : UpdateChannel.BETA;
 		}
 	}

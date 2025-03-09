@@ -131,7 +131,7 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 		}
 
 		@Override
-		public UpdateChannel updateChannel() {
+		public UpdateChannel getUpdateChannel() {
 			var preRelease = this.version.preRelease();
 			if (preRelease.isEmpty()) {
 				return UpdateChannel.RELEASE;

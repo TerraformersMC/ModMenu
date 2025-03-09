@@ -117,11 +117,11 @@ public interface Mod {
 	void setUpdateInfo(@Nullable UpdateInfo updateInfo);
 
 	default boolean hasUpdate() {
-		UpdateInfo updateInfo = getUpdateInfo();
+		UpdateInfo updateInfo = this.getUpdateInfo();
 		if (updateInfo == null) {
 			return false;
 		} else {
-			return updateInfo.isUpdateAvailable() && updateInfo.updateChannel().compareTo(ModMenuConfig.UPDATE_CHANNEL.getValue()) >= 0;
+			return updateInfo.isUpdateAvailable() && updateInfo.getUpdateChannel().compareTo(ModMenuConfig.UPDATE_CHANNEL.getValue()) >= 0;
 		}
 	}
 

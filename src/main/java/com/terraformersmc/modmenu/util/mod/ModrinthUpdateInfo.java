@@ -7,7 +7,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 public record ModrinthUpdateInfo(String projectId, String versionId, String versionNumber,
-								 UpdateChannel updateChannel) implements UpdateInfo {
+								 UpdateChannel getUpdateChannel) implements UpdateInfo {
 	private static final Text MODRINTH_TEXT = Text.translatable("modmenu.modrinth");
 
 	@Override
