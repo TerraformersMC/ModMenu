@@ -11,14 +11,14 @@ jobs:
     strategy:
       matrix:
         # Use these Java versions
-        java: [
-          21,  # Minimum
-        ]
-        os: [ubuntu-22.04]
+        java: [ 21 ]
+        distro: [ temurin ]
+        # and run on both Linux and Windows
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Validate Gradle wrapper
@@ -26,7 +26,7 @@ jobs:
       - name: Setup JDK ${{ matrix.java }}
         uses: actions/setup-java@v3
         with:
-          distribution: zulu
+          distribution: ${{ matrix.distro }}
           java-version: ${{ matrix.java }}
       - name: Make Gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
