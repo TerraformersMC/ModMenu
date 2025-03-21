@@ -1,6 +1,12 @@
 package com.terraformersmc.modmenu.gui.widget;
 
+import com.mojang.blaze3d.buffers.BufferType;
+import com.mojang.blaze3d.buffers.BufferUsage;
+import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -16,6 +22,7 @@ import net.minecraft.client.gl.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
@@ -214,7 +221,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	@Override
 	protected void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
 		int entryCount = this.getEntryCount();
-		Tessellator tessellator = Tessellator.getInstance();
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowTop(index) + this.itemHeight;
@@ -230,28 +236,36 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					float float_2 = this.isFocused() ? 1.0F : 0.5F;
 					final int topColor = ColorHelper.fromFloats(1.0F, float_2, float_2, float_2);
 					final int bottomColor = ColorHelper.fromFloats(1.0F, 0.0F, 0.0F, 0.0F);
-					BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-					bufferBuilder.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).color(topColor);
-					bufferBuilder.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).color(topColor);
-					bufferBuilder.vertex(matrix, selectionRight, entryTop - 2, 0.0F).color(topColor);
-					bufferBuilder.vertex(matrix, entryLeft, entryTop - 2, 0.0F).color(topColor);
-					bufferBuilder.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
-					bufferBuilder.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
-					bufferBuilder.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).color(bottomColor);
-					bufferBuilder.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).color(bottomColor);
-					try (BuiltBuffer builtBuffer = bufferBuilder.end()) {
-						VertexFormat.DrawMode drawMode = builtBuffer.getDrawParameters().mode();
-						Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
-						try (RenderPass renderPass = RenderSystem.getDevice().getResourceManager().newRenderPass(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty());
-							 GpuBuffer gpuBuffer = RenderSystem.getDevice().createBuffer(() -> "Mod List", GlBufferTarget.VERTICES, GlUsage.DYNAMIC_WRITE, 786432)) { // createBuffer
-							RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(drawMode);
-							renderPass.bindShader(ShaderPipelines.GUI);
-							renderPass.setVertexBuffer(0, gpuBuffer);
-							renderPass.setIndexBuffer(autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount()), autoStorageIndexBuffer.getIndexType());
-							RenderSystem.getDevice().getResourceManager().copyDataInto(gpuBuffer, builtBuffer.getBuffer(), 0);
-							renderPass.drawObjects(0, builtBuffer.getDrawParameters().indexCount());
-						}
-					}
+                    RenderPipeline pipeline = RenderPipelines.GUI;
+                    try (BufferAllocator alloc = new BufferAllocator(pipeline.getVertexFormat().getVertexSize() * 4)) {
+                        BufferBuilder bufferBuilder = new BufferBuilder(alloc, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
+                        bufferBuilder.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).color(topColor);
+                        bufferBuilder.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).color(topColor);
+                        bufferBuilder.vertex(matrix, selectionRight, entryTop - 2, 0.0F).color(topColor);
+                        bufferBuilder.vertex(matrix, entryLeft, entryTop - 2, 0.0F).color(topColor);
+                        bufferBuilder.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
+                        bufferBuilder.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
+                        bufferBuilder.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).color(bottomColor);
+                        bufferBuilder.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).color(bottomColor);
+                        try (BuiltBuffer builtBuffer = bufferBuilder.endNullable()) {
+                            if (builtBuffer == null) {
+                                alloc.close();
+                                return;
+                            }
+                            Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
+                            RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
+                            VertexFormat.IndexType indexType = autoStorageIndexBuffer.getIndexType();
+                            GpuBuffer indexBuffer = autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount());
+                            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Mod List", BufferType.VERTICES, BufferUsage.DYNAMIC_WRITE, builtBuffer.getBuffer().remaining());
+                            RenderSystem.getDevice().createCommandEncoder().writeToBuffer(vertexBuffer, builtBuffer.getBuffer(), 0);
+                            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty())) {
+                                renderPass.setPipeline(pipeline);
+                                renderPass.setVertexBuffer(0, vertexBuffer);
+                                renderPass.setIndexBuffer(indexBuffer, indexType);
+                                renderPass.drawIndexed(0, builtBuffer.getDrawParameters().indexCount());
+                            }
+                        }
+                    }
 				}
 
 				entryLeft = this.getRowLeft();
