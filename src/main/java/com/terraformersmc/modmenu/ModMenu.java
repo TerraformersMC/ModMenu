@@ -1,6 +1,8 @@
 package com.terraformersmc.modmenu;
 
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
@@ -45,11 +48,11 @@ public class ModMenu implements ClientModInitializer {
 		GSON_MINIFIED = builder.create();
 	}
 
-	public static final Map<String, Mod> MODS = new HashMap<>();
-	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
-	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
+	public static final Map<String, Mod> MODS = new ConcurrentHashMap<>();
+	public static final Map<String, Mod> ROOT_MODS = new ConcurrentHashMap<>();
+	public static final ListMultimap<Mod, Mod> PARENT_MAP = Multimaps.synchronizedListMultimap(LinkedListMultimap.create());
 
-	private static final Map<String, ConfigScreenFactory<?>> configScreenFactories = new HashMap<>();
+	private static final Map<String, ConfigScreenFactory<?>> configScreenFactories = new ConcurrentHashMap<>();
 	private static final List<ModMenuApi> apiImplementations = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
