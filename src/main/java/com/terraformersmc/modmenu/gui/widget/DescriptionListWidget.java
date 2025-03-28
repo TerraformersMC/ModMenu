@@ -281,39 +281,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.enableScissor(drawContext);
 		super.renderList(drawContext, mouseX, mouseY, delta);
 		drawContext.disableScissor();
-
-        RenderPipeline pipeline = RenderPipelines.GUI;
-        try (BufferAllocator alloc = new BufferAllocator(pipeline.getVertexFormat().getVertexSize() * 4)) {
-            BufferBuilder bufferBuilder = new BufferBuilder(alloc, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-            final int black = ColorHelper.fullAlpha(0);
-            bufferBuilder.vertex(this.getX(), (this.getY() + 4), 0.0F).color(0);
-            bufferBuilder.vertex(this.getRight(), (this.getY() + 4), 0.0F).color(0);
-            bufferBuilder.vertex(this.getRight(), this.getY(), 0.0F).color(black);
-            bufferBuilder.vertex(this.getX(), this.getY(), 0.0F).color(black);
-            bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0F).color(black);
-            bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0F).color(black);
-            bufferBuilder.vertex(this.getRight(), (this.getBottom() - 4), 0.0F).color(0);
-            bufferBuilder.vertex(this.getX(), (this.getBottom() - 4), 0.0F).color(0);
-            this.renderScrollBar(bufferBuilder);
-            try (BuiltBuffer builtBuffer = bufferBuilder.endNullable()) {
-                if (builtBuffer == null) {
-                    alloc.close();
-                    return;
-                }
-                Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
-                RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
-                VertexFormat.IndexType indexType = autoStorageIndexBuffer.getIndexType();
-                GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Description List", BufferType.VERTICES, BufferUsage.DYNAMIC_WRITE, builtBuffer.getBuffer().remaining());
-                GpuBuffer indexBuffer = autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount());
-                RenderSystem.getDevice().createCommandEncoder().writeToBuffer(vertexBuffer, builtBuffer.getBuffer(), 0);
-                try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty())) {
-                    renderPass.setPipeline(pipeline);
-                    renderPass.setVertexBuffer(0, vertexBuffer);
-                    renderPass.setIndexBuffer(indexBuffer, indexType);
-                    renderPass.drawIndexed(0, builtBuffer.getDrawParameters().indexCount());
-                }
-            }
-        }
 	}
 
 	public void renderScrollBar(BufferBuilder bufferBuilder) {
