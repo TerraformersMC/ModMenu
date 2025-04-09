@@ -1,9 +1,9 @@
 package com.terraformersmc.modmenu.gui.widget;
 
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -53,7 +53,7 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		}
 
 		context.drawTexture(
-			RenderLayer::getGuiTextured,
+            RenderPipelines.GUI_TEXTURED,
 			this.texture,
 			this.getX(),
 			this.getY(),

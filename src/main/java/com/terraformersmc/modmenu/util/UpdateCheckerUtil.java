@@ -226,7 +226,7 @@ public class UpdateCheckerUtil {
 	}
 
 	private static @Nullable Map<String, VersionUpdate> getUpdatedVersions(Collection<String> modHashes) {
-		String mcVer = SharedConstants.getGameVersion().getName();
+		String mcVer = SharedConstants.getGameVersion().name();
 		List<String> loaders = ModMenu.RUNNING_QUILT ? List.of("fabric", "quilt") : List.of("fabric");
 
 		List<UpdateChannel> updateChannels;

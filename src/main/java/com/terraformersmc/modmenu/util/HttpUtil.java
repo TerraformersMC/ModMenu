@@ -29,7 +29,7 @@ public class HttpUtil {
 		String loader = ModMenu.RUNNING_QUILT ? "quilt" : "fabric";
 
 		var modMenuVersion = getModMenuVersion();
-		var minecraftVersion = SharedConstants.getGameVersion().getName();
+		var minecraftVersion = SharedConstants.getGameVersion().name();
 
 		// -> TerraformersMC/ModMenu/9.1.0 (1.20.3/quilt/development)
 		return "%s/%s (%s/%s%s)".formatted(ModMenu.GITHUB_REF, modMenuVersion, minecraftVersion, loader, env);

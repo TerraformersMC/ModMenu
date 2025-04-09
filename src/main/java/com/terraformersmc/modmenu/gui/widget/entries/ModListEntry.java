@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
-import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
@@ -12,9 +11,9 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
@@ -23,7 +22,6 @@ import net.minecraft.util.Language;
 import net.minecraft.util.Util;
 
 public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> {
-	public static final Identifier UNKNOWN_ICON = Identifier.ofVanilla("textures/misc/unknown_pack.png");
 	private static final Identifier MOD_CONFIGURATION_ICON = Identifier.of(ModMenu.MOD_ID, "textures/gui/mod_configuration.png");
 	private static final Identifier ERROR_ICON = Identifier.ofVanilla("world_list/error");
 	private static final Identifier ERROR_HIGHLIGHTED_ICON = Identifier.ofVanilla("world_list/error_highlighted");
@@ -69,9 +67,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		}
 
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager._enableBlend();
-		drawContext.drawTexture(RenderLayer::getGuiTextured, this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
-		GlStateManager._disableBlend();
+		drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 
 		Text name = Text.literal(mod.getTranslatedName());
 		StringVisitable trimmedName = name;
@@ -137,7 +133,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				boolean hoveringIcon = mouseX - x < iconSize;
 				if (this.list.getParent().modScreenErrors.containsKey(modId)) {
 					drawContext.drawGuiTexture(
-						RenderLayer::getGuiTextured,
+                        RenderPipelines.GUI_TEXTURED,
 						hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON,
 						x,
 						y,
@@ -150,8 +146,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 					}
 				} else {
 					int v = hoveringIcon ? iconSize : 0;
+                    // TODO: Fix gray background covering logo?
 					drawContext.drawTexture(
-						RenderLayer::getGuiTextured,
+                        RenderPipelines.GUI_TEXTURED,
 						MOD_CONFIGURATION_ICON,
 						x,
 						y,
@@ -195,7 +192,8 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		if (this.iconLocation == null) {
 			this.iconLocation = Identifier.of(ModMenu.MOD_ID, mod.getId() + "_icon");
 			NativeImageBackedTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.getGuiScale().getValue());
-			this.client.getTextureManager().registerTexture(this.iconLocation, icon);
+			icon.setFilter(false, false);
+            this.client.getTextureManager().registerTexture(this.iconLocation, icon);
 		}
 
 		return iconLocation;
