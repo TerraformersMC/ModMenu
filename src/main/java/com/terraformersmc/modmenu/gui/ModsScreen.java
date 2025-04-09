@@ -2,6 +2,8 @@ package com.terraformersmc.modmenu.gui;
 
 import com.google.common.base.Joiner;
 import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
@@ -17,6 +19,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -25,7 +28,6 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.screen.ScreenTexts;
@@ -203,7 +205,7 @@ public class ModsScreen extends Screen {
 				final Mod mod = Objects.requireNonNull(selected).getMod();
 				boolean isMinecraft = selected.getMod().getId().equals("minecraft");
 				if (isMinecraft) {
-					var url = SharedConstants.getGameVersion().isStable() ? Urls.JAVA_FEEDBACK : Urls.SNAPSHOT_FEEDBACK;
+					var url = SharedConstants.getGameVersion().stable() ? Urls.JAVA_FEEDBACK : Urls.SNAPSHOT_FEEDBACK;
 					ConfirmLinkScreen.open(this, url, true);
 				} else {
 					var url = mod.getWebsite();
@@ -388,9 +390,7 @@ public class ModsScreen extends Screen {
 			}
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			GlStateManager._enableBlend();
-			drawContext.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
-			GlStateManager._disableBlend();
+			drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			Text name = Text.literal(mod.getTranslatedName());
@@ -464,7 +464,7 @@ public class ModsScreen extends Screen {
 		}
 	}
 
-	private Text computeModCountText(boolean includeLibs, boolean onInit) {
+    private Text computeModCountText(boolean includeLibs, boolean onInit) {
 		int[] rootMods = formatModCount(ModMenu.ROOT_MODS.values()
 			.stream()
 			.filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY))
