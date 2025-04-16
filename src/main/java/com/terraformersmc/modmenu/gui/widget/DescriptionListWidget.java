@@ -1,7 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import com.mojang.blaze3d.buffers.BufferType;
-import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
@@ -13,7 +11,8 @@ import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.*;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -23,7 +22,8 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -303,9 +303,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
                 Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
                 RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
                 VertexFormat.IndexType indexType = autoStorageIndexBuffer.getIndexType();
-                GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Description List", BufferType.VERTICES, BufferUsage.DYNAMIC_WRITE, builtBuffer.getBuffer().remaining());
+                GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Description List", GpuBuffer.USAGE_COPY_DST, builtBuffer.getBuffer().remaining());
                 GpuBuffer indexBuffer = autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount());
-                RenderSystem.getDevice().createCommandEncoder().writeToBuffer(vertexBuffer, builtBuffer.getBuffer(), 0);
+                RenderSystem.getDevice().createCommandEncoder().writeToBuffer(vertexBuffer.slice(), builtBuffer.getBuffer());
                 try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty())) {
                     renderPass.setPipeline(pipeline);
                     renderPass.setVertexBuffer(0, vertexBuffer);
@@ -393,7 +393,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				x += 11;
 			}
 
-			drawContext.drawTextWithShadow(textRenderer, text, x + indent, y, 0xAAAAAA);
+			drawContext.drawTextWithShadow(textRenderer, text, x + indent, y, 0xFFAAAAAA);
 		}
 
 		@Override

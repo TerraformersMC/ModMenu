@@ -69,7 +69,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
+			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()));
 		}
 	}
 
@@ -120,7 +120,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	public void finalizeInit() {
 		reloadFilters();
-		if(restoreScrollY != null) {
+		if (restoreScrollY != null) {
 			setScrollY(restoreScrollY);
 			restoreScrollY = null;
 		}
@@ -323,10 +323,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	@Override
 	public int getRowLeft() {
 		return this.getX() + 6;
-	}
-
-	public int getTop() {
-		return this.getY();
 	}
 
 	public ModsScreen getParent() {
