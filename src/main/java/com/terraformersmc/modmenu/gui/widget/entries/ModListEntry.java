@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -66,8 +65,19 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			DrawingUtil.drawRandomVersionBackground(mod, drawContext, x, y, iconSize, iconSize);
 		}
 
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.getIconTexture(), x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
+		drawContext.drawTexture(
+                RenderPipelines.GUI_TEXTURED,
+                this.getIconTexture(),
+                x,
+                y,
+                0.0F,
+                0.0F,
+                iconSize,
+                iconSize,
+                iconSize,
+                iconSize,
+                0xFFFFFFFF
+        );
 
 		Text name = Text.literal(mod.getTranslatedName());
 		StringVisitable trimmedName = name;
@@ -78,13 +88,14 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			trimmedName = StringVisitable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
 		}
 
-		drawContext.drawText(font,
+        drawContext.method_71046();
+		drawContext.drawTextWithShadow(font,
 			Language.getInstance().reorder(trimmedName),
 			x + iconSize + 3,
 			y + 1,
-			0xFFFFFF,
-			true
+            0xFFFFFFFF
 		);
+        drawContext.method_71050();
 
 		var updateBadgeXOffset = 0;
 		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue()
@@ -112,9 +123,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				(y + client.textRenderer.fontHeight + 2),
 				rowWidth - iconSize - 7,
 				2,
-				0x808080
+				0xFF808080
 			);
-		} else {
+        } else {
 			DrawingUtil.drawWrappedString(
 				drawContext,
 				mod.getPrefixedVersion(),
@@ -122,7 +133,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				(y + client.textRenderer.fontHeight + 2),
 				rowWidth - iconSize - 7,
 				2,
-				0x808080
+				0xFF808080
 			);
 		}
 
@@ -146,7 +157,6 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 					}
 				} else {
 					int v = hoveringIcon ? iconSize : 0;
-                    // TODO: Fix gray background covering logo?
 					drawContext.drawTexture(
                         RenderPipelines.GUI_TEXTURED,
 						MOD_CONFIGURATION_ICON,
@@ -157,7 +167,8 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 						iconSize,
 						iconSize,
 						textureSize,
-						textureSize
+						textureSize,
+                        0xFFFFFFFF
 					);
 				}
 			}

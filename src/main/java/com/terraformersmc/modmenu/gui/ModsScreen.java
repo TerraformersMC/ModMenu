@@ -389,8 +389,7 @@ public class ModsScreen extends Screen {
 				DrawingUtil.drawRandomVersionBackground(mod, drawContext, x, RIGHT_PANE_Y, 32, 32);
 			}
 
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
+			drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32, 0xFFFFFFFF);
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			Text name = Text.literal(mod.getTranslatedName());
