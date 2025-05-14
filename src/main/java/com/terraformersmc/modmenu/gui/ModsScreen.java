@@ -2,9 +2,6 @@ package com.terraformersmc.modmenu.gui;
 
 import com.google.common.base.Joiner;
 import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
@@ -25,12 +22,14 @@ import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.tooltip.TooltipState;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -412,7 +411,7 @@ public class ModsScreen extends Screen {
 			if (mouseX > x + imageOffset && mouseY > RIGHT_PANE_Y + 1 &&
 				mouseY < RIGHT_PANE_Y + 1 + textRenderer.fontHeight &&
 				mouseX < x + imageOffset + textRenderer.getWidth(trimmedName)) {
-				this.setTooltip(ModMenuScreenTexts.modIdTooltip(mod.getId()));
+                drawContext.drawTooltip(ModMenuScreenTexts.modIdTooltip(mod.getId()), mouseX, mouseY);
 			}
 
 			if (this.init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
@@ -461,7 +460,7 @@ public class ModsScreen extends Screen {
 				);
 			}
 		}
-	}
+    }
 
     private Text computeModCountText(boolean includeLibs, boolean onInit) {
 		int[] rootMods = formatModCount(ModMenu.ROOT_MODS.values()

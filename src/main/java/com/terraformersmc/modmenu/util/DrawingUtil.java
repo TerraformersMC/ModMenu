@@ -52,7 +52,7 @@ public class DrawingUtil {
 			string = string.substring(0, string.length() - 1);
 		}
 
-        drawContext.method_71046();
+//        drawContext.method_71046();
 		List<StringVisitable> strings = CLIENT.textRenderer.getTextHandler().wrapLines(Text.literal(string), wrapWidth, Style.EMPTY);
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
@@ -78,7 +78,7 @@ public class DrawingUtil {
                     color
             );
 		}
-        drawContext.method_71050();
+//        drawContext.method_71050();
 	}
 
 	public static void drawBadge(
@@ -101,8 +101,8 @@ public class DrawingUtil {
 		);
 		drawContext.fill(x + tagWidth, y, x + tagWidth + 1, y + CLIENT.textRenderer.fontHeight, outlineColor);
 		drawContext.fill(x + 1, y, x + tagWidth, y + CLIENT.textRenderer.fontHeight, fillColor);
-        drawContext.method_71046();
-		drawContext.drawText(
+//        drawContext.method_71046();
+        drawContext.drawText(
             CLIENT.textRenderer,
 			text,
 			(int) (x + 1 + (tagWidth - CLIENT.textRenderer.getWidth(text)) / (float) 2),
@@ -110,6 +110,6 @@ public class DrawingUtil {
 			textColor,
 			false
 		);
-        drawContext.method_71050();
+//        drawContext.method_71050();
 	}
 }

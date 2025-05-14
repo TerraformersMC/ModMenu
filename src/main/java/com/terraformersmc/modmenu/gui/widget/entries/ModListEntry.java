@@ -13,6 +13,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
@@ -88,18 +89,18 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			trimmedName = StringVisitable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
 		}
 
-        drawContext.method_71046();
-		drawContext.drawTextWithShadow(font,
+//        drawContext.method_71046();
+		drawContext.drawTextWithShadow(
+            font,
 			Language.getInstance().reorder(trimmedName),
 			x + iconSize + 3,
 			y + 1,
             0xFFFFFFFF
 		);
-        drawContext.method_71050();
+//        drawContext.method_71050();
 
 		var updateBadgeXOffset = 0;
-		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue()
-			.contains(modId) && (mod.hasUpdate() || mod.getChildHasUpdate())) {
+		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(modId) && (mod.hasUpdate() || mod.getChildHasUpdate())) {
 			UpdateAvailableBadge.renderBadge(drawContext, x + iconSize + 3 + font.getWidth(name) + 2, y);
 			updateBadgeXOffset = 11;
 		}
@@ -153,7 +154,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 					);
 					if (hoveringIcon) {
 						Throwable e = this.list.getParent().modScreenErrors.get(modId);
-						this.list.getParent().setTooltip(this.client.textRenderer.wrapLines(ModMenuScreenTexts.configureError(modId, e), 175));
+//                        this.list.getParent().setTooltip(this.client.textRenderer.wrapLines(ModMenuScreenTexts.configureError(modId, e), 175));
 					}
 				} else {
 					int v = hoveringIcon ? iconSize : 0;

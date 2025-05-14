@@ -306,11 +306,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
                 GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Description List", GpuBuffer.USAGE_COPY_DST, builtBuffer.getBuffer().remaining());
                 GpuBuffer indexBuffer = autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount());
                 RenderSystem.getDevice().createCommandEncoder().writeToBuffer(vertexBuffer.slice(), builtBuffer.getBuffer());
-                try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty())) {
+                try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Description List", framebuffer.getColorAttachmentView(), OptionalInt.empty(), framebuffer.getDepthAttachmentView(), OptionalDouble.empty())) {
                     renderPass.setPipeline(pipeline);
                     renderPass.setVertexBuffer(0, vertexBuffer);
                     renderPass.setIndexBuffer(indexBuffer, indexType);
-                    renderPass.drawIndexed(0, builtBuffer.getDrawParameters().indexCount());
+                    renderPass.drawIndexed(0, 0, builtBuffer.getDrawParameters().indexCount(), 1);
                 }
             }
         }
