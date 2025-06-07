@@ -1,7 +1,6 @@
 package com.terraformersmc.modmenu.gui;
 
 import com.google.common.base.Joiner;
-import com.mojang.blaze3d.opengl.GlStateManager;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
@@ -123,7 +122,8 @@ public class ModsScreen extends Screen {
         int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
 
         this.searchBoxX = this.paneWidth / 2 - searchBoxWidth / 2 - filtersButtonSize / 2;
-        this.searchBox = new TextFieldWidget(this.textRenderer,
+        this.searchBox = new TextFieldWidget(
+                this.textRenderer,
                 this.searchBoxX,
                 22,
                 searchBoxWidth,
@@ -294,10 +294,9 @@ public class ModsScreen extends Screen {
 
         this.modList.render(drawContext, mouseX, mouseY, delta);
         this.searchBox.render(drawContext, mouseX, mouseY, delta);
-        GlStateManager._disableBlend();
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 0xFFFFFFFF);
         assert client != null;
-        int grayColor = 11184810;
+        int grayColor = 0xFFAAAAAA;
         if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
             drawContext.drawCenteredTextWithShadow(
                     this.textRenderer,
