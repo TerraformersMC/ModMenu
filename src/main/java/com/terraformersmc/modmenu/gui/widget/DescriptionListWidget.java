@@ -117,7 +117,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
             UpdateInfo updateInfo = mod.getUpdateInfo();
             if (updateInfo != null && updateInfo.isUpdateAvailable()) {
                 children().add(emptyEntry);
-
                 int index = 0;
                 for (OrderedText line : textRenderer.wrapLines(HAS_UPDATE_TEXT, wrapWidth - 11)) {
                     DescriptionEntry entry = new DescriptionEntry(line);
@@ -140,9 +139,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
                     updateMessage = DOWNLOAD_TEXT;
                 } else {
                     if (downloadLink != null) {
-                        updateMessage = updateMessage.copy()
-                                .formatted(Formatting.BLUE)
-                                .formatted(Formatting.UNDERLINE);
+                        updateMessage = updateMessage.copy().formatted(Formatting.BLUE, Formatting.UNDERLINE);
                     }
                 }
                 for (OrderedText line : textRenderer.wrapLines(updateMessage, wrapWidth - 16)) {
@@ -189,11 +186,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
             links.forEach((key, value) -> {
                 int indent = 8;
-                for (OrderedText line : textRenderer.wrapLines(Text.translatable(key)
-                                .formatted(Formatting.BLUE)
-                                .formatted(Formatting.UNDERLINE),
-                        wrapWidth - 16
-                )) {
+                for (OrderedText line : textRenderer.wrapLines(Text.translatable(key).formatted(Formatting.BLUE, Formatting.UNDERLINE), wrapWidth - 16)) {
                     children().add(new LinkEntry(line, value, indent));
                     indent = 16;
                 }
@@ -203,7 +196,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
         Set<String> licenses = mod.getLicense();
         if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
             children().add(emptyEntry);
-
             for (OrderedText line : textRenderer.wrapLines(LICENSE_TEXT, wrapWidth)) {
                 children().add(new DescriptionEntry(line));
             }
@@ -220,38 +212,28 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
         if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
             if ("minecraft".equals(mod.getId())) {
                 children().add(emptyEntry);
-
                 for (OrderedText line : textRenderer.wrapLines(VIEW_CREDITS_TEXT, wrapWidth)) {
                     children().add(new MojangCreditsEntry(line));
                 }
             } else if (!"java".equals(mod.getId())) {
                 var credits = mod.getCredits();
-
                 if (!credits.isEmpty()) {
                     children().add(emptyEntry);
-
                     for (OrderedText line : textRenderer.wrapLines(CREDITS_TEXT, wrapWidth)) {
                         children().add(new DescriptionEntry(line));
                     }
 
                     var iterator = credits.entrySet().iterator();
-
                     while (iterator.hasNext()) {
                         int indent = 8;
-
                         var role = iterator.next();
-
-
-                        for (var line : textRenderer.wrapLines(this.creditsRoleText(role.getKey()),
-                                wrapWidth - 16
-                        )) {
+                        for (var line : textRenderer.wrapLines(this.creditsRoleText(role.getKey()), wrapWidth - 16)) {
                             children().add(new DescriptionEntry(line, indent));
                             indent = 16;
                         }
 
                         for (var contributor : role.getValue()) {
                             indent = 16;
-
                             for (var line : textRenderer.wrapLines(Text.literal(contributor), wrapWidth - 24)) {
                                 children().add(new DescriptionEntry(line, indent));
                                 indent = 24;
@@ -281,7 +263,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
         this.enableScissor(drawContext);
         super.renderList(drawContext, mouseX, mouseY, delta);
         drawContext.disableScissor();
-
         RenderPipeline pipeline = RenderPipelines.GUI;
         try (BufferAllocator alloc = new BufferAllocator(pipeline.getVertexFormat().getVertexSize() * 4)) {
             BufferBuilder bufferBuilder = new BufferBuilder(alloc, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());

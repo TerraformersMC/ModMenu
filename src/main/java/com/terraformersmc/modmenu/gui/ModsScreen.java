@@ -433,7 +433,7 @@ public class ModsScreen extends Screen {
                         mod.getPrefixedVersion(),
                         x + imageOffset,
                         RIGHT_PANE_Y + 2 + lineSpacing,
-                        0xFF808080,
+                        0xFFAAAAAA,
                         true
                 );
             }
@@ -454,7 +454,7 @@ public class ModsScreen extends Screen {
                         RIGHT_PANE_Y + 2 + lineSpacing * 2,
                         this.paneWidth - imageOffset - 4,
                         1,
-                        0xFF808080
+                        0xFFAAAAAA
                 );
             }
         }
@@ -526,13 +526,9 @@ public class ModsScreen extends Screen {
         String modId = selected.getMod().getId();
 
         this.descriptionListWidget.updateSelectedModIfRequired(selected.getMod());
-
         if (this.configureButton != null) {
-
             this.configureButton.active = getModHasConfigScreen(modId);
-            this.configureButton.visible =
-                    selected != null && getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
-
+            this.configureButton.visible = selected != null && getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
             if (modScreenErrors.containsKey(modId)) {
                 Throwable e = modScreenErrors.get(modId);
                 this.configureButton.setTooltip(Tooltip.of(ModMenuScreenTexts.configureError(modId, e)));
