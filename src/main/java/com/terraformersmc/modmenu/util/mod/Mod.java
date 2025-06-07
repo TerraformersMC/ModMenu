@@ -138,38 +138,38 @@ public interface Mod {
 	enum Badge {
 		LIBRARY(
 			"modmenu.badge.library",
-			0xff107454,
-			0xff093929,
+			0xFF107454,
+			0xFF093929,
 			"library"
 		),
 		CLIENT(
 			"modmenu.badge.clientsideOnly",
-			0xff2b4b7c,
-			0xff0e2a55,
+			0xFF2b4b7c,
+			0xFF0e2a55,
 			null
 		),
 		DEPRECATED(
 			"modmenu.badge.deprecated",
-			0xff841426,
-			0xff530C17,
+			0xFF841426,
+			0xFF530C17,
 			"deprecated"
 		),
 		PATCHWORK_FORGE(
 			"modmenu.badge.forge",
-			0xff1f2d42,
-			0xff101721,
+			0xFF1f2d42,
+			0xFF101721,
 			null
 		),
 		MODPACK(
 			"modmenu.badge.modpack",
-			0xff7a2b7c,
-			0xff510d54,
+			0xFF7a2b7c,
+			0xFF510d54,
 			null
 		),
 		MINECRAFT(
 			"modmenu.badge.minecraft",
-			0xff6f6c6a,
-			0xff31302f,
+			0xFF6f6c6a,
+			0xFF31302f,
 			null
 		);
 
