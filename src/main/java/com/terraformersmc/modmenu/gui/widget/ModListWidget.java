@@ -209,27 +209,26 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	@Override
 	protected void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        int entryLeft = this.getRowLeft();
-        int entryWidth = this.getRowWidth();
-        int entryHeight = this.itemHeight - 4;
-        int entryCount = this.getEntryCount();
+		int entryLeft = this.getRowLeft();
+		int entryWidth = this.getRowWidth();
+		int entryHeight = this.itemHeight - 4;
+		int entryCount = this.getEntryCount();
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowBottom(index);
 			if (entryBottom >= this.getY() && entryTop <= this.getBottom()) {
 				ModListEntry entry = this.getEntry(index);
 				if (this.isSelectedEntry(index)) {
-                    int entryContentLeft = entryLeft + entry.getXOffset() - 2;
-                    int entryContentWidth = entryWidth - entry.getXOffset() + 4;
-                    this.drawSelectionHighlight(
-                            drawContext,
-                            entryContentLeft,
-                            entryTop,
-                            entryContentWidth,
-                            entryHeight,
-                            this.isFocused() ? Colors.WHITE : Colors.GRAY,
-                            Colors.BLACK
-                    );
+					int entryContentLeft = entryLeft + entry.getXOffset() - 2;
+					int entryContentWidth = entryWidth - entry.getXOffset() + 4;
+					this.drawSelectionHighlight(
+						drawContext,
+						entryContentLeft,
+						entryTop,
+						entryContentWidth,
+						entryHeight,
+						this.isFocused() ? Colors.WHITE : Colors.GRAY, Colors.BLACK
+					);
 				}
 
 				entry.render(
@@ -248,15 +247,15 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		}
 	}
 
-    /**
-     * Version of {@link #drawSelectionHighlight(DrawContext, int, int, int, int, int)} with unconstrained positioning and sizing.
-     */
-    protected void drawSelectionHighlight(DrawContext context, int x, int y, int width, int height, int borderColor, int fillColor) {
-        context.fill(x, y - 2, x + width, y + height + 2, borderColor);
-        context.fill(x + 1, y - 1, x + width - 1, y + height + 1, fillColor);
-    }
+	/**
+	 * Version of {@link #drawSelectionHighlight(DrawContext, int, int, int, int, int)} with unconstrained positioning and sizing.
+	 */
+	protected void drawSelectionHighlight(DrawContext context, int x, int y, int width, int height, int borderColor, int fillColor) {
+		context.fill(x, y - 2, x + width, y + height + 2, borderColor);
+		context.fill(x + 1, y - 1, x + width - 1, y + height + 1, fillColor);
+	}
 
-    public void ensureVisible(ModListEntry entry) {
+	public void ensureVisible(ModListEntry entry) {
 		super.ensureVisible(entry);
 	}
 

@@ -53,7 +53,7 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		}
 
 		context.drawTexture(
-            RenderPipelines.GUI_TEXTURED,
+			RenderPipelines.GUI_TEXTURED,
 			this.texture,
 			this.getX(),
 			this.getY(),
