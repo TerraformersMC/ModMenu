@@ -3,8 +3,8 @@ package com.terraformersmc.modmenu.gui.widget;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
-import com.terraformersmc.modmenu.gui.element.BackgroundGradientGuiElement;
-import com.terraformersmc.modmenu.gui.element.ScrollBarGuiElement;
+// import com.terraformersmc.modmenu.gui.element.BackgroundGradientGuiElement;
+// import com.terraformersmc.modmenu.gui.element.ScrollBarGuiElement;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -18,14 +18,14 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.texture.TextureSetup;
+// import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
-import org.joml.Matrix3x2f;
+// import org.joml.Matrix3x2f;
 
 import java.util.*;
 
@@ -276,25 +276,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.enableScissor(drawContext);
 		super.renderList(drawContext, mouseX, mouseY, delta);
 		drawContext.disableScissor();
-		
-		final int outer = 0xFF000000;
-		final int inner = 0x00000000;
-		final float scale = 1.0F;
-		drawContext.state.addSimpleElement(
-				new BackgroundGradientGuiElement(
-						RenderPipelines.GUI, 
-						TextureSetup.empty(), 
-						new Matrix3x2f(drawContext.getMatrices()), 
-						this.getX(), this.getY(),
-						this.getHeight(),
-						this.getWidth(),
-						this.getRight(), this.getBottom(),
-						scale, inner, outer,
-						drawContext.scissorStack.peekLast()
-		));
-		this.renderScrollBar(drawContext, scale);
 	}
 
+    /*
 	public void renderScrollBar(DrawContext drawContext, float scale) {
 		int scrollbarStartX = this.getScrollbarX();
 		int scrollbarEndX = scrollbarStartX + 6;
@@ -327,6 +311,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			);
 		}
 	}
+    */
 
 	private Text creditsRoleText(String roleName) {
 		// Replace spaces and dashes in role names with underscores if they exist
