@@ -37,3 +37,7 @@ repositories {
 		url = 'https://maven.nucleoid.xyz/'
 	}
 }
+
+loom {
+	accessWidenerPath = file("src/main/resources/modmenu.accesswidener")
+}

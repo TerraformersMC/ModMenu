@@ -1,17 +1,13 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
+import com.terraformersmc.modmenu.gui.element.BackgroundGradientGuiElement;
+import com.terraformersmc.modmenu.gui.element.ScrollBarGuiElement;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
@@ -23,14 +19,14 @@ import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BuiltBuffer;
-import net.minecraft.client.util.BufferAllocator;
+import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
+import org.joml.Matrix3x2f;
 
 import java.util.*;
 
@@ -281,42 +277,26 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.enableScissor(drawContext);
 		super.renderList(drawContext, mouseX, mouseY, delta);
 		drawContext.disableScissor();
-
-		RenderPipeline pipeline = RenderPipelines.GUI;
-		try (BufferAllocator alloc = new BufferAllocator(pipeline.getVertexFormat().getVertexSize() * 4)) {
-			BufferBuilder bufferBuilder = new BufferBuilder(alloc, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-			final int black = 0xFF000000;
-			bufferBuilder.vertex(this.getX(), (this.getY() + 4), 0.0F).color(0);
-			bufferBuilder.vertex(this.getRight(), (this.getY() + 4), 0.0F).color(0);
-			bufferBuilder.vertex(this.getRight(), this.getY(), 0.0F).color(black);
-			bufferBuilder.vertex(this.getX(), this.getY(), 0.0F).color(black);
-			bufferBuilder.vertex(this.getX(), this.getBottom(), 0.0F).color(black);
-			bufferBuilder.vertex(this.getRight(), this.getBottom(), 0.0F).color(black);
-			bufferBuilder.vertex(this.getRight(), (this.getBottom() - 4), 0.0F).color(0);
-			bufferBuilder.vertex(this.getX(), (this.getBottom() - 4), 0.0F).color(0);
-			this.renderScrollBar(bufferBuilder);
-			try (BuiltBuffer builtBuffer = bufferBuilder.endNullable()) {
-				if (builtBuffer == null) {
-					alloc.close();
-					return;
-				}
-				Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
-				RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
-				VertexFormat.IndexType indexType = autoStorageIndexBuffer.getIndexType();
-				GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Description List", GpuBuffer.USAGE_COPY_DST, builtBuffer.getBuffer().remaining());
-				GpuBuffer indexBuffer = autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount());
-				RenderSystem.getDevice().createCommandEncoder().writeToBuffer(vertexBuffer.slice(), builtBuffer.getBuffer());
-				try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Description List", framebuffer.getColorAttachmentView(), OptionalInt.empty(), framebuffer.getDepthAttachmentView(), OptionalDouble.empty())) {
-					renderPass.setPipeline(pipeline);
-					renderPass.setVertexBuffer(0, vertexBuffer);
-					renderPass.setIndexBuffer(indexBuffer, indexType);
-					renderPass.drawIndexed(0, 0, builtBuffer.getDrawParameters().indexCount(), 1);
-				}
-			}
-		}
+		
+		final int outer = 0xFF000000;
+		final int inner = 0x00000000;
+		final float scale = 1.0F;
+		drawContext.state.addSimpleElement(
+				new BackgroundGradientGuiElement(
+						RenderPipelines.GUI, 
+						TextureSetup.empty(), 
+						new Matrix3x2f(drawContext.getMatrices()), 
+						this.getX(), this.getY(),
+						this.getHeight(),
+						this.getWidth(),
+						this.getRight(), this.getBottom(),
+						scale, inner, outer,
+						drawContext.scissorStack.peekLast()
+		));
+		this.renderScrollBar(drawContext, scale);
 	}
 
-	public void renderScrollBar(BufferBuilder bufferBuilder) {
+	public void renderScrollBar(DrawContext drawContext, float scale) {
 		int scrollbarStartX = this.getScrollbarX();
 		int scrollbarEndX = scrollbarStartX + 6;
 		int maxScroll = this.getMaxScrollY();
@@ -331,18 +311,21 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			final int black = 0xFF000000;
 			final int firstColor = ColorHelper.fromFloats(255, 128, 128, 128);
 			final int lastColor = ColorHelper.fromFloats(255, 192, 192, 192);
-			bufferBuilder.vertex(scrollbarStartX, this.getBottom(), 0.0F).color(black);
-			bufferBuilder.vertex(scrollbarEndX, this.getBottom(), 0.0F).color(black);
-			bufferBuilder.vertex(scrollbarEndX, this.getY(), 0.0F).color(black);
-			bufferBuilder.vertex(scrollbarStartX, this.getY(), 0.0F).color(black);
-			bufferBuilder.vertex(scrollbarStartX, q + p, 0.0F).color(firstColor);
-			bufferBuilder.vertex(scrollbarEndX, q + p, 0.0F).color(firstColor);
-			bufferBuilder.vertex(scrollbarEndX, q, 0.0F).color(firstColor);
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0F).color(firstColor);
-			bufferBuilder.vertex(scrollbarStartX, q + p - 1, 0.0F).color(lastColor);
-			bufferBuilder.vertex(scrollbarEndX - 1, q + p - 1, 0.0F).color(lastColor);
-			bufferBuilder.vertex(scrollbarEndX - 1, q, 0.0F).color(lastColor);
-			bufferBuilder.vertex(scrollbarStartX, q, 0.0F).color(lastColor);
+			
+			drawContext.state.addSimpleElement(
+					new ScrollBarGuiElement(
+							RenderPipelines.GUI,
+							TextureSetup.empty(),
+							new Matrix3x2f(drawContext.getMatrices()),
+							scrollbarStartX, this.getY(),
+							scrollbarEndX,
+							this.getHeight(), this.getWidth(),
+							this.getBottom(), q, p,
+							scale,
+							firstColor, lastColor, black,
+							drawContext.scissorStack.peekLast()
+					)
+		    );
 		}
 	}
 
