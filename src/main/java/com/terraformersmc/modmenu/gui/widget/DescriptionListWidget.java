@@ -3,8 +3,6 @@ package com.terraformersmc.modmenu.gui.widget;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
-// import com.terraformersmc.modmenu.gui.element.BackgroundGradientGuiElement;
-// import com.terraformersmc.modmenu.gui.element.ScrollBarGuiElement;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -18,14 +16,12 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
-// import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
-// import org.joml.Matrix3x2f;
 
 import java.util.*;
 
@@ -277,41 +273,6 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		super.renderList(drawContext, mouseX, mouseY, delta);
 		drawContext.disableScissor();
 	}
-
-    /*
-	public void renderScrollBar(DrawContext drawContext, float scale) {
-		int scrollbarStartX = this.getScrollbarX();
-		int scrollbarEndX = scrollbarStartX + 6;
-		int maxScroll = this.getMaxScrollY();
-		if (maxScroll > 0) {
-			int p = (int) ((float) ((this.getBottom() - this.getY()) * (this.getBottom() - this.getY())) / (float) this.getContentsHeightWithPadding());
-			p = MathHelper.clamp(p, 32, this.getBottom() - this.getY() - 8);
-			int q = (int) this.getScrollY() * (this.getBottom() - this.getY() - p) / maxScroll + this.getY();
-			if (q < this.getY()) {
-				q = this.getY();
-			}
-
-			final int black = 0xFF000000;
-			final int firstColor = ColorHelper.fromFloats(255, 128, 128, 128);
-			final int lastColor = ColorHelper.fromFloats(255, 192, 192, 192);
-			
-			drawContext.state.addSimpleElement(
-					new ScrollBarGuiElement(
-							RenderPipelines.GUI,
-							TextureSetup.empty(),
-							new Matrix3x2f(drawContext.getMatrices()),
-							scrollbarStartX, this.getY(),
-							scrollbarEndX,
-							this.getHeight(), this.getWidth(),
-							this.getBottom(), q, p,
-							scale,
-							firstColor, lastColor, black,
-							drawContext.scissorStack.peekLast()
-					)
-			);
-		}
-	}
-    */
 
 	private Text creditsRoleText(String roleName) {
 		// Replace spaces and dashes in role names with underscores if they exist
