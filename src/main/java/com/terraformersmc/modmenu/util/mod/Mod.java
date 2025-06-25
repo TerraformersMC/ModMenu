@@ -7,6 +7,7 @@ import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import eu.pb4.placeholders.api.ParserContext;
+import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
@@ -79,6 +80,8 @@ public interface Mod {
 	@NotNull String getPrefixedVersion();
 
 	@NotNull List<String> getAuthors();
+
+    ContactInformation getContact(String author);
 
 	/**
 	 * @return a mapping of contributors to their roles.

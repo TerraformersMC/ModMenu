@@ -4,6 +4,7 @@ import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Click;
@@ -242,7 +243,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 							indent = 16;
 
 							for (var line : textRenderer.wrapLines(Text.literal(contributor), wrapWidth - 24)) {
-								this.addEntry(new DescriptionEntry(line, indent));
+                                ContactInformation contact = mod.getContact(contributor);
+                                if (contact != null && contact.get("email").isPresent()) {
+                                    this.addEntry(new MailableContactEntry(line, contact.get("email").get(), indent));
+                                } else {
+									this.addEntry(new DescriptionEntry(line, indent));
+                                }
 								indent = 24;
 							}
 						}
@@ -392,4 +398,37 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			return super.mouseClicked(click, doubleClick);
 		}
 	}
+
+    protected class MailableContactEntry extends DescriptionEntry {
+        private final String email;
+
+        public MailableContactEntry(OrderedText text, String email, int indent) {
+            super(text, indent);
+            this.email = email;
+        }
+
+        public MailableContactEntry(OrderedText text, String link) {
+            this(text, link, 0);
+        }
+
+        @Override
+        public void render(DrawContext drawContext, int mouseX, int mouseY, boolean isSelected, float delta) {
+            super.render(drawContext, mouseX, mouseY, isSelected, delta);
+            drawContext.drawTextWithShadow(textRenderer, Text.literal(" ").append(Text.literal("✉")), this.getContentX() + indent + textRenderer.getWidth(text) + 1, this.getContentY(), 0xFFAAAAAA);
+        }
+
+        @Override
+        public boolean mouseClicked(Click click, boolean doubled) {
+            if (isMouseOver(click.x(), click.y())) {
+                client.setScreen(new ConfirmLinkScreen((open) -> {
+                    if (open) {
+                        Util.getOperatingSystem().open("mailto:" + email);
+                    }
+                    client.setScreen(parent);
+                }, "mailto:" + email, false));
+            }
+
+            return super.mouseClicked(click, doubled);
+        }
+    }
 }
