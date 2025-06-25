@@ -4,6 +4,7 @@ import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.mod.Mod;
+import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -243,7 +244,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 							indent = 16;
 
 							for (var line : textRenderer.wrapLines(Text.literal(contributor), wrapWidth - 24)) {
-								children().add(new DescriptionEntry(line, indent));
+                                ContactInformation contact = mod.getContact(contributor);
+                                if (contact != null && contact.get("email").isPresent()) {
+                                    children().add(new MailableContactEntry(line, contact.get("email").get(), indent));
+                                } else {
+									children().add(new DescriptionEntry(line, indent));
+                                }
 								indent = 24;
 							}
 						}
@@ -381,4 +387,38 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			return super.mouseClicked(mouseX, mouseY, button);
 		}
 	}
+
+    protected class MailableContactEntry extends DescriptionEntry {
+        private final String email;
+
+        public MailableContactEntry(OrderedText text, String email, int indent) {
+            super(text, indent);
+            this.email = email;
+        }
+
+        public MailableContactEntry(OrderedText text, String link) {
+            this(text, link, 0);
+        }
+
+        @Override
+        public void render(DrawContext drawContext, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+            super.render(drawContext, index, y, x, itemWidth, itemHeight, mouseX, mouseY, isSelected, delta);
+            drawContext.drawTextWithShadow(textRenderer, Text.literal(" ").append(Text.literal("✉")), x + indent + textRenderer.getWidth(text) + 1, y, 0xFFAAAAAA);
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (isMouseOver(mouseX, mouseY)) {
+                client.setScreen(new ConfirmLinkScreen((open) -> {
+                    if (open) {
+                        Util.getOperatingSystem().open("mailto:" + email);
+                    }
+                    client.setScreen(parent);
+                }, "mailto:" + email, false));
+            }
+
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+    }
+
 }

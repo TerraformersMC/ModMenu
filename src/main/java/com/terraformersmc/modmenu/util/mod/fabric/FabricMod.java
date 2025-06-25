@@ -237,6 +237,21 @@ public class FabricMod implements Mod {
 		return authors;
 	}
 
+    @Override
+    public ContactInformation getContact(String author) {
+        for (Person person : metadata.getAuthors()) {
+            if (person.getName().equals(author)) {
+                return person.getContact();
+            }
+        }
+        for (Person person : metadata.getContributors()) {
+            if (person.getName().equals(author)) {
+                return person.getContact();
+            }
+        }
+        return null;
+    }
+
 	@Override
 	public @NotNull Map<String, Collection<String>> getContributors() {
 		var contributors = new LinkedHashMap<String, Collection<String>>();
