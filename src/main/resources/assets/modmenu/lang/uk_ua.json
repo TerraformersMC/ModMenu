@@ -7,12 +7,12 @@
 
   "modmenu.loaded": "(Завантажено: %s)",
   "modmenu.loaded.short": "(%s)",
-  "modmenu.loaded.69.secret": "(Завантажено: %s... Славно)",
-  "modmenu.loaded.420.secret": "(Завантажено: %s... Спали їх)",
+  "modmenu.loaded.69.secret": "(Завантажено: %s… Славно)",
+  "modmenu.loaded.420.secret": "(Завантажено: %s… Спали їх)",
   "modmenu.mods.n": " (%s модів)",
   "modmenu.mods.1": " (%s мод)",
-  "modmenu.mods.69.secret": " (%s модів... Цікаво)",
-  "modmenu.mods.420.secret": " (%s модів... Спали їх)",
+  "modmenu.mods.69.secret": " (%s модів… Цікаво)",
+  "modmenu.mods.420.secret": " (%s модів… Спали їх)",
 
   "modmenu.search": "Пошук модів",
   "modmenu.searchTerms.library": "api бібліотек",
@@ -37,7 +37,7 @@
   "modmenu.badge.clientsideOnly": "Клієнт",
   "modmenu.badge.deprecated": "Застарілий",
   "modmenu.badge.forge": "Forge",
-  "modmenu.badge.modpack": "Збірка модів",
+  "modmenu.badge.modpack": "Пакет модів",
   "modmenu.badge.minecraft": "Minecraft",
 
   "modmenu.dropInfo.line1": "Перетягніть файли у це",
@@ -49,7 +49,7 @@
   "modmenu.modIdToolTip": "ID моду: %s",
   "modmenu.authorPrefix": "Зроблено %s",
   "modmenu.config": "Змінити налаштування",
-  "modmenu.configure": "Налаштування...",
+  "modmenu.configure": "Налаштування…",
   "modmenu.configure.error": "Не вдалося завантажити екран налаштувань %s\nПовідомити в %s, а не в Mod Menu",
   "modmenu.website": "Сайт моду",
   "modmenu.issues": "Повідомити про проблему",
@@ -76,7 +76,7 @@
   "modmenu.github_releases": "Релізи на GitHub",
   "modmenu.github_sponsors": "GitHub спонсори",
   "modmenu.kofi": "Ko-fi",
-  "modmenu.liberapay": "Донат на Liberapay",
+  "modmenu.liberapay": "Підтримати на Liberapay",
   "modmenu.mastodon": "Mastodon",
   "modmenu.modrinth": "Modrinth",
   "modmenu.opencollective": "Open Collective",
@@ -143,7 +143,7 @@
   "option.modmenu.mod_count_location": "Кількість модів",
   "option.modmenu.mod_count_location.title_screen": "У кутку назви",
   "option.modmenu.mod_count_location.mods_button": "Кнопка",
-  "option.modmenu.mod_count_location.title_screen_and_mods_button": "Всюди",
+  "option.modmenu.mod_count_location.title_screen_and_mods_button": "Усюди",
   "option.modmenu.mod_count_location.none": "Приховано",
   "option.modmenu.easter_eggs": "Прихованки",
   "option.modmenu.easter_eggs.true": "УВІМК.",
@@ -177,6 +177,6 @@
   "option.modmenu.quick_configure.false": "ВИМК.",
   "option.modmenu.update_channel": "Типи оновлень",
   "option.modmenu.update_channel.alpha": "Усі",
-  "option.modmenu.update_channel.beta": "Релізи і бети",
-  "option.modmenu.update_channel.release": "Релізи"
+  "option.modmenu.update_channel.beta": "Випуски і бети",
+  "option.modmenu.update_channel.release": "Випуски"
 }
