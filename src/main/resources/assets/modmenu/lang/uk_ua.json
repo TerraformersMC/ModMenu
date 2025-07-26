@@ -46,12 +46,12 @@
   "modmenu.dropSuccessful.line1": "Моди скопійовані успішно",
   "modmenu.dropSuccessful.line2": "Щоб моди запрацювали, перезавантажте гру",
 
-  "modmenu.modIdToolTip": "ID моду: %s",
+  "modmenu.modIdToolTip": "ID мода: %s",
   "modmenu.authorPrefix": "Зроблено %s",
   "modmenu.config": "Змінити налаштування",
   "modmenu.configure": "Налаштування…",
   "modmenu.configure.error": "Не вдалося завантажити екран налаштувань %s\nПовідомити в %s, а не в Mod Menu",
-  "modmenu.website": "Сайт моду",
+  "modmenu.website": "Сайт мода",
   "modmenu.issues": "Повідомити про проблему",
 
   "modmenu.credits": "Автори:",
@@ -61,7 +61,7 @@
   "modmenu.source": "Вихідний код",
   "modmenu.hasUpdate": "Оновлення доступне:",
   "modmenu.experimental": "(Перевірка оновлень є експериментальною!)",
-  "modmenu.childHasUpdate": "Дочірній мод цього моду має доступне оновлення",
+  "modmenu.childHasUpdate": "Дочірній мод цього мода має доступне оновлення",
   "modmenu.updateText": "v%s на %s",
   "modmenu.install_version": "Установити версію %s",
   "modmenu.downloadLink": "Завантажити",
