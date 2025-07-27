@@ -47,7 +47,7 @@
   "modmenu.dropSuccessful.line2": "Щоб моди запрацювали, перезавантажте гру",
 
   "modmenu.modIdToolTip": "ID мода: %s",
-  "modmenu.authorPrefix": "Зроблено %s",
+  "modmenu.authorPrefix": "Від %s",
   "modmenu.config": "Змінити налаштування",
   "modmenu.configure": "Налаштування…",
   "modmenu.configure.error": "Не вдалося завантажити екран налаштувань %s\nПовідомити в %s, а не в Mod Menu",
