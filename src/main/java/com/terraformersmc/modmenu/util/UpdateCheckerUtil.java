@@ -67,13 +67,11 @@ public class UpdateCheckerUtil {
 						Thread.currentThread().setName("ModMenu/Update Checker/%s".formatted(mod.getName()));
 
 						var update = updateChecker.checkForUpdates();
-
-						if (update == null) {
-							return;
-						}
-
 						mod.setUpdateInfo(update);
-						LOGGER.info("Update available for '{}@{}'", mod.getId(), mod.getVersion());
+
+						if (update != null && update.isUpdateAvailable()) {
+							LOGGER.info("Update available for '{}@{}'", mod.getId(), mod.getVersion());
+						}
 					});
 				}
 			}
