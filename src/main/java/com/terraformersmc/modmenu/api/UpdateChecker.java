@@ -1,5 +1,7 @@
 package com.terraformersmc.modmenu.api;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface UpdateChecker {
 	/**
 	 * Gets called when ModMenu is checking for updates.
@@ -9,5 +11,5 @@ public interface UpdateChecker {
 	 *
 	 * @return The update info
 	 */
-	UpdateInfo checkForUpdates();
+	@Nullable UpdateInfo checkForUpdates();
 }
