@@ -65,7 +65,8 @@
   "modmenu.updateText": "v%s on %s",
   "modmenu.install_version": "Install version %s",
   "modmenu.downloadLink": "Download",
-  
+
+  "modmenu.bluesky": "Bluesky",
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -84,8 +85,8 @@
   "modmenu.paypal": "PayPal",
   "modmenu.reddit": "Reddit",
   "modmenu.twitch": "Twitch",
-  "modmenu.twitter": "X (Twitter)",
   "modmenu.wiki": "Wiki",
+  "modmenu.twitter": "X (Twitter)",
   "modmenu.youtube": "YouTube",
   
   "modmenu.credits.role.author": "Authors",
