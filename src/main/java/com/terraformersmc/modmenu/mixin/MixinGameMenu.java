@@ -9,11 +9,13 @@ import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,6 +27,11 @@ import java.util.List;
 public abstract class MixinGameMenu extends Screen {
 	protected MixinGameMenu(Text title) {
 		super(title);
+	}
+
+	@Accessor
+	private static Tooltip getCUSTOM_OPTIONS_TOOLTIP() {
+		throw new AssertionError();
 	}
 
 	@Inject(method = "initWidgets", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget;forEachChild(Ljava/util/function/Consumer;)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
@@ -42,7 +49,7 @@ public abstract class MixinGameMenu extends Screen {
 					Widget widget = buttons.get(i);
 					if (style == ModMenuConfig.GameMenuButtonStyle.INSERT) {
 						if (!(widget instanceof ClickableWidget button) || button.visible) {
-							ModMenuEventHandler.shiftButtons(widget, modsButtonIndex == -1 || ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs", "menu.server_links"), spacing);
+							ModMenuEventHandler.shiftButtons(widget, modsButtonIndex == -1 || ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs", "menu.server_links") || ModMenuEventHandler.buttonHasTooltip(widget, getCUSTOM_OPTIONS_TOOLTIP()), spacing);
 							if (modsButtonIndex == -1) {
 								buttonsY = widget.getY();
 							}

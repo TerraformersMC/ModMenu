@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
+import com.terraformersmc.modmenu.mixin.AccessorClickableWidget;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.Widget;
@@ -143,6 +145,14 @@ public class ModMenuEventHandler {
 			Text text = button.getMessage();
 			TextContent textContent = text.getContent();
 			return textContent instanceof TranslatableTextContent && Arrays.stream(translationKeys).anyMatch(s -> ((TranslatableTextContent) textContent).getKey().equals(s));
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean buttonHasTooltip(Widget widget, Tooltip tooltip) {
+		if (widget instanceof ButtonWidget && widget instanceof AccessorClickableWidget accessor) {
+			return tooltip == accessor.getTooltip().getTooltip();
 		} else {
 			return false;
 		}
