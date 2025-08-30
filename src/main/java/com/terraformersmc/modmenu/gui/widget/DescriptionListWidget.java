@@ -324,6 +324,23 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 
 		@Override
+		public boolean isMouseOver(double mouseX, double mouseY) {
+			if (!super.isMouseOver(mouseX, mouseY)) {
+				return false;
+			}
+
+			int width = DescriptionListWidget.this.textRenderer.getWidth(text);
+
+			if (updateTextEntry) {
+				width += 11;
+			}
+
+			double relativeX = mouseX - DescriptionListWidget.this.getRowLeft() - indent;
+
+			return relativeX >= 0 && relativeX < width;
+		}
+
+		@Override
 		public List<? extends Element> children() {
 			return Collections.emptyList();
 		}
