@@ -7,7 +7,9 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -32,18 +34,15 @@ public class ParentEntry extends ModListEntry {
 	@Override
 	public void render(
 		DrawContext drawContext,
-		int index,
-		int y,
-		int x,
-		int rowWidth,
-		int rowHeight,
 		int mouseX,
 		int mouseY,
 		boolean isSelected,
 		float delta
 	) {
-		super.render(drawContext, index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
+		super.render(drawContext, mouseX, mouseY, isSelected, delta);
 		TextRenderer font = client.textRenderer;
+		int x = this.getX();
+		int y = this.getY();
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
 		int shownChildren = ModSearch.search(list.getParent(), list.getParent().getSearchInput(), getChildren()).size();
@@ -125,17 +124,17 @@ public class ParentEntry extends ModListEntry {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int i) {
+	public boolean mouseClicked(Click click, boolean doubleClick) {
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
 		boolean quickConfigure = ModMenuConfig.QUICK_CONFIGURE.getValue();
-		if (mouseX - list.getRowLeft() <= iconSize) {
+		if (click.x() - list.getRowLeft() <= iconSize) {
 			this.toggleChildren();
 			return true;
 		} else if (!quickConfigure && Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
 			this.toggleChildren();
 			return true;
 		} else {
-			return super.mouseClicked(mouseX, mouseY, i);
+			return super.mouseClicked(click, doubleClick);
 		}
 	}
 
@@ -151,9 +150,9 @@ public class ParentEntry extends ModListEntry {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+	public boolean keyPressed(KeyInput input) {
 		String modId = getMod().getId();
-		if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_SPACE) {
+		if (input.isEnterOrSpace()) {
 			if (list.getParent().showModChildren.contains(modId)) {
 				list.getParent().showModChildren.remove(modId);
 			} else {
@@ -162,24 +161,24 @@ public class ParentEntry extends ModListEntry {
 
 			list.filter(list.getParent().getSearchInput(), false);
 			return true;
-		} else if (keyCode == GLFW.GLFW_KEY_LEFT) {
+		} else if (input.isLeft()) {
 			if (list.getParent().showModChildren.contains(modId)) {
 				list.getParent().showModChildren.remove(modId);
 				list.filter(list.getParent().getSearchInput(), false);
 			}
 
 			return true;
-		} else if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+		} else if (input.isRight()) {
 			if (!list.getParent().showModChildren.contains(modId)) {
 				list.getParent().showModChildren.add(modId);
 				list.filter(list.getParent().getSearchInput(), false);
 				return true;
 			} else {
-				return list.keyPressed(GLFW.GLFW_KEY_DOWN, 0, 0);
+				return list.keyPressed(new KeyInput(GLFW.GLFW_KEY_DOWN, 0, 0));
 			}
 		}
 
-		return super.keyPressed(keyCode, scanCode, modifiers);
+		return super.keyPressed(input);
 	}
 
 	public void setChildren(List<Mod> children) {

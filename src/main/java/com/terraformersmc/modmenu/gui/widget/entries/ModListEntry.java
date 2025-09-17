@@ -10,6 +10,7 @@ import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -48,18 +49,15 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	@Override
 	public void render(
 		DrawContext drawContext,
-		int index,
-		int y,
-		int x,
-		int rowWidth,
-		int rowHeight,
 		int mouseX,
 		int mouseY,
 		boolean hovered,
 		float delta
 	) {
-		x += getXOffset();
-		rowWidth -= getXOffset();
+        int x = this.getX() + this.getXOffset();
+        int y = this.getY() + this.getYOffset() + 2;
+        int rowWidth = this.getWidth() - this.getXOffset();
+        int rowHeight = this.getHeight() - this.getYOffset();
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
 		String modId = mod.getId();
 		if ("java".equals(modId)) {
@@ -175,11 +173,11 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+	public boolean mouseClicked(Click click, boolean doubleClick) {
 		list.select(this);
 		if (ModMenuConfig.QUICK_CONFIGURE.getValue() && this.list.getParent().getModHasConfigScreen(this.mod.getId())) {
 			int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
-			if (mouseX - list.getRowLeft() <= iconSize) {
+			if (click.x() - list.getRowLeft() <= iconSize) {
 				this.openConfig();
 			} else if (Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
 				this.openConfig();
@@ -210,6 +208,10 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	}
 
 	public int getXOffset() {
+		return 0;
+	}
+
+	public int getYOffset() {
 		return 0;
 	}
 }

@@ -24,6 +24,8 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.screen.ScreenTexts;
@@ -274,13 +276,13 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		return super.keyPressed(keyCode, scanCode, modifiers) || this.searchBox.keyPressed(keyCode, scanCode, modifiers);
+	public boolean keyPressed(KeyInput input) {
+		return super.keyPressed(input) || this.searchBox.keyPressed(input);
 	}
 
 	@Override
-	public boolean charTyped(char chr, int keyCode) {
-		return this.searchBox.charTyped(chr, keyCode);
+	public boolean charTyped(CharInput input) {
+		return this.searchBox.charTyped(input);
 	}
 
 	@Override

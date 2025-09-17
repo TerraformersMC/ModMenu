@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -19,8 +20,6 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.*;
 
@@ -98,7 +97,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		Text description = mod.getFormattedDescription();
 		if (!description.getString().isEmpty()) {
 			for (OrderedText line : textRenderer.wrapLines(description, wrapWidth)) {
-				children().add(new DescriptionEntry(line));
+				this.addEntry(new DescriptionEntry(line));
 			}
 		}
 
@@ -106,7 +105,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			.contains(mod.getId())) {
 			UpdateInfo updateInfo = mod.getUpdateInfo();
 			if (updateInfo != null && updateInfo.isUpdateAvailable()) {
-				children().add(emptyEntry);
+				this.addEntry(emptyEntry);
 
 				int index = 0;
 				for (OrderedText line : textRenderer.wrapLines(HAS_UPDATE_TEXT, wrapWidth - 11)) {
@@ -115,12 +114,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						entry.setUpdateTextEntry();
 					}
 
-					children().add(entry);
+					this.addEntry(entry);
 					index += 1;
 				}
 
 				for (OrderedText line : textRenderer.wrapLines(EXPERIMENTAL_TEXT, wrapWidth - 16)) {
-					children().add(new DescriptionEntry(line, 8));
+					this.addEntry(new DescriptionEntry(line, 8));
 				}
 
 				Text updateMessage = updateInfo.getUpdateMessage();
@@ -137,15 +136,15 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 				for (OrderedText line : textRenderer.wrapLines(updateMessage, wrapWidth - 16)) {
 					if (downloadLink != null) {
-						children().add(new LinkEntry(line, downloadLink, 8));
+						this.addEntry(new LinkEntry(line, downloadLink, 8));
 					} else {
-						children().add(new DescriptionEntry(line, 8));
+						this.addEntry(new DescriptionEntry(line, 8));
 					}
 				}
 			}
 
 			if (mod.getChildHasUpdate()) {
-				children().add(emptyEntry);
+				this.addEntry(emptyEntry);
 
 				int index = 0;
 				for (OrderedText line : textRenderer.wrapLines(CHILD_HAS_UPDATE_TEXT, wrapWidth - 11)) {
@@ -154,7 +153,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						entry.setUpdateTextEntry();
 					}
 
-					children().add(entry);
+					this.addEntry(entry);
 					index += 1;
 				}
 			}
@@ -163,16 +162,16 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		Map<String, String> links = mod.getLinks();
 		String sourceLink = mod.getSource();
 		if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
-			children().add(emptyEntry);
+			this.addEntry(emptyEntry);
 
 			for (OrderedText line : textRenderer.wrapLines(LINKS_TEXT, wrapWidth)) {
-				children().add(new DescriptionEntry(line));
+				this.addEntry(new DescriptionEntry(line));
 			}
 
 			if (sourceLink != null) {
 				int indent = 8;
 				for (OrderedText line : textRenderer.wrapLines(SOURCE_TEXT, wrapWidth - 16)) {
-					children().add(new LinkEntry(line, sourceLink, indent));
+					this.addEntry(new LinkEntry(line, sourceLink, indent));
 					indent = 16;
 				}
 			}
@@ -184,7 +183,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						.formatted(Formatting.UNDERLINE),
 					wrapWidth - 16
 				)) {
-					children().add(new LinkEntry(line, value, indent));
+					this.addEntry(new LinkEntry(line, value, indent));
 					indent = 16;
 				}
 			});
@@ -192,16 +191,16 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		Set<String> licenses = mod.getLicense();
 		if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
-			children().add(emptyEntry);
+			this.addEntry(emptyEntry);
 
 			for (OrderedText line : textRenderer.wrapLines(LICENSE_TEXT, wrapWidth)) {
-				children().add(new DescriptionEntry(line));
+				this.addEntry(new DescriptionEntry(line));
 			}
 
 			for (String license : licenses) {
 				int indent = 8;
 				for (OrderedText line : textRenderer.wrapLines(Text.literal(license), wrapWidth - 16)) {
-					children().add(new DescriptionEntry(line, indent));
+					this.addEntry(new DescriptionEntry(line, indent));
 					indent = 16;
 				}
 			}
@@ -209,19 +208,19 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
 			if ("minecraft".equals(mod.getId())) {
-				children().add(emptyEntry);
+				this.addEntry(emptyEntry);
 
 				for (OrderedText line : textRenderer.wrapLines(VIEW_CREDITS_TEXT, wrapWidth)) {
-					children().add(new MojangCreditsEntry(line));
+					this.addEntry(new MojangCreditsEntry(line));
 				}
 			} else if (!"java".equals(mod.getId())) {
 				var credits = mod.getCredits();
 
 				if (!credits.isEmpty()) {
-					children().add(emptyEntry);
+					this.addEntry(emptyEntry);
 
 					for (OrderedText line : textRenderer.wrapLines(CREDITS_TEXT, wrapWidth)) {
-						children().add(new DescriptionEntry(line));
+						this.addEntry(new DescriptionEntry(line));
 					}
 
 					var iterator = credits.entrySet().iterator();
@@ -235,7 +234,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						for (var line : textRenderer.wrapLines(this.creditsRoleText(role.getKey()),
 							wrapWidth - 16
 						)) {
-							children().add(new DescriptionEntry(line, indent));
+							this.addEntry(new DescriptionEntry(line, indent));
 							indent = 16;
 						}
 
@@ -243,13 +242,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 							indent = 16;
 
 							for (var line : textRenderer.wrapLines(Text.literal(contributor), wrapWidth - 24)) {
-								children().add(new DescriptionEntry(line, indent));
+								this.addEntry(new DescriptionEntry(line, indent));
 								indent = 24;
 							}
 						}
 
 						if (iterator.hasNext()) {
-							children().add(emptyEntry);
+							this.addEntry(emptyEntry);
 						}
 					}
 				}
@@ -305,16 +304,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		@Override
 		public void render(
 			DrawContext drawContext,
-			int index,
-			int y,
-			int x,
-			int itemWidth,
-			int itemHeight,
 			int mouseX,
 			int mouseY,
 			boolean isSelected,
 			float delta
 		) {
+			int x = this.getX();
+			int y = this.getY();
 			if (updateTextEntry) {
 				UpdateAvailableBadge.renderBadge(drawContext, x + indent, y);
 				x += 11;
@@ -357,12 +353,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 
 		@Override
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			if (isMouseOver(mouseX, mouseY)) {
+		public boolean mouseClicked(Click click, boolean doubleClick) {
+			if (isMouseOver(click.x(), click.y())) {
 				client.setScreen(new MinecraftCredits());
 			}
 
-			return super.mouseClicked(mouseX, mouseY, button);
+			return super.mouseClicked(click, doubleClick);
 		}
 
 		class MinecraftCredits extends CreditsAndAttributionScreen {
@@ -385,8 +381,8 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 
 		@Override
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			if (isMouseOver(mouseX, mouseY)) {
+		public boolean mouseClicked(Click click, boolean doubleClick) {
+			if (isMouseOver(click.x(), click.y())) {
 				client.setScreen(new ConfirmLinkScreen((open) -> {
 					if (open) {
 						Util.getOperatingSystem().open(link);
@@ -395,7 +391,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				}, link, false));
 			}
 
-			return super.mouseClicked(mouseX, mouseY, button);
+			return super.mouseClicked(click, doubleClick);
 		}
 	}
 }

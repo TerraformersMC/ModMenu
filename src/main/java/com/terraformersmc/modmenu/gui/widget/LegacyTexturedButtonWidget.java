@@ -46,7 +46,7 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 	@Override
 	public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
 		int v = this.v;
-		if (!this.isNarratable()) {
+		if (!this.isInteractable()) {
 			v += this.hoveredVOffset * 2;
 		} else if (this.isSelected()) {
 			v += this.hoveredVOffset;
