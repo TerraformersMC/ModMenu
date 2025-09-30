@@ -41,8 +41,8 @@ public class ParentEntry extends ModListEntry {
 	) {
 		super.render(drawContext, mouseX, mouseY, isSelected, delta);
 		TextRenderer font = client.textRenderer;
-		int x = this.getX();
-		int y = this.getY();
+		int x = this.getContentX() - 2;
+		int y = this.getContentY();
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
 		int shownChildren = ModSearch.search(list.getParent(), list.getParent().getSearchInput(), getChildren()).size();

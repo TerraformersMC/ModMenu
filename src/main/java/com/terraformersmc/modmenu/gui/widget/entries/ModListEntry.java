@@ -56,9 +56,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		float delta
 	) {
         int x = this.getX() + this.getXOffset();
-        int y = this.getY() + this.getYOffset() + 2;
-        int rowWidth = this.getWidth() - this.getXOffset();
-        int rowHeight = this.getHeight() - this.getYOffset();
+        int y = this.getContentY();
+        int rowWidth = this.getContentWidth();
+//        int rowHeight = this.getContentHeight();
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
 		String modId = mod.getId();
 		if ("java".equals(modId)) {
@@ -91,7 +91,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		drawContext.drawTextWithShadow(font,
 			Language.getInstance().reorder(trimmedName),
 			x + iconSize + 3,
-			y + 1,
+			y + 3,
 			0xFFFFFFFF
 		);
 
@@ -105,7 +105,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		if (!ModMenuConfig.HIDE_BADGES.getValue()) {
 			new ModBadgeRenderer(
 				x + iconSize + 3 + font.getWidth(name) + 2 + updateBadgeXOffset,
-				y,
+				y + 2,
 				x + rowWidth,
 				mod,
 				list.getParent()
@@ -118,7 +118,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				drawContext,
 				summary,
 				(x + iconSize + 3 + 4),
-				(y + client.textRenderer.fontHeight + 2),
+				(y + client.textRenderer.fontHeight + 4),
 				rowWidth - iconSize - 7,
 				2,
 				0xFF808080
@@ -128,7 +128,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				drawContext,
 				mod.getPrefixedVersion(),
 				(x + iconSize + 3),
-				(y + client.textRenderer.fontHeight + 2),
+				(y + client.textRenderer.fontHeight + 4),
 				rowWidth - iconSize - 7,
 				2,
 				0xFF808080
@@ -212,10 +212,6 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	}
 
 	public int getXOffset() {
-		return 0;
-	}
-
-	public int getYOffset() {
 		return 0;
 	}
 }

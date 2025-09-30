@@ -4,7 +4,6 @@ import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.input.KeyInput;
-import org.lwjgl.glfw.GLFW;
 
 public class ChildEntry extends ModListEntry {
 	private final boolean bottomChild;
@@ -24,12 +23,11 @@ public class ChildEntry extends ModListEntry {
 		boolean isSelected,
 		float delta
 	) {
-		int x = this.parent.getX() + 4;
-		this.setX(x);
+		int x = this.getContentX() - 2;
 		super.render(drawContext, mouseX, mouseY, isSelected, delta);
-		int y = this.getY();
-		int rowWidth = this.getWidth();
-		int rowHeight = this.getHeight();
+		int y = this.getContentY();
+//		int rowWidth = this.getContentWidth();
+		int rowHeight = this.getContentHeight();
 		int color = 0xFFA0A0A0;
 		drawContext.fill(x, y - 2, x + 1, y + (bottomChild ? rowHeight / 2 : rowHeight + 2), color);
 		drawContext.fill(x, y + rowHeight / 2, x + 7, y + rowHeight / 2 + 1, color);
