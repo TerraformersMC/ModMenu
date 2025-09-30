@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.gui.widget;
 
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.cursor.StandardCursors;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.text.Text;
@@ -64,6 +65,9 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 			this.textureWidth,
 			this.textureHeight
 		);
+		if (this.isHovered()) {
+			context.setCursor(this.isInteractable() ? StandardCursors.POINTING_HAND : StandardCursors.NOT_ALLOWED);
+		}
 	}
 
 	public static Builder legacyTexturedBuilder(Text message, ButtonWidget.PressAction onPress) {

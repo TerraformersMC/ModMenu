@@ -12,6 +12,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.cursor.StandardCursors;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.StringVisitable;
@@ -148,10 +149,10 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 						iconSize,
 						iconSize
 					);
-					if (hoveringIcon) {
-						Throwable e = this.list.getParent().modScreenErrors.get(modId);
-						//this.list.getParent().setTooltip(this.client.textRenderer.wrapLines(ModMenuScreenTexts.configureError(modId, e), 175));
-					}
+//					if (hoveringIcon) {
+//						Throwable e = this.list.getParent().modScreenErrors.get(modId);
+//						this.list.getParent().setTooltip(this.client.textRenderer.wrapLines(ModMenuScreenTexts.configureError(modId, e), 175));
+//					}
 				} else {
 					int v = hoveringIcon ? iconSize : 0;
 					drawContext.drawTexture(
@@ -167,6 +168,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 						textureSize,
 						ColorHelper.getWhite(1.0F)
 					);
+				}
+				if (hoveringIcon) {
+					drawContext.setCursor(this.isClickable() ? StandardCursors.POINTING_HAND : StandardCursors.NOT_ALLOWED);
 				}
 			}
 		}

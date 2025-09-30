@@ -207,7 +207,9 @@ public class ModsScreen extends Screen {
 					ConfirmLinkScreen.open(this, url, true);
 				} else {
 					var url = mod.getWebsite();
-					ConfirmLinkScreen.open(this, url, false);
+					if (url != null) {
+						ConfirmLinkScreen.open(this, url, false);
+					}
 				}
 			})
 			.position(this.rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36)
@@ -222,7 +224,9 @@ public class ModsScreen extends Screen {
 					ConfirmLinkScreen.open(this, Urls.SNAPSHOT_BUGS, true);
 				} else {
 					var url = mod.getIssueTracker();
-					ConfirmLinkScreen.open(this, url, false);
+					if (url != null) {
+						ConfirmLinkScreen.open(this, url, false);
+					}
 				}
 			})
 			.position(this.rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36)
@@ -525,7 +529,7 @@ public class ModsScreen extends Screen {
 		this.selected = entry;
 		String modId = selected.getMod().getId();
 
-		this.descriptionListWidget.updateSelectedModIfRequired(selected.getMod());
+		this.descriptionListWidget.updateSelectedMod(selected.getMod());
 
 		if (this.configureButton != null) {
 

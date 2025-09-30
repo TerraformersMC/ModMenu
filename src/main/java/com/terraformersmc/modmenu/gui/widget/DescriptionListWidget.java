@@ -52,12 +52,12 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		this.textRenderer = client.textRenderer;
 
 		if (copyFrom != null) {
-			updateSelectedModIfRequired(copyFrom.selectedMod);
+			updateSelectedMod(copyFrom.selectedMod);
 			setScrollY(copyFrom.getScrollY());
 		}
 
 		if (parent.getSelectedEntry() != null) {
-			updateSelectedModIfRequired(parent.getSelectedEntry().getMod());
+			updateSelectedMod(parent.getSelectedEntry().getMod());
 		}
 	}
 
@@ -256,13 +256,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 	}
 
-	public void updateSelectedModIfRequired(Mod mod) {
-		if (mod != selectedMod) {
-			selectedMod = mod;
-			clearEntries();
-			setScrollY(-Double.MAX_VALUE);
-			rebuildUI();
-		}
+	public void updateSelectedMod(Mod mod) {
+		selectedMod = mod;
+		clearEntries();
+		setScrollY(-Double.MAX_VALUE);
+		rebuildUI();
 	}
 
 	@Override
