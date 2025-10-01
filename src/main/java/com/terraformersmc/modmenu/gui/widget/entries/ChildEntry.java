@@ -23,9 +23,9 @@ public class ChildEntry extends ModListEntry {
 		boolean isSelected,
 		float delta
 	) {
-		int x = this.getContentX() - 2;
 		super.render(drawContext, mouseX, mouseY, isSelected, delta);
-		int y = this.getContentY();
+		int x = this.getContentX() - 2;
+		int y = this.getContentY() + this.getYOffset();
 //		int rowWidth = this.getContentWidth();
 		int rowHeight = this.getContentHeight();
 		int color = 0xFFA0A0A0;

@@ -19,7 +19,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -234,6 +233,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		int entryCount = this.getEntryCount();
 		int x = this.getX();
 		int y = this.getY();
+		int yOffset = 2;
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowBottom(index);
@@ -246,13 +246,14 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 					this.drawSelectionHighlight(
 						drawContext,
 						entryContentLeft,
-						entryTop,
+						entryTop + yOffset,
 						entryContentWidth,
 						entryHeight,
 						this.isFocused() ? Colors.WHITE : Colors.GRAY, Colors.BLACK
 					);
 				}
 
+				entry.setYOffset(yOffset);
 				entry.render(
 					drawContext,
 					mouseX,

@@ -308,7 +308,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			float delta
 		) {
 			int x = this.getX();
-			int y = this.getY();
+			int y = this.getContentY();
 			if (updateTextEntry) {
 				UpdateAvailableBadge.renderBadge(drawContext, x + indent, y);
 				x += 11;

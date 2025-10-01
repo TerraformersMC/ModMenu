@@ -35,6 +35,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	protected static final int FULL_ICON_SIZE = 32;
 	protected static final int COMPACT_ICON_SIZE = 19;
 	protected long sinceLastClick;
+	protected int yOffset = 0;
 
 	public ModListEntry(Mod mod, ModListWidget list) {
 		this.mod = mod;
@@ -56,7 +57,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		float delta
 	) {
         int x = this.getX() + this.getXOffset();
-        int y = this.getContentY();
+        int y = this.getContentY() + this.getYOffset();
         int rowWidth = this.getContentWidth();
 //        int rowHeight = this.getContentHeight();
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
@@ -91,7 +92,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		drawContext.drawTextWithShadow(font,
 			Language.getInstance().reorder(trimmedName),
 			x + iconSize + 3,
-			y + 3,
+			y + 1,
 			0xFFFFFFFF
 		);
 
@@ -105,7 +106,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		if (!ModMenuConfig.HIDE_BADGES.getValue()) {
 			new ModBadgeRenderer(
 				x + iconSize + 3 + font.getWidth(name) + 2 + updateBadgeXOffset,
-				y + 2,
+				y,
 				x + rowWidth,
 				mod,
 				list.getParent()
@@ -118,7 +119,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				drawContext,
 				summary,
 				(x + iconSize + 3 + 4),
-				(y + client.textRenderer.fontHeight + 4),
+				(y + client.textRenderer.fontHeight + 2),
 				rowWidth - iconSize - 7,
 				2,
 				0xFF808080
@@ -128,7 +129,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				drawContext,
 				mod.getPrefixedVersion(),
 				(x + iconSize + 3),
-				(y + client.textRenderer.fontHeight + 4),
+				(y + client.textRenderer.fontHeight + 2),
 				rowWidth - iconSize - 7,
 				2,
 				0xFF808080
@@ -213,5 +214,13 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	public int getXOffset() {
 		return 0;
+	}
+
+	public void setYOffset(int offset) {
+		this.yOffset = offset;
+	}
+
+	public int getYOffset() {
+		return this.yOffset;
 	}
 }

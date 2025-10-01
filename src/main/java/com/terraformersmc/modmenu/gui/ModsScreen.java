@@ -405,7 +405,7 @@ public class ModsScreen extends Screen {
 				textRenderer,
 				Language.getInstance().reorder(trimmedName),
 				x + imageOffset,
-				RIGHT_PANE_Y + 3,
+				RIGHT_PANE_Y + 1,
 				0xFFFFFFFF,
 				true
 			);
@@ -419,7 +419,7 @@ public class ModsScreen extends Screen {
 			if (this.init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(
 					x + imageOffset + client.textRenderer.getWidth(trimmedName) + 2,
-					RIGHT_PANE_Y + 2,
+					RIGHT_PANE_Y,
 					width - 28,
 					selectedEntry.mod,
 					this
@@ -436,7 +436,7 @@ public class ModsScreen extends Screen {
 					textRenderer,
 					mod.getPrefixedVersion(),
 					x + imageOffset,
-					RIGHT_PANE_Y + 4 + lineSpacing,
+					RIGHT_PANE_Y + 2 + lineSpacing,
 					0xFFAAAAAA,
 					true
 				);
