@@ -47,6 +47,8 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public class ModsScreen extends Screen {
+    private static float frame = 0;
+
 	private static final Identifier FILTERS_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID, "textures/gui/filters_button.png");
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = Identifier.of(ModMenu.MOD_ID, "textures/gui/configure_button.png");
 
@@ -103,6 +105,8 @@ public class ModsScreen extends Screen {
 
 	@Override
 	protected void init() {
+        frame = 0;
+
 		int paneY = ModMenuConfig.CONFIG_MODE.getValue() ? 48 : 48 + 19;
 		this.paneWidth = this.width / 2 - 8;
 		this.rightPaneX = this.width - this.paneWidth;
@@ -297,10 +301,31 @@ public class ModsScreen extends Screen {
 			this.descriptionListWidget.render(drawContext, mouseX, mouseY, delta);
 		}
 
+        //MOD LIST SLIDE IN
+        float modListX = frame<10? (float) (350f * Math.pow(1f - (frame/10f), 2f)) : 0f;
+
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().translate(-modListX,0);
 		this.modList.render(drawContext, mouseX, mouseY, delta);
-		this.searchBox.render(drawContext, mouseX, mouseY, delta);
+        drawContext.getMatrices().popMatrix();
+
+        //SEARCH BAR FALL IN
+        float searchBoxY = (frame>5)?(frame<15?(float) (150f * Math.pow(1f - ((frame-5)/10f), 2f)):0) : 150;
+
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().translate(0,-searchBoxY);
+        this.searchBox.render(drawContext, mouseX, mouseY, delta);
 		drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 0xFFFFFFFF);
-		assert client != null;
+        drawContext.getMatrices().popMatrix();
+
+
+        //MOD DESC SLIDE IN
+        float modDescX = (frame>10)?(frame<20?(float) (500f * Math.pow(1f - ((frame-10)/10f), 2f)):0) : 500;
+
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().translate(modDescX,0);
+
+        assert client != null;
 		int grayColor = 0xFFAAAAAA;
 		if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
 			drawContext.drawCenteredTextWithShadow(
@@ -382,17 +407,20 @@ public class ModsScreen extends Screen {
 				}
 			}
 		}
+        drawContext.getMatrices().popMatrix();
 
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().translate(modDescX,0);
 		if (selectedEntry != null) {
 			Mod mod = selectedEntry.getMod();
-			int x = this.rightPaneX;
+			int x = (int) (this.rightPaneX+modDescX);
 			if ("java".equals(mod.getId())) {
 				DrawingUtil.drawRandomVersionBackground(mod, drawContext, x, RIGHT_PANE_Y, 32, 32);
 			}
 
 			drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32, 0xFFFFFFFF);
 			int lineSpacing = textRenderer.fontHeight + 1;
-			int imageOffset = 36;
+			int imageOffset = (int) (36+modDescX);
 			Text name = Text.literal(mod.getTranslatedName());
 			StringVisitable trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
@@ -404,7 +432,7 @@ public class ModsScreen extends Screen {
 			drawContext.drawText(
 				textRenderer,
 				Language.getInstance().reorder(trimmedName),
-				x + imageOffset,
+                    (int) (x + imageOffset+modDescX),
 				RIGHT_PANE_Y + 1,
 				0xFFFFFFFF,
 				true
@@ -419,8 +447,8 @@ public class ModsScreen extends Screen {
 			if (this.init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(
 					x + imageOffset + client.textRenderer.getWidth(trimmedName) + 2,
-					RIGHT_PANE_Y,
-					width - 28,
+                        (int) (RIGHT_PANE_Y+modDescX),
+                        (int) (width - 28+modDescX),
 					selectedEntry.mod,
 					this
 				);
@@ -455,13 +483,15 @@ public class ModsScreen extends Screen {
 					drawContext,
 					I18n.translate("modmenu.authorPrefix", authors),
 					x + imageOffset,
-					RIGHT_PANE_Y + 2 + lineSpacing * 2,
+                        (int) (RIGHT_PANE_Y + 2 + lineSpacing * 2-modDescX),
 					this.paneWidth - imageOffset - 4,
 					1,
 					0xFFAAAAAA
 				);
 			}
 		}
+
+        frame += 2*client.getRenderTickCounter().getDynamicDeltaTicks();
 	}
 
 	private Text computeModCountText(boolean includeLibs, boolean onInit) {
