@@ -21,14 +21,14 @@ public class UpdateCheckerTexturedButtonWidget extends LegacyTexturedButtonWidge
 		int textureWidth,
 		int textureHeight,
 		ButtonWidget.PressAction pressAction,
-		Text message
+        net.minecraft.text.Text message
 	) {
 		super(x, y, width, height, u, v, hoveredVOffset, texture, textureWidth, textureHeight, pressAction, message);
 	}
 
 	@Override
-	public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-		super.renderWidget(drawContext, mouseX, mouseY, delta);
+	public void drawIcon(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+		super.drawIcon(drawContext, mouseX, mouseY, delta);
 		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
 			UpdateAvailableBadge.renderBadge(drawContext, this.getX() + this.width - 5, this.getY() - 3);
 		}

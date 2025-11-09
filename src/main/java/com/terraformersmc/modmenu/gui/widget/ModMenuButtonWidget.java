@@ -9,8 +9,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
-public class ModMenuButtonWidget extends ButtonWidget {
-	public ModMenuButtonWidget(int x, int y, int width, int height, Text text, Screen screen) {
+public class ModMenuButtonWidget extends ButtonWidget.Text {
+	public ModMenuButtonWidget(int x, int y, int width, int height, net.minecraft.text.Text text, Screen screen) {
 		super(
 			x,
 			y,
@@ -23,8 +23,8 @@ public class ModMenuButtonWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-		super.renderWidget(drawContext, mouseX, mouseY, delta);
+    public void drawIcon(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+		super.drawIcon(drawContext, mouseX, mouseY, delta);
 		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
 			UpdateAvailableBadge.renderBadge(
 				drawContext,

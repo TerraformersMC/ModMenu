@@ -30,7 +30,7 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		int textureWidth,
 		int textureHeight,
 		ButtonWidget.PressAction pressAction,
-		Text message
+		net.minecraft.text.Text message
 	) {
 		super(x, y, width, height, null, pressAction, message);
 
@@ -45,7 +45,7 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 	}
 
 	@Override
-	public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void drawIcon(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
 		int v = this.v;
 		if (!this.isInteractable()) {
 			v += this.hoveredVOffset * 2;
@@ -65,17 +65,14 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 			this.textureWidth,
 			this.textureHeight
 		);
-		if (this.isHovered()) {
-			context.setCursor(this.isInteractable() ? StandardCursors.POINTING_HAND : StandardCursors.NOT_ALLOWED);
-		}
 	}
 
-	public static Builder legacyTexturedBuilder(Text message, ButtonWidget.PressAction onPress) {
+    public static Builder legacyTexturedBuilder(net.minecraft.text.Text message, ButtonWidget.PressAction onPress) {
 		return new Builder(message, onPress);
 	}
 
 	public static class Builder {
-		private final Text message;
+		private final net.minecraft.text.Text message;
 		private final ButtonWidget.PressAction onPress;
 
 		private int x;
@@ -93,7 +90,7 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		private int textureWidth;
 		private int textureHeight;
 
-		public Builder(Text message, PressAction onPress) {
+		public Builder(net.minecraft.text.Text message, PressAction onPress) {
 			this.message = message;
 			this.onPress = onPress;
 		}
