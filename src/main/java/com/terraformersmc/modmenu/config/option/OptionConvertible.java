@@ -1,7 +1,7 @@
 package com.terraformersmc.modmenu.config.option;
 
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.OptionInstance;
 
 public interface OptionConvertible {
-	SimpleOption<?> asOption();
+	OptionInstance<?> asOption();
 }

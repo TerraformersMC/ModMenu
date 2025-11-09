@@ -7,14 +7,13 @@ import com.terraformersmc.modmenu.config.option.EnumConfigOption;
 import com.terraformersmc.modmenu.config.option.OptionConvertible;
 import com.terraformersmc.modmenu.config.option.StringSetConfigOption;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import net.minecraft.client.option.SimpleOption;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Locale;
+import net.minecraft.client.OptionInstance;
 
 public class ModMenuConfig {
 	public static final EnumConfigOption<Sorting> SORTING = new EnumConfigOption<>("sorting", Sorting.ASCENDING);
@@ -56,8 +55,8 @@ public class ModMenuConfig {
 	@FileOnlyConfig
 	public static final StringSetConfigOption DISABLE_UPDATE_CHECKER = new StringSetConfigOption("disable_update_checker", new HashSet<>());
 
-	public static SimpleOption<?>[] asOptions() {
-		ArrayList<SimpleOption<?>> options = new ArrayList<>();
+	public static OptionInstance<?>[] asOptions() {
+		ArrayList<OptionInstance<?>> options = new ArrayList<>();
 		for (Field field : ModMenuConfig.class.getDeclaredFields()) {
 			if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) &&
 				OptionConvertible.class.isAssignableFrom(field.getType()) &&
@@ -70,7 +69,7 @@ public class ModMenuConfig {
 			}
 		}
 
-		return options.toArray(SimpleOption[]::new);
+		return options.toArray(OptionInstance[]::new);
 	}
 
 	public enum Sorting {

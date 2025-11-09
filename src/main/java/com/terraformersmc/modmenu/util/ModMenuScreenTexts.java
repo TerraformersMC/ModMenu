@@ -1,35 +1,35 @@
 package com.terraformersmc.modmenu.util;
 
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 
 public final class ModMenuScreenTexts {
-	public static final Text CONFIGURE = Text.translatable("modmenu.configure");
-	public static final Text DROP_CONFIRM = Text.translatable("modmenu.dropConfirm");
-	public static final Text DROP_INFO_LINE_1 = Text.translatable("modmenu.dropInfo.line1");
-	public static final Text DROP_INFO_LINE_2 = Text.translatable("modmenu.dropInfo.line2");
-	public static final Text DROP_SUCCESSFUL_LINE_1 = Text.translatable("modmenu.dropSuccessful.line1");
-	public static final Text DROP_SUCCESSFUL_LINE_2 = Text.translatable("modmenu.dropSuccessful.line2");
-	public static final Text ISSUES = Text.translatable("modmenu.issues");
-	public static final Text MODS_FOLDER = Text.translatable("modmenu.modsFolder");
-	public static final Text SEARCH = Text.translatable("modmenu.search");
-	public static final Text TITLE = Text.translatable("modmenu.title");
-	public static final Text TOGGLE_FILTER_OPTIONS = Text.translatable("modmenu.toggleFilterOptions");
-	public static final Text WEBSITE = Text.translatable("modmenu.website");
+	public static final Component CONFIGURE = Component.translatable("modmenu.configure");
+	public static final Component DROP_CONFIRM = Component.translatable("modmenu.dropConfirm");
+	public static final Component DROP_INFO_LINE_1 = Component.translatable("modmenu.dropInfo.line1");
+	public static final Component DROP_INFO_LINE_2 = Component.translatable("modmenu.dropInfo.line2");
+	public static final Component DROP_SUCCESSFUL_LINE_1 = Component.translatable("modmenu.dropSuccessful.line1");
+	public static final Component DROP_SUCCESSFUL_LINE_2 = Component.translatable("modmenu.dropSuccessful.line2");
+	public static final Component ISSUES = Component.translatable("modmenu.issues");
+	public static final Component MODS_FOLDER = Component.translatable("modmenu.modsFolder");
+	public static final Component SEARCH = Component.translatable("modmenu.search");
+	public static final Component TITLE = Component.translatable("modmenu.title");
+	public static final Component TOGGLE_FILTER_OPTIONS = Component.translatable("modmenu.toggleFilterOptions");
+	public static final Component WEBSITE = Component.translatable("modmenu.website");
 
 	private ModMenuScreenTexts() {
 	}
 
-	public static Text modIdTooltip(String modId) {
-		return Text.translatable("modmenu.modIdToolTip", modId);
+	public static Component modIdTooltip(String modId) {
+		return Component.translatable("modmenu.modIdToolTip", modId);
 	}
 
-	public static Text configureError(String modId, Throwable e) {
-		return Text.translatable("modmenu.configure.error", modId, modId)
-			.append(ScreenTexts.LINE_BREAK)
-			.append(ScreenTexts.LINE_BREAK)
+	public static Component configureError(String modId, Throwable e) {
+		return Component.translatable("modmenu.configure.error", modId, modId)
+			.append(CommonComponents.NEW_LINE)
+			.append(CommonComponents.NEW_LINE)
 			.append(e.toString())
-			.formatted(Formatting.RED);
+			.withStyle(ChatFormatting.RED);
 	}
 }

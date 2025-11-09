@@ -6,7 +6,6 @@ import com.terraformersmc.modmenu.api.UpdateChecker;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.util.HttpUtil;
 import com.terraformersmc.modmenu.util.JsonUtil;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.Version;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import net.minecraft.network.chat.Component;
 
 public class QuiltLoaderUpdateChecker implements UpdateChecker {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu/Quilt Update Checker");
@@ -121,8 +121,8 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
 		}
 
 		@Override
-		public @NotNull Text getUpdateMessage() {
-			return Text.translatable("modmenu.install_version", this.version.raw());
+		public @NotNull Component getUpdateMessage() {
+			return Component.translatable("modmenu.install_version", this.version.raw());
 		}
 
 		@Override

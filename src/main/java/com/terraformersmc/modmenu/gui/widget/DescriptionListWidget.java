@@ -4,42 +4,42 @@ import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSelectionList;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.CreditsAndAttributionScreen;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Util;
 
 import java.util.*;
 
-public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
-	private static final Text HAS_UPDATE_TEXT = Text.translatable("modmenu.hasUpdate");
-	private static final Text EXPERIMENTAL_TEXT = Text.translatable("modmenu.experimental").formatted(Formatting.GOLD);
-	private static final Text DOWNLOAD_TEXT = Text.translatable("modmenu.downloadLink").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE);
-	private static final Text CHILD_HAS_UPDATE_TEXT = Text.translatable("modmenu.childHasUpdate");
-	private static final Text LINKS_TEXT = Text.translatable("modmenu.links");
-	private static final Text SOURCE_TEXT = Text.translatable("modmenu.source").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE);
-	private static final Text LICENSE_TEXT = Text.translatable("modmenu.license");
-	private static final Text VIEW_CREDITS_TEXT = Text.translatable("modmenu.viewCredits").formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE);
-	private static final Text CREDITS_TEXT = Text.translatable("modmenu.credits");
+public class DescriptionListWidget extends AbstractSelectionList<DescriptionListWidget.DescriptionEntry> {
+	private static final Component HAS_UPDATE_TEXT = Component.translatable("modmenu.hasUpdate");
+	private static final Component EXPERIMENTAL_TEXT = Component.translatable("modmenu.experimental").withStyle(ChatFormatting.GOLD);
+	private static final Component DOWNLOAD_TEXT = Component.translatable("modmenu.downloadLink").withStyle(ChatFormatting.BLUE).withStyle(ChatFormatting.UNDERLINE);
+	private static final Component CHILD_HAS_UPDATE_TEXT = Component.translatable("modmenu.childHasUpdate");
+	private static final Component LINKS_TEXT = Component.translatable("modmenu.links");
+	private static final Component SOURCE_TEXT = Component.translatable("modmenu.source").withStyle(ChatFormatting.BLUE).withStyle(ChatFormatting.UNDERLINE);
+	private static final Component LICENSE_TEXT = Component.translatable("modmenu.license");
+	private static final Component VIEW_CREDITS_TEXT = Component.translatable("modmenu.viewCredits").withStyle(ChatFormatting.BLUE).withStyle(ChatFormatting.UNDERLINE);
+	private static final Component CREDITS_TEXT = Component.translatable("modmenu.credits");
 
 	private final ModsScreen parent;
-	private final TextRenderer textRenderer;
+	private final Font textRenderer;
 	private Mod selectedMod = null;
 
 	public DescriptionListWidget(
-		MinecraftClient client,
+		Minecraft client,
 		int width,
 		int height,
 		int y,
@@ -49,11 +49,11 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	) {
 		super(client, width, height, y, itemHeight);
 		this.parent = parent;
-		this.textRenderer = client.textRenderer;
+		this.textRenderer = client.font;
 
 		if (copyFrom != null) {
 			updateSelectedMod(copyFrom.selectedMod);
-			setScrollY(copyFrom.getScrollY());
+			setScrollAmount(copyFrom.scrollAmount());
 		}
 
 		if (parent.getSelectedEntry() != null) {
@@ -62,7 +62,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	public DescriptionEntry getSelectedOrNull() {
+	public DescriptionEntry getSelected() {
 		return null;
 	}
 
@@ -72,15 +72,15 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	}
 
 	@Override
-	protected int getScrollbarX() {
+	protected int scrollBarX() {
 		return this.width - 6 + this.getX();
 	}
 
 	@Override
-	public void appendClickableNarrations(NarrationMessageBuilder builder) {
+	public void updateWidgetNarration(NarrationElementOutput builder) {
 		if (selectedMod != null) {
-			builder.put(
-				NarrationPart.TITLE,
+			builder.add(
+				NarratedElementType.TITLE,
 				selectedMod.getTranslatedName() + " " + selectedMod.getPrefixedVersion());
 		}
 	}
@@ -90,13 +90,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			return;
 		}
 
-		DescriptionEntry emptyEntry = new DescriptionEntry(OrderedText.EMPTY);
+		DescriptionEntry emptyEntry = new DescriptionEntry(FormattedCharSequence.EMPTY);
 		int wrapWidth = getRowWidth() - 5;
 
 		Mod mod = selectedMod;
-		Text description = mod.getFormattedDescription();
+		Component description = mod.getFormattedDescription();
 		if (!description.getString().isEmpty()) {
-			for (OrderedText line : textRenderer.wrapLines(description, wrapWidth)) {
+			for (FormattedCharSequence line : textRenderer.split(description, wrapWidth)) {
 				this.addEntry(new DescriptionEntry(line));
 			}
 		}
@@ -108,7 +108,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				this.addEntry(emptyEntry);
 
 				int index = 0;
-				for (OrderedText line : textRenderer.wrapLines(HAS_UPDATE_TEXT, wrapWidth - 11)) {
+				for (FormattedCharSequence line : textRenderer.split(HAS_UPDATE_TEXT, wrapWidth - 11)) {
 					DescriptionEntry entry = new DescriptionEntry(line);
 					if (index == 0) {
 						entry.setUpdateTextEntry();
@@ -118,23 +118,23 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					index += 1;
 				}
 
-				for (OrderedText line : textRenderer.wrapLines(EXPERIMENTAL_TEXT, wrapWidth - 16)) {
+				for (FormattedCharSequence line : textRenderer.split(EXPERIMENTAL_TEXT, wrapWidth - 16)) {
 					this.addEntry(new DescriptionEntry(line, 8));
 				}
 
-				Text updateMessage = updateInfo.getUpdateMessage();
+				Component updateMessage = updateInfo.getUpdateMessage();
 				String downloadLink = updateInfo.getDownloadLink();
 				if (updateMessage == null) {
 					updateMessage = DOWNLOAD_TEXT;
 				} else {
 					if (downloadLink != null) {
 						updateMessage = updateMessage.copy()
-							.formatted(Formatting.BLUE)
-							.formatted(Formatting.UNDERLINE);
+							.withStyle(ChatFormatting.BLUE)
+							.withStyle(ChatFormatting.UNDERLINE);
 					}
 				}
 
-				for (OrderedText line : textRenderer.wrapLines(updateMessage, wrapWidth - 16)) {
+				for (FormattedCharSequence line : textRenderer.split(updateMessage, wrapWidth - 16)) {
 					if (downloadLink != null) {
 						this.addEntry(new LinkEntry(line, downloadLink, 8));
 					} else {
@@ -147,7 +147,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				this.addEntry(emptyEntry);
 
 				int index = 0;
-				for (OrderedText line : textRenderer.wrapLines(CHILD_HAS_UPDATE_TEXT, wrapWidth - 11)) {
+				for (FormattedCharSequence line : textRenderer.split(CHILD_HAS_UPDATE_TEXT, wrapWidth - 11)) {
 					DescriptionEntry entry = new DescriptionEntry(line);
 					if (index == 0) {
 						entry.setUpdateTextEntry();
@@ -164,13 +164,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
 			this.addEntry(emptyEntry);
 
-			for (OrderedText line : textRenderer.wrapLines(LINKS_TEXT, wrapWidth)) {
+			for (FormattedCharSequence line : textRenderer.split(LINKS_TEXT, wrapWidth)) {
 				this.addEntry(new DescriptionEntry(line));
 			}
 
 			if (sourceLink != null) {
 				int indent = 8;
-				for (OrderedText line : textRenderer.wrapLines(SOURCE_TEXT, wrapWidth - 16)) {
+				for (FormattedCharSequence line : textRenderer.split(SOURCE_TEXT, wrapWidth - 16)) {
 					this.addEntry(new LinkEntry(line, sourceLink, indent));
 					indent = 16;
 				}
@@ -178,9 +178,9 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 			links.forEach((key, value) -> {
 				int indent = 8;
-				for (OrderedText line : textRenderer.wrapLines(Text.translatable(key)
-						.formatted(Formatting.BLUE)
-						.formatted(Formatting.UNDERLINE),
+				for (FormattedCharSequence line : textRenderer.split(Component.translatable(key)
+						.withStyle(ChatFormatting.BLUE)
+						.withStyle(ChatFormatting.UNDERLINE),
 					wrapWidth - 16
 				)) {
 					this.addEntry(new LinkEntry(line, value, indent));
@@ -193,13 +193,13 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
 			this.addEntry(emptyEntry);
 
-			for (OrderedText line : textRenderer.wrapLines(LICENSE_TEXT, wrapWidth)) {
+			for (FormattedCharSequence line : textRenderer.split(LICENSE_TEXT, wrapWidth)) {
 				this.addEntry(new DescriptionEntry(line));
 			}
 
 			for (String license : licenses) {
 				int indent = 8;
-				for (OrderedText line : textRenderer.wrapLines(Text.literal(license), wrapWidth - 16)) {
+				for (FormattedCharSequence line : textRenderer.split(Component.literal(license), wrapWidth - 16)) {
 					this.addEntry(new DescriptionEntry(line, indent));
 					indent = 16;
 				}
@@ -210,7 +210,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 			if ("minecraft".equals(mod.getId())) {
 				this.addEntry(emptyEntry);
 
-				for (OrderedText line : textRenderer.wrapLines(VIEW_CREDITS_TEXT, wrapWidth)) {
+				for (FormattedCharSequence line : textRenderer.split(VIEW_CREDITS_TEXT, wrapWidth)) {
 					this.addEntry(new MojangCreditsEntry(line));
 				}
 			} else if (!"java".equals(mod.getId())) {
@@ -219,7 +219,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				if (!credits.isEmpty()) {
 					this.addEntry(emptyEntry);
 
-					for (OrderedText line : textRenderer.wrapLines(CREDITS_TEXT, wrapWidth)) {
+					for (FormattedCharSequence line : textRenderer.split(CREDITS_TEXT, wrapWidth)) {
 						this.addEntry(new DescriptionEntry(line));
 					}
 
@@ -231,7 +231,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						var role = iterator.next();
 
 
-						for (var line : textRenderer.wrapLines(this.creditsRoleText(role.getKey()),
+						for (var line : textRenderer.split(this.creditsRoleText(role.getKey()),
 							wrapWidth - 16
 						)) {
 							this.addEntry(new DescriptionEntry(line, indent));
@@ -241,7 +241,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 						for (var contributor : role.getValue()) {
 							indent = 16;
 
-							for (var line : textRenderer.wrapLines(Text.literal(contributor), wrapWidth - 24)) {
+							for (var line : textRenderer.split(Component.literal(contributor), wrapWidth - 24)) {
 								this.addEntry(new DescriptionEntry(line, indent));
 								indent = 24;
 							}
@@ -259,38 +259,38 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	public void updateSelectedMod(Mod mod) {
 		selectedMod = mod;
 		clearEntries();
-		setScrollY(-Double.MAX_VALUE);
+		setScrollAmount(-Double.MAX_VALUE);
 		rebuildUI();
 	}
 
 	@Override
-	public void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+	public void renderListItems(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
 		this.enableScissor(drawContext);
-		super.renderList(drawContext, mouseX, mouseY, delta);
+		super.renderListItems(drawContext, mouseX, mouseY, delta);
 		drawContext.disableScissor();
 	}
 
-	private Text creditsRoleText(String roleName) {
+	private Component creditsRoleText(String roleName) {
 		// Replace spaces and dashes in role names with underscores if they exist
 		// Notably Quilted Fabric API does this with FabricMC as "Upstream Owner"
 		var translationKey = roleName.replaceAll("[ -]", "_").toLowerCase();
 		// Add an s to the default untranslated string if it ends in r since this
 		// Fixes common role names people use in English (e.g. Author -> Authors)
 		var fallback = roleName.endsWith("r") ? roleName + "s" : roleName;
-		return Text.translatableWithFallback("modmenu.credits.role." + translationKey, fallback).append(Text.literal(":"));
+		return Component.translatableWithFallback("modmenu.credits.role." + translationKey, fallback).append(Component.literal(":"));
 	}
 
-	protected class DescriptionEntry extends ElementListWidget.Entry<DescriptionEntry> {
-		protected OrderedText text;
+	protected class DescriptionEntry extends ContainerObjectSelectionList.Entry<DescriptionEntry> {
+		protected FormattedCharSequence text;
 		protected int indent;
 		public boolean updateTextEntry = false;
 
-		public DescriptionEntry(OrderedText text, int indent) {
+		public DescriptionEntry(FormattedCharSequence text, int indent) {
 			this.text = text;
 			this.indent = indent;
 		}
 
-		public DescriptionEntry(OrderedText text) {
+		public DescriptionEntry(FormattedCharSequence text) {
 			this(text, 0);
 		}
 
@@ -300,8 +300,8 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 
 		@Override
-		public void render(
-			DrawContext drawContext,
+		public void renderContent(
+			GuiGraphics drawContext,
 			int mouseX,
 			int mouseY,
 			boolean isSelected,
@@ -314,7 +314,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				x += 11;
 			}
 
-			drawContext.drawTextWithShadow(textRenderer, text, x + indent, y, 0xFFAAAAAA);
+			drawContext.drawString(textRenderer, text, x + indent, y, 0xFFAAAAAA);
 		}
 
 		@Override
@@ -323,7 +323,7 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 				return false;
 			}
 
-			int width = DescriptionListWidget.this.textRenderer.getWidth(text);
+			int width = DescriptionListWidget.this.textRenderer.width(text);
 
 			if (updateTextEntry) {
 				width += 11;
@@ -335,25 +335,25 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 		}
 
 		@Override
-		public List<? extends Element> children() {
+		public List<? extends GuiEventListener> children() {
 			return Collections.emptyList();
 		}
 
 		@Override
-		public List<? extends Selectable> selectableChildren() {
+		public List<? extends NarratableEntry> narratables() {
 			return Collections.emptyList();
 		}
 	}
 
 	protected class MojangCreditsEntry extends DescriptionEntry {
-		public MojangCreditsEntry(OrderedText text) {
+		public MojangCreditsEntry(FormattedCharSequence text) {
 			super(text);
 		}
 
 		@Override
-		public boolean mouseClicked(Click click, boolean doubleClick) {
+		public boolean mouseClicked(MouseButtonEvent click, boolean doubleClick) {
 			if (isMouseOver(click.x(), click.y())) {
-				client.setScreen(new MinecraftCredits());
+				minecraft.setScreen(new MinecraftCredits());
 			}
 
 			return super.mouseClicked(click, doubleClick);
@@ -369,23 +369,23 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	protected class LinkEntry extends DescriptionEntry {
 		private final String link;
 
-		public LinkEntry(OrderedText text, String link, int indent) {
+		public LinkEntry(FormattedCharSequence text, String link, int indent) {
 			super(text, indent);
 			this.link = link;
 		}
 
-		public LinkEntry(OrderedText text, String link) {
+		public LinkEntry(FormattedCharSequence text, String link) {
 			this(text, link, 0);
 		}
 
 		@Override
-		public boolean mouseClicked(Click click, boolean doubleClick) {
+		public boolean mouseClicked(MouseButtonEvent click, boolean doubleClick) {
 			if (isMouseOver(click.x(), click.y())) {
-				client.setScreen(new ConfirmLinkScreen((open) -> {
+				minecraft.setScreen(new ConfirmLinkScreen((open) -> {
 					if (open) {
-						Util.getOperatingSystem().open(link);
+						Util.getPlatform().openUri(link);
 					}
-					client.setScreen(parent);
+					minecraft.setScreen(parent);
 				}, link, false));
 			}
 
