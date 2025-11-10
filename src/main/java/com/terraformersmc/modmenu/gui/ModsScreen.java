@@ -89,19 +89,6 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-		if (modList.isMouseOver(mouseX, mouseY)) {
-			return this.modList.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-		}
-
-		if (descriptionListWidget.isMouseOver(mouseX, mouseY)) {
-			return this.descriptionListWidget.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-		}
-
-		return false;
-	}
-
-	@Override
 	protected void init() {
 		int paneY = ModMenuConfig.CONFIG_MODE.getValue() ? 48 : 48 + 19;
 		this.paneWidth = this.width / 2 - 8;
