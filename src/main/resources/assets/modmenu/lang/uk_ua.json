@@ -52,7 +52,7 @@
   "modmenu.configure": "Налаштування…",
   "modmenu.configure.error": "Не вдалося завантажити екран налаштувань %s\nПовідомити в %s, а не в Mod Menu",
   "modmenu.website": "Сайт мода",
-  "modmenu.issues": "Повідомити про проблему",
+  "modmenu.issues": "Звітувати помилку",
 
   "modmenu.credits": "Згадки:",
   "modmenu.viewCredits": "Показати авторів",
