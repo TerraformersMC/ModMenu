@@ -185,12 +185,12 @@ public class FabricMod implements Mod {
 				defaultIconWarning = false;
 			}
 
-			return iconHandler.createIcon(
+			return Objects.requireNonNull(iconHandler.createIcon(
 				FabricLoader.getInstance()
 					.getModContainer(ModMenu.MOD_ID)
 					.orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + ModMenu.MOD_ID)),
 				"assets/" + ModMenu.MOD_ID + "/unknown_icon.png"
-			);
+			));
 		}
 		return icon;
 	}
