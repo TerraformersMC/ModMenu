@@ -27,8 +27,8 @@ public class ModMenuButtonWidget extends ButtonWidget.Text {
 		if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
 			UpdateAvailableBadge.renderBadge(
 				drawContext,
-				this.width + this.getX() - 16,      // 1.21.8
-//				this.width + this.getX() - 13,      // Matches Realms Position
+//				this.width + this.getX() - 16,      // 1.21.8
+				this.width + this.getX() - 13,      // Matches Realms Position
 				this.height / 2 + this.getY() - 4
 			);
 		}
