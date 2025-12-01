@@ -121,7 +121,7 @@ public interface Mod {
 		if (updateInfo == null) {
 			return false;
 		} else {
-			return updateInfo.isUpdateAvailable() && updateInfo.getUpdateChannel().compareTo(ModMenuConfig.UPDATE_CHANNEL.getValue()) >= 0;
+			return updateInfo.isUpdateAvailable() && updateInfo.getUpdateChannel().compareTo(ModMenuConfig.UPDATE_CHANNEL.getValue()) >= 0 && !isUpdateDownloaded();
 		}
 	}
 
@@ -132,6 +132,13 @@ public interface Mod {
 	void setChildHasUpdate();
 
 	boolean getChildHasUpdate();
+
+	void resetChildHasUpdate();
+
+	void setDownloadingUpdate(boolean downloading);
+	boolean isDownloadingUpdate(); 
+	void setUpdateDownloaded(boolean downloaded);
+	boolean isUpdateDownloaded();
 
 	boolean isHidden();
 

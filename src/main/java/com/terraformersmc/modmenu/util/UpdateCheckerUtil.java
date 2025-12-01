@@ -281,6 +281,10 @@ public class UpdateCheckerUtil {
 						return;
 					}
 
+					var primaryFileObject = primaryFile.get().getAsJsonObject();
+					var downloadUrl = primaryFileObject.get("url").getAsString();
+					var fileName = primaryFileObject.get("filename").getAsString();
+
 					Instant date;
 
 					try {
@@ -290,15 +294,14 @@ public class UpdateCheckerUtil {
 					}
 
 					var updateChannel = UpdateCheckerUtil.getUpdateChannel(versionType);
-					var versionHash = primaryFile.get()
-						.getAsJsonObject()
+					var versionHash = primaryFileObject
 						.get("hashes")
 						.getAsJsonObject()
 						.get("sha512")
 						.getAsString();
 
 					results.put(lookupHash,
-						new VersionUpdate(projectId, versionId, versionNumber, date, updateChannel, versionHash)
+						new VersionUpdate(projectId, versionId, versionNumber, date, updateChannel, downloadUrl, fileName, versionHash)
 					);
 				});
 
@@ -317,10 +320,12 @@ public class UpdateCheckerUtil {
 		String versionNumber,
 		Instant releaseDate,
 		UpdateChannel updateChannel,
+		String downloadUrl,
+		String fileName,
 		String hash
 	) {
 		private UpdateInfo asUpdateInfo() {
-			return new ModrinthUpdateInfo(this.projectId, this.versionId, this.versionNumber, this.updateChannel);
+			return new ModrinthUpdateInfo(this.projectId, this.versionId, this.versionNumber, this.updateChannel, this.downloadUrl, this.fileName, this.hash);
 		}
 	}
 

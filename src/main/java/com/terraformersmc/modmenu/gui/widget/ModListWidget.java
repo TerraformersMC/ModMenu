@@ -159,6 +159,8 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	private void filter(String searchTerm, boolean refresh, boolean search) {
+		double scrollY = this.getScrollY();
+		
 		this.clearEntries();
 		addedMods.clear();
 		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> {
@@ -219,6 +221,8 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				setSelected(getEntry(0));
 			}
 		}
+		
+		this.setScrollY(scrollY);
 
 		if (getScrollY() > Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4))) {
 			setScrollY(Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4)));
@@ -231,13 +235,11 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		int entryWidth = this.getRowWidth();
 		int entryHeight = this.itemHeight - 4;
 		int entryCount = this.getEntryCount();
-		int x = this.getX();
-		int y = this.getY();
 		int yOffset = 2;
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
 			int entryBottom = this.getRowBottom(index);
-			if (entryBottom >= y && entryTop <= this.getBottom()) {
+			if (entryBottom >= this.getY() && entryTop <= this.getBottom()) {
 				ModListEntry entry = this.getEntry(index);
 				if (entry == null) continue;
 				if (this.isSelectedEntry(index)) {

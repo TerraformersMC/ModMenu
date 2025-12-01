@@ -90,6 +90,7 @@ public class ModMenu implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		com.terraformersmc.modmenu.util.CleanupManager.performCleanup();
 		ModMenuConfigManager.initializeConfig();
 		Set<String> modpackMods = new HashSet<>();
 		Map<String, UpdateChecker> updateCheckers = new HashMap<>();

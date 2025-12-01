@@ -46,6 +46,8 @@ public class FabricMod implements Mod {
 	protected boolean allowsUpdateChecks = true;
 
 	protected boolean childHasUpdate = false;
+	private boolean isDownloadingUpdate = false;
+	private boolean isUpdateDownloaded = false;
 
 	public FabricMod(ModContainer modContainer, Set<String> modpackMods) {
 		this.container = modContainer;
@@ -383,6 +385,31 @@ public class FabricMod implements Mod {
 	@Override
 	public void setChildHasUpdate() {
 		this.childHasUpdate = true;
+	}
+
+	@Override
+    public void resetChildHasUpdate() {
+        this.childHasUpdate = false;
+    }
+
+	@Override
+	public void setDownloadingUpdate(boolean downloading) {
+		this.isDownloadingUpdate = downloading;
+	}
+
+	@Override
+	public boolean isDownloadingUpdate() {
+		return this.isDownloadingUpdate;
+	}
+
+	@Override
+	public void setUpdateDownloaded(boolean downloaded) {
+		this.isUpdateDownloaded = downloaded;
+	}
+
+	@Override
+	public boolean isUpdateDownloaded() {
+		return this.isUpdateDownloaded;
 	}
 
 	@Override

@@ -17,6 +17,8 @@ public class FabricDummyParentMod implements Mod {
 	private final String id;
 	private final FabricMod host;
 	private boolean childHasUpdate;
+	private boolean isDownloadingUpdate = false;
+	private boolean isUpdateDownloaded = false;
 
 	public FabricDummyParentMod(FabricMod host, String id) {
 		this.host = host;
@@ -195,6 +197,31 @@ public class FabricDummyParentMod implements Mod {
 	@Override
 	public void setChildHasUpdate() {
 		this.childHasUpdate = true;
+	}
+
+	@Override
+	public void resetChildHasUpdate() {
+		this.childHasUpdate = false;
+	}
+
+	@Override
+	public void setDownloadingUpdate(boolean downloading) {
+		this.isDownloadingUpdate = downloading;
+	}
+
+	@Override
+	public boolean isDownloadingUpdate() {
+		return this.isDownloadingUpdate;
+	}
+
+	@Override
+	public void setUpdateDownloaded(boolean downloaded) {
+		this.isUpdateDownloaded = downloaded;
+	}
+
+	@Override
+	public boolean isUpdateDownloaded() {
+		return this.isUpdateDownloaded;
 	}
 
 	@Override
