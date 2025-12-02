@@ -111,6 +111,8 @@
   "modmenu.update.button.updateAll": "Update All",
   "modmenu.update.state.updating": "Updating...",
   "modmenu.update.state.updated": "Updated",
+  "modmenu.update.state.widget.updated": "This mod has been updated.",
+  "modmenu.update.state.widget.restartRequired": "Restart required to apply changes.",
 
   "modmenu.update.tooltip.single": "Download the latest version. A restart is required to apply changes.",
   "modmenu.update.tooltip.all": "Download all available updates. A restart is required to apply changes.",

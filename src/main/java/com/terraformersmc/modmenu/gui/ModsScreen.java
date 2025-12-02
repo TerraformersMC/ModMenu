@@ -78,9 +78,9 @@ public class ModsScreen extends Screen {
 	private ClickableWidget websiteButton;
 	private ClickableWidget issuesButton;
 	private DescriptionListWidget descriptionListWidget;
-	private ClickableWidget updateAllButton;
-	private ClickableWidget updateButton;
-	private ModUpdaterService modUpdater;
+	private @Nullable ClickableWidget updateAllButton;
+	private @Nullable ClickableWidget updateButton;
+	private final ModUpdaterService modUpdater;
 
 	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
 	public final Map<String, Throwable> modScreenErrors = new HashMap<>();
@@ -95,20 +95,13 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-		if (modList.isMouseOver(mouseX, mouseY)) {
-			return this.modList.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-		}
-
-		if (descriptionListWidget.isMouseOver(mouseX, mouseY)) {
-			return this.descriptionListWidget.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-		}
-
-		return false;
-	}
-
-	@Override
 	protected void init() {
+		// Reset widgets to prevent ghosting when returning to screen
+		this.updateAllButton = null;
+		this.updateButton = null;
+		this.filtersButton = null;
+		this.configureButton = null;
+
 		int paneY = ModMenuConfig.CONFIG_MODE.getValue() ? 48 : 48 + 19;
 		this.paneWidth = this.width / 2 - 8;
 		this.rightPaneX = this.width - this.paneWidth;
@@ -124,21 +117,21 @@ public class ModsScreen extends Screen {
 		);
 		this.modList.setX(0);
 
-		// Layout Calculation for Search Row
-		// Target Order: [Search Box] [Filter Button] [Update All Button]
-		// The search row sits centered in the left pane with some margins.
-		
-		int totalSearchRowWidth = this.paneWidth - 32; // Preserving original margin logic
+		// --- Search Row Layout Calculation ---
+		boolean updateChecksEnabled = ModMenuConfig.UPDATE_CHECKER.getValue();
 		Text updateAllText = Text.translatable("modmenu.update.button.updateAll");
-		int updateAllWidth = this.textRenderer.getWidth(updateAllText) + 20;
-		int filterButtonWidth = ModMenuConfig.CONFIG_MODE.getValue() ? 0 : 20;
-		int gap = 2;
+		int updateAllButtonWidth = updateChecksEnabled ? this.textRenderer.getWidth(updateAllText) + 20 : 0;
+		int updateAllGap = updateChecksEnabled ? 2 : 0;
+
+		int filtersButtonSize = (ModMenuConfig.CONFIG_MODE.getValue() ? 0 : 22);
 		
-		// Calculate gaps: 1 gap if no filter button, 2 gaps if filter button exists
-		int totalGaps = (filterButtonWidth > 0 ? 2 * gap : gap);
-		
-		int searchBoxWidth = totalSearchRowWidth - updateAllWidth - filterButtonWidth - totalGaps;
-		this.searchBoxX = (this.paneWidth / 2) - (totalSearchRowWidth / 2);
+		// Calculate available width for the search box by subtracting Filter and UpdateAll buttons
+		int searchWidthMax = this.paneWidth - 32 - filtersButtonSize - updateAllButtonWidth - updateAllGap;
+		int searchBoxWidth = ModMenuConfig.CONFIG_MODE.getValue() ? Math.min(200, searchWidthMax) : searchWidthMax;
+
+		// Center the whole group: [Search] [Filter] [UpdateAll]
+		int totalRowWidth = searchBoxWidth + filtersButtonSize + updateAllGap + updateAllButtonWidth;
+		this.searchBoxX = this.paneWidth / 2 - totalRowWidth / 2;
 
 		this.searchBox = new TextFieldWidget(this.textRenderer,
 			this.searchBoxX,
@@ -148,38 +141,50 @@ public class ModsScreen extends Screen {
 			this.searchBox,
 			ModMenuScreenTexts.SEARCH
 		);
-		this.searchBox.setChangedListener(text -> this.modList.filter(text, false));
+		this.searchBox.setChangedListener(text -> {
+			this.modList.filter(text, false);
+		});
 
 		// Filters button
+		Text sortingText = ModMenuConfig.SORTING.getButtonText();
+		Text librariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
+
+		int sortingWidth = textRenderer.getWidth(sortingText) + 28;
+		int librariesWidth = textRenderer.getWidth(librariesText) + 20;
+
+		this.filtersWidth = librariesWidth + sortingWidth + 2;
+		this.searchRowWidth = this.searchBoxX + totalRowWidth + 22;
+
+		this.updateFiltersX(true);
+
+		int currentX = this.searchBoxX + searchBoxWidth + 2;
+
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.filtersButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS,
-					button -> this.setFilterOptionsShown(!this.filterOptionsShown)
+					button -> {
+						this.setFilterOptionsShown(!this.filterOptionsShown);
+					}
 				)
-				.position(this.searchBoxX + searchBoxWidth + gap, 22)
+				.position(currentX, 22)
 				.size(20, 20)
 				.uv(0, 0, 20)
 				.texture(FILTERS_BUTTON_LOCATION, 32, 64)
 				.build();
+
 			this.filtersButton.setTooltip(Tooltip.of(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS));
+			currentX += 20 + updateAllGap;
 		}
 
-		// "Update All" button
-		int updateAllX = this.searchBoxX + searchBoxWidth + gap + (filterButtonWidth > 0 ? filterButtonWidth + gap : 0);
-		this.updateAllButton = ButtonWidget.builder(updateAllText, button -> this.modUpdater.performUpdateAll())
-			.position(updateAllX, 22)
-			.size(updateAllWidth, 20)
-			.build();
-		this.updateAllButton.setTooltip(Tooltip.of(Text.translatable("modmenu.update.tooltip.all")));
+		// Update All Button
+		if (updateChecksEnabled) {
+			this.updateAllButton = ButtonWidget.builder(updateAllText, button -> this.modUpdater.performUpdateAll())
+				.position(currentX, 22)
+				.size(updateAllButtonWidth, 20)
+				.build();
+			this.updateAllButton.setTooltip(Tooltip.of(Text.translatable("modmenu.update.tooltip.all")));
+		}
 
-		// Sorting and Libraries buttons
-		Text sortingText = ModMenuConfig.SORTING.getButtonText();
-		Text librariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
-		int sortingWidth = textRenderer.getWidth(sortingText) + 28;
-		int librariesWidth = textRenderer.getWidth(librariesText) + 20;
-		this.filtersWidth = librariesWidth + sortingWidth + 2;
-		this.searchRowWidth = this.searchBoxX + totalSearchRowWidth + 22;
-		this.updateFiltersX(true);
-
+		// Sorting button
 		this.sortingButton = ButtonWidget.builder(sortingText, button -> {
 			ModMenuConfig.SORTING.cycleValue();
 			ModMenuConfigManager.save();
@@ -187,6 +192,7 @@ public class ModsScreen extends Screen {
 			button.setMessage(ModMenuConfig.SORTING.getButtonText());
 		}).position(this.filtersX, 45).size(sortingWidth, 20).build();
 
+		// Show libraries button
 		this.librariesButton = ButtonWidget.builder(librariesText, button -> {
 			ModMenuConfig.SHOW_LIBRARIES.toggleValue();
 			ModMenuConfigManager.save();
@@ -194,16 +200,13 @@ public class ModsScreen extends Screen {
 			button.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
 		}).position(this.filtersX + sortingWidth + 2, 45).size(librariesWidth, 20).build();
 
-		int updateButtonWidth = this.textRenderer.getWidth(Text.translatable("modmenu.update.state.updating")) + 10;
-		this.updateButton = ButtonWidget.builder(Text.translatable("modmenu.update.button.update"), button -> {
-			if (selected != null) {
-				this.modUpdater.performUpdate(selected.getMod());
-			}
-		}).size(updateButtonWidth, 20).build();
-		this.updateButton.setTooltip(Tooltip.of(Text.translatable("modmenu.update.tooltip.single")));
-		this.updateButton.visible = false;
+		// --- Alignment Calculation ---
+		int urlButtonWidths = this.paneWidth / 2 - 2;
+		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
+		int issuesButtonX = this.rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2);
+		int issuesRightAlign = issuesButtonX + cappedButtonWidth;
 
-		// Configure Button
+		// Configure button
 		if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
 			this.configureButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ScreenTexts.EMPTY, button -> {
 					final String id = Objects.requireNonNull(selected).getMod().getId();
@@ -213,19 +216,29 @@ public class ModsScreen extends Screen {
 						button.active = false;
 					}
 				})
-				.position(width - 24, RIGHT_PANE_Y)
+				.position(issuesRightAlign - 20, RIGHT_PANE_Y)
 				.size(20, 20)
 				.uv(0, 0, 20)
 				.texture(CONFIGURE_BUTTON_LOCATION, 32, 64)
 				.build();
 		}
-		
-		// Position the update button to the left of the configure button
-		this.updateButton.setPosition(width - 24 - updateButtonWidth - 2, RIGHT_PANE_Y);
+
+		// Update Button (Single) - Initialization
+		if (updateChecksEnabled) {
+			int updateButtonWidth = this.textRenderer.getWidth(Text.translatable("modmenu.update.state.updating")) + 10;
+			this.updateButton = ButtonWidget.builder(Text.translatable("modmenu.update.button.update"), button -> {
+				if (selected != null) {
+					this.modUpdater.performUpdate(selected.getMod());
+				}
+			})
+			.position(issuesRightAlign - 20 - updateButtonWidth - 2, RIGHT_PANE_Y)
+			.size(updateButtonWidth, 20)
+			.build();
+			this.updateButton.visible = false;
+			this.updateButton.setTooltip(Tooltip.of(Text.translatable("modmenu.update.tooltip.single")));
+		}
 
 		// Website button
-		int urlButtonWidths = this.paneWidth / 2 - 2;
-		int cappedButtonWidth = Math.min(urlButtonWidths, 200);
 		this.websiteButton = ButtonWidget.builder(ModMenuScreenTexts.WEBSITE, button -> {
 				final Mod mod = Objects.requireNonNull(selected).getMod();
 				boolean isMinecraft = selected.getMod().getId().equals("minecraft");
@@ -256,7 +269,7 @@ public class ModsScreen extends Screen {
 					}
 				}
 			})
-			.position(this.rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), RIGHT_PANE_Y + 36)
+			.position(issuesButtonX, RIGHT_PANE_Y + 36)
 			.size(Math.min(urlButtonWidths, 200), 20)
 			.build();
 
@@ -284,16 +297,21 @@ public class ModsScreen extends Screen {
 
 		// Add children
 		this.addSelectableChild(this.searchBox);
-		
+		this.setInitialFocus(this.searchBox);
 		if (this.filtersButton != null) {
 			this.addDrawableChild(this.filtersButton);
 		}
-		this.addDrawableChild(this.updateAllButton);
+		if (this.updateAllButton != null) {
+			this.addDrawableChild(this.updateAllButton);
+		}
 
 		this.addDrawableChild(this.sortingButton);
 		this.addDrawableChild(this.librariesButton);
 		this.addSelectableChild(this.modList);
-		this.addDrawableChild(this.updateButton);
+		
+		if (this.updateButton != null) {
+			this.addDrawableChild(this.updateButton);
+		}
 		if (this.configureButton != null) {
 			this.addDrawableChild(this.configureButton);
 		}
@@ -304,7 +322,6 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(modsFolderButton);
 		this.addDrawableChild(doneButton);
 
-		this.setInitialFocus(this.searchBox);
 		this.init = true;
 		this.keepFilterOptionsShown = true;
 	}
@@ -326,12 +343,18 @@ public class ModsScreen extends Screen {
 		if (selectedEntry != null) {
 			this.descriptionListWidget.render(drawContext, mouseX, mouseY, delta);
 		}
-		
-		boolean anyUpdatesAvailable = ModMenu.MODS.values().stream().anyMatch(Mod::hasUpdate);
-        this.updateAllButton.active = anyUpdatesAvailable;
 
-		if (selected != null) {
-			Mod mod = selected.getMod();
+		// Update All Button Logic
+		if (this.updateAllButton != null) {
+			boolean anyUpdatesAvailable = ModMenu.MODS.values().stream().anyMatch(mod -> 
+				mod.hasUpdate() && !mod.isUpdateDownloaded() && !mod.isDownloadingUpdate()
+			);
+			this.updateAllButton.active = anyUpdatesAvailable;
+		}
+
+		// Single Update Button Logic (Instant Refresh)
+		if (selectedEntry != null && this.updateButton != null) {
+			Mod mod = selectedEntry.getMod();
 			boolean hasUpdateInfo = mod.getUpdateInfo() instanceof DownloadableUpdateInfo;
 			this.updateButton.visible = hasUpdateInfo || mod.isUpdateDownloaded();
 
@@ -339,14 +362,17 @@ public class ModsScreen extends Screen {
 				this.updateButton.active = false;
 				this.updateButton.setMessage(Text.translatable("modmenu.update.state.updating"));
 			} else if (mod.isUpdateDownloaded()) {
-				this.updateButton.active = false;
-				this.updateButton.setMessage(Text.translatable("modmenu.update.state.updated"));
+				// Detect transition from Updating -> Updated to refresh the widget
+				if (this.updateButton.active || !this.updateButton.getMessage().equals(Text.translatable("modmenu.update.state.updated"))) {
+					this.updateButton.active = false;
+					this.updateButton.setMessage(Text.translatable("modmenu.update.state.updated"));
+					// Force description widget to refresh to show "Restart Required" badges
+					this.descriptionListWidget.updateSelectedMod(mod);
+				}
 			} else {
 				this.updateButton.active = hasUpdateInfo && mod.hasUpdate();
 				this.updateButton.setMessage(Text.translatable("modmenu.update.button.update"));
 			}
-		} else {
-			this.updateButton.visible = false;
 		}
 
 		this.modList.render(drawContext, mouseX, mouseY, delta);
@@ -584,15 +610,53 @@ public class ModsScreen extends Screen {
 		this.descriptionListWidget.updateSelectedMod(selected.getMod());
 
 		if (this.configureButton != null) {
+
 			this.configureButton.active = getModHasConfigScreen(modId);
 			this.configureButton.visible =
-				getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
+				selected != null && getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
 
 			if (modScreenErrors.containsKey(modId)) {
 				Throwable e = modScreenErrors.get(modId);
 				this.configureButton.setTooltip(Tooltip.of(ModMenuScreenTexts.configureError(modId, e)));
 			} else {
 				this.configureButton.setTooltip(Tooltip.of(ModMenuScreenTexts.CONFIGURE));
+			}
+		}
+
+		// Update Button Logic & Positioning
+		if (this.updateButton != null) {
+			Mod mod = selected.getMod();
+			boolean hasUpdateInfo = mod.getUpdateInfo() instanceof DownloadableUpdateInfo;
+			this.updateButton.visible = hasUpdateInfo || mod.isUpdateDownloaded();
+
+			// Recalculate alignment variables to match Issues button
+			int urlButtonWidths = this.paneWidth / 2 - 2;
+			int cappedButtonWidth = Math.min(urlButtonWidths, 200);
+			int issuesButtonX = this.rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2);
+			int issuesRightAlign = issuesButtonX + cappedButtonWidth;
+
+			int updateButtonWidth = this.updateButton.getWidth();
+			boolean configVisible = this.configureButton != null && this.configureButton.visible;
+			
+			this.updateButton.setY(RIGHT_PANE_Y);
+			if (configVisible) {
+				// Anchor to left of Configure button
+				this.updateButton.setX(issuesRightAlign - 20 - updateButtonWidth - 2);
+			} else {
+				// Anchor to Issues Right Align
+				this.updateButton.setX(issuesRightAlign - updateButtonWidth);
+			}
+
+			// Update text/active state immediately upon selection
+			if (mod.isDownloadingUpdate()) {
+				this.updateButton.active = false;
+				this.updateButton.setMessage(Text.translatable("modmenu.update.state.updating"));
+			} else if (mod.isUpdateDownloaded()) {
+				this.updateButton.active = false;
+				this.updateButton.setMessage(Text.translatable("modmenu.update.state.updated"));
+			} else {
+				this.updateButton.active = hasUpdateInfo && mod.hasUpdate();
+				this.updateButton.setMessage(Text.translatable("modmenu.update.button.update"));
 			}
 		}
 

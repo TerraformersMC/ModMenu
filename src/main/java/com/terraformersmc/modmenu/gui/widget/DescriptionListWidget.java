@@ -103,42 +103,57 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 
 		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue()
 			.contains(mod.getId())) {
-			UpdateInfo updateInfo = mod.getUpdateInfo();
-			if (updateInfo != null && updateInfo.isUpdateAvailable()) {
+			
+			if (mod.isUpdateDownloaded()) {
 				this.addEntry(emptyEntry);
-
-				int index = 0;
-				for (OrderedText line : textRenderer.wrapLines(HAS_UPDATE_TEXT, wrapWidth - 11)) {
+				// Header: "Updated"
+				for (OrderedText line : textRenderer.wrapLines(Text.translatable("modmenu.update.state.widget.updated").formatted(Formatting.GREEN), wrapWidth - 11)) {
 					DescriptionEntry entry = new DescriptionEntry(line);
-					if (index == 0) {
-						entry.setUpdateTextEntry();
-					}
-
+					entry.setUpdateTextEntry(); // Show badge
 					this.addEntry(entry);
-					index += 1;
 				}
-
-				for (OrderedText line : textRenderer.wrapLines(EXPERIMENTAL_TEXT, wrapWidth - 16)) {
+				// Body: "Restart required"
+				for (OrderedText line : textRenderer.wrapLines(Text.translatable("modmenu.update.state.widget.restartRequired").formatted(Formatting.GRAY), wrapWidth - 16)) {
 					this.addEntry(new DescriptionEntry(line, 8));
 				}
+			} else {
+				UpdateInfo updateInfo = mod.getUpdateInfo();
+				if (updateInfo != null && updateInfo.isUpdateAvailable()) {
+					this.addEntry(emptyEntry);
 
-				Text updateMessage = updateInfo.getUpdateMessage();
-				String downloadLink = updateInfo.getDownloadLink();
-				if (updateMessage == null) {
-					updateMessage = DOWNLOAD_TEXT;
-				} else {
-					if (downloadLink != null) {
-						updateMessage = updateMessage.copy()
-							.formatted(Formatting.BLUE)
-							.formatted(Formatting.UNDERLINE);
+					int index = 0;
+					for (OrderedText line : textRenderer.wrapLines(HAS_UPDATE_TEXT, wrapWidth - 11)) {
+						DescriptionEntry entry = new DescriptionEntry(line);
+						if (index == 0) {
+							entry.setUpdateTextEntry();
+						}
+
+						this.addEntry(entry);
+						index += 1;
 					}
-				}
 
-				for (OrderedText line : textRenderer.wrapLines(updateMessage, wrapWidth - 16)) {
-					if (downloadLink != null) {
-						this.addEntry(new LinkEntry(line, downloadLink, 8));
-					} else {
+					for (OrderedText line : textRenderer.wrapLines(EXPERIMENTAL_TEXT, wrapWidth - 16)) {
 						this.addEntry(new DescriptionEntry(line, 8));
+					}
+
+					Text updateMessage = updateInfo.getUpdateMessage();
+					String downloadLink = updateInfo.getDownloadLink();
+					if (updateMessage == null) {
+						updateMessage = DOWNLOAD_TEXT;
+					} else {
+						if (downloadLink != null) {
+							updateMessage = updateMessage.copy()
+								.formatted(Formatting.BLUE)
+								.formatted(Formatting.UNDERLINE);
+						}
+					}
+
+					for (OrderedText line : textRenderer.wrapLines(updateMessage, wrapWidth - 16)) {
+						if (downloadLink != null) {
+							this.addEntry(new LinkEntry(line, downloadLink, 8));
+						} else {
+							this.addEntry(new DescriptionEntry(line, 8));
+						}
 					}
 				}
 			}
