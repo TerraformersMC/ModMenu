@@ -124,12 +124,21 @@ public class ModsScreen extends Screen {
 		);
 		this.modList.setX(0);
 
-		// Search box
-		int searchBarWidth = this.paneWidth - 32 - 22;
+		// Layout Calculation for Search Row
+		// Target Order: [Search Box] [Filter Button] [Update All Button]
+		// The search row sits centered in the left pane with some margins.
+		
+		int totalSearchRowWidth = this.paneWidth - 32; // Preserving original margin logic
 		Text updateAllText = Text.translatable("modmenu.update.button.updateAll");
 		int updateAllWidth = this.textRenderer.getWidth(updateAllText) + 20;
-		int searchBoxWidth = searchBarWidth - updateAllWidth;
-		this.searchBoxX = (this.paneWidth / 2) - (searchBarWidth / 2);
+		int filterButtonWidth = ModMenuConfig.CONFIG_MODE.getValue() ? 0 : 20;
+		int gap = 2;
+		
+		// Calculate gaps: 1 gap if no filter button, 2 gaps if filter button exists
+		int totalGaps = (filterButtonWidth > 0 ? 2 * gap : gap);
+		
+		int searchBoxWidth = totalSearchRowWidth - updateAllWidth - filterButtonWidth - totalGaps;
+		this.searchBoxX = (this.paneWidth / 2) - (totalSearchRowWidth / 2);
 
 		this.searchBox = new TextFieldWidget(this.textRenderer,
 			this.searchBoxX,
@@ -141,19 +150,12 @@ public class ModsScreen extends Screen {
 		);
 		this.searchBox.setChangedListener(text -> this.modList.filter(text, false));
 
-		// "Update All" button
-		this.updateAllButton = ButtonWidget.builder(updateAllText, button -> this.modUpdater.performUpdateAll())
-			.position(this.searchBox.getX() + this.searchBox.getWidth() + 2, 22)
-			.size(updateAllWidth, 20)
-			.build();
-		this.updateAllButton.setTooltip(Tooltip.of(Text.translatable("modmenu.update.tooltip.all")));
-
 		// Filters button
 		if (!ModMenuConfig.CONFIG_MODE.getValue()) {
 			this.filtersButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS,
 					button -> this.setFilterOptionsShown(!this.filterOptionsShown)
 				)
-				.position(this.updateAllButton.getX() + this.updateAllButton.getWidth(), 22)
+				.position(this.searchBoxX + searchBoxWidth + gap, 22)
 				.size(20, 20)
 				.uv(0, 0, 20)
 				.texture(FILTERS_BUTTON_LOCATION, 32, 64)
@@ -161,13 +163,21 @@ public class ModsScreen extends Screen {
 			this.filtersButton.setTooltip(Tooltip.of(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS));
 		}
 
+		// "Update All" button
+		int updateAllX = this.searchBoxX + searchBoxWidth + gap + (filterButtonWidth > 0 ? filterButtonWidth + gap : 0);
+		this.updateAllButton = ButtonWidget.builder(updateAllText, button -> this.modUpdater.performUpdateAll())
+			.position(updateAllX, 22)
+			.size(updateAllWidth, 20)
+			.build();
+		this.updateAllButton.setTooltip(Tooltip.of(Text.translatable("modmenu.update.tooltip.all")));
+
 		// Sorting and Libraries buttons
 		Text sortingText = ModMenuConfig.SORTING.getButtonText();
 		Text librariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
 		int sortingWidth = textRenderer.getWidth(sortingText) + 28;
 		int librariesWidth = textRenderer.getWidth(librariesText) + 20;
 		this.filtersWidth = librariesWidth + sortingWidth + 2;
-		this.searchRowWidth = this.searchBoxX + searchBarWidth + 22;
+		this.searchRowWidth = this.searchBoxX + totalSearchRowWidth + 22;
 		this.updateFiltersX(true);
 
 		this.sortingButton = ButtonWidget.builder(sortingText, button -> {
@@ -274,10 +284,11 @@ public class ModsScreen extends Screen {
 
 		// Add children
 		this.addSelectableChild(this.searchBox);
-		this.addDrawableChild(this.updateAllButton);
+		
 		if (this.filtersButton != null) {
 			this.addDrawableChild(this.filtersButton);
 		}
+		this.addDrawableChild(this.updateAllButton);
 
 		this.addDrawableChild(this.sortingButton);
 		this.addDrawableChild(this.librariesButton);

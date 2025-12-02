@@ -24,13 +24,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ModUpdaterService {
     public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | Updater");
     private final ModsScreen screen;
     private final Path modsDir = FabricLoader.getInstance().getGameDir().resolve("mods");
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(4);
 
     public ModUpdaterService(ModsScreen screen) {
         this.screen = screen;
@@ -60,15 +62,17 @@ public class ModUpdaterService {
             return;
         }
 
+        // Safety check: ensure we can identify the file to replace before starting
+        Optional<Path> oldFile = findModJar(mod);
+        if (oldFile.isEmpty()) {
+            LOGGER.warn("Could not find JAR for mod '{}'. Skipping update to prevent issues (Dev Env?).", mod.getId());
+            return;
+        }
+
         mod.setDownloadingUpdate(true);
 
         CompletableFuture.runAsync(() -> {
             try {
-                Optional<Path> oldFile = findModJar(mod);
-                if (oldFile.isEmpty()) {
-                    LOGGER.error("Could not find JAR for mod '{}' to schedule cleanup.", mod.getId());
-                }
-
                 Path tempFile = downloadFile(info);
 
                 if (info.getFileHash() != null) {
@@ -107,7 +111,7 @@ public class ModUpdaterService {
             } finally {
                 mod.setDownloadingUpdate(false);
             }
-        });
+        }, EXECUTOR);
     }
 
     private Path downloadFile(DownloadableUpdateInfo info) throws IOException, InterruptedException {
