@@ -152,7 +152,7 @@ public class ModsScreen extends Screen {
 
 		// Sorting button
 		this.sortingButton = ButtonWidget.builder(sortingText, button -> {
-			ModMenuConfig.SORTING.cycleValue();
+			ModMenuConfig.SORTING.cycleValue(this.client.isShiftPressed() ? -1 : 1);
 			ModMenuConfigManager.save();
 			modList.reloadFilters();
 			button.setMessage(ModMenuConfig.SORTING.getButtonText());
