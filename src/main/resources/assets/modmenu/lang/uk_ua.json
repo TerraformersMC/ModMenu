@@ -3,7 +3,7 @@
   "key.modmenu.open_menu": "Відкрити меню модів",
   "modmenu.title": "Моди",
   "modmenu.nameTranslation.modmenu": "Mod Menu",
-  "modmenu.descriptionTranslation.modmenu": "Додає меню для перегляду встановлених модів",
+  "modmenu.descriptionTranslation.modmenu": "Додає меню для перегляду встановлених модів.",
 
   "modmenu.loaded": "(Завантажено: %s)",
   "modmenu.loaded.short": "(%s)",
@@ -50,7 +50,7 @@
   "modmenu.authorPrefix": "Від %s",
   "modmenu.config": "Змінити налаштування",
   "modmenu.configure": "Налаштування…",
-  "modmenu.configure.error": "Не вдалося завантажити екран налаштувань %s\nПовідомити в %s, а не в Mod Menu",
+  "modmenu.configure.error": "Не вдалося завантажити екран налаштувань %s\nЗвітуйте в %s, а не в Mod Menu",
   "modmenu.website": "Сайт мода",
   "modmenu.issues": "Звітувати помилку",
 
