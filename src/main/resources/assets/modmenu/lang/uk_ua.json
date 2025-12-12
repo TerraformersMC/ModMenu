@@ -104,8 +104,8 @@
   "modmenu.descriptionTranslation.minecraft": "Усталена гра.",
   "modmenu.nameTranslation.java": "Java",
   "modmenu.descriptionTranslation.java": "Середовище виконання Java.",
-  "modmenu.nameTranslation.": "Завантажувач Fabric",
-  "modmenu.descriptionTranslation.": "Усталений завантажувач модів.",
+  "modmenu.nameTranslation.fabricloader": "Завантажувач Fabric",
+  "modmenu.descriptionTranslation.fabricloader": "Усталений завантажувач модів.",
   "modmenu.javaDistributionName": "Запуск: %s",
 
   "modmenu.options": "Налаштування Mod Menu",
