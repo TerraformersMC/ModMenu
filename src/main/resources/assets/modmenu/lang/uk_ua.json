@@ -66,6 +66,7 @@
   "modmenu.install_version": "Установити версію %s",
   "modmenu.downloadLink": "Завантажити",
 
+  "modmenu.bluesky": "Bluesky",
   "modmenu.buymeacoffee": "Buy me a coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -84,9 +85,9 @@
   "modmenu.paypal": "PayPal",
   "modmenu.reddit": "Reddit",
   "modmenu.twitch": "Twitch",
-  "modmenu.twitter": "𝕏 (Twitter)",
   "modmenu.wiki": "Wiki",
   "modmenu.youtube": "YouTube",
+  "modmenu.twitter": "𝕏 (Twitter)",
 
   "modmenu.credits.role.author": "Автори",
   "modmenu.credits.role.contributor": "Дописувачі",
