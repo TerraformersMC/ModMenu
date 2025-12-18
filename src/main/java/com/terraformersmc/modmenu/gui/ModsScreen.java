@@ -14,6 +14,8 @@ import com.terraformersmc.modmenu.util.TranslationUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
@@ -246,7 +248,7 @@ public class ModsScreen extends Screen {
 		this.descriptionListWidget.setX(this.rightPaneX);
 
 		// Mods folder button
-		ClickableWidget modsFolderButton = ButtonWidget.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Util.getOperatingSystem().open(FabricLoader.getInstance().getGameDir().resolve("mods").toUri())).position(this.width / 2 - 154, this.height - 28).size(150, 20).build();
+		ClickableWidget modsFolderButton = ButtonWidget.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Util.getOperatingSystem().open(getModsFolder().toUri())).position(this.width / 2 - 154, this.height - 28).size(150, 20).build();
 
 		// Done button
 		ClickableWidget doneButton = ButtonWidget.builder(ScreenTexts.DONE, button -> client.setScreen(previousScreen)).position(this.width / 2 + 4, this.height - 28).size(150, 20).build();
@@ -623,6 +625,21 @@ public class ModsScreen extends Screen {
 			return false;
 		}
 	}
+
+    private static Path getModsFolder() {
+        ModContainer container = FabricLoader.getInstance().getModContainer(ModMenu.MOD_ID).orElseThrow();
+
+        while (container.getContainingMod().isPresent()) {
+            container = container.getContainingMod().get();
+        }
+
+        if (container.getOrigin().getKind() == ModOrigin.Kind.PATH) {
+            return container.getOrigin().getPaths().getFirst().getParent();
+        } else {
+            // Fall back on the old behavior
+            return FabricLoader.getInstance().getGameDir().resolve("mods");
+        }
+    }
 
 	public boolean getModHasConfigScreen(String modId) {
 		if (this.modScreenErrors.containsKey(modId)) {
