@@ -1,12 +1,12 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 
-public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
+public class LegacyTexturedButtonWidget extends ImageButton {
 	private final int u;
 	private final int v;
 	private final int hoveredVOffset;
@@ -27,8 +27,8 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		Identifier texture,
 		int textureWidth,
 		int textureHeight,
-		ButtonWidget.PressAction pressAction,
-		net.minecraft.text.Text message
+		Button.OnPress pressAction,
+		net.minecraft.network.chat.Component message
 	) {
 		super(x, y, width, height, null, pressAction, message);
 
@@ -43,15 +43,15 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 	}
 
 	@Override
-    public void drawIcon(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    public void renderContents(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
 		int v = this.v;
-		if (!this.isInteractable()) {
+		if (!this.isActive()) {
 			v += this.hoveredVOffset * 2;
-		} else if (this.isSelected()) {
+		} else if (this.isHoveredOrFocused()) {
 			v += this.hoveredVOffset;
 		}
 
-		context.drawTexture(
+		context.blit(
 			RenderPipelines.GUI_TEXTURED,
 			this.texture,
 			this.getX(),
@@ -65,13 +65,13 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		);
 	}
 
-    public static Builder legacyTexturedBuilder(net.minecraft.text.Text message, ButtonWidget.PressAction onPress) {
-		return new Builder(message, onPress);
+    public static com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget.Builder legacyTexturedBuilder(net.minecraft.network.chat.Component message, Button.OnPress onPress) {
+		return new com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget.Builder(message, onPress);
 	}
 
 	public static class Builder {
-		private final net.minecraft.text.Text message;
-		private final ButtonWidget.PressAction onPress;
+		private final net.minecraft.network.chat.Component message;
+		private final Button.OnPress onPress;
 
 		private int x;
 		private int y;
@@ -88,31 +88,31 @@ public class LegacyTexturedButtonWidget extends TexturedButtonWidget {
 		private int textureWidth;
 		private int textureHeight;
 
-		public Builder(net.minecraft.text.Text message, PressAction onPress) {
+		public Builder(net.minecraft.network.chat.Component message, OnPress onPress) {
 			this.message = message;
 			this.onPress = onPress;
 		}
 
-		public Builder position(int x, int y) {
+		public com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget.Builder position(int x, int y) {
 			this.x = x;
 			this.y = y;
 			return this;
 		}
 
-		public Builder size(int width, int height) {
+		public com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget.Builder size(int width, int height) {
 			this.width = width;
 			this.height = height;
 			return this;
 		}
 
-		public Builder uv(int u, int v, int hoveredVOffset) {
+		public com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget.Builder uv(int u, int v, int hoveredVOffset) {
 			this.u = u;
 			this.v = v;
 			this.hoveredVOffset = hoveredVOffset;
 			return this;
 		}
 
-		public Builder texture(Identifier texture, int textureWidth, int textureHeight) {
+		public com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget.Builder texture(Identifier texture, int textureWidth, int textureHeight) {
 			this.texture = texture;
 			this.textureWidth = textureWidth;
 			this.textureHeight = textureHeight;

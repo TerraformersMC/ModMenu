@@ -24,10 +24,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -242,7 +242,7 @@ public class ModMenu implements ClientModInitializer {
 		return NumberFormat.getInstance().format(cachedDisplayedModCount);
 	}
 
-	public static Text createModsButtonText(boolean title) {
+	public static Component createModsButtonText(boolean title) {
 		var titleStyle = ModMenuConfig.MODS_BUTTON_STYLE.getValue();
 		var gameMenuStyle = ModMenuConfig.GAME_MENU_BUTTON_STYLE.getValue();
 		var isIcon = title ?
@@ -251,18 +251,18 @@ public class ModMenu implements ClientModInitializer {
 		var isShort = title ?
 			titleStyle == ModMenuConfig.TitleMenuButtonStyle.SHRINK :
 			gameMenuStyle == ModMenuConfig.GameMenuButtonStyle.REPLACE;
-		MutableText modsText = ModMenuScreenTexts.TITLE.copy();
+		MutableComponent modsText = ModMenuScreenTexts.TITLE.copy();
 		if (ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnModsButton() && !isIcon) {
 			String count = ModMenu.getDisplayedModCount();
 			if (isShort) {
-				modsText.append(Text.literal(" ")).append(Text.translatable("modmenu.loaded.short", count));
+				modsText.append(Component.literal(" ")).append(Component.translatable("modmenu.loaded.short", count));
 			} else {
 				String specificKey = "modmenu.loaded." + count;
-				String key = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.loaded";
-				if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
+				String key = I18n.exists(specificKey) ? specificKey : "modmenu.loaded";
+				if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.exists(specificKey + ".secret")) {
 					key = specificKey + ".secret";
 				}
-				modsText.append(Text.literal(" ")).append(Text.translatable(key, count));
+				modsText.append(Component.literal(" ")).append(Component.translatable(key, count));
 			}
 		}
 		return modsText;

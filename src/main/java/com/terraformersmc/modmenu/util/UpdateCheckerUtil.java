@@ -11,9 +11,9 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModrinthUpdateInfo;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class UpdateCheckerUtil {
 		}
 
 		LOGGER.info("Checking mod updates...");
-		Util.getMainWorkerExecutor().execute(UpdateCheckerUtil::checkForUpdates0);
+		Util.backgroundExecutor().execute(UpdateCheckerUtil::checkForUpdates0);
 	}
 
 	private static void checkForUpdates0() {
@@ -156,9 +156,9 @@ public class UpdateCheckerUtil {
 
 	public static void triggerV2DeprecatedToast() {
 		if (modrinthApiV2Deprecated && ModMenuConfig.UPDATE_CHECKER.getValue()) {
-			MinecraftClient.getInstance().getToastManager().add(new SystemToast(SystemToast.Type.PERIODIC_NOTIFICATION,
-				Text.translatable("modmenu.modrinth.v2_deprecated.title"),
-				Text.translatable("modmenu.modrinth.v2_deprecated.description")
+			Minecraft.getInstance().getToastManager().addToast(new SystemToast(SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
+				Component.translatable("modmenu.modrinth.v2_deprecated.title"),
+				Component.translatable("modmenu.modrinth.v2_deprecated.description")
 			));
 		}
 	}
@@ -224,7 +224,7 @@ public class UpdateCheckerUtil {
 	}
 
 	private static @Nullable Map<String, VersionUpdate> getUpdatedVersions(Collection<String> modHashes) {
-		String mcVer = SharedConstants.getGameVersion().name();
+		String mcVer = SharedConstants.getCurrentVersion().name();
 		List<String> loaders = ModMenu.RUNNING_QUILT ? List.of("fabric", "quilt") : List.of("fabric");
 
 		List<UpdateChannel> updateChannels;

@@ -2,8 +2,8 @@ package com.terraformersmc.modmenu.gui.widget.entries;
 
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.input.KeyInput;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.KeyEvent;
 
 public class ChildEntry extends ModListEntry {
 	private final boolean bottomChild;
@@ -16,14 +16,14 @@ public class ChildEntry extends ModListEntry {
 	}
 
 	@Override
-	public void render(
-		DrawContext drawContext,
+	public void renderContent(
+		GuiGraphics drawContext,
 		int mouseX,
 		int mouseY,
 		boolean isSelected,
 		float delta
 	) {
-		super.render(drawContext, mouseX, mouseY, isSelected, delta);
+		super.renderContent(drawContext, mouseX, mouseY, isSelected, delta);
 		int x = this.getContentX() - 2;
 		int y = this.getContentY() + this.getYOffset();
 //		int rowWidth = this.getContentWidth();
@@ -34,7 +34,7 @@ public class ChildEntry extends ModListEntry {
 	}
 
 	@Override
-	public boolean keyPressed(KeyInput input) {
+	public boolean keyPressed(KeyEvent input) {
 		if (input.isLeft()) {
 			list.setSelected(parent);
 			list.ensureVisible(parent);

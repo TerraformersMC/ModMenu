@@ -10,20 +10,20 @@ import com.terraformersmc.modmenu.gui.widget.entries.ParentEntry;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSelectionList;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.Mth;
 
-public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> implements AutoCloseable {
+public class ModListWidget extends ObjectSelectionList<ModListEntry> implements AutoCloseable {
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
 	private final ModsScreen parent;
 	private List<Mod> mods = null;
@@ -34,7 +34,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	private Double restoreScrollY = null;
 
 	public ModListWidget(
-		MinecraftClient client,
+		Minecraft client,
 		int width,
 		int height,
 		int y,
@@ -46,18 +46,18 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.parent = parent;
 		if (list != null) {
 			this.mods = list.mods;
-			this.restoreScrollY = list.getScrollY();
+			this.restoreScrollY = list.scrollAmount();
 		}
 	}
 
 	@Override
-	public void setScrollY(double amount) {
-		super.setScrollY(amount);
-		int denominator = Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4));
+	public void setScrollAmount(double amount) {
+		super.setScrollAmount(amount);
+		int denominator = Math.max(0, this.contentHeight() - (this.getBottom() - this.getY() - 4));
 		if (denominator == 0) {
 			parent.updateScrollPercent(0);
 		} else {
-			parent.updateScrollPercent(getScrollY() / Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4)));
+			parent.updateScrollPercent(scrollAmount() / Math.max(0, this.contentHeight() - (this.getBottom() - this.getY() - 4)));
 		}
 	}
 
@@ -70,7 +70,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()));
+			this.minecraft.getNarrator().saySystemChatQueued(Component.translatable("narrator.select", mod.getTranslatedName()));
 		}
 	}
 
@@ -83,11 +83,11 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			selectedModId = entry.getMod().getId();
 		}
 
-		parent.updateSelectedEntry(getSelectedOrNull());
+		parent.updateSelectedEntry(getSelected());
 	}
 
 	protected boolean isSelectedEntry(int index) {
-		ModListEntry selected = getSelectedOrNull();
+		ModListEntry selected = getSelected();
 		ModListEntry entry = this.getEntry(index);
 		return selected != null && entry != null && selected.getMod().getId().equals(entry.getMod().getId());
 	}
@@ -139,7 +139,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	public void finalizeInit() {
 		reloadFilters();
 		if (restoreScrollY != null) {
-			setScrollY(restoreScrollY);
+			setScrollAmount(restoreScrollY);
 			restoreScrollY = null;
 		}
 	}
@@ -213,29 +213,29 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
             return;
         }
 
-		if (parent.getSelectedEntry() != null && !children().isEmpty() || this.getSelectedOrNull() != null && getSelectedOrNull().getMod() != parent.getSelectedEntry().getMod()) {
+		if (parent.getSelectedEntry() != null && !children().isEmpty() || this.getSelected() != null && getSelected().getMod() != parent.getSelectedEntry().getMod()) {
 			for (ModListEntry entry : children()) {
 				if (entry.getMod().equals(parent.getSelectedEntry().getMod())) {
 					setSelected(entry);
 				}
 			}
 		} else {
-			if (getSelectedOrNull() == null && !children().isEmpty() && getEntry(0) != null) {
+			if (getSelected() == null && !children().isEmpty() && getEntry(0) != null) {
 				setSelected(getEntry(0));
 			}
 		}
 
-		if (getScrollY() > Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4))) {
-			setScrollY(Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4)));
+		if (scrollAmount() > Math.max(0, this.contentHeight() - (this.getBottom() - this.getY() - 4))) {
+			setScrollAmount(Math.max(0, this.contentHeight() - (this.getBottom() - this.getY() - 4)));
 		}
 	}
 
 	@Override
-	protected void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+	protected void renderListItems(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
 		int entryLeft = this.getRowLeft();
 		int entryWidth = this.getRowWidth();
-		int entryHeight = this.itemHeight - 4;
-		int entryCount = this.getEntryCount();
+		int entryHeight = this.defaultEntryHeight - 4;
+		int entryCount = this.getItemCount();
 		int x = this.getX();
 		int y = this.getY();
 		int yOffset = 2;
@@ -254,12 +254,12 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 						entryTop + yOffset,
 						entryContentWidth,
 						entryHeight,
-						this.isFocused() ? Colors.WHITE : Colors.GRAY, Colors.BLACK
+						this.isFocused() ? CommonColors.WHITE : CommonColors.GRAY, CommonColors.BLACK
 					);
 				}
 
 				entry.setYOffset(yOffset);
-				entry.render(
+				entry.renderContent(
 					drawContext,
 					mouseX,
 					mouseY,
@@ -271,9 +271,9 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	/**
-	 * Version of {@link #drawSelectionHighlight(DrawContext, EntryListWidget.Entry, int)} with unconstrained positioning and sizing.
+	 * Version of {@link #renderSelection(GuiGraphics, AbstractSelectionList.Entry, int)} with unconstrained positioning and sizing.
 	 */
-	protected void drawSelectionHighlight(DrawContext context, int x, int y, int width, int height, int borderColor, int fillColor) {
+	protected void drawSelectionHighlight(GuiGraphics context, int x, int y, int width, int height, int borderColor, int fillColor) {
 		context.fill(x, y - 2, x + width, y + height + 2, borderColor);
 		context.fill(x + 1, y - 1, x + width - 1, y + height + 1, fillColor);
 	}
@@ -281,43 +281,43 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	public void ensureVisible(ModListEntry entry) {
 //		super.ensureVisible(entry);
 		int i = this.getRowTop(this.children().indexOf(entry));
-		int j = i - this.getY() - 4 - this.itemHeight;
+		int j = i - this.getY() - 4 - this.defaultEntryHeight;
 		if (j < 0) {
-			this.setScrollY(this.getScrollY() + j);
+			this.setScrollAmount(this.scrollAmount() + j);
 		}
 
-		int k = this.getBottom() - i - (this.itemHeight * 2);
+		int k = this.getBottom() - i - (this.defaultEntryHeight * 2);
 		if (k < 0) {
-			this.setScrollY(this.getScrollY() - k);
+			this.setScrollAmount(this.scrollAmount() - k);
 		}
 	}
 
-	public boolean keyPressed(KeyInput input) {
+	public boolean keyPressed(KeyEvent input) {
 		if (input.isUp() || input.isDown()) {
 			return super.keyPressed(input);
 		}
 
-		if (getSelectedOrNull() != null) {
-			return getSelectedOrNull().keyPressed(input);
+		if (getSelected() != null) {
+			return getSelected().keyPressed(input);
 		}
 
 		return false;
 	}
 
 	public final ModListEntry getEntryAtPos(double x, double y) {
-		int int_5 = MathHelper.floor(y - (double) this.getY()) + (int) this.getScrollY() - 4;
-		int index = int_5 / this.itemHeight;
-		return x < (double) this.getScrollbarX() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? this.children().get(index) : null;
+		int int_5 = Mth.floor(y - (double) this.getY()) + (int) this.scrollAmount() - 4;
+		int index = int_5 / this.defaultEntryHeight;
+		return x < (double) this.scrollBarX() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getItemCount() ? this.children().get(index) : null;
 	}
 
 	@Override
-	protected int getScrollbarX() {
+	protected int scrollBarX() {
 		return this.width - 6;
 	}
 
 	@Override
 	public int getRowWidth() {
-		return this.width - (Math.max(0, this.getContentsHeightWithPadding() - (this.getBottom() - this.getY() - 4)) > 0 ? 18 : 12);
+		return this.width - (Math.max(0, this.contentHeight() - (this.getBottom() - this.getY() - 4)) > 0 ? 18 : 12);
 	}
 
 	@Override
@@ -330,8 +330,8 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	}
 
 	@Override
-	protected int getContentsHeightWithPadding() {
-		return super.getContentsHeightWithPadding() + 4;
+	protected int contentHeight() {
+		return super.contentHeight() + 4;
 	}
 
 	public int getDisplayedCountFor(Set<String> set) {

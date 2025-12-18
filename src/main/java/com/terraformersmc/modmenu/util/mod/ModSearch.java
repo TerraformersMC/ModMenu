@@ -3,12 +3,11 @@ package com.terraformersmc.modmenu.util.mod;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.util.Pair;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.util.Tuple;
 
 public class ModSearch {
 	public static boolean validSearchQuery(String query) {
@@ -20,12 +19,12 @@ public class ModSearch {
 			return candidates;
 		} else {
 			return candidates.stream()
-				.map(modContainer -> new Pair<>(modContainer,
+				.map(modContainer -> new Tuple<>(modContainer,
 					passesFilters(screen, modContainer, query.toLowerCase(Locale.ROOT))
 				))
-				.filter(pair -> pair.getRight() > 0)
-				.sorted((a, b) -> b.getRight() - a.getRight())
-				.map(Pair::getLeft)
+				.filter(pair -> pair.getB() > 0)
+				.sorted((a, b) -> b.getB() - a.getB())
+				.map(Tuple::getA)
 				.collect(Collectors.toList());
 		}
 	}
@@ -37,13 +36,13 @@ public class ModSearch {
 		String modDescription = mod.getDescription();
 		String modSummary = mod.getSummary();
 
-		String library = I18n.translate("modmenu.searchTerms.library");
-		String patchwork = I18n.translate("modmenu.searchTerms.patchwork");
-		String modpack = I18n.translate("modmenu.searchTerms.modpack");
-		String deprecated = I18n.translate("modmenu.searchTerms.deprecated");
-		String clientside = I18n.translate("modmenu.searchTerms.clientside");
-		String configurable = I18n.translate("modmenu.searchTerms.configurable");
-		String hasUpdate = I18n.translate("modmenu.searchTerms.hasUpdate");
+		String library = I18n.get("modmenu.searchTerms.library");
+		String patchwork = I18n.get("modmenu.searchTerms.patchwork");
+		String modpack = I18n.get("modmenu.searchTerms.modpack");
+		String deprecated = I18n.get("modmenu.searchTerms.deprecated");
+		String clientside = I18n.get("modmenu.searchTerms.clientside");
+		String configurable = I18n.get("modmenu.searchTerms.configurable");
+		String hasUpdate = I18n.get("modmenu.searchTerms.hasUpdate");
 
 		// Libraries are currently hidden, ignore them entirely
 		if (mod.isHidden() || !ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {

@@ -13,8 +13,8 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.*;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -161,7 +161,7 @@ public class FabricMod implements Mod {
 	}
 
 	@Override
-	public @NotNull NativeImageBackedTexture getIcon(FabricIconHandler iconHandler, int i) {
+	public @NotNull DynamicTexture getIcon(FabricIconHandler iconHandler, int i) {
 		String iconSourceId = getId();
 		String iconPath = metadata.getIconPath(i).orElse("assets/" + getId() + "/icon.png");
 		if ("minecraft".equals(getId())) {
@@ -177,7 +177,7 @@ public class FabricMod implements Mod {
 			.getModContainer(iconSourceId)
 			.orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
 
-		NativeImageBackedTexture icon = iconHandler.createIcon(iconSource, iconPath);
+		DynamicTexture icon = iconHandler.createIcon(iconSource, iconPath);
 		if (icon == null) {
 			if (defaultIconWarning) {
 				LOGGER.warn("Warning! Mod {} has a broken icon, loading default icon", metadata.getId());
@@ -203,7 +203,7 @@ public class FabricMod implements Mod {
 	public @NotNull String getTranslatedDescription() {
 		var description = Mod.super.getTranslatedDescription();
 		if (getId().equals("java")) {
-			description = description + "\n" + I18n.translate("modmenu.javaDistributionName", getName());
+			description = description + "\n" + I18n.get("modmenu.javaDistributionName", getName());
 		}
 
 		return description;

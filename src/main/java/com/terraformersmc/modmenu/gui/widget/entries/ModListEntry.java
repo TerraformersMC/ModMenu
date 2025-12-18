@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -7,28 +8,27 @@ import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
 import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.cursor.StandardCursors;
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.ColorHelper;
 
-public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEntry> {
-	public static final Identifier UNKNOWN_ICON = Identifier.ofVanilla("textures/misc/unknown_pack.png");
-	private static final Identifier MOD_CONFIGURATION_ICON = Identifier.of(ModMenu.MOD_ID, "textures/gui/mod_configuration.png");
-	private static final Identifier ERROR_ICON = Identifier.ofVanilla("world_list/error");
-	private static final Identifier ERROR_HIGHLIGHTED_ICON = Identifier.ofVanilla("world_list/error_highlighted");
+public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
+	public static final Identifier UNKNOWN_ICON = Identifier.withDefaultNamespace("textures/misc/unknown_pack.png");
+	private static final Identifier MOD_CONFIGURATION_ICON = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/mod_configuration.png");
+	private static final Identifier ERROR_ICON = Identifier.withDefaultNamespace("world_list/error");
+	private static final Identifier ERROR_HIGHLIGHTED_ICON = Identifier.withDefaultNamespace("world_list/error_highlighted");
 
-	protected final MinecraftClient client;
+	protected final Minecraft client;
 	public final Mod mod;
 	protected final ModListWidget list;
 	protected Identifier iconLocation;
@@ -40,17 +40,17 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 	public ModListEntry(Mod mod, ModListWidget list) {
 		this.mod = mod;
 		this.list = list;
-		this.client = MinecraftClient.getInstance();
+		this.client = Minecraft.getInstance();
 	}
 
 	@Override
-	public Text getNarration() {
-		return Text.literal(mod.getTranslatedName());
+	public Component getNarration() {
+		return Component.literal(mod.getTranslatedName());
 	}
 
 	@Override
-	public void render(
-		DrawContext drawContext,
+	public void renderContent(
+		GuiGraphics drawContext,
 		int mouseX,
 		int mouseY,
 		boolean hovered,
@@ -66,7 +66,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			DrawingUtil.drawRandomVersionBackground(mod, drawContext, x, y, iconSize, iconSize);
 		}
 
-		drawContext.drawTexture(
+		drawContext.blit(
 			RenderPipelines.GUI_TEXTURED,
 			this.getIconTexture(),
 			x,
@@ -77,20 +77,20 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 			iconSize,
 			iconSize,
 			iconSize,
-			ColorHelper.getWhite(1.0F)
+			ARGB.white(1.0F)
 		);
 
-		Text name = Text.literal(mod.getTranslatedName());
-		StringVisitable trimmedName = name;
+		Component name = Component.literal(mod.getTranslatedName());
+		FormattedText trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;
-		TextRenderer font = this.client.textRenderer;
-		if (font.getWidth(name) > maxNameWidth) {
-			StringVisitable ellipsis = StringVisitable.plain("...");
-			trimmedName = StringVisitable.concat(font.trimToWidth(name, maxNameWidth - font.getWidth(ellipsis)), ellipsis);
+		Font font = this.client.font;
+		if (font.width(name) > maxNameWidth) {
+			FormattedText ellipsis = FormattedText.of("...");
+			trimmedName = FormattedText.composite(font.substrByWidth(name, maxNameWidth - font.width(ellipsis)), ellipsis);
 		}
 
-		drawContext.drawTextWithShadow(font,
-			Language.getInstance().reorder(trimmedName),
+		drawContext.drawString(font,
+			Language.getInstance().getVisualOrder(trimmedName),
 			x + iconSize + 3,
 			y + 1,
 			0xFFFFFFFF
@@ -99,13 +99,13 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		var updateBadgeXOffset = 0;
 		if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue()
 			.contains(modId) && (mod.hasUpdate() || mod.getChildHasUpdate())) {
-			UpdateAvailableBadge.renderBadge(drawContext, x + iconSize + 3 + font.getWidth(name) + 2, y);
+			UpdateAvailableBadge.renderBadge(drawContext, x + iconSize + 3 + font.width(name) + 2, y);
 			updateBadgeXOffset = 11;
 		}
 
 		if (!ModMenuConfig.HIDE_BADGES.getValue()) {
 			new ModBadgeRenderer(
-				x + iconSize + 3 + font.getWidth(name) + 2 + updateBadgeXOffset,
+				x + iconSize + 3 + font.width(name) + 2 + updateBadgeXOffset,
 				y,
 				x + rowWidth,
 				mod,
@@ -119,7 +119,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				drawContext,
 				summary,
 				(x + iconSize + 3 + 4),
-				(y + client.textRenderer.fontHeight + 2),
+				(y + client.font.lineHeight + 2),
 				rowWidth - iconSize - 7,
 				2,
 				0xFF808080
@@ -129,7 +129,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 				drawContext,
 				mod.getPrefixedVersion(),
 				(x + iconSize + 3),
-				(y + client.textRenderer.fontHeight + 2),
+				(y + client.font.lineHeight + 2),
 				rowWidth - iconSize - 7,
 				2,
 				0xFF808080
@@ -138,11 +138,11 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 		if (!(this instanceof ParentEntry) && ModMenuConfig.QUICK_CONFIGURE.getValue() && (this.list.getParent().getModHasConfigScreen(modId) || this.list.getParent().modScreenErrors.containsKey(modId))) {
 			final int textureSize = ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256;
-			if (this.client.options.getTouchscreen().getValue() || hovered) {
+			if (this.client.options.touchscreen().get() || hovered) {
 				drawContext.fill(x, y, x + iconSize, y + iconSize, -1601138544);
 				boolean hoveringIcon = mouseX - x < iconSize;
 				if (this.list.getParent().modScreenErrors.containsKey(modId)) {
-					drawContext.drawGuiTexture(
+					drawContext.blitSprite(
 						RenderPipelines.GUI_TEXTURED,
 						hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON,
 						x,
@@ -156,7 +156,7 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 //					}
 				} else {
 					int v = hoveringIcon ? iconSize : 0;
-					drawContext.drawTexture(
+					drawContext.blit(
 						RenderPipelines.GUI_TEXTURED,
 						MOD_CONFIGURATION_ICON,
 						x,
@@ -167,29 +167,29 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 						iconSize,
 						textureSize,
 						textureSize,
-						ColorHelper.getWhite(1.0F)
+						ARGB.white(1.0F)
 					);
 				}
 				if (hoveringIcon) {
-					drawContext.setCursor(this.isClickable() ? StandardCursors.POINTING_HAND : StandardCursors.NOT_ALLOWED);
+					drawContext.requestCursor(this.shouldTakeFocusAfterInteraction() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean mouseClicked(Click click, boolean doubleClick) {
+	public boolean mouseClicked(MouseButtonEvent click, boolean doubleClick) {
 		list.select(this);
 		if (ModMenuConfig.QUICK_CONFIGURE.getValue() && this.list.getParent().getModHasConfigScreen(this.mod.getId())) {
 			int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
 			if (click.x() - list.getRowLeft() <= iconSize) {
 				this.openConfig();
-			} else if (Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
+			} else if (Util.getMillis() - this.sinceLastClick < 250) {
 				this.openConfig();
 			}
 		}
 
-		this.sinceLastClick = Util.getMeasuringTimeMs();
+		this.sinceLastClick = Util.getMillis();
 		return true;
 	}
 
@@ -203,9 +203,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 
 	public Identifier getIconTexture() {
 		if (this.iconLocation == null) {
-			this.iconLocation = Identifier.of(ModMenu.MOD_ID, mod.getId() + "_icon");
-			NativeImageBackedTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.getGuiScale().getValue());
-			this.client.getTextureManager().registerTexture(this.iconLocation, icon);
+			this.iconLocation = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, mod.getId() + "_icon");
+			DynamicTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.guiScale().get());
+			this.client.getTextureManager().register(this.iconLocation, icon);
 		}
 
 		return iconLocation;

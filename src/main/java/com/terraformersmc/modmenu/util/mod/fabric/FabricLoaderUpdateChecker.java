@@ -11,7 +11,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,8 +137,8 @@ public class FabricLoaderUpdateChecker implements UpdateChecker {
 		}
 
 		@Override
-		public @Nullable Text getUpdateMessage() {
-			return Text.translatable("modmenu.install_version", this.version);
+		public @Nullable Component getUpdateMessage() {
+			return Component.translatable("modmenu.install_version", this.version);
 		}
 
 		@Override

@@ -1,6 +1,6 @@
 package com.terraformersmc.modmenu.api;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public interface UpdateInfo {
@@ -13,7 +13,7 @@ public interface UpdateInfo {
 	 * @return The message that is getting displayed when an update is available or <code>null</code> to let ModMenu handle displaying the message.
 	 */
 	@Nullable
-	default Text getUpdateMessage() {
+	default Component getUpdateMessage() {
 		return null;
 	}
 

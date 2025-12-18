@@ -6,14 +6,6 @@ import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.GameMenuScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,10 +14,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
-@Mixin(GameMenuScreen.class)
+@Mixin(PauseScreen.class)
 public abstract class MixinGameMenu extends Screen {
-	protected MixinGameMenu(Text title) {
+	protected MixinGameMenu(Component title) {
 		super(title);
 	}
 
@@ -34,10 +34,10 @@ public abstract class MixinGameMenu extends Screen {
 		throw new AssertionError();
 	}
 
-	@Inject(method = "initWidgets", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget;forEachChild(Ljava/util/function/Consumer;)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-	private void onInitWidgets(CallbackInfo ci, GridWidget gridWidget) {
+	@Inject(method = "createPauseMenu", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/layouts/GridLayout;visitWidgets(Ljava/util/function/Consumer;)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+	private void onInitWidgets(CallbackInfo ci, GridLayout gridWidget) {
 		if (gridWidget != null) {
-			final List<Widget> buttons = ((AccessorGridWidget) gridWidget).getChildren();
+			final List<LayoutElement> buttons = ((AccessorGridWidget) gridWidget).getChildren();
 			if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 				int modsButtonIndex = -1;
 				final int spacing = 24;
@@ -46,9 +46,9 @@ public abstract class MixinGameMenu extends Screen {
 				int vanillaButtonsY = this.height / 4 + 72 - 16 + 1;
 				final int fullWidthButton = 204;
 				for (int i = 0; i < buttons.size(); i++) {
-					Widget widget = buttons.get(i);
+					LayoutElement widget = buttons.get(i);
 					if (style == ModMenuConfig.GameMenuButtonStyle.INSERT) {
-						if (!(widget instanceof ClickableWidget button) || button.visible) {
+						if (!(widget instanceof AbstractWidget button) || button.visible) {
 							ModMenuEventHandler.shiftButtons(widget, modsButtonIndex == -1 || ModMenuEventHandler.buttonHasText(widget, "menu.reportBugs", "menu.server_links") || ModMenuEventHandler.buttonHasTooltip(widget, getCUSTOM_OPTIONS_TOOLTIP()), spacing);
 							if (modsButtonIndex == -1) {
 								buttonsY = widget.getY();
@@ -73,14 +73,14 @@ public abstract class MixinGameMenu extends Screen {
 							buttons.stream()
 								.filter(w -> ModMenuEventHandler.buttonHasText(w, "menu.reportBugs"))
 								.forEach(w -> {
-									if (w instanceof ClickableWidget cw) {
+									if (w instanceof AbstractWidget cw) {
 										cw.visible = false;
 										cw.active = false;
 									}
 								});
 						} else {
 							modsButtonIndex = i + 1;
-							if (!(widget instanceof ClickableWidget button) || button.visible) {
+							if (!(widget instanceof AbstractWidget button) || button.visible) {
 								buttonsY = widget.getY();
 							}
 						}
@@ -109,7 +109,7 @@ public abstract class MixinGameMenu extends Screen {
 							ModMenuEventHandler.MODS_BUTTON_TEXTURE,
 							32,
 							64,
-							button -> MinecraftClient.getInstance().setScreen(new ModsScreen(this)),
+							button -> Minecraft.getInstance().setScreen(new ModsScreen(this)),
 							ModMenuApi.createModsButtonText()
 						));
 					}

@@ -2,12 +2,11 @@ package com.terraformersmc.modmenu.config.option;
 
 import com.mojang.serialization.Codec;
 import com.terraformersmc.modmenu.util.TranslationUtil;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-
 import java.util.Arrays;
 import java.util.Locale;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 
 public class EnumConfigOption<E extends Enum<E>> implements OptionConvertible {
 	private final String key, translationKey;
@@ -46,20 +45,20 @@ public class EnumConfigOption<E extends Enum<E>> implements OptionConvertible {
 		return defaultValue;
 	}
 
-	private static <E extends Enum<E>> Text getValueText(EnumConfigOption<E> option, E value) {
-		return Text.translatable(option.translationKey + "." + value.name().toLowerCase(Locale.ROOT));
+	private static <E extends Enum<E>> Component getValueText(EnumConfigOption<E> option, E value) {
+		return Component.translatable(option.translationKey + "." + value.name().toLowerCase(Locale.ROOT));
 	}
 
-	public Text getButtonText() {
-		return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText(this, getValue()));
+	public Component getButtonText() {
+		return CommonComponents.optionNameValue(Component.translatable(translationKey), getValueText(this, getValue()));
 	}
 
 	@Override
-	public SimpleOption<E> asOption() {
-		return new SimpleOption<>(translationKey,
-			SimpleOption.emptyTooltip(),
+	public OptionInstance<E> asOption() {
+		return new OptionInstance<>(translationKey,
+			OptionInstance.noTooltip(),
 			(text, value) -> getValueText(this, value),
-			new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(enumClass.getEnumConstants()),
+			new OptionInstance.Enum<>(Arrays.asList(enumClass.getEnumConstants()),
 				Codec.STRING.xmap(string -> Arrays.stream(enumClass.getEnumConstants())
 					.filter(e -> e.name().toLowerCase().equals(string))
 					.findAny()

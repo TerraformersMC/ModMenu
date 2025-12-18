@@ -5,13 +5,13 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import org.lwjgl.glfw.GLFW;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ParentEntry extends ModListEntry {
-	private static final Identifier PARENT_MOD_TEXTURE = Identifier.of(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
+	private static final Identifier PARENT_MOD_TEXTURE = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
 	protected List<Mod> children;
 	protected ModListWidget list;
 	protected boolean hoveringIcon = false;
@@ -32,24 +32,24 @@ public class ParentEntry extends ModListEntry {
 	}
 
 	@Override
-	public void render(
-		DrawContext drawContext,
+	public void renderContent(
+		GuiGraphics drawContext,
 		int mouseX,
 		int mouseY,
 		boolean isSelected,
 		float delta
 	) {
-		super.render(drawContext, mouseX, mouseY, isSelected, delta);
-		TextRenderer font = client.textRenderer;
+		super.renderContent(drawContext, mouseX, mouseY, isSelected, delta);
+		Font font = client.font;
 		int x = this.getContentX() - 2;
 		int y = this.getContentY() + this.getYOffset();
-		int childrenBadgeHeight = font.fontHeight;
-		int childrenBadgeWidth = font.fontHeight;
+		int childrenBadgeHeight = font.lineHeight;
+		int childrenBadgeWidth = font.lineHeight;
 		int shownChildren = ModSearch.search(list.getParent(), list.getParent().getSearchInput(), getChildren()).size();
-		Text str = shownChildren == children.size() ?
-			Text.literal(String.valueOf(shownChildren)) :
-			Text.literal(shownChildren + "/" + children.size());
-		int childrenWidth = font.getWidth(str) - 1;
+		Component str = shownChildren == children.size() ?
+			Component.literal(String.valueOf(shownChildren)) :
+			Component.literal(shownChildren + "/" + children.size());
+		int childrenWidth = font.width(str) - 1;
 		if (childrenBadgeWidth < childrenWidth + 4) {
 			childrenBadgeWidth = childrenWidth + 4;
 		}
@@ -93,9 +93,9 @@ public class ParentEntry extends ModListEntry {
 			childrenBadgeY + childrenBadgeHeight,
 			childrenOutlineColor
 		);
-		drawContext.drawText(
+		drawContext.drawString(
 			font,
-			str.asOrderedText(),
+			str.getVisualOrderText(),
 			(int) (childrenBadgeX + (float) childrenBadgeWidth / 2 - (float) childrenWidth / 2),
 			childrenBadgeY + 1,
 			0xFFCACACA,
@@ -107,7 +107,7 @@ public class ParentEntry extends ModListEntry {
 			drawContext.fill(x, y, x + iconSize, y + iconSize, 0xA0909090);
 			int xOffset = list.getParent().showModChildren.contains(getMod().getId()) ? iconSize : 0;
 			int yOffset = hoveringIcon ? iconSize : 0;
-			drawContext.drawTexture(
+			drawContext.blit(
 				RenderPipelines.GUI_TEXTURED,
 				PARENT_MOD_TEXTURE,
 				x,
@@ -124,13 +124,13 @@ public class ParentEntry extends ModListEntry {
 	}
 
 	@Override
-	public boolean mouseClicked(Click click, boolean doubleClick) {
+	public boolean mouseClicked(MouseButtonEvent click, boolean doubleClick) {
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
 		boolean quickConfigure = ModMenuConfig.QUICK_CONFIGURE.getValue();
 		if (click.x() - list.getRowLeft() <= iconSize) {
 			this.toggleChildren();
 			return true;
-		} else if (!quickConfigure && Util.getMeasuringTimeMs() - this.sinceLastClick < 250) {
+		} else if (!quickConfigure && Util.getMillis() - this.sinceLastClick < 250) {
 			this.toggleChildren();
 			return true;
 		} else {
@@ -150,9 +150,9 @@ public class ParentEntry extends ModListEntry {
 	}
 
 	@Override
-	public boolean keyPressed(KeyInput input) {
+	public boolean keyPressed(KeyEvent input) {
 		String modId = getMod().getId();
-		if (input.isEnterOrSpace()) {
+		if (input.isSelection()) {
 			if (list.getParent().showModChildren.contains(modId)) {
 				list.getParent().showModChildren.remove(modId);
 			} else {
@@ -174,7 +174,7 @@ public class ParentEntry extends ModListEntry {
 				list.filter(list.getParent().getSearchInput(), false);
 				return true;
 			} else {
-				return list.keyPressed(new KeyInput(GLFW.GLFW_KEY_DOWN, 0, 0));
+				return list.keyPressed(new KeyEvent(GLFW.GLFW_KEY_DOWN, 0, 0));
 			}
 		}
 
