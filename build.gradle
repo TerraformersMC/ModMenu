@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.14-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom' version '1.14-SNAPSHOT'
 }
 
 // TODO Use ferry.gradle once its updated
@@ -11,18 +11,18 @@ group = project.maven_group
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'fabric-loom'
+apply plugin: 'net.fabricmc.fabric-loom'
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = 25
     it.options.encoding = "UTF-8"
 }
 
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -31,17 +31,16 @@ jar {
 
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"
-    mappings loom.officialMojangMappings()
 
-	modImplementation "net.fabricmc:fabric-loader:$project.loader_version"
+	implementation "net.fabricmc:fabric-loader:$project.loader_version"
 
-    modImplementation include(fabricApi.module("fabric-api-base", project.fabric_version))
-    modImplementation include(fabricApi.module("fabric-resource-loader-v1", project.fabric_version))
-    modImplementation include(fabricApi.module("fabric-screen-api-v1", project.fabric_version))
-    modImplementation include(fabricApi.module("fabric-key-binding-api-v1", project.fabric_version))
-    modImplementation include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+    implementation include(fabricApi.module("fabric-api-base", project.fabric_version))
+    implementation include(fabricApi.module("fabric-resource-loader-v1", project.fabric_version))
+    implementation include(fabricApi.module("fabric-screen-api-v1", project.fabric_version))
+    implementation include(fabricApi.module("fabric-key-binding-api-v1", project.fabric_version))
+    implementation include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
 
-    modImplementation include("eu.pb4:placeholder-api:${project.text_placeholder_api_version}")
+    implementation include("eu.pb4:placeholder-api:${project.text_placeholder_api_version}")
 
 	compileOnly "org.quiltmc:quilt-loader:$project.quilt_loader_version"
 }

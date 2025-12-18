@@ -39,9 +39,11 @@ public interface Mod {
 	@NotNull
 	default String getSummary() {
 		String string = getTranslatedSummary();
-		return ModMenu.TEXT_PLACEHOLDER_COMPAT ?
-			TextPlaceholderApiCompat.PARSER.parseText(string, ParserContext.of()).getString() :
-			string;
+        //TODO Add back text placeholder api
+		//return ModMenu.TEXT_PLACEHOLDER_COMPAT ?
+		//	TextPlaceholderApiCompat.PARSER.parseText(string, ParserContext.of()).getString() :
+		//	string;
+        return string;
 	}
 
 	@NotNull
@@ -70,9 +72,11 @@ public interface Mod {
 
 	default Component getFormattedDescription() {
 		String string = getTranslatedDescription();
-		return ModMenu.TEXT_PLACEHOLDER_COMPAT ?
-			TextPlaceholderApiCompat.PARSER.parseText(string, ParserContext.of()) :
-			Component.literal(string);
+        //TODO Add back text placeholder api
+		//return ModMenu.TEXT_PLACEHOLDER_COMPAT ?
+		//	TextPlaceholderApiCompat.PARSER.parseText(string, ParserContext.of()) :
+		//	Component.literal(string);
+        return Component.literal(string);
 	}
 
 	@NotNull String getVersion();
