@@ -158,7 +158,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		return !children.stream().allMatch(child -> child.isHidden() || hideLibraries && child.getBadges().contains(Mod.Badge.LIBRARY));
 	}
 
-	private void filter(String searchTerm, boolean refresh, boolean search) {
+	public void filter(String searchTerm, boolean refresh, boolean reposition) {
 		this.clearEntries();
 		addedMods.clear();
 		Collection<Mod> mods = ModMenu.MODS.values().stream().filter(mod -> {
@@ -207,6 +207,11 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				}
 			}
 		}
+
+        if (!reposition) {
+            // This generally leaves the same mod selected, but no mod highlighted, and the scrolling is unmodified.
+            return;
+        }
 
 		if (parent.getSelectedEntry() != null && !children().isEmpty() || this.getSelectedOrNull() != null && getSelectedOrNull().getMod() != parent.getSelectedEntry().getMod()) {
 			for (ModListEntry entry : children()) {
