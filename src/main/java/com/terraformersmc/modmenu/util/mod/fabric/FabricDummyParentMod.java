@@ -7,6 +7,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -94,6 +95,11 @@ public class FabricDummyParentMod implements Mod {
 	}
 
 	@Override
+    public ContactInformation getContact(String author) {
+        return null;
+    }
+
+    @Override
 	public @NotNull Map<String, Collection<String>> getContributors() {
 		return Map.of();
 	}
