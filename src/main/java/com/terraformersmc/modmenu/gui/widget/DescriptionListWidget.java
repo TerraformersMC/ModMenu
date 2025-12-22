@@ -402,33 +402,32 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
     protected class MailableContactEntry extends DescriptionEntry {
         private final String email;
 
-        public MailableContactEntry(OrderedText text, String email, int indent) {
+        public MailableContactEntry(FormattedCharSequence text, String email, int indent) {
             super(text, indent);
             this.email = email;
         }
 
-        public MailableContactEntry(OrderedText text, String link) {
+        public MailableContactEntry(FormattedCharSequence text, String link) {
             this(text, link, 0);
         }
 
         @Override
-        public void render(DrawContext drawContext, int mouseX, int mouseY, boolean isSelected, float delta) {
-            super.render(drawContext, mouseX, mouseY, isSelected, delta);
-            drawContext.drawTextWithShadow(textRenderer, Text.literal(" ").append(Text.literal("✉")), this.getContentX() + indent + textRenderer.getWidth(text) + 1, this.getContentY(), 0xFFAAAAAA);
+        public void renderContent(GuiGraphics drawContext, int mouseX, int mouseY, boolean isSelected, float delta) {
+            super.renderContent(drawContext, mouseX, mouseY, isSelected, delta);
+            drawContext.drawString(textRenderer, Component.literal(" ").append(Component.literal("✉")), this.getContentX() + indent + textRenderer.width(text) + 1, this.getContentY(), 0xFFAAAAAA);
         }
 
         @Override
-        public boolean mouseClicked(Click click, boolean doubled) {
-            if (isMouseOver(click.x(), click.y())) {
-                client.setScreen(new ConfirmLinkScreen((open) -> {
+        public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+            if (isMouseOver(event.x(), event.y())) {
+                minecraft.setScreen(new ConfirmLinkScreen((open) -> {
                     if (open) {
-                        Util.getOperatingSystem().open("mailto:" + email);
+                        Util.getPlatform().openUri("mailto:" + email);
                     }
-                    client.setScreen(parent);
+                    minecraft.setScreen(parent);
                 }, "mailto:" + email, false));
             }
-
-            return super.mouseClicked(click, doubled);
+            return super.mouseClicked(event, doubleClick);
         }
     }
 }
