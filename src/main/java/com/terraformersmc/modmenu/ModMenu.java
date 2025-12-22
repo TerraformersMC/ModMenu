@@ -14,6 +14,7 @@ import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.util.EnumToLowerCaseJsonConverter;
 import com.terraformersmc.modmenu.util.ModMenuScreenTexts;
+import com.terraformersmc.modmenu.util.NullScreenFactory;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
@@ -103,9 +104,11 @@ public class ModMenu implements ClientModInitializer {
 			String modId = metadata.getId();
 			try {
 				ModMenuApi api = entrypoint.getEntrypoint();
-                var factory = api.getModConfigScreenFactory();
-                if (factory != null) configScreenFactories.put(modId, factory);
-                apiImplementations.add(api);
+                ConfigScreenFactory<?> factory = api.getModConfigScreenFactory();
+                if (!(factory instanceof NullScreenFactory<?>)) {
+                    configScreenFactories.put(modId, factory);
+                }
+				apiImplementations.add(api);
 				updateCheckers.put(modId, api.getUpdateChecker());
 				providedUpdateCheckers.putAll(api.getProvidedUpdateCheckers());
 				api.attachModpackBadges(modpackMods::add);

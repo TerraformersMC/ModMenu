@@ -2,7 +2,7 @@ package com.terraformersmc.modmenu.api;
 
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.gui.ModsScreen;
-import org.jetbrains.annotations.Nullable;
+import com.terraformersmc.modmenu.util.NullScreenFactory;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
@@ -38,8 +38,8 @@ public interface ModMenuApi {
 	 *
 	 * @return A factory for constructing config screen instances.
 	 */
-	default @Nullable ConfigScreenFactory<?> getModConfigScreenFactory() {
-		return null;
+	default ConfigScreenFactory<?> getModConfigScreenFactory() {
+		return new NullScreenFactory<>();
 	}
 
 	/**
