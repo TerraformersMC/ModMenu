@@ -103,8 +103,9 @@ public class ModMenu implements ClientModInitializer {
 			String modId = metadata.getId();
 			try {
 				ModMenuApi api = entrypoint.getEntrypoint();
-				configScreenFactories.put(modId, api.getModConfigScreenFactory());
-				apiImplementations.add(api);
+                var factory = api.getModConfigScreenFactory();
+                if (factory != null) configScreenFactories.put(modId, factory);
+                apiImplementations.add(api);
 				updateCheckers.put(modId, api.getUpdateChecker());
 				providedUpdateCheckers.putAll(api.getProvidedUpdateCheckers());
 				api.attachModpackBadges(modpackMods::add);
