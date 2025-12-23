@@ -2,39 +2,14 @@ plugins {
 	id 'net.fabricmc.fabric-loom' version '1.14-SNAPSHOT'
 }
 
-// TODO Use ferry.gradle once its updated
-// apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.7/ferry.gradle'
-
-base.archivesName = project.archive_name
-group = project.maven_group
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'net.fabricmc.fabric-loom'
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = 25
-    it.options.encoding = "UTF-8"
-}
-
-java {
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
-}
-
-jar {
-    from "LICENSE"
-}
+apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/3.1/ferry.gradle'
 
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"
 
-	implementation "net.fabricmc:fabric-loader:$project.loader_version"
+    implementation "net.fabricmc:fabric-loader:$project.loader_version"
 
-    implementation include(fabricApi.module("fabric-api-base", project.fabric_version))
+	implementation include(fabricApi.module("fabric-api-base", project.fabric_version))
     implementation include(fabricApi.module("fabric-resource-loader-v1", project.fabric_version))
     implementation include(fabricApi.module("fabric-screen-api-v1", project.fabric_version))
     implementation include(fabricApi.module("fabric-key-binding-api-v1", project.fabric_version))
