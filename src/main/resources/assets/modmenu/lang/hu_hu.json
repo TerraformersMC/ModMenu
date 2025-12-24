@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "Frissítés érhető el:",
   "modmenu.childHasUpdate": "Ennek a modnak egyik almodulja frissítést kapott.",
   "modmenu.updateText": "v%s (%s)",
+  "modmenu.updateText.nonNumerical": "%s (%s)",
   "modmenu.buymeacoffee": "Vegyél nekem kávét",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

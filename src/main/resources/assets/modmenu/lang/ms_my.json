@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "Terdapat kemas kini baharu:",
   "modmenu.childHasUpdate": "Terdapat kemas kini untuk anak kepada mod ini.",
   "modmenu.updateText": "v%s di %s",
+  "modmenu.updateText.nonNumerical": "%s di %s",
   "modmenu.buymeacoffee": "Belikan Saya Kopi",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

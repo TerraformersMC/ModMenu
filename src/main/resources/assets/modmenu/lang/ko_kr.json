@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Mod Menu의 업데이트 확인기능은 실험적 기능입니다!)",
   "modmenu.childHasUpdate": "이 모드의 하위 항목에 사용 가능한 업데이트가 있습니다.",
   "modmenu.updateText": "v%s on %s",
+  "modmenu.updateText.nonNumerical": "%s on %s",
   "modmenu.install_version": "Install version %s",
   "modmenu.downloadLink": "다운로드",
 

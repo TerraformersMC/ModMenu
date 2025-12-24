@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Перевірка оновлень є експериментальною!)",
   "modmenu.childHasUpdate": "Дочірній мод цього мода має доступне оновлення",
   "modmenu.updateText": "v%s на %s",
+  "modmenu.updateText.nonNumerical": "%s на %s",
   "modmenu.install_version": "Установити версію %s",
   "modmenu.downloadLink": "Завантажити",
 

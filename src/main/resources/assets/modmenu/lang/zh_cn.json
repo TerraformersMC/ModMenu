@@ -56,6 +56,7 @@
   "modmenu.experimental": "(更新检测器处于实验阶段！)",
   "modmenu.childHasUpdate": "此模组的一个子模组有更新。",
   "modmenu.updateText": "%2$s中的v%1$s",
+  "modmenu.updateText.nonNumerical": "%2$s中的%1$s",
   "modmenu.downloadLink": "下载",
   "modmenu.buymeacoffee": "给我买一杯咖啡",
   "modmenu.coindrop": "Coindrop",
