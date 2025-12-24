@@ -63,6 +63,7 @@
   "modmenu.hasUpdate": "Жаңарту қолжетімді:",
   "modmenu.childHasUpdate": "Осы модқа тәуелді модқа жаңарту қолжетімді",
   "modmenu.updateText": "%s нұсқасы, %s",
+  "modmenu.updateText.nonNumerical": "%s нұсқасы, %s",
   "modmenu.install_version": "%s нұсқасын орнату",
   "modmenu.downloadLink": "Жүктеу",
 

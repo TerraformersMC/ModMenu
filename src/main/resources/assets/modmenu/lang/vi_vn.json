@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Trình kiểm tra cập nhật của Mod Menu hiện đang trong giai đoạn thử nghiệm!)",
   "modmenu.childHasUpdate": "Mod con của mod hiện tại có bản cập nhật mới.",
   "modmenu.updateText": "v%s trên %s",
+  "modmenu.updateText.nonNumerical": "%s trên %s",
   "modmenu.install_version": "Cài đặt bản %s",
   "modmenu.downloadLink": "Tải xuống",
   

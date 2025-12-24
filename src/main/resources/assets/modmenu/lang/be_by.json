@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Праверка абнаўленняў у Mod Menu з'яўляецца эксперыментам!)",
   "modmenu.childHasUpdate": "Абнаўленне дзіцячага мода даступна.",
   "modmenu.updateText": "v%s на %s",
+  "modmenu.updateText.nonNumerical": "%s на %s",
   "modmenu.install_version": "Усталяваць версію %s",
   "modmenu.downloadLink": "Спампаваць",
   

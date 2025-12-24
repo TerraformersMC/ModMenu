@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "Bir güncelleme mevcut:",
   "modmenu.childHasUpdate": "Bu modun alt biriminin bir güncellemesi var.",
   "modmenu.updateText": "v%s (%s üzerinde)",
+  "modmenu.updateText.nonNumerical": "%s (%s üzerinde)",
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

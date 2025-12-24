@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Mod Menu Update checker ist experimental!)",
   "modmenu.childHasUpdate": "Eine Abhängigkeit dieser Mod hat ein verfügbares Update.",
   "modmenu.updateText": "v%s on %s",
+  "modmenu.updateText.nonNumerical": "%s on %s",
   "modmenu.install_version": "Installiere version %s",
   "modmenu.downloadLink": "Herunterladen",
   

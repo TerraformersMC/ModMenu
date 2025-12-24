@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "Une mise à jour est disponible :",
   "modmenu.childHasUpdate": "Un mod complémentaire a une mise à jour disponible.",
   "modmenu.updateText": "v%s on %s",
+  "modmenu.updateText.nonNumerical": "%s on %s",
   "modmenu.buymeacoffee": "Offrez-moi un café",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

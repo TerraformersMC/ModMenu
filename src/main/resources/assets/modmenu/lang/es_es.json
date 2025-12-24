@@ -63,6 +63,7 @@
   "modmenu.experimental": "(La característica de comprobación de actualizaciones es experimental.)",
   "modmenu.childHasUpdate": "Actualización disponible para mod secundario.",
   "modmenu.updateText": "v%s en %s",
+  "modmenu.updateText.nonNumerical": "%s en %s",
   "modmenu.install_version": "Instalar versión %s",
   "modmenu.downloadLink": "Descargar",
 
@@ -95,7 +96,7 @@
   "modmenu.credits.role.playtester": "Testers",
   "modmenu.credits.role.illustrator": "Ilustradores",
   "modmenu.credits.role.owner": "Propietarios",
-	
+
   "modmenu.modsFolder": "Abrir carpeta de mods",
   "modmenu.configsFolder": "Abrir carpeta de opciones",
 

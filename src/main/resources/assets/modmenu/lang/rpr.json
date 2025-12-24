@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "Доступно обновление:",
   "modmenu.childHasUpdate": "Доступно обновление для дочернего мода.",
   "modmenu.updateText": "v%s на %s",
+  "modmenu.updateText.nonNumerical": "%s на %s",
   "modmenu.buymeacoffee": "Извольте Оплатить Мой Кофе",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

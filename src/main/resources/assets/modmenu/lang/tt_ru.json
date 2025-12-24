@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Mod Menu яңарту тикшерүчесе — эксперименталь функция!)",
   "modmenu.childHasUpdate": "Бу модның бала өчен яңарту бар.",
   "modmenu.updateText": "%2$s сайтында %1$s версиясе",
+  "modmenu.updateText.nonNumerical": "%2$s сайтында %1$s версиясе",
   "modmenu.install_version": "%s версиясен утырту",
   "modmenu.downloadLink": "Йөкләнү",
   

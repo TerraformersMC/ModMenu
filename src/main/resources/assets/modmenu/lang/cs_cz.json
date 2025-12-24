@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "Je dostupná aktualizace:",
   "modmenu.childHasUpdate": "Je dostupná aktualizace podřazeného modu.",
   "modmenu.updateText": "v%s na %s",
+  "modmenu.updateText.nonNumerical": "%s na %s",
   "modmenu.buymeacoffee": "Kupte mi kávu",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
