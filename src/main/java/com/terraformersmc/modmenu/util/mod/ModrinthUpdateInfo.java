@@ -15,10 +15,15 @@ public record ModrinthUpdateInfo(String projectId, String versionId, String vers
         return true;
     }
 
-    @Override
-    public @NotNull Component getUpdateMessage() {
-        return Component.translatable("modmenu.updateText", VersionUtil.stripPrefix(this.versionNumber), MODRINTH_TEXT);
-    }
+	@Override
+	public @NotNull Component getUpdateMessage() {
+        String versionNoPrefix = VersionUtil.stripPrefix(this.versionNumber);
+        String key = "modmenu.updateText";
+        if (!Character.isDigit(versionNoPrefix.charAt(0))) {
+            key += ".nonNumerical";
+        }
+        return Component.translatable(key, versionNoPrefix, MODRINTH_TEXT);
+	}
 
     @Override
     public String getDownloadLink() {
