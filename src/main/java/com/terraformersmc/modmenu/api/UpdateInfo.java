@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.api;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public interface UpdateInfo {
 	/**
 	 * @return If an update for the mod is available.

@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.api;
 
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public interface UpdateChecker {
 	/**
 	 * Gets called when ModMenu is checking for updates.

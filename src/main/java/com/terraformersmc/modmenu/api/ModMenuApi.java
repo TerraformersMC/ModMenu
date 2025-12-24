@@ -9,6 +9,7 @@ import net.minecraft.text.Text;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public interface ModMenuApi {
 	/**
 	 * Used for creating a {@link Screen} instance of the Mod Menu
