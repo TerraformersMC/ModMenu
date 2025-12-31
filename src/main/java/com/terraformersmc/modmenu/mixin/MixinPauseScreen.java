@@ -36,7 +36,7 @@ public abstract class MixinPauseScreen extends Screen {
 
     @Inject(method = "createPauseMenu", at = @At("TAIL"))
     private void onCreatePauseMenu(CallbackInfo ci) {
-        List<AbstractWidget> buttons = Screens.getButtons(this);
+        List<AbstractWidget> buttons = Screens.getWidgets(this);
 
         if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
             int modsButtonIndex = -1;

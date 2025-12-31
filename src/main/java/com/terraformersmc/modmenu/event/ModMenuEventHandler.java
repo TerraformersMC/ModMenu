@@ -10,7 +10,7 @@ import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
 import com.terraformersmc.modmenu.mixin.AccessorAbstractWidget;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.KeyMapping;
@@ -34,7 +34,7 @@ public class ModMenuEventHandler {
     private static KeyMapping MENU_KEY_BIND;
 
     public static void register() {
-        MENU_KEY_BIND = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+        MENU_KEY_BIND = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.modmenu.open_menu",
                 InputConstants.Type.KEYSYM,
                 InputConstants.UNKNOWN.getValue(),
@@ -51,7 +51,7 @@ public class ModMenuEventHandler {
     }
 
     private static void afterTitleScreenInit(Screen screen) {
-        final List<AbstractWidget> buttons = Screens.getButtons(screen);
+        final List<AbstractWidget> buttons = Screens.getWidgets(screen);
         if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue()) {
             int modsButtonIndex = -1;
             final int spacing = 24;

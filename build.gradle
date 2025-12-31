@@ -12,7 +12,7 @@ dependencies {
 	implementation include(fabricApi.module("fabric-api-base", project.fabric_version))
     implementation include(fabricApi.module("fabric-resource-loader-v1", project.fabric_version))
     implementation include(fabricApi.module("fabric-screen-api-v1", project.fabric_version))
-    implementation include(fabricApi.module("fabric-key-binding-api-v1", project.fabric_version))
+    implementation include(fabricApi.module("fabric-key-mapping-api-v1", project.fabric_version))
     implementation include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
 
 //    implementation include("eu.pb4:placeholder-api:${project.text_placeholder_api_version}")
