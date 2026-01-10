@@ -3,6 +3,7 @@ package com.terraformersmc.modmenu.util;
 import com.terraformersmc.modmenu.ModMenu;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
+import net.minecraft.util.Util;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -11,7 +12,9 @@ import java.net.http.HttpResponse;
 
 public class HttpUtil {
 	private static final String USER_AGENT = buildUserAgent();
-	private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+	private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .executor(Util.getDownloadWorkerExecutor())
+            .build();
 
 	private HttpUtil() {
 	}
