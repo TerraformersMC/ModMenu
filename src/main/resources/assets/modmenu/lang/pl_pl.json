@@ -109,6 +109,7 @@
   "option.modmenu.sorting": "Sortuj",
   "option.modmenu.sorting.ascending": "A-Z",
   "option.modmenu.sorting.descending": "Z-A",
+  "option.modmenu.sorting.has_update": "Ma aktualizację",
   "option.modmenu.show_libraries": "Biblioteki",
   "option.modmenu.show_libraries.true": "Pokazuj",
   "option.modmenu.show_libraries.false": "Ukrywaj",
