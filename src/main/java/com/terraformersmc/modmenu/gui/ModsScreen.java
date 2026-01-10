@@ -264,6 +264,10 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(modsFolderButton);
 		this.addDrawableChild(doneButton);
 
+		// Ensure a valid entry is selected
+		this.updateSelectedEntry(this.modList.getEntry(0));
+		this.modList.select(this.selected);
+
 		this.init = true;
 		this.keepFilterOptionsShown = true;
 	}
@@ -521,10 +525,9 @@ public class ModsScreen extends Screen {
 		this.descriptionListWidget.updateSelectedMod(selected.getMod());
 
 		if (this.configureButton != null) {
-
 			this.configureButton.active = getModHasConfigScreen(modId);
 			this.configureButton.visible =
-				selected != null && getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
+				getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
 
 			if (modScreenErrors.containsKey(modId)) {
 				Throwable e = modScreenErrors.get(modId);
