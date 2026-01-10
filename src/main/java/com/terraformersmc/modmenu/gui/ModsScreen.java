@@ -1,8 +1,6 @@
 package com.terraformersmc.modmenu.gui;
 
 import com.google.common.base.Joiner;
-import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
@@ -295,10 +293,9 @@ public class ModsScreen extends Screen {
 
 		this.modList.render(drawContext, mouseX, mouseY, delta);
 		this.searchBox.render(drawContext, mouseX, mouseY, delta);
-		GlStateManager._disableBlend();
-		drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 16777215);
+		drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.modList.getWidth() / 2, 8, 0xFFFFFFFF);
 		assert client != null;
-		int grayColor = 11184810;
+		int grayColor = 0xFFAAAAAA;
 		if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
 			drawContext.drawCenteredTextWithShadow(
 				this.textRenderer,
@@ -327,7 +324,7 @@ public class ModsScreen extends Screen {
 							fullModCount.asOrderedText(),
 							this.searchBoxX,
 							52,
-							0xFFFFFF,
+							0xFFFFFFFF,
 							true
 						);
 					} else {
@@ -336,7 +333,7 @@ public class ModsScreen extends Screen {
 							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
-							0xFFFFFF,
+							0xFFFFFFFF,
 							true
 						);
 						drawContext.drawText(
@@ -344,7 +341,7 @@ public class ModsScreen extends Screen {
 							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
-							0xFFFFFF,
+							0xFFFFFFFF,
 							true
 						);
 					}
@@ -355,7 +352,7 @@ public class ModsScreen extends Screen {
 							fullModCount.asOrderedText(),
 							this.searchBoxX,
 							52,
-							0xFFFFFF,
+							0xFFFFFFFF,
 							true
 						);
 					} else {
@@ -364,7 +361,7 @@ public class ModsScreen extends Screen {
 							computeModCountText(false, false).asOrderedText(),
 							this.searchBoxX,
 							46,
-							0xFFFFFF,
+							0xFFFFFFFF,
 							true
 						);
 						drawContext.drawText(
@@ -372,7 +369,7 @@ public class ModsScreen extends Screen {
 							computeLibraryCountText(false).asOrderedText(),
 							this.searchBoxX,
 							57,
-							0xFFFFFF,
+							0xFFFFFFFF,
 							true
 						);
 					}
@@ -387,10 +384,7 @@ public class ModsScreen extends Screen {
 				DrawingUtil.drawRandomVersionBackground(mod, drawContext, x, RIGHT_PANE_Y, 32, 32);
 			}
 
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			GlStateManager._enableBlend();
-			drawContext.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32);
-			GlStateManager._disableBlend();
+			drawContext.drawTexture(RenderLayer::getGuiTextured, this.selected.getIconTexture(), x, RIGHT_PANE_Y, 0.0F, 0.0F, 32, 32, 32, 32, 0xFFFFFFFF);
 			int lineSpacing = textRenderer.fontHeight + 1;
 			int imageOffset = 36;
 			Text name = Text.literal(mod.getTranslatedName());
@@ -406,7 +400,7 @@ public class ModsScreen extends Screen {
 				Language.getInstance().reorder(trimmedName),
 				x + imageOffset,
 				RIGHT_PANE_Y + 1,
-				0xFFFFFF,
+				0xFFFFFFFF,
 				true
 			);
 
@@ -437,7 +431,7 @@ public class ModsScreen extends Screen {
 					mod.getPrefixedVersion(),
 					x + imageOffset,
 					RIGHT_PANE_Y + 2 + lineSpacing,
-					0x808080,
+					0xFFAAAAAA,
 					true
 				);
 			}
@@ -458,7 +452,7 @@ public class ModsScreen extends Screen {
 					RIGHT_PANE_Y + 2 + lineSpacing * 2,
 					this.paneWidth - imageOffset - 4,
 					1,
-					0x808080
+					0xFFAAAAAA
 				);
 			}
 		}
@@ -554,10 +548,6 @@ public class ModsScreen extends Screen {
 
 		this.issuesButton.visible = true;
 		this.issuesButton.active = isMinecraft || selected.getMod().getIssueTracker() != null;
-	}
-
-	public double getScrollPercent() {
-		return scrollPercent;
 	}
 
 	public void updateScrollPercent(double scrollPercent) {

@@ -1,6 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -100,7 +99,7 @@ public class ParentEntry extends ModListEntry {
 			str.asOrderedText(),
 			(int) (childrenBadgeX + (float) childrenBadgeWidth / 2 - (float) childrenWidth / 2),
 			childrenBadgeY + 1,
-			0xCACACA,
+			0xFFCACACA,
 			false
 		);
 
@@ -109,7 +108,6 @@ public class ParentEntry extends ModListEntry {
 			drawContext.fill(x, y, x + iconSize, y + iconSize, 0xA0909090);
 			int xOffset = list.getParent().showModChildren.contains(getMod().getId()) ? iconSize : 0;
 			int yOffset = hoveringIcon ? iconSize : 0;
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			drawContext.drawTexture(
 				RenderLayer::getGuiTextured,
 				PARENT_MOD_TEXTURE,
@@ -120,7 +118,8 @@ public class ParentEntry extends ModListEntry {
 				iconSize + xOffset,
 				iconSize + yOffset,
 				ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256,
-				ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256
+				ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256,
+				0xFFFFFFFF
 			);
 		}
 	}

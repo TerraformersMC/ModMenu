@@ -1,12 +1,5 @@
 package com.terraformersmc.modmenu.gui.widget;
 
-import com.mojang.blaze3d.buffers.BufferType;
-import com.mojang.blaze3d.buffers.BufferUsage;
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -18,16 +11,12 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.Colors;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -80,7 +69,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		this.setSelected(entry);
 		if (entry != null) {
 			Mod mod = entry.getMod();
-			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()).getString());
+			this.client.getNarratorManager().narrate(Text.translatable("narrator.select", mod.getTranslatedName()));
 		}
 	}
 
@@ -131,7 +120,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	public void finalizeInit() {
 		reloadFilters();
-		if(restoreScrollY != null) {
+		if (restoreScrollY != null) {
 			setScrollY(restoreScrollY);
 			restoreScrollY = null;
 		}
@@ -220,61 +209,34 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 
 	@Override
 	protected void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+		int entryLeft = this.getRowLeft();
+		int entryWidth = this.getRowWidth();
+		int entryHeight = this.itemHeight - 4;
 		int entryCount = this.getEntryCount();
 		for (int index = 0; index < entryCount; ++index) {
 			int entryTop = this.getRowTop(index) + 2;
-			int entryBottom = this.getRowTop(index) + this.itemHeight;
+			int entryBottom = this.getRowBottom(index);
 			if (entryBottom >= this.getY() && entryTop <= this.getBottom()) {
-				int entryHeight = this.itemHeight - 4;
 				ModListEntry entry = this.getEntry(index);
-				int rowWidth = this.getRowWidth();
-				int entryLeft;
 				if (this.isSelectedEntry(index)) {
-					Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
-					entryLeft = getRowLeft() - 2 + entry.getXOffset();
-					int selectionRight = this.getRowLeft() + rowWidth + 2;
-					float float_2 = this.isFocused() ? 1.0F : 0.5F;
-					final int topColor = ColorHelper.fromFloats(1.0F, float_2, float_2, float_2);
-					final int bottomColor = ColorHelper.fromFloats(1.0F, 0.0F, 0.0F, 0.0F);
-                    RenderPipeline pipeline = RenderPipelines.GUI;
-                    try (BufferAllocator alloc = new BufferAllocator(pipeline.getVertexFormat().getVertexSize() * 4)) {
-                        BufferBuilder bufferBuilder = new BufferBuilder(alloc, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-                        bufferBuilder.vertex(matrix, entryLeft, entryTop + entryHeight + 2, 0.0F).color(topColor);
-                        bufferBuilder.vertex(matrix, selectionRight, entryTop + entryHeight + 2, 0.0F).color(topColor);
-                        bufferBuilder.vertex(matrix, selectionRight, entryTop - 2, 0.0F).color(topColor);
-                        bufferBuilder.vertex(matrix, entryLeft, entryTop - 2, 0.0F).color(topColor);
-                        bufferBuilder.vertex(matrix, entryLeft + 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
-                        bufferBuilder.vertex(matrix, selectionRight - 1, entryTop + entryHeight + 1, 0.0F).color(bottomColor);
-                        bufferBuilder.vertex(matrix, selectionRight - 1, entryTop - 1, 0.0F).color(bottomColor);
-                        bufferBuilder.vertex(matrix, entryLeft + 1, entryTop - 1, 0.0F).color(bottomColor);
-                        try (BuiltBuffer builtBuffer = bufferBuilder.endNullable()) {
-                            if (builtBuffer == null) {
-                                alloc.close();
-                                return;
-                            }
-                            Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
-                            RenderSystem.ShapeIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
-                            VertexFormat.IndexType indexType = autoStorageIndexBuffer.getIndexType();
-                            GpuBuffer indexBuffer = autoStorageIndexBuffer.getIndexBuffer(builtBuffer.getDrawParameters().indexCount());
-                            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Mod List", BufferType.VERTICES, BufferUsage.DYNAMIC_WRITE, builtBuffer.getBuffer().remaining());
-                            RenderSystem.getDevice().createCommandEncoder().writeToBuffer(vertexBuffer, builtBuffer.getBuffer(), 0);
-                            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(framebuffer.getColorAttachment(), OptionalInt.empty(), framebuffer.getDepthAttachment(), OptionalDouble.empty())) {
-                                renderPass.setPipeline(pipeline);
-                                renderPass.setVertexBuffer(0, vertexBuffer);
-                                renderPass.setIndexBuffer(indexBuffer, indexType);
-                                renderPass.drawIndexed(0, builtBuffer.getDrawParameters().indexCount());
-                            }
-                        }
-                    }
+					int entryContentLeft = entryLeft + entry.getXOffset() - 2;
+					int entryContentWidth = entryWidth - entry.getXOffset() + 4;
+					this.drawSelectionHighlight(
+						drawContext,
+						entryContentLeft,
+						entryTop,
+						entryContentWidth,
+						entryHeight,
+						this.isFocused() ? Colors.WHITE : Colors.GRAY, Colors.BLACK
+					);
 				}
 
-				entryLeft = this.getRowLeft();
 				entry.render(
 					drawContext,
 					index,
 					entryTop,
 					entryLeft,
-					rowWidth,
+					entryWidth,
 					entryHeight,
 					mouseX,
 					mouseY,
@@ -283,6 +245,14 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				);
 			}
 		}
+	}
+
+	/**
+	 * Version of {@link #drawSelectionHighlight(DrawContext, int, int, int, int, int)} with unconstrained positioning and sizing.
+	 */
+	protected void drawSelectionHighlight(DrawContext context, int x, int y, int width, int height, int borderColor, int fillColor) {
+		context.fill(x, y - 2, x + width, y + height + 2, borderColor);
+		context.fill(x + 1, y - 1, x + width - 1, y + height + 1, fillColor);
 	}
 
 	public void ensureVisible(ModListEntry entry) {
@@ -352,10 +322,6 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 	@Override
 	public int getRowLeft() {
 		return this.getX() + 6;
-	}
-
-	public int getTop() {
-		return this.getY();
 	}
 
 	public ModsScreen getParent() {
