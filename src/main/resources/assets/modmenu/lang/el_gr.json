@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "Υπάρχει διαθέσιμη ενημέρωση:",
   "modmenu.childHasUpdate": "Ένα παιδί αυτού του mod έχει διαθέσιμη ενημέρωση.",
   "modmenu.updateText": "v%s στο %s",
+  "modmenu.updateText.nonNumerical": "%s στο %s",
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

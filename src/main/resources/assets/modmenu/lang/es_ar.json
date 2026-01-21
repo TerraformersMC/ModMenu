@@ -63,6 +63,7 @@
   "modmenu.experimental": "(¡El buscador de actualizaciones de Mod Menu es experimental!)",
   "modmenu.childHasUpdate": "Un complemento de este mod tiene una actualización disponible.",
   "modmenu.updateText": "v%s en %s",
+  "modmenu.updateText.nonNumerical": "%s en %s",
   "modmenu.install_version": "Instalar versión %s",
   "modmenu.downloadLink": "Descargar",
 

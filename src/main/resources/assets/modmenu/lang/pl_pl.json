@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Funkcja sprawdzania aktualizacji jest eksperymentalna!)",
   "modmenu.childHasUpdate": "Mod potomny tego modu ma dostępną aktualizację.",
   "modmenu.updateText": "v%s na %s",
+  "modmenu.updateText.nonNumerical": "%s na %s",
   "modmenu.install_version": "Zainstaluj wersję %s",
   "modmenu.downloadLink": "Pobierz",
   

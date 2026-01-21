@@ -54,6 +54,7 @@
   "modmenu.hasUpdate": "有更新可用：",
   "modmenu.childHasUpdate": "此模組的一個子模組有更新。",
   "modmenu.updateText": "%2$s 中的 v%1$s",
+  "modmenu.updateText.nonNumerical": "%2$s 中的 %1$s",
   "modmenu.buymeacoffee": "予吾一茶",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

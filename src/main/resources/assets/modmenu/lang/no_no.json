@@ -63,6 +63,7 @@
   "modmenu.experimental": "(Mod-menyens oppdaterings-sjekker er eksperimentell!)",
   "modmenu.childHasUpdate": "Et barn av denne modden har en oppdatering tilgjengelig.",
   "modmenu.updateText": "v%s på %s",
+  "modmenu.updateText.nonNumerical": "%s på %s",
   
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",

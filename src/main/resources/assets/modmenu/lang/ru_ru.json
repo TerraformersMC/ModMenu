@@ -63,6 +63,7 @@
   "modmenu.experimental": "(проверка обновлений ModMenu экспериментальна)",
   "modmenu.childHasUpdate": "Доступно обновление для дочернего мода.",
   "modmenu.updateText": "v%s на %s",
+  "modmenu.updateText.nonNumerical": "%s на %s",
   "modmenu.install_version": "Установить версию %s",
   "modmenu.downloadLink": "Загрузить",
   
