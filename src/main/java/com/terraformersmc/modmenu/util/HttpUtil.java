@@ -9,11 +9,14 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class HttpUtil {
+    private static final Duration TIMEOUT = Duration.ofSeconds(30);
     private static final String USER_AGENT = buildUserAgent();
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .executor(Util.nonCriticalIoPool())
+            .connectTimeout(TIMEOUT)
             .build();
 
     private HttpUtil() {
@@ -24,6 +27,7 @@ public class HttpUtil {
             HttpResponse.BodyHandler<T> handler
     ) throws IOException, InterruptedException {
         builder.setHeader("User-Agent", USER_AGENT);
+        builder.timeout(TIMEOUT);
         return HTTP_CLIENT.send(builder.build(), handler);
     }
 
