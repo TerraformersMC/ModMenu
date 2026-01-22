@@ -44,7 +44,7 @@ public class UpdateCheckerUtil {
         }
 
         LOGGER.info("Checking mod updates...");
-        Util.backgroundExecutor().execute(UpdateCheckerUtil::checkForUpdates0);
+        Util.nonCriticalIoPool().execute(UpdateCheckerUtil::checkForUpdates0);
     }
 
     private static void checkForUpdates0() {
