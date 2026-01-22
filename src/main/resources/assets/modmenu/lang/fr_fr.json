@@ -3,7 +3,7 @@
   "key.modmenu.open_menu": "Ouvrir Mod Menu",
   "modmenu.title": "Mods",
   "modmenu.nameTranslation.modmenu": "Mod Menu",
-  "modmenu.descriptionTranslation.modmenu": "Ajoute un menu de mods pour voir la liste de mods installés.",
+  "modmenu.descriptionTranslation.modmenu": "Ajoute un menu de mods pour afficher la liste des mods installés.",
 
   "modmenu.loaded": "(%s chargés)",
   "modmenu.loaded.short": "(%s)",
@@ -40,10 +40,10 @@
   "modmenu.badge.modpack": "Modpack",
   "modmenu.badge.minecraft": "Minecraft",
 
-  "modmenu.dropInfo.line1": "Faites glisser et déposez des fichiers dans",
+  "modmenu.dropInfo.line1": "Glissez-déposez des fichiers dans",
   "modmenu.dropInfo.line2": "cette fenêtre pour ajouter des mods",
-  "modmenu.dropConfirm": "Voulez-vous copier les mods suivants dans le répertoire des mods ?",
-  "modmenu.dropSuccessful.line1": "Les mods ont été copiés avec succès",
+  "modmenu.dropConfirm": "Voulez-vous copier les mods suivants dans le dossier des mods ?",
+  "modmenu.dropSuccessful.line1": "Mods copiés avec succès",
   "modmenu.dropSuccessful.line2": "Redémarrez le jeu pour charger les mods",
 
   "modmenu.modIdToolTip": "ID du mod : %s",
