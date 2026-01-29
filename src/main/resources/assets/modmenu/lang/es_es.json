@@ -170,7 +170,7 @@
   "option.modmenu.update_checker.false": "NO",
   "option.modmenu.button_update_badge": "Mostrar indicador de actualización",
   "option.modmenu.button_update_badge.true": "SÍ",
-  "option.modmenu.button_update_badge.false": "NO"
+  "option.modmenu.button_update_badge.false": "NO",
   "option.modmenu.quick_configure": "Configuración rápida",
   "option.modmenu.quick_configure.true": "SÍ",
   "option.modmenu.quick_configure.false": "NO",
