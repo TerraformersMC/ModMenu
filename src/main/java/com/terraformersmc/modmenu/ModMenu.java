@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public class ModMenu implements ClientModInitializer {
     public static final String MOD_ID = "modmenu";
@@ -98,22 +99,41 @@ public class ModMenu implements ClientModInitializer {
 
         // Ignore deprecations, they're from Quilt Loader being in the dev env
         //noinspection deprecation
-        FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach(entrypoint -> {
+        FabricLoader.getInstance().getEntrypointContainers("modmenu", Object.class).forEach(entrypoint -> {
             //noinspection deprecation
             ModMetadata metadata = entrypoint.getProvider().getMetadata();
             String modId = metadata.getId();
             try {
-                ModMenuApi api = entrypoint.getEntrypoint();
-                ConfigScreenFactory<?> factory = api.getModConfigScreenFactory();
-                if (!(factory instanceof NullScreenFactory<?>)) {
-                    configScreenFactories.put(modId, factory);
-                }
-                apiImplementations.add(api);
-                updateCheckers.put(modId, api.getUpdateChecker());
-                providedUpdateCheckers.putAll(api.getProvidedUpdateCheckers());
-                api.attachModpackBadges(modpackMods::add);
+                Object type = entrypoint.getEntrypoint();
+                // First check if API is the entrypoint
+                if (type instanceof ModMenuApi api) {
+                    try {
+                        ConfigScreenFactory<?> factory = api.getModConfigScreenFactory();
+                        if (!(factory instanceof NullScreenFactory<?>)) {
+                            configScreenFactories.put(modId, factory);
+                        }
+                        apiImplementations.add(api);
+                        updateCheckers.put(modId, api.getUpdateChecker());
+                        providedUpdateCheckers.putAll(api.getProvidedUpdateCheckers());
+                        api.attachModpackBadges(modpackMods::add);
+                    } catch (Throwable e) {
+                        LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
+                    }
+                // Otherwise resort to function and verify if this function claims what it is supposed to be
+                // by intentionally trying to instance itself with the screen function
+                } else if (type instanceof Function) {
+                    try {
+                        @SuppressWarnings("unchecked")
+                        Function<Screen, Screen> sf = (Function<Screen, Screen>)type;
+                        configScreenFactories.put(modId, s -> sf.apply(s));
+                    } catch (Throwable e) {
+                        LOGGER.error("Mod {} provides an incompatible function implementation", modId, e);
+                    }
+               } else {
+                   LOGGER.error("Mod {} provides an unsupported entry implementation", modId);
+               }
             } catch (Throwable e) {
-                LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
+                LOGGER.error("Mod {} provides a broken entry implementation", modId, e);
             }
         });
 
