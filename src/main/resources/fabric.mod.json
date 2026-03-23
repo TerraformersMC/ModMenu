@@ -100,7 +100,8 @@
     "Pyrrha",
     "sakura-ryoko",
     "lowercasebtw",
-    "tnoctua"
+    "tnoctua",
+	  "Starmoe(Celestia)"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [

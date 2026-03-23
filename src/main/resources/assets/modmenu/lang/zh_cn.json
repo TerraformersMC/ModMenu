@@ -163,5 +163,10 @@
   "option.modmenu.update_channel": "更新频道",
   "option.modmenu.update_channel.alpha": "全部",
   "option.modmenu.update_channel.beta": "正式版和测试版",
-  "option.modmenu.update_channel.release": "仅正式版"
+  "option.modmenu.update_channel.release": "仅正式版",
+  "modmenu.install_version": "安装版本 %s",
+  "modmenu.bluesky": "Bluesky",
+  "option.modmenu.sorting.has_update": "有更新",
+  "option.modmenu.game_menu_button_style.insert": "“提供反馈”和“报告漏洞”下一行",
+  "option.modmenu.game_menu_button_style.replace": "替换掉“提供反馈”和“报告漏洞”"
 }
