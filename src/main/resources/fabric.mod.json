@@ -100,7 +100,8 @@
 	"sakura-ryoko",
 	"gniftygnome",
 	"lowercasebtw",
-	"tnoctua"
+	"tnoctua",
+	"litetex"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
