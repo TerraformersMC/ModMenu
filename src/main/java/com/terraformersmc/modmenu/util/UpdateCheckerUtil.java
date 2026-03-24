@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class UpdateCheckerUtil {
@@ -43,94 +44,95 @@ public class UpdateCheckerUtil {
 			return;
 		}
 
-		LOGGER.info("Checking mod updates...");
-		Util.getMainWorkerExecutor().execute(UpdateCheckerUtil::checkForUpdates0);
-	}
+        LOGGER.info("Checking mod updates...");
+        Util.getDownloadWorkerExecutor().execute(UpdateCheckerUtil::checkForUpdates0);
+    }
 
-	private static void checkForUpdates0() {
-		try (var executor = Executors.newThreadPerTaskExecutor(new UpdateCheckerThreadFactory())) {
-			List<Mod> withoutUpdateChecker = new ArrayList<>();
+    private static void checkForUpdates0() {
+        // noinspection resource - close would result in waiting for all thread, use shutdown instead
+        ExecutorService executor = Executors.newThreadPerTaskExecutor(new UpdateCheckerThreadFactory());
+        List<Mod> withoutUpdateChecker = new ArrayList<>();
 
-			List<Mod> updatableMods = ModMenu.MODS.values()
-				.stream()
-				.filter(UpdateCheckerUtil::allowsUpdateChecks)
-				.toList();
+        List<Mod> updatableMods = ModMenu.MODS.values()
+                .stream()
+                .filter(UpdateCheckerUtil::allowsUpdateChecks)
+                .toList();
 
-			for (Mod mod : updatableMods) {
-				UpdateChecker updateChecker = mod.getUpdateChecker();
+        for (Mod mod : updatableMods) {
+            UpdateChecker updateChecker = mod.getUpdateChecker();
 
-				if (updateChecker == null) {
-					withoutUpdateChecker.add(mod); // Fall back to update checking via Modrinth
-				} else {
-					executor.submit(() -> {
-						// We don't know which mod the thread is for yet in the thread factory
-						Thread.currentThread().setName("ModMenu/Update Checker/%s".formatted(mod.getName()));
+            if (updateChecker == null) {
+                withoutUpdateChecker.add(mod); // Fall back to update checking via Modrinth
+            } else {
+                executor.submit(() -> {
+                    // We don't know which mod the thread is for yet in the thread factory
+                    Thread.currentThread().setName("ModMenu/Update Checker/%s".formatted(mod.getName()));
 
-						var update = updateChecker.checkForUpdates();
-						mod.setUpdateInfo(update);
+                    var update = updateChecker.checkForUpdates();
+                    mod.setUpdateInfo(update);
 
-						if (update != null && update.isUpdateAvailable()) {
-							LOGGER.info("Update available for '{}@{}'", mod.getId(), mod.getVersion());
-						}
-					});
-				}
-			}
+                    if (update != null && update.isUpdateAvailable()) {
+                        LOGGER.info("Update available for '{}@{}'", mod.getId(), mod.getVersion());
+                    }
+                });
+            }
+        }
 
-			if (modrinthApiV2Deprecated) {
-				return;
-			}
+        if (modrinthApiV2Deprecated) {
+            return;
+        }
 
-			var modHashes = getModHashes(withoutUpdateChecker);
+        var modHashes = getModHashes(withoutUpdateChecker);
 
-			var currentVersionsFuture = executor.submit(() -> getCurrentVersions(modHashes.keySet()));
-			var updatedVersionsFuture = executor.submit(() -> getUpdatedVersions(modHashes.keySet()));
+        var currentVersionsFuture = executor.submit(() -> getCurrentVersions(modHashes.keySet()));
+        var updatedVersionsFuture = executor.submit(() -> getUpdatedVersions(modHashes.keySet()));
 
-			Map<String, Instant> currentVersions = null;
-			Map<String, VersionUpdate> updatedVersions = null;
+        Map<String, Instant> currentVersions = null;
+        Map<String, VersionUpdate> updatedVersions = null;
 
-			try {
-				currentVersions = currentVersionsFuture.get();
-				updatedVersions = updatedVersionsFuture.get();
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
+        try {
+            currentVersions = currentVersionsFuture.get();
+            updatedVersions = updatedVersionsFuture.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
 
-			if (currentVersions == null || updatedVersions == null) {
-				return;
-			}
+        if (currentVersions == null || updatedVersions == null) {
+            return;
+        }
 
-			for (var hash : modHashes.keySet()) {
-				var date = currentVersions.get(hash);
-				var data = updatedVersions.get(hash);
+        for (var hash : modHashes.keySet()) {
+            var date = currentVersions.get(hash);
+            var data = updatedVersions.get(hash);
 
-				if (date == null || data == null) {
-					continue;
-				}
+            if (date == null || data == null) {
+                continue;
+            }
 
-				// Current version is still the newest
-				if (Objects.equals(hash, data.hash)) {
-					continue;
-				}
+            // Current version is still the newest
+            if (Objects.equals(hash, data.hash)) {
+                continue;
+            }
 
-				// Current version is newer than what's
-				// Available on our preferred update channel
-				if (date.compareTo(data.releaseDate) >= 0) {
-					continue;
-				}
+            // Current version is newer than what's
+            // Available on our preferred update channel
+            if (date.compareTo(data.releaseDate) >= 0) {
+                continue;
+            }
 
-				for (var mod : modHashes.get(hash)) {
-					mod.setUpdateInfo(data.asUpdateInfo());
-					LOGGER.info("Update available for '{}@{}', (-> {})",
-						mod.getId(),
-						mod.getVersion(),
-						data.versionNumber
-					);
-				}
-			}
-		}
-	}
+            for (var mod : modHashes.get(hash)) {
+                mod.setUpdateInfo(data.asUpdateInfo());
+                LOGGER.info("Update available for '{}@{}', (-> {})",
+                        mod.getId(),
+                        mod.getVersion(),
+                        data.versionNumber
+                );
+            }
+        }
+        executor.shutdown();
+    }
 
 	private static Map<String, Set<Mod>> getModHashes(Collection<Mod> mods) {
 		Map<String, Set<Mod>> results = new HashMap<>();
