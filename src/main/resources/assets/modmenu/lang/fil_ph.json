@@ -40,8 +40,8 @@
   "modmenu.badge.modpack": "Modpack",
   "modmenu.badge.minecraft": "Minecraft",
   
-  "modmenu.dropInfo.line1": "Ihatak at ihulog ang mga file sa",
-  "modmenu.dropInfo.line2": "window na ito upang magdagdag ng mga mod",
+  "modmenu.dropInfo.line1": "Ihatak at ihulog ang mga file sa window",
+  "modmenu.dropInfo.line2": "na ito upang magdagdag ng mga mod",
   "modmenu.dropConfirm": "Gusto mo bang kopyahin ang mga sumusunod na mga mod sa direktoryo ng mod?",
   "modmenu.dropSuccessful.line1": "Matagumpay na nakopya ang mga mod",
   "modmenu.dropSuccessful.line2": "I-restart ang laro upang i-load ang mga mod",
