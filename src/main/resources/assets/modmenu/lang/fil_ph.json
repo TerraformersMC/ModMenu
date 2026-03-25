@@ -64,7 +64,7 @@
   "modmenu.childHasUpdate": "Mayroong update para sa komponente ng mod na ito.",
   "modmenu.updateText": "v%s sa %s",
   "modmenu.updateText.nonNumerical": "%s sa %s",
-  "modmenu.install_version": "I-install ang bersiyon %s",
+  "modmenu.install_version": "I-install ang bersiyong %s",
   "modmenu.downloadLink": "I-download",
 
   "modmenu.bluesky": "Bluesky",
