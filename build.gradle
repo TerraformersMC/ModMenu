@@ -24,15 +24,18 @@ repositories {
 	maven {
 		name = 'TerraformersMC'
 		url = 'https://maven.terraformersmc.com/'
+        content { includeGroupAndSubgroups("com.terraformersmc") }
 	}
 
 	maven {
 		name = 'Quilt'
 		url = 'https://maven.quiltmc.org/repository/release'
+        content { includeGroupAndSubgroups("org.quiltmc") }
 	}
 
 	maven {
 		name = 'Nucleoid'
 		url = 'https://maven.nucleoid.xyz/'
+        content { includeGroupAndSubgroups("eu.pb4") }
 	}
 }
