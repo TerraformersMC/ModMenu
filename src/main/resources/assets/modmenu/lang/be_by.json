@@ -66,7 +66,8 @@
   "modmenu.updateText.nonNumerical": "%s на %s",
   "modmenu.install_version": "Усталяваць версію %s",
   "modmenu.downloadLink": "Спампаваць",
-  
+
+  "modmenu.bluesky": "Bluesky",
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
