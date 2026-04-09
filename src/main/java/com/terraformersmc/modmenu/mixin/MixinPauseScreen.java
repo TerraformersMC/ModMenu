@@ -109,7 +109,7 @@ public abstract class MixinPauseScreen extends Screen {
                             ModMenuEventHandler.MODS_BUTTON_TEXTURE,
                             32,
                             64,
-                            button -> Minecraft.getInstance().setScreen(new ModsScreen(this)),
+                            button -> Minecraft.getInstance().setScreenAndShow(new ModsScreen(this)),
                             ModMenuApi.createModsButtonText()
                     ));
                 }

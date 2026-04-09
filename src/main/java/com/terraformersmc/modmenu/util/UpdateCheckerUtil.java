@@ -158,7 +158,7 @@ public class UpdateCheckerUtil {
 
     public static void triggerV2DeprecatedToast() {
         if (modrinthApiV2Deprecated && ModMenuConfig.UPDATE_CHECKER.getValue()) {
-            Minecraft.getInstance().getToastManager().addToast(new SystemToast(SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
+            Minecraft.getInstance().gui.toastManager().addToast(new SystemToast(SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                     Component.translatable("modmenu.modrinth.v2_deprecated.title"),
                     Component.translatable("modmenu.modrinth.v2_deprecated.description")
             ));

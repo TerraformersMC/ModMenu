@@ -4,12 +4,13 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.util.Tuple;
 
 public class ModSearch {
     public static boolean validSearchQuery(String query) {
@@ -21,12 +22,12 @@ public class ModSearch {
             return candidates;
         } else {
             return candidates.stream()
-                    .map(modContainer -> new Tuple<>(modContainer,
+                    .map(modContainer -> Map.entry(modContainer,
                             passesFilters(screen, modContainer, query.toLowerCase(Locale.ROOT))
                     ))
-                    .filter(pair -> pair.getB() > 0)
-                    .sorted((a, b) -> b.getB() - a.getB())
-                    .map(Tuple::getA)
+                    .filter(pair -> pair.getValue() > 0)
+                    .sorted(Comparator.<Map.Entry<Mod, Integer>>comparingInt(Map.Entry::getValue).reversed())
+                    .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
         }
     }

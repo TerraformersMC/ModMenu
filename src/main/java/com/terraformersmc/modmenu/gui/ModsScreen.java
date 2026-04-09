@@ -238,7 +238,7 @@ public class ModsScreen extends Screen {
         AbstractWidget modsFolderButton = Button.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Util.getPlatform().openUri(getModsFolder().toUri())).pos(this.width / 2 - 154, this.height - 28).size(150, 20).build();
 
         // Done button
-        AbstractWidget doneButton = Button.builder(CommonComponents.GUI_DONE, button -> minecraft.setScreen(previousScreen)).pos(this.width / 2 + 4, this.height - 28).size(150, 20).build();
+        AbstractWidget doneButton = Button.builder(CommonComponents.GUI_DONE, button -> minecraft.setScreenAndShow(previousScreen)).pos(this.width / 2 + 4, this.height - 28).size(150, 20).build();
 
         // Initialize data
         modList.finalizeInit();
@@ -500,7 +500,7 @@ public class ModsScreen extends Screen {
     @Override
     public void onClose() {
         this.modList.close();
-        this.minecraft.setScreen(this.previousScreen);
+        this.minecraft.setScreenAndShow(this.previousScreen);
     }
 
     private void setFilterOptionsShown(boolean filterOptionsShown) {
@@ -580,7 +580,7 @@ public class ModsScreen extends Screen {
 
         String modList = mods.stream().map(Path::getFileName).map(Path::toString).collect(Collectors.joining(", "));
         assert this.minecraft != null;
-        this.minecraft.setScreen(new ConfirmScreen((value) -> {
+        this.minecraft.setScreenAndShow(new ConfirmScreen((value) -> {
             if (value) {
                 boolean allSuccessful = true;
                 for (Path path : mods) {
@@ -595,10 +595,10 @@ public class ModsScreen extends Screen {
                 }
 
                 if (allSuccessful) {
-                    SystemToast.add(minecraft.getToastManager(), SystemToast.SystemToastId.PERIODIC_NOTIFICATION, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_1, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_2);
+                    SystemToast.add(minecraft.gui.toastManager(), SystemToast.SystemToastId.PERIODIC_NOTIFICATION, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_1, ModMenuScreenTexts.DROP_SUCCESSFUL_LINE_2);
                 }
             }
-            this.minecraft.setScreen(this);
+            this.minecraft.setScreenAndShow(this);
         }, ModMenuScreenTexts.DROP_CONFIRM, Component.literal(modList)));
     }
 
@@ -643,7 +643,7 @@ public class ModsScreen extends Screen {
             Screen screen = ModMenu.getConfigScreen(modId, this);
             if (screen != null) {
                 assert this.minecraft != null;
-                this.minecraft.setScreen(screen);
+                this.minecraft.setScreenAndShow(screen);
             }
         } catch (java.lang.NoClassDefFoundError e) {
             LOGGER.warn("The '{}' mod config screen is not available because {} is missing.", modId, e.getLocalizedMessage());
