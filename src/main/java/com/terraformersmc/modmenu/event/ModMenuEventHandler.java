@@ -125,7 +125,7 @@ public class ModMenuEventHandler {
                             MODS_BUTTON_TEXTURE,
                             32,
                             64,
-                            button -> Minecraft.getInstance().setScreenAndShow(new ModsScreen(screen)),
+                            button -> Minecraft.getInstance().gui.setScreen(new ModsScreen(screen)),
                             ModMenuApi.createModsButtonText()
                     ));
                 }
@@ -136,7 +136,7 @@ public class ModMenuEventHandler {
 
     private static void onClientEndTick(Minecraft client) {
         while (MENU_KEY_MAPPING.consumeClick()) {
-            client.setScreenAndShow(new ModsScreen(client.gui.screen()));
+            client.gui.setScreen(new ModsScreen(client.gui.screen()));
         }
     }
 
