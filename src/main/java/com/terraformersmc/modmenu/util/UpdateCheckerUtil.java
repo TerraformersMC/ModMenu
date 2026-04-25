@@ -101,9 +101,10 @@ public class UpdateCheckerUtil {
                 currentVersions = currentVersionsFuture.get();
                 updatedVersions = updatedVersionsFuture.get();
             } catch (ExecutionException e) {
-                throw new RuntimeException(e);
+                LOGGER.error("Error checking for updates: ", e.getCause() != null ? e.getCause() : e);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                LOGGER.error("Error checking for updates: ", e);
             }
         } finally {
             executor.shutdown();
@@ -167,9 +168,9 @@ public class UpdateCheckerUtil {
 
     public static void triggerV2RemovedToast() {
         if (modrinthApiV2Removed && ModMenuConfig.UPDATE_CHECKER.getValue()) {
-            Minecraft.getInstance().getToastManager().addToast(new SystemToast(SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
-                    Component.translatable("modmenu.modrinth.v2_removed.title"),
-                    Component.translatable("modmenu.modrinth.v2_removed.description")
+            MinecraftClient.getInstance().getToastManager().add(new SystemToast(SystemToast.Type.PERIODIC_NOTIFICATION,
+                    Text.translatable("modmenu.modrinth.v2_removed.title"),
+                    Text.translatable("modmenu.modrinth.v2_removed.description")
             ));
         }
     }
@@ -208,11 +209,14 @@ public class UpdateCheckerUtil {
 					results.put(hash, date);
 				});
 
-				return results;
-			}
-		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Error checking for versions: ", e);
-		}
+                return results;
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOGGER.error("Error checking for versions: ", e);
+        } catch (IOException | RuntimeException e) {
+            LOGGER.error("Error checking for versions: ", e);
+        }
 
 		return null;
 	}
@@ -235,7 +239,7 @@ public class UpdateCheckerUtil {
 	}
 
     private static @Nullable Map<String, VersionUpdate> getUpdatedVersions(Collection<String> modHashes) {
-        String mcVer = SharedConstants.getCurrentVersion().name();
+        String mcVer = SharedConstants.getGameVersion().name();
         List<String> loaders = ModMenu.RUNNING_QUILT ? List.of("fabric", "quilt") : List.of("fabric");
         List<UpdateChannel> updateChannels = getUpdateChannels();
 
@@ -301,11 +305,14 @@ public class UpdateCheckerUtil {
 					);
 				});
 
-				return results;
-			}
-		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Error checking for updates: ", e);
-		}
+                return results;
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOGGER.error("Error checking for updates: ", e);
+        } catch (IOException | RuntimeException e) {
+            LOGGER.error("Error checking for updates: ", e);
+        }
 
 		return null;
 	}
