@@ -9,8 +9,8 @@
   "modmenu.loaded.short": "(%s)",
   "modmenu.loaded.69.secret": "(%s załadowanych... nieźle)",
   "modmenu.loaded.420.secret": "(%s załadowanych... jedziesz na zielonym?)",
-  "modmenu.mods.n": " (%s Modów)",
-  "modmenu.mods.1": " (%s Mod)",
+  "modmenu.mods.n": " (%s modów)",
+  "modmenu.mods.1": " (%s mod)",
   "modmenu.mods.69.secret": " (%s modów...nieźle)",
   "modmenu.mods.420.secret": " (%s modów... jedziesz na zielonym?)",
   
@@ -66,7 +66,8 @@
   "modmenu.updateText.nonNumerical": "%s na %s",
   "modmenu.install_version": "Zainstaluj wersję %s",
   "modmenu.downloadLink": "Pobierz",
-  
+
+  "modmenu.bluesky": "Bluesky",
   "modmenu.buymeacoffee": "Kup autorowi kawę",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
