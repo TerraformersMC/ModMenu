@@ -138,7 +138,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
 
         if (!(this instanceof ParentEntry) && ModMenuConfig.QUICK_CONFIGURE.getValue() && (this.list.getParent().getModHasConfigScreen(modId) || this.list.getParent().modScreenErrors.containsKey(modId))) {
             final int textureSize = ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256;
-            if (this.client.options.touchscreen().get() || hovered) {
+            if (hovered) {
                 drawContext.fill(x, y, x + iconSize, y + iconSize, -1601138544);
                 boolean hoveringIcon = mouseX - x < iconSize;
                 if (this.list.getParent().modScreenErrors.containsKey(modId)) {
