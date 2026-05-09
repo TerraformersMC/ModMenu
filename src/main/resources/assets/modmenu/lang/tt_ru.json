@@ -66,7 +66,8 @@
   "modmenu.updateText.nonNumerical": "%2$s сайтында %1$s версиясе",
   "modmenu.install_version": "%s версиясен утырту",
   "modmenu.downloadLink": "Йөкләнү",
-  
+
+  "modmenu.bluesky": "Bluesky",
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",

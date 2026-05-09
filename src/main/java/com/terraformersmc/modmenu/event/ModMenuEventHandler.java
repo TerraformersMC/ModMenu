@@ -131,7 +131,7 @@ public class ModMenuEventHandler {
                 }
             }
         }
-        UpdateCheckerUtil.triggerV2DeprecatedToast();
+        UpdateCheckerUtil.triggerV2RemovedToast();
     }
 
     private static void onClientEndTick(Minecraft client) {

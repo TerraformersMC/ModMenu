@@ -16,6 +16,7 @@ import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +30,12 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class UpdateCheckerUtil {
     public static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu/Update Checker");
 
-    private static boolean modrinthApiV2Deprecated = false;
+    private static boolean modrinthApiV2Removed = false;
 
     private static boolean allowsUpdateChecks(Mod mod) {
         return mod.allowsUpdateChecks();
@@ -49,54 +51,63 @@ public class UpdateCheckerUtil {
     }
 
     private static void checkForUpdates0() {
-        // noinspection resource - close would result in waiting for all thread, use shutdown instead
-        ExecutorService executor = Executors.newThreadPerTaskExecutor(new UpdateCheckerThreadFactory());
         List<Mod> withoutUpdateChecker = new ArrayList<>();
+        Map<String, Instant> currentVersions = null;
+        Map<String, VersionUpdate> updatedVersions = null;
+        Map<String, Set<Mod>> modHashes;
+        Future<Map<String, Instant>> currentVersionsFuture;
+        Future<Map<String, UpdateCheckerUtil.VersionUpdate>> updatedVersionsFuture;
 
         List<Mod> updatableMods = ModMenu.MODS.values()
                 .stream()
                 .filter(UpdateCheckerUtil::allowsUpdateChecks)
                 .toList();
 
-        for (Mod mod : updatableMods) {
-            UpdateChecker updateChecker = mod.getUpdateChecker();
-
-            if (updateChecker == null) {
-                withoutUpdateChecker.add(mod); // Fall back to update checking via Modrinth
-            } else {
-                executor.submit(() -> {
-                    // We don't know which mod the thread is for yet in the thread factory
-                    Thread.currentThread().setName("ModMenu/Update Checker/%s".formatted(mod.getName()));
-
-                    var update = updateChecker.checkForUpdates();
-                    mod.setUpdateInfo(update);
-
-                    if (update != null && update.isUpdateAvailable()) {
-                        LOGGER.info("Update available for '{}@{}'", mod.getId(), mod.getVersion());
-                    }
-                });
-            }
-        }
-
-        if (modrinthApiV2Deprecated) {
-            return;
-        }
-
-        var modHashes = getModHashes(withoutUpdateChecker);
-
-        var currentVersionsFuture = executor.submit(() -> getCurrentVersions(modHashes.keySet()));
-        var updatedVersionsFuture = executor.submit(() -> getUpdatedVersions(modHashes.keySet()));
-
-        Map<String, Instant> currentVersions = null;
-        Map<String, VersionUpdate> updatedVersions = null;
+        // Close would result in waiting for all threads; use try/finally shutdown instead.
+        //noinspection resource
+        ExecutorService executor = Executors.newThreadPerTaskExecutor(new UpdateCheckerThreadFactory());
 
         try {
-            currentVersions = currentVersionsFuture.get();
-            updatedVersions = updatedVersionsFuture.get();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            for (Mod mod : updatableMods) {
+                UpdateChecker updateChecker = mod.getUpdateChecker();
+
+                if (updateChecker == null) {
+                    withoutUpdateChecker.add(mod); // Fall back to update checking via Modrinth
+                } else {
+                    executor.submit(() -> {
+                        // We don't know which mod the thread is for yet in the thread factory
+                        Thread.currentThread().setName("ModMenu/Update Checker/%s".formatted(mod.getName()));
+
+                        var update = updateChecker.checkForUpdates();
+                        mod.setUpdateInfo(update);
+
+                        if (update != null && update.isUpdateAvailable()) {
+                            LOGGER.info("Update available for '{}@{}'", mod.getId(), mod.getVersion());
+                        }
+                    });
+                }
+            }
+
+            if (modrinthApiV2Removed) {
+                return;
+            }
+
+            modHashes = getModHashes(withoutUpdateChecker);
+
+            currentVersionsFuture = executor.submit(() -> getCurrentVersions(modHashes.keySet()));
+            updatedVersionsFuture = executor.submit(() -> getUpdatedVersions(modHashes.keySet()));
+
+            try {
+                currentVersions = currentVersionsFuture.get();
+                updatedVersions = updatedVersionsFuture.get();
+            } catch (ExecutionException e) {
+                LOGGER.error("Error checking for updates: ", e.getCause() != null ? e.getCause() : e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                LOGGER.error("Error checking for updates: ", e);
+            }
+        } finally {
+            executor.shutdown();
         }
 
         if (currentVersions == null || updatedVersions == null) {
@@ -131,7 +142,6 @@ public class UpdateCheckerUtil {
                 );
             }
         }
-        executor.shutdown();
     }
 
     private static Map<String, Set<Mod>> getModHashes(Collection<Mod> mods) {
@@ -156,11 +166,11 @@ public class UpdateCheckerUtil {
         return results;
     }
 
-    public static void triggerV2DeprecatedToast() {
-        if (modrinthApiV2Deprecated && ModMenuConfig.UPDATE_CHECKER.getValue()) {
+    public static void triggerV2RemovedToast() {
+        if (modrinthApiV2Removed && ModMenuConfig.UPDATE_CHECKER.getValue()) {
             Minecraft.getInstance().gui.toastManager().addToast(new SystemToast(SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
-                    Component.translatable("modmenu.modrinth.v2_deprecated.title"),
-                    Component.translatable("modmenu.modrinth.v2_deprecated.description")
+                    Component.translatable("modmenu.modrinth.v2_removed.title"),
+                    Component.translatable("modmenu.modrinth.v2_removed.description")
             ));
         }
     }
@@ -180,8 +190,8 @@ public class UpdateCheckerUtil {
             var response = HttpUtil.request(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 410) {
-                modrinthApiV2Deprecated = true;
-                LOGGER.warn("Modrinth API v2 is deprecated, unable to check for mod updates.");
+                modrinthApiV2Removed = true;
+                LOGGER.warn("Cannot check for updates because Modrinth's API v2 is no longer available.");
             } else if (response.statusCode() == 200) {
                 Map<String, Instant> results = new HashMap<>();
                 JsonObject data = JsonParser.parseString(response.body()).getAsJsonObject();
@@ -201,7 +211,10 @@ public class UpdateCheckerUtil {
 
                 return results;
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOGGER.error("Error checking for versions: ", e);
+        } catch (IOException | RuntimeException e) {
             LOGGER.error("Error checking for versions: ", e);
         }
 
@@ -228,17 +241,7 @@ public class UpdateCheckerUtil {
     private static @Nullable Map<String, VersionUpdate> getUpdatedVersions(Collection<String> modHashes) {
         String mcVer = SharedConstants.getCurrentVersion().name();
         List<String> loaders = ModMenu.RUNNING_QUILT ? List.of("fabric", "quilt") : List.of("fabric");
-
-        List<UpdateChannel> updateChannels;
-        UpdateChannel preferredChannel = UpdateChannel.getUserPreference();
-
-        if (preferredChannel == UpdateChannel.RELEASE) {
-            updateChannels = List.of(UpdateChannel.RELEASE);
-        } else if (preferredChannel == UpdateChannel.BETA) {
-            updateChannels = List.of(UpdateChannel.BETA, UpdateChannel.RELEASE);
-        } else {
-            updateChannels = List.of(UpdateChannel.ALPHA, UpdateChannel.BETA, UpdateChannel.RELEASE);
-        }
+        List<UpdateChannel> updateChannels = getUpdateChannels();
 
         String body = ModMenu.GSON_MINIFIED.toJson(new LatestVersionsFromHashesBody(modHashes,
                 loaders,
@@ -258,8 +261,8 @@ public class UpdateCheckerUtil {
             int status = latestVersionsResponse.statusCode();
             LOGGER.debug("Status: {}", status);
             if (status == 410) {
-                modrinthApiV2Deprecated = true;
-                LOGGER.warn("Modrinth API v2 is deprecated, unable to check for mod updates.");
+                modrinthApiV2Removed = true;
+                LOGGER.warn("Cannot check for updates because Modrinth's API v2 is no longer available.");
             } else if (status == 200) {
                 Map<String, VersionUpdate> results = new HashMap<>();
                 JsonObject responseObject = JsonParser.parseString(latestVersionsResponse.body()).getAsJsonObject();
@@ -304,11 +307,22 @@ public class UpdateCheckerUtil {
 
                 return results;
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOGGER.error("Error checking for updates: ", e);
+        } catch (IOException | RuntimeException e) {
             LOGGER.error("Error checking for updates: ", e);
         }
 
         return null;
+    }
+
+    private static @NullMarked List<UpdateChannel> getUpdateChannels() {
+        return switch(UpdateChannel.getUserPreference()) {
+            case RELEASE -> List.of(UpdateChannel.RELEASE);
+            case BETA -> List.of(UpdateChannel.BETA, UpdateChannel.RELEASE);
+            default -> List.of(UpdateChannel.ALPHA, UpdateChannel.BETA, UpdateChannel.RELEASE);
+        };
     }
 
     private record VersionUpdate(

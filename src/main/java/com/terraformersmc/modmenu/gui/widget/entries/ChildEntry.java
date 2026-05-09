@@ -4,7 +4,9 @@ import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ChildEntry extends ModListEntry {
     private final boolean bottomChild;
     private final ParentEntry parent;

@@ -21,7 +21,10 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
     public static final Identifier UNKNOWN_ICON = Identifier.withDefaultNamespace("textures/misc/unknown_pack.png");
     private static final Identifier MOD_CONFIGURATION_ICON = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/mod_configuration.png");
@@ -31,7 +34,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
     protected final Minecraft client;
     public final Mod mod;
     protected final ModListWidget list;
-    protected Identifier iconLocation;
+    protected @Nullable Identifier iconLocation;
     protected static final int FULL_ICON_SIZE = 32;
     protected static final int COMPACT_ICON_SIZE = 19;
     protected long sinceLastClick;
@@ -209,6 +212,12 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
         }
 
         return iconLocation;
+    }
+
+    public void updatePlacement(int leftX, int width, int y) {
+        this.setX(leftX);
+        this.setWidth(width);
+        this.setY(y);
     }
 
     public int getXOffset() {
