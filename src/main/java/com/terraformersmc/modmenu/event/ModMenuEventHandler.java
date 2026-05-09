@@ -92,47 +92,47 @@ public class ModMenuEventHandler {
 				}
 			}
 
-			if (modsButtonIndex != -1) {
-				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.CLASSIC) {
-					buttons.add(modsButtonIndex, new ModMenuButtonWidget(
-						screen.width / 2 - 100,
-						buttonsY + spacing,
-						200,
-						20,
-						ModMenuApi.createModsButtonText(),
-						screen
-					));
-				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
-					buttons.add(modsButtonIndex,
-						new ModMenuButtonWidget(
-							screen.width / 2 + 2,
-							buttonsY,
-							98,
-							20,
-							ModMenuApi.createModsButtonText(),
-							screen
-						)
-					);
-				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(
-						screen.width / 2 + 104,
-						buttonsY,
-						20,
-						20,
-						0,
-						0,
-						20,
-						MODS_BUTTON_TEXTURE,
-						32,
-						64,
-						button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)),
-						ModMenuApi.createModsButtonText()
-					));
-				}
-			}
-		}
-		UpdateCheckerUtil.triggerV2DeprecatedToast();
-	}
+            if (modsButtonIndex != -1) {
+                if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.CLASSIC) {
+                    buttons.add(modsButtonIndex, new ModMenuButtonWidget(
+                            screen.width / 2 - 100,
+                            buttonsY + spacing,
+                            200,
+                            20,
+                            ModMenuApi.createModsButtonText(),
+                            screen
+                    ));
+                } else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.SHRINK) {
+                    buttons.add(modsButtonIndex,
+                            new ModMenuButtonWidget(
+                                    screen.width / 2 + 2,
+                                    buttonsY,
+                                    98,
+                                    20,
+                                    ModMenuApi.createModsButtonText(),
+                                    screen
+                            )
+                    );
+                } else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.ICON) {
+                    buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(
+                            screen.width / 2 + 104,
+                            buttonsY,
+                            20,
+                            20,
+                            0,
+                            0,
+                            20,
+                            MODS_BUTTON_TEXTURE,
+                            32,
+                            64,
+                            button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)),
+                            ModMenuApi.createModsButtonText()
+                    ));
+                }
+            }
+        }
+        UpdateCheckerUtil.triggerV2RemovedToast();
+    }
 
 	private static void onClientEndTick(MinecraftClient client) {
 		while (MENU_KEY_BIND.wasPressed()) {

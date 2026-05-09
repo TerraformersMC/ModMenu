@@ -39,7 +39,10 @@
   "modmenu.badge.forge": "Forge",
   "modmenu.badge.modpack": "Modpack",
   "modmenu.badge.minecraft": "Minecraft",
-  
+
+  "modmenu.modrinth.v2_removed.title": "Update check failed",
+  "modmenu.modrinth.v2_removed.description": "Cannot check for updates because Modrinth's API v2 is no longer available.",
+
   "modmenu.dropInfo.line1": "Drag and drop files into",
   "modmenu.dropInfo.line2": "this window to add mods",
   "modmenu.dropConfirm": "Do you want to copy the following mods into the mods directory?",
