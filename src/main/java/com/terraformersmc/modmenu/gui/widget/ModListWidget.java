@@ -208,6 +208,12 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 			}
 		}
 
+        // Entries are assigned their width as they are added. The first entries can be
+        // measured before the final content height makes scrollbar presence stable,
+        // which leaves wrapped descriptions using a stale row width until scrolling
+        // happens to reposition the list.
+        this.repositionEntriesAfterContentChange();
+
         if (!reposition) {
             // This generally leaves the same mod selected, but no mod highlighted, and the scrolling is unmodified.
             return;
@@ -230,33 +236,46 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		}
 	}
 
-	@Override
-	protected void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-		int entryLeft = this.getRowLeft();
-		int entryWidth = this.getRowWidth();
-		int entryHeight = this.itemHeight - 4;
-		int entryCount = this.getEntryCount();
-		int x = this.getX();
-		int y = this.getY();
-		int yOffset = 2;
-		for (int index = 0; index < entryCount; ++index) {
-			int entryTop = this.getRowTop(index) + 2;
-			int entryBottom = this.getRowBottom(index);
-			if (entryBottom >= y && entryTop <= this.getBottom()) {
-				ModListEntry entry = this.getEntry(index);
-				if (entry == null) continue;
-				if (this.isSelectedEntry(index)) {
-					int entryContentLeft = entryLeft + entry.getXOffset() - 2;
-					int entryContentWidth = entryWidth - entry.getXOffset() + 4;
-					this.drawSelectionHighlight(
-						drawContext,
-						entryContentLeft,
-						entryTop + yOffset,
-						entryContentWidth,
-						entryHeight,
-						this.isFocused() ? Colors.WHITE : Colors.GRAY, Colors.BLACK
-					);
-				}
+    private void repositionEntriesAfterContentChange() {
+        int rowLeft = this.getRowLeft();
+        int rowWidth = this.getRowWidth();
+        int nextY = this.getY() + 2 - (int) this.getScrollY();
+
+        for (ModListEntry entry : children()) {
+            entry.setX(rowLeft);
+            entry.setWidth(rowWidth);
+            entry.setY(nextY);
+            nextY += entry.getHeight();
+        }
+    }
+
+    @Override
+    protected void renderList(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        int entryLeft = this.getRowLeft();
+        int entryWidth = this.getRowWidth();
+        int entryHeight = this.itemHeight - 4;
+        int entryCount = this.getEntryCount();
+        int x = this.getX();
+        int y = this.getY();
+        int yOffset = 2;
+        for (int index = 0; index < entryCount; ++index) {
+            int entryTop = this.getRowTop(index) + 2;
+            int entryBottom = this.getRowBottom(index);
+            if (entryBottom >= y && entryTop <= this.getBottom()) {
+                ModListEntry entry = this.getEntry(index);
+                if (entry == null) continue;
+                if (this.isSelectedEntry(index)) {
+                    int entryContentLeft = entryLeft + entry.getXOffset() - 2;
+                    int entryContentWidth = entryWidth - entry.getXOffset() + 4;
+                    this.drawSelectionHighlight(
+                            drawContext,
+                            entryContentLeft,
+                            entryTop + yOffset,
+                            entryContentWidth,
+                            entryHeight,
+                            this.isFocused() ? Colors.WHITE : Colors.GRAY, Colors.BLACK
+                    );
+                }
 
 				entry.setYOffset(yOffset);
 				entry.render(
