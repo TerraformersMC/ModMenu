@@ -28,7 +28,7 @@ public class UpdateCheckerTexturedButtonWidget extends LegacyTexturedButtonWidge
     public void extractContents(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float delta) {
         super.extractContents(drawContext, mouseX, mouseY, delta);
         if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
-            UpdateAvailableBadge.renderBadge(drawContext, this.getX() + this.width - 5, this.getY() - 3);
+            UpdateAvailableBadge.renderBadge(drawContext, this.getX() + this.width - 5, this.getY() - 3, getAlpha());
         }
     }
 }
