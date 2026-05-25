@@ -28,7 +28,8 @@ public class ModMenuButtonWidget extends Button.Plain {
             UpdateAvailableBadge.renderBadge(
                     drawContext,
                     this.width + this.getX() - 13,
-                    this.height / 2 + this.getY() - 5
+                    this.height / 2 + this.getY() - 5,
+                    getAlpha()
             );
         }
     }
