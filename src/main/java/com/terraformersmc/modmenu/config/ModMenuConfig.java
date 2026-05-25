@@ -22,8 +22,8 @@ public class ModMenuConfig {
     public static final BooleanConfigOption COUNT_LIBRARIES = new BooleanConfigOption("count_libraries", true);
     public static final BooleanConfigOption COMPACT_LIST = new BooleanConfigOption("compact_list", false);
     public static final BooleanConfigOption COUNT_CHILDREN = new BooleanConfigOption("count_children", true);
-    public static final EnumConfigOption<TitleMenuButtonStyle> MODS_BUTTON_STYLE = new EnumConfigOption<>("mods_button_style", TitleMenuButtonStyle.CLASSIC);
-    public static final EnumConfigOption<GameMenuButtonStyle> GAME_MENU_BUTTON_STYLE = new EnumConfigOption<>("game_menu_button_style", GameMenuButtonStyle.REPLACE);
+    public static final EnumConfigOption<TitleMenuButtonStyle> MODS_BUTTON_STYLE = new EnumConfigOption<>("mods_button_style", TitleMenuButtonStyle.ICON);
+    public static final EnumConfigOption<GameMenuButtonStyle> GAME_MENU_BUTTON_STYLE = new EnumConfigOption<>("game_menu_button_style", GameMenuButtonStyle.ICON);
     public static final BooleanConfigOption COUNT_HIDDEN_MODS = new BooleanConfigOption("count_hidden_mods", true);
     public static final EnumConfigOption<ModCountLocation> MOD_COUNT_LOCATION = new EnumConfigOption<>("mod_count_location", ModCountLocation.TITLE_SCREEN);
     public static final BooleanConfigOption HIDE_MOD_LINKS = new BooleanConfigOption("hide_mod_links", false);
@@ -120,6 +120,6 @@ public class ModMenuConfig {
     }
 
     public enum GameMenuButtonStyle {
-        @SerializedName(value = "replace", alternate = {"replace_bugs"}) REPLACE, @SerializedName(value = "insert", alternate = {"below_bugs"}) INSERT, ICON
+        @SerializedName(value = "insert", alternate = {"below_bugs"}) INSERT, @SerializedName(value = "icon", alternate = {"replace", "replace_bugs" /*old REPLACE ids*/}) ICON
     }
 }

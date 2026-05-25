@@ -5,6 +5,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 
 public class LegacyTexturedButtonWidget extends ImageButton {
     private final int u;
@@ -61,7 +62,8 @@ public class LegacyTexturedButtonWidget extends ImageButton {
                 this.width,
                 this.height,
                 this.textureWidth,
-                this.textureHeight
+                this.textureHeight,
+                ARGB.color(getAlpha(), 0xffffff)
         );
     }
 

@@ -6,8 +6,6 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
-import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
-import com.terraformersmc.modmenu.mixin.AccessorAbstractWidget;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -17,7 +15,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -113,21 +110,6 @@ public class ModMenuEventHandler {
                                     screen
                             )
                     );
-                } else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.ICON) {
-                    buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(
-                            screen.width / 2 + 104,
-                            buttonsY,
-                            20,
-                            20,
-                            0,
-                            0,
-                            20,
-                            MODS_BUTTON_TEXTURE,
-                            32,
-                            64,
-                            button -> Minecraft.getInstance().gui.setScreen(new ModsScreen(screen)),
-                            ModMenuApi.createModsButtonText()
-                    ));
                 }
             }
         }
@@ -145,14 +127,6 @@ public class ModMenuEventHandler {
             Component text = button.getMessage();
             ComponentContents textContent = text.getContents();
             return textContent instanceof TranslatableContents && Arrays.stream(translationKeys).anyMatch(s -> ((TranslatableContents) textContent).getKey().equals(s));
-        } else {
-            return false;
-        }
-    }
-
-    public static boolean buttonHasTooltip(LayoutElement widget, Tooltip tooltip) {
-        if (widget instanceof Button && widget instanceof AccessorAbstractWidget accessor) {
-            return tooltip == accessor.getTooltip().get();
         } else {
             return false;
         }
