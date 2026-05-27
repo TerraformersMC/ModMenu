@@ -2,6 +2,8 @@ package com.terraformersmc.modmenu.mixin;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
@@ -50,6 +52,11 @@ public abstract class MixinTitleScreen {
             addModMenuIconWidget.set(true);
             numberOfButtons.set(numberOfButtons.get() + 1);
         }
+    }
+
+    @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/TitleScreen;getHorizontalPosition(III)I"))
+    private int replaceInlinedConstant(TitleScreen instance, int currentButton, int numberOfButtons, int buttonWidth, Operation<Integer> original, @Local(name = "numberOfButtons") int actualNumberOfButtons) {
+        return original.call(instance, currentButton, actualNumberOfButtons, buttonWidth);
     }
 
     @Definition(id = "width", field = "Lnet/minecraft/client/gui/screens/TitleScreen;width:I")
