@@ -57,7 +57,7 @@ public abstract class MixinPauseScreen extends Screen {
         if (!ModMenuConfig.MODIFY_GAME_MENU.getValue()) return;
         ModMenuConfig.GameMenuButtonStyle style = ModMenuConfig.GAME_MENU_BUTTON_STYLE.getValue();
         if (style == ModMenuConfig.GameMenuButtonStyle.INSERT) {
-            final int fullWidthButton = 204;
+            final int fullWidthButton = 204; // PauseScreen.BUTTON_WIDTH_FULL
             helper.addChild(new ModMenuButtonWidget(
                     0,
                     0,
