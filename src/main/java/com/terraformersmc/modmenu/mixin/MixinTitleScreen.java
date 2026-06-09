@@ -82,8 +82,8 @@ public abstract class MixinTitleScreen {
         ));
     }
 
-    @ModifyArg(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;III)V", ordinal = 0))
-    private String onRender(String string) {
+    @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/language/I18n;get(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"))
+    String modifyModdedVersionString(String id, Object[] args, Operation<String> original) {
         if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnTitleScreen()) {
             String count = ModMenu.getDisplayedModCount();
             String specificKey = "modmenu.mods." + count;
@@ -92,9 +92,9 @@ public abstract class MixinTitleScreen {
                 replacementKey = specificKey + ".secret";
             }
 
-            return string.replace(I18n.get(I18n.get("menu.modded")), I18n.get(replacementKey, count));
-        } else {
-            return string;
+            return I18n.get(replacementKey, count);
         }
+
+        return original.call(id, args);
     }
 }
