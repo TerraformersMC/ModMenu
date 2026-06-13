@@ -264,10 +264,6 @@ public class ModsScreen extends Screen {
         this.addRenderableWidget(modsFolderButton);
         this.addRenderableWidget(doneButton);
 
-        // Ensure a valid entry is selected
-        this.updateSelectedEntry(this.modList.getEntry(0));
-        this.modList.select(this.selected);
-
         this.init = true;
         this.keepFilterOptionsShown = true;
     }
