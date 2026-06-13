@@ -198,6 +198,11 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
                     if (this.parent.showModChildren.contains(modId)) {
                         List<Mod> validChildren = ModSearch.search(this.parent, searchTerm, children);
                         for (Mod child : validChildren) {
+                            //Hide child lib mods when the config is set to hide
+                            if (child.getBadges().contains(Mod.Badge.LIBRARY) && !ModMenuConfig.SHOW_LIBRARIES.getValue()) {
+                                continue;
+                            }
+
                             this.addEntry(new ChildEntry(child, parent, this, validChildren.indexOf(child) == validChildren.size() - 1));
                         }
                     }
