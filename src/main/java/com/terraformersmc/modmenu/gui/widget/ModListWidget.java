@@ -137,7 +137,7 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
     }
 
     public void finalizeInit() {
-        reloadFilters();
+        filter(parent.getSearchInput(), true, true);
         if (restoreScrollY != null) {
             setScrollAmount(restoreScrollY);
             restoreScrollY = null;
