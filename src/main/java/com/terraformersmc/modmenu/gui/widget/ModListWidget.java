@@ -187,26 +187,31 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 				continue;
 			}
 
-			if (!ModMenu.PARENT_MAP.values().contains(mod)) {
-				if (ModMenu.PARENT_MAP.keySet().contains(mod) && hasVisibleChildMods(mod)) {
-					//Add parent mods when not searching
-					List<Mod> children = ModMenu.PARENT_MAP.get(mod);
-					children.sort(ModMenuConfig.SORTING.getValue().getComparator());
-					ParentEntry parent = new ParentEntry(mod, children, this);
-					this.addEntry(parent);
-					//Add children if they are meant to be shown
-					if (this.parent.showModChildren.contains(modId)) {
-						List<Mod> validChildren = ModSearch.search(this.parent, searchTerm, children);
-						for (Mod child : validChildren) {
-							this.addEntry(new ChildEntry(child, parent, this, validChildren.indexOf(child) == validChildren.size() - 1));
-						}
-					}
-				} else {
-					//A mod with no children
-					this.addEntry(new IndependentEntry(mod, this));
-				}
-			}
-		}
+            if (!ModMenu.PARENT_MAP.values().contains(mod)) {
+                if (ModMenu.PARENT_MAP.keySet().contains(mod) && hasVisibleChildMods(mod)) {
+                    //Add parent mods when not searching
+                    List<Mod> children = ModMenu.PARENT_MAP.get(mod);
+                    children.sort(ModMenuConfig.SORTING.getValue().getComparator());
+                    ParentEntry parent = new ParentEntry(mod, children, this);
+                    this.addEntry(parent);
+                    //Add children if they are meant to be shown
+                    if (this.parent.showModChildren.contains(modId)) {
+                        List<Mod> validChildren = ModSearch.search(this.parent, searchTerm, children);
+                        for (Mod child : validChildren) {
+                            //Hide child lib mods when the config is set to hide
+                            if (child.getBadges().contains(Mod.Badge.LIBRARY) && !ModMenuConfig.SHOW_LIBRARIES.getValue()) {
+                                continue;
+                            }
+
+                            this.addEntry(new ChildEntry(child, parent, this, validChildren.indexOf(child) == validChildren.size() - 1));
+                        }
+                    }
+                } else {
+                    //A mod with no children
+                    this.addEntry(new IndependentEntry(mod, this));
+                }
+            }
+        }
 
         // Entries are assigned their width as they are added. The first entries can be
         // measured before the final content height makes scrollbar presence stable,
