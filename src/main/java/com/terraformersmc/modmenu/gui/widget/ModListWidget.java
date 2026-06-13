@@ -136,13 +136,13 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
 		super.removeEntry(entry);
 	}
 
-	public void finalizeInit() {
-		reloadFilters();
-		if (restoreScrollY != null) {
-			setScrollY(restoreScrollY);
-			restoreScrollY = null;
-		}
-	}
+    public void finalizeInit() {
+        filter(parent.getSearchInput(), true, true);
+        if (restoreScrollY != null) {
+            setScrollY(restoreScrollY);
+            restoreScrollY = null;
+        }
+    }
 
 	public void reloadFilters() {
 		filter(parent.getSearchInput(), true, false);

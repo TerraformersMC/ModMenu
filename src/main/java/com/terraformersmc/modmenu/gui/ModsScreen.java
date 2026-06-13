@@ -264,13 +264,9 @@ public class ModsScreen extends Screen {
 		this.addDrawableChild(modsFolderButton);
 		this.addDrawableChild(doneButton);
 
-		// Ensure a valid entry is selected
-		this.updateSelectedEntry(this.modList.getEntry(0));
-		this.modList.select(this.selected);
-
-		this.init = true;
-		this.keepFilterOptionsShown = true;
-	}
+        this.init = true;
+        this.keepFilterOptionsShown = true;
+    }
 
 	@Override
 	public boolean keyPressed(KeyInput input) {
