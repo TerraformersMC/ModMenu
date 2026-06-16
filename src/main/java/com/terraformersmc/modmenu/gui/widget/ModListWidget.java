@@ -154,8 +154,8 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
 
     private boolean hasVisibleChildMods(Mod parent) {
         List<Mod> children = ModMenu.PARENT_MAP.get(parent);
-        boolean hideLibraries = !ModMenuConfig.SHOW_LIBRARIES.getValue();
-        return !children.stream().allMatch(child -> child.isHidden() || hideLibraries && child.getBadges().contains(Mod.Badge.LIBRARY));
+        ModMenuConfig.LibraryVisibility libraryVisibility = ModMenuConfig.SHOW_LIBRARIES.getValue();
+        return !children.stream().allMatch(child -> child.isHidden() || libraryVisibility.hideMod(child, this.parent.getModHasConfigScreen(child.getId())));
     }
 
     public void filter(String searchTerm, boolean refresh, boolean reposition) {
@@ -183,7 +183,7 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
             String modId = mod.getId();
 
             //Hide parent lib mods when the config is set to hide
-            if (mod.getBadges().contains(Mod.Badge.LIBRARY) && !ModMenuConfig.SHOW_LIBRARIES.getValue()) {
+            if (ModMenuConfig.SHOW_LIBRARIES.getValue().hideMod(mod, this.parent.getModHasConfigScreen(modId))) {
                 continue;
             }
 
@@ -199,7 +199,7 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
                         List<Mod> validChildren = ModSearch.search(this.parent, searchTerm, children);
                         for (Mod child : validChildren) {
                             //Hide child lib mods when the config is set to hide
-                            if (child.getBadges().contains(Mod.Badge.LIBRARY) && !ModMenuConfig.SHOW_LIBRARIES.getValue()) {
+                            if (ModMenuConfig.SHOW_LIBRARIES.getValue().hideMod(child, this.parent.getModHasConfigScreen(child.getId()))) {
                                 continue;
                             }
 
