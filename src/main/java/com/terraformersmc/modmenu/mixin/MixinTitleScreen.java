@@ -11,10 +11,12 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.gui.ModsScreen;
-import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
+import com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.resources.language.I18n;
@@ -26,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.terraformersmc.modmenu.event.ModMenuEventHandler.MODS_BUTTON_TEXTURE;
+import static com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget.*;
 
 @Mixin(TitleScreen.class)
 public abstract class MixinTitleScreen {
@@ -66,19 +68,25 @@ public abstract class MixinTitleScreen {
         if (!addModMenuIconWidget.get()) return;
         currentButton.set(currentButton.get()+1);
         Screen screen = (TitleScreen) (Object) this;
-        Screens.getWidgets(screen).add(new UpdateCheckerTexturedButtonWidget(
+        Screens.getWidgets(screen).add(new SmallModMenuButtonWidget(
                 this.getHorizontalPosition(currentButton.get(), numberOfButtons, 20),
                 topPos,
                 20,
                 20,
-                0,
-                0,
+                ModMenuApi.createModsButtonText(),
                 20,
-                MODS_BUTTON_TEXTURE,
-                32,
-                64,
+                20,
+                0,
+                0,
+                new WidgetSprites(
+                        MODS_SPRITE_ENABLED,
+                        MODS_SPRITE_DISABLED,
+                        MODS_SPRITE_FOCUSED
+                ),
                 _ -> Minecraft.getInstance().gui.setScreen(new ModsScreen(screen)),
-                ModMenuApi.createModsButtonText()
+                ModMenuApi.createModsButtonText(),
+                null,
+                false
         ));
     }
 

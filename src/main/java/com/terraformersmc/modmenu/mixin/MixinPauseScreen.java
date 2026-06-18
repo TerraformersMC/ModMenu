@@ -5,11 +5,11 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
-import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
-import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
+import com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -20,6 +20,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import static com.terraformersmc.modmenu.gui.ModsScreen.*;
+import static com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget.*;
 
 @Mixin(PauseScreen.class)
 public abstract class MixinPauseScreen extends Screen {
@@ -34,19 +37,26 @@ public abstract class MixinPauseScreen extends Screen {
         if (!ModMenuConfig.MODIFY_GAME_MENU.getValue()) return;
         ModMenuConfig.GameMenuButtonStyle style = ModMenuConfig.GAME_MENU_BUTTON_STYLE.getValue();
         if (style == ModMenuConfig.GameMenuButtonStyle.ICON) {
-            iconButtonRow.addChild(new UpdateCheckerTexturedButtonWidget(
+            iconButtonRow.addChild(new SmallModMenuButtonWidget(
                     0,
                     0,
                     20,
                     20,
-                    0,
-                    0,
+                    ModMenuApi.createModsButtonText(),
                     20,
-                    ModMenuEventHandler.MODS_BUTTON_TEXTURE,
-                    32,
-                    64,
+                    20,
+                    0,
+                    0,
+                    new WidgetSprites(
+                            MODS_SPRITE_ENABLED,
+                            MODS_SPRITE_DISABLED,
+                            MODS_SPRITE_FOCUSED
+                    ),
                     _ -> Minecraft.getInstance().gui.setScreen(new ModsScreen(this)),
-                    ModMenuApi.createModsButtonText()
+                    ModMenuApi.createModsButtonText(),
+                    null,
+                    false
+
             ));
         }
 

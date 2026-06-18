@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ModMenuEventHandler {
-    public static final Identifier MODS_BUTTON_TEXTURE = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/mods_button.png");
     private static KeyMapping MENU_KEY_MAPPING;
 
     public static void register() {

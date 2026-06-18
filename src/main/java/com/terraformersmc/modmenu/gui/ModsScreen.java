@@ -5,7 +5,6 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
-import com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
@@ -18,10 +17,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.ConfirmScreen;
@@ -49,8 +45,12 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public class ModsScreen extends Screen {
-    private static final Identifier FILTERS_BUTTON_LOCATION = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/filters_button.png");
-    private static final Identifier CONFIGURE_BUTTON_LOCATION = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/configure_button.png");
+    private static final Identifier FILTERS_SPRITE_ENABLED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "filters/enabled");
+    private static final Identifier FILTERS_SPRITE_DISABLED= Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "filters/disabled");
+    private static final Identifier FILTERS_SPRITE_FOCUSED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "filters/focused");
+    private static final Identifier CONFIGURE_SPRITE_ENABLED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "configure/enabled");
+    private static final Identifier CONFIGURE_SPRITE_DISABLED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "configure/disabled");
+    private static final Identifier CONFIGURE_SPRITE_FOCUSED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "configure/focused");
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
     private final Screen previousScreen;
@@ -70,11 +70,11 @@ public class ModsScreen extends Screen {
     public final Set<String> showModChildren = new HashSet<>();
 
     private EditBox searchBox;
-    private @Nullable AbstractWidget filtersButton;
+    private @Nullable SpriteIconButton filtersButton;
     private AbstractWidget sortingButton;
     private AbstractWidget librariesButton;
     private ModListWidget modList;
-    private @Nullable AbstractWidget configureButton;
+    private @Nullable SpriteIconButton configureButton;
     private AbstractWidget websiteButton;
     private AbstractWidget issuesButton;
     private DescriptionListWidget descriptionListWidget;
@@ -138,18 +138,21 @@ public class ModsScreen extends Screen {
         this.updateFiltersX(true);
 
         if (!ModMenuConfig.CONFIG_MODE.getValue()) {
-            this.filtersButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS,
-                            button -> {
-                                this.setFilterOptionsShown(!this.filterOptionsShown);
-                            }
+            this.filtersButton =
+                    SpriteIconButton.builder(
+                            ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS,
+                            button -> this.setFilterOptionsShown(!this.filterOptionsShown),
+                            true
                     )
-                    .position(this.paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22)
                     .size(20, 20)
-                    .uv(0, 0, 20)
-                    .texture(FILTERS_BUTTON_LOCATION, 32, 64)
+                    .tooltip(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS)
+                    .sprite(new WidgetSprites(
+                            FILTERS_SPRITE_ENABLED,
+                            FILTERS_SPRITE_DISABLED,
+                            FILTERS_SPRITE_FOCUSED
+                    ), 20, 20)
                     .build();
-
-            this.filtersButton.setTooltip(Tooltip.create(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS));
+            this.filtersButton.setPosition(this.paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22);
         }
 
         // Sorting button
@@ -170,19 +173,27 @@ public class ModsScreen extends Screen {
 
         // Configure button
         if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
-            this.configureButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(CommonComponents.EMPTY, button -> {
-                        final String id = Objects.requireNonNull(selected).getMod().getId();
-                        if (getModHasConfigScreen(id)) {
-                            this.safelyOpenConfigScreen(id);
-                        } else {
-                            button.active = false;
-                        }
-                    })
-                    .position(width - 24, RIGHT_PANE_Y)
-                    .size(20, 20)
-                    .uv(0, 0, 20)
-                    .texture(CONFIGURE_BUTTON_LOCATION, 32, 64)
+            this.configureButton =
+                    SpriteIconButton.builder(
+                            ModMenuScreenTexts.CONFIGURE,
+                            button -> {
+                                final String id = Objects.requireNonNull(selected).getMod().getId();
+                                if (getModHasConfigScreen(id)) {
+                                    this.safelyOpenConfigScreen(id);
+                                } else {
+                                    button.active = false;
+                                }
+                            },
+                            true
+                    )
+                    .size(20,20)
+                    .sprite(new WidgetSprites(
+                            CONFIGURE_SPRITE_ENABLED,
+                            CONFIGURE_SPRITE_DISABLED,
+                            CONFIGURE_SPRITE_FOCUSED
+                    ), 20, 20)
                     .build();
+            this.configureButton.setPosition(width - 24, RIGHT_PANE_Y);
         }
 
         // Website button
