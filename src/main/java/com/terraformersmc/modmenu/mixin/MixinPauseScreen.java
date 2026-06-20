@@ -21,8 +21,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.terraformersmc.modmenu.gui.ModsScreen.*;
-import static com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget.*;
+import static com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget.MODS_SPRITE_ENABLED;
+import static com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget.MODS_SPRITE_DISABLED;
+import static com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget.MODS_SPRITE_FOCUSED;
+
 
 @Mixin(PauseScreen.class)
 public abstract class MixinPauseScreen extends Screen {
