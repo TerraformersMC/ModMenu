@@ -205,7 +205,7 @@ public class ModMenu implements ClientModInitializer {
                 continue;
             }
 
-            if (!ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
+            if (ModMenuConfig.SHOW_LIBRARIES.getValue().hideMod(mod, getConfigScreenFactory(mod.getId()) != null)) {
                 continue;
             }
 

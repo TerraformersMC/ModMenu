@@ -16,8 +16,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.GuiGraphicsExtractorimport net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -170,7 +169,10 @@ public class ModsScreen extends Screen {
 
         // Show libraries button
         this.librariesButton = Button.builder(librariesText, button -> {
-            ModMenuConfig.SHOW_LIBRARIES.toggleValue();
+            var values = ModMenuConfig.LibraryVisibility.values();
+            var value = ModMenuConfig.SHOW_LIBRARIES.getValue().ordinal();
+
+            ModMenuConfig.SHOW_LIBRARIES.setValue(values[(values.length + value + (minecraft.hasShiftDown() ? -1 : 1) ) % values.length]);
             ModMenuConfigManager.save();
             modList.reloadFilters();
             button.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
@@ -327,8 +329,7 @@ public class ModsScreen extends Screen {
             Component fullModCount = this.computeModCountText(true, false);
             if (!ModMenuConfig.CONFIG_MODE.getValue() && this.updateFiltersX(false)) {
                 if (this.filterOptionsShown) {
-                    if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
-                            font.width(fullModCount) <= this.filtersX - 5) {
+                    if (font.width(fullModCount) <= this.filtersX - 5) {
                         drawContext.text(
                                 font,
                                 fullModCount.getVisualOrderText(),
@@ -356,8 +357,7 @@ public class ModsScreen extends Screen {
                         );
                     }
                 } else {
-                    if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
-                            font.width(fullModCount) <= modList.getWidth() - 5) {
+                    if (font.width(fullModCount) <= modList.getWidth() - 5) {
                         drawContext.text(font,
                                 fullModCount.getVisualOrderText(),
                                 this.searchBoxX,
@@ -474,23 +474,29 @@ public class ModsScreen extends Screen {
                 .filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY))
                 .map(Mod::getId)
                 .collect(Collectors.toSet()), onInit);
-        if (includeLibs && ModMenuConfig.SHOW_LIBRARIES.getValue() && !onInit) {
+        if (includeLibs && !onInit) {
+            var visibility = ModMenuConfig.SHOW_LIBRARIES.getValue();
+
             int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
                     .stream()
-                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY))
+                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY) && !visibility.hideMod(mod, getModHasConfigScreen(mod.getId())))
                     .map(Mod::getId)
                     .collect(Collectors.toSet()), false);
-            return TranslationUtil.translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
-        } else {
-            return TranslationUtil.translateNumeric("modmenu.showingMods", rootMods);
+
+            if (rootLibs.length == 1 && rootLibs[0] != 0 || rootLibs.length == 2 && rootLibs[1] != 0) {
+                return TranslationUtil.translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
+            }
         }
+
+        return TranslationUtil.translateNumeric("modmenu.showingMods", rootMods);
     }
 
     private Component computeLibraryCountText(boolean onInit) {
-        if (ModMenuConfig.SHOW_LIBRARIES.getValue() && !onInit) {
+        var visibility = ModMenuConfig.SHOW_LIBRARIES.getValue();
+        if (!onInit) {
             int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
                     .stream()
-                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY))
+                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY) && !visibility.hideMod(mod, this.getModHasConfigScreen(mod.getId())))
                     .map(Mod::getId)
                     .collect(Collectors.toSet()), false);
             return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 import net.minecraft.client.OptionInstance;
 
@@ -27,7 +28,7 @@ public class ModMenuConfig {
     public static final BooleanConfigOption COUNT_HIDDEN_MODS = new BooleanConfigOption("count_hidden_mods", true);
     public static final EnumConfigOption<ModCountLocation> MOD_COUNT_LOCATION = new EnumConfigOption<>("mod_count_location", ModCountLocation.TITLE_SCREEN);
     public static final BooleanConfigOption HIDE_MOD_LINKS = new BooleanConfigOption("hide_mod_links", false);
-    public static final BooleanConfigOption SHOW_LIBRARIES = new BooleanConfigOption("show_libraries", false);
+    public static final EnumConfigOption<LibraryVisibility> SHOW_LIBRARIES = new EnumConfigOption<>("show_libraries", LibraryVisibility.WITH_CONFIG);
     public static final BooleanConfigOption HIDE_MOD_LICENSE = new BooleanConfigOption("hide_mod_license", false);
     public static final BooleanConfigOption HIDE_BADGES = new BooleanConfigOption("hide_badges", false);
     public static final BooleanConfigOption HIDE_MOD_CREDITS = new BooleanConfigOption("hide_mod_credits", false);
@@ -87,6 +88,24 @@ public class ModMenuConfig {
 
         public Comparator<Mod> getComparator() {
             return comparator;
+        }
+    }
+
+    public enum LibraryVisibility {
+        FALSE,
+        WITH_CONFIG,
+        TRUE;
+
+        public boolean hideMod(Mod mod, boolean hasConfig) {
+            return switch (this) {
+                case TRUE -> false;
+                case FALSE -> mod.getBadges().contains(Mod.Badge.LIBRARY);
+                case WITH_CONFIG -> mod.getBadges().contains(Mod.Badge.LIBRARY) && !hasConfig;
+            };
+        }
+
+        public boolean isTrue() {
+            return this == TRUE;
         }
     }
 
