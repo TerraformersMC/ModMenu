@@ -105,7 +105,6 @@
   "option.modmenu.show_libraries": "函式庫",
   "option.modmenu.show_libraries.true": "顯示",
   "option.modmenu.show_libraries.false": "隱藏",
-  "option.modmenu.show_libraries.with_config": "有設定時",
   "option.modmenu.hide_config_buttons": "設定按鈕",
   "option.modmenu.hide_config_buttons.true": "隱藏",
   "option.modmenu.hide_config_buttons.false": "顯示",

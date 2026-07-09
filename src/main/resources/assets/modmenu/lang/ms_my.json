@@ -105,7 +105,6 @@
   "option.modmenu.show_libraries": "Pustaka",
   "option.modmenu.show_libraries.true": "Ditunjukkan",
   "option.modmenu.show_libraries.false": "Disembunyikan",
-  "option.modmenu.show_libraries.with_config": "Dengan Konfigurasi",
   "option.modmenu.hide_config_buttons": "Butang Konfigurasi",
   "option.modmenu.hide_config_buttons.true": "Disembunyikan",
   "option.modmenu.hide_config_buttons.false": "Ditunjukkan",
