@@ -26,11 +26,7 @@ public class FabricIconHandler implements Closeable {
         try {
             Path path = iconSource.getPath(iconPath);
             DynamicTexture cachedIcon = getCachedModIcon(path);
-            if (cachedIcon != null) {
-                return cachedIcon;
-            }
 
-            cachedIcon = getCachedModIcon(path);
             if (cachedIcon != null) {
                 return cachedIcon;
             }
@@ -38,8 +34,9 @@ public class FabricIconHandler implements Closeable {
             try (InputStream inputStream = Files.newInputStream(path)) {
                 NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
                 Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-                DynamicTexture tex = new DynamicTexture(() -> Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, path.toString()).toString(), image);
+                DynamicTexture tex = new DynamicTexture(() -> Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, iconPath).toString(), image);
                 cacheModIcon(path, tex);
+
                 return tex;
             }
         } catch (IllegalStateException e) {
@@ -55,6 +52,7 @@ public class FabricIconHandler implements Closeable {
             if (!iconPath.equals("assets/" + iconSource.getMetadata().getId() + "/icon.png")) {
                 LOGGER.error("Invalid mod icon for icon source {}: {}", iconSource.getMetadata().getId(), iconPath);
             }
+
             return null;
         }
     }
