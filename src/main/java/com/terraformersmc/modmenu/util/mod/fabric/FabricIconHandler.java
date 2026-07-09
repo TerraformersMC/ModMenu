@@ -22,42 +22,40 @@ public class FabricIconHandler implements Closeable {
 
 	private final Map<Path, NativeImageBackedTexture> modIconCache = new HashMap<>();
 
-	public NativeImageBackedTexture createIcon(ModContainer iconSource, String iconPath) {
-		try {
-			Path path = iconSource.getPath(iconPath);
-			NativeImageBackedTexture cachedIcon = getCachedModIcon(path);
-			if (cachedIcon != null) {
-				return cachedIcon;
-			}
+    public NativeImageBackedTexture createIcon(ModContainer iconSource, String iconPath) {
+        try {
+            Path path = iconSource.getPath(iconPath);
+            NativeImageBackedTexture cachedIcon = getCachedModIcon(path);
 
-			cachedIcon = getCachedModIcon(path);
-			if (cachedIcon != null) {
-				return cachedIcon;
-			}
+            if (cachedIcon != null) {
+                return cachedIcon;
+            }
 
-			try (InputStream inputStream = Files.newInputStream(path)) {
-				NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
-				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-				NativeImageBackedTexture tex = new NativeImageBackedTexture(() -> Identifier.of(ModMenu.MOD_ID, path.toString()).toString(), image);
-				cacheModIcon(path, tex);
-				return tex;
-			}
-		} catch (IllegalStateException e) {
-			if (e.getMessage().equals("Must be square icon")) {
-				LOGGER.error("Mod icon must be a square for icon source {}: {}",
-					iconSource.getMetadata().getId(),
-					iconPath
-				);
-			}
+            try (InputStream inputStream = Files.newInputStream(path)) {
+                NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
+                Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
+                NativeImageBackedTexture tex = new NativeImageBackedTexture(() -> Identifier.of(ModMenu.MOD_ID, iconPath).toString(), image);
+                cacheModIcon(path, tex);
 
-			return null;
-		} catch (Throwable t) {
-			if (!iconPath.equals("assets/" + iconSource.getMetadata().getId() + "/icon.png")) {
-				LOGGER.error("Invalid mod icon for icon source {}: {}", iconSource.getMetadata().getId(), iconPath);
-			}
-			return null;
-		}
-	}
+                return tex;
+            }
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("Must be square icon")) {
+                LOGGER.error("Mod icon must be a square for icon source {}: {}",
+                        iconSource.getMetadata().getId(),
+                        iconPath
+                );
+            }
+
+            return null;
+        } catch (Throwable t) {
+            if (!iconPath.equals("assets/" + iconSource.getMetadata().getId() + "/icon.png")) {
+                LOGGER.error("Invalid mod icon for icon source {}: {}", iconSource.getMetadata().getId(), iconPath);
+            }
+
+            return null;
+        }
+    }
 
 	@Override
 	public void close() {
