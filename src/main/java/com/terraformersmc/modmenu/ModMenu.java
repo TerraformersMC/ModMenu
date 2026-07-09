@@ -261,6 +261,8 @@ public class ModMenu implements ClientModInitializer {
 				String key = I18n.hasTranslation(specificKey) ? specificKey : "modmenu.loaded";
 				if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.hasTranslation(specificKey + ".secret")) {
 					key = specificKey + ".secret";
+				} else if (ModMenuConfig.EASTER_EGGS.getValue() && "67".equals(count)) {
+					key = "modmenu.loaded.69.secret";
 				}
 				modsText.append(Text.literal(" ")).append(Text.translatable(key, count));
 			}
