@@ -211,9 +211,15 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		return iconLocation;
 	}
 
-	public int getXOffset() {
-		return 0;
-	}
+    public void updatePlacement(int leftX, int width, int y) {
+        this.setX(leftX);
+        this.setWidth(width);
+        this.setY(y);
+    }
+
+    public int getXOffset() {
+        return 0;
+    }
 
 	public void setYOffset(int offset) {
 		this.yOffset = offset;

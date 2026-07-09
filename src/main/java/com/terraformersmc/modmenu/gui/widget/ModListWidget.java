@@ -242,9 +242,7 @@ public class ModListWidget extends AlwaysSelectedEntryListWidget<ModListEntry> i
         int nextY = this.getY() + 2 - (int) this.getScrollY();
 
         for (ModListEntry entry : children()) {
-            entry.setX(rowLeft);
-            entry.setWidth(rowWidth);
-            entry.setY(nextY);
+            entry.updatePlacement(rowLeft, rowWidth, nextY);
             nextY += entry.getHeight();
         }
     }
