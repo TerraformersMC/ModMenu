@@ -32,7 +32,7 @@ public class ModMenuEventHandler {
     public static void register() {
         MENU_KEY_MAPPING = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.modmenu.open_menu",
-                InputConstants.Type.KEYSYM,
+                InputConstants.Type.KEYBOARD,
                 InputConstants.UNKNOWN.getValue(),
                 KeyMapping.Category.MISC
         ));
