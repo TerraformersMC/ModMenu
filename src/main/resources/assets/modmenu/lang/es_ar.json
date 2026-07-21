@@ -39,6 +39,9 @@
   "modmenu.badge.forge": "Forge",
   "modmenu.badge.modpack": "Modpack",
   "modmenu.badge.minecraft": "Minecraft",
+  
+  "modmenu.modrinth.v2_removed.title": "Falló la verificación de actualizaciones",
+  "modmenu.modrinth.v2_removed.description": "No se puede verificar actualizaciones porque la API v2 de Modrinth ya no está disponible.",
 
   "modmenu.dropInfo.line1": "Arrastrá y soltá archivos en",
   "modmenu.dropInfo.line2": "esta ventana para agregar mods",
@@ -67,6 +70,7 @@
   "modmenu.install_version": "Instalar versión %s",
   "modmenu.downloadLink": "Descargar",
 
+  "modmenu.bluesky": "Bluesky",
   "modmenu.buymeacoffee": "Invitame un café",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
@@ -114,6 +118,7 @@
   "option.modmenu.show_libraries": "Bibliotecas",
   "option.modmenu.show_libraries.true": "Mostradas",
   "option.modmenu.show_libraries.false": "Ocultas",
+  "option.modmenu.show_libraries.with_config": "Con Config",
   "option.modmenu.hide_config_buttons": "Botones de config",
   "option.modmenu.hide_config_buttons.true": "Ocultos",
   "option.modmenu.hide_config_buttons.false": "Visibles",
