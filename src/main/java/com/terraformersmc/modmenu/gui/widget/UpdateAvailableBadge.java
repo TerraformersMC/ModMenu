@@ -6,7 +6,6 @@ import net.minecraft.resources.Identifier;
 import static java.lang.Math.round;
 import static java.lang.Math.clamp;
 
-
 public class UpdateAvailableBadge {
     private static final Identifier UPDATE_ICON = Identifier.withDefaultNamespace("icon/trial_available");
 
