@@ -10,7 +10,7 @@ public class UpdateAvailableBadge {
     private static final Identifier UPDATE_ICON = Identifier.withDefaultNamespace("icon/trial_available");
 
     public static void renderBadge(GuiGraphicsExtractor drawContext, int x, int y) {
-        renderBadge(drawContext, x, y, 0xFF);
+        renderBadge(drawContext, x, y, 1.0F);
     }
 
     public static void renderBadge(GuiGraphicsExtractor drawContext, int x, int y, float alpha) {
