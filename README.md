@@ -91,7 +91,7 @@ Any key in the `links` object will be included in the links section, with the ke
 ```
 will show as a link with the text "Discord", since "Discord" is the English translation of "modmenu.discord" provided by Mod Menu.
 
-Mod Menu provides several default translations that can be used for links. A full list can be seen in Mod Menu's language file [here](https://github.com/TerraformersMC/ModMenu/blob/-/src/main/resources/assets/modmenu/lang/en_us.json). All default link translation keys take the form `modmenu.<type>`.
+Mod Menu provides several default translations that can be used for links. A full list can be seen in Mod Menu's language file [here](https://github.com/TerraformersMC/ModMenu/blob/-/src/main/resources/assets/modmenu/lang/en_us.json#L73-L94). All default link translation keys take the form `modmenu.<type>`.
 
 You can also provide your own translations if you would like to add custom links. Make sure to use ***your own namespace*** (as opposed to `modmenu`) for any custom keys.
 
