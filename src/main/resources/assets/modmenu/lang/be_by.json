@@ -39,6 +39,9 @@
   "modmenu.badge.forge": "Forge",
   "modmenu.badge.modpack": "Зборка",
   "modmenu.badge.minecraft": "Minecraft",
+
+  "modmenu.modrinth.v2_removed.title": "Не ўдалося праверыць абнаўленні",
+  "modmenu.modrinth.v2_removed.description": "Немагчыма праверыць абнаўленні, бо API Modrinth версіі 2 больш не даступны.",
   
   "modmenu.dropInfo.line1": "Перацягніце файлы ў",
   "modmenu.dropInfo.line2": "гэта акно, каб дадаць моды",
@@ -55,7 +58,7 @@
   "modmenu.issues": "Пажаданні",
   
   "modmenu.credits": "Стваральнікі:",
-  "modmenu.viewCredits": "Праглядзець тытры",
+  "modmenu.viewCredits": "Праглядзець цітры",
   "modmenu.license": "Ліцэнзія:",
   "modmenu.links": "Спасылкі:",
   "modmenu.source": "Зыходны код",
@@ -115,6 +118,7 @@
   "option.modmenu.show_libraries": "Бібліятэкі",
   "option.modmenu.show_libraries.true": "Паказаны",
   "option.modmenu.show_libraries.false": "Схаваны",
+  "option.modmenu.show_libraries.with_config": "З канфігурацыяй",
   "option.modmenu.hide_config_buttons": "Кнопка налад",
   "option.modmenu.hide_config_buttons.true": "Схавана",
   "option.modmenu.hide_config_buttons.false": "Паказана",
