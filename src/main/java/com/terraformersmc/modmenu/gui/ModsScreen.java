@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.gui;
 
 import com.google.common.base.Joiner;
+import com.mojang.blaze3d.Blaze3D;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
@@ -37,12 +38,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonLinks;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -216,7 +217,7 @@ public class ModsScreen extends Screen {
                     } else {
                         var url = mod.getWebsite();
                         if (url != null) {
-                            ConfirmLinkScreen.confirmLinkNow(this, url, false);
+                            ConfirmLinkScreen.confirmLinkNow(this, URI.create(url), false);
                         }
                     }
                 })
@@ -233,7 +234,7 @@ public class ModsScreen extends Screen {
                     } else {
                         var url = mod.getIssueTracker();
                         if (url != null) {
-                            ConfirmLinkScreen.confirmLinkNow(this, url, false);
+                            ConfirmLinkScreen.confirmLinkNow(this, URI.create(url), false);
                         }
                     }
                 })
@@ -254,7 +255,7 @@ public class ModsScreen extends Screen {
         this.descriptionListWidget.setX(this.rightPaneX);
 
         // Mods folder button
-        AbstractWidget modsFolderButton = Button.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Util.getPlatform().openUri(getModsFolder().toUri())).pos(this.width / 2 - 154, this.height - 28).size(150, 20).build();
+        AbstractWidget modsFolderButton = Button.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Blaze3D.openUri(getModsFolder().toUri())).pos(this.width / 2 - 154, this.height - 28).size(150, 20).build();
 
         // Done button
         AbstractWidget doneButton = Button.builder(CommonComponents.GUI_DONE, button -> minecraft.gui.setScreen(previousScreen)).pos(this.width / 2 + 4, this.height - 28).size(150, 20).build();
