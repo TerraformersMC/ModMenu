@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.gui.widget;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -20,8 +21,8 @@ import net.minecraft.client.gui.screens.CreditsAndAttributionScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.util.Util;
 
+import java.net.URI;
 import java.util.*;
 
 public class DescriptionListWidget extends AbstractSelectionList<DescriptionListWidget.DescriptionEntry> {
@@ -389,10 +390,10 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
             if (isMouseOver(click.x(), click.y())) {
                 minecraft.gui.setScreen(new ConfirmLinkScreen((open) -> {
                     if (open) {
-                        Util.getPlatform().openUri(link);
+                        Blaze3D.openUri(URI.create(link));
                     }
                     minecraft.gui.setScreen(parent);
-                }, link, false));
+                }, URI.create(link), false));
             }
 
             return super.mouseClicked(click, doubleClick);
@@ -422,10 +423,10 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
             if (isMouseOver(event.x(), event.y())) {
                 minecraft.gui.setScreen(new ConfirmLinkScreen((open) -> {
                     if (open) {
-                        Util.getPlatform().openUri("mailto:" + email);
+                        Blaze3D.openUri(URI.create("mailto:" + email));
                     }
                     minecraft.gui.setScreen(parent);
-                }, "mailto:" + email, false));
+                }, URI.create("mailto:" + email), false));
             }
             return super.mouseClicked(event, doubleClick);
         }

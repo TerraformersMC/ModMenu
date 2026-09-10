@@ -20,7 +20,7 @@ public class ModMenuModMenuCompat implements ModMenuApi {
 
     @Override
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
-        return Map.of("minecraft", parent -> new OptionsScreen(parent, Minecraft.getInstance().options, false));
+        return Map.of("minecraft", parent -> new OptionsScreen(parent, Minecraft.getInstance().options));
     }
 
     @Override
