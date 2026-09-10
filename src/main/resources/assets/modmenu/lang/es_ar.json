@@ -43,6 +43,9 @@
   "modmenu.modrinth.v2_removed.title": "Falló la verificación de actualizaciones",
   "modmenu.modrinth.v2_removed.description": "No se puede verificar actualizaciones porque la API v2 de Modrinth ya no está disponible.",
 
+  "modmenu.modrinth.v2_removed.title": "Error al buscar actualizaciones",
+  "modmenu.modrinth.v2_removed.description": "No se pueden buscar actualizaciones porque la API v2 de Modrinth ya no está disponible.",
+
   "modmenu.dropInfo.line1": "Arrastrá y soltá archivos en",
   "modmenu.dropInfo.line2": "esta ventana para agregar mods",
   "modmenu.dropConfirm": "¿Querés copiar los siguientes mods a la carpeta de mods?",
@@ -89,8 +92,8 @@
   "modmenu.paypal": "PayPal",
   "modmenu.reddit": "Reddit",
   "modmenu.twitch": "Twitch",
-  "modmenu.twitter": "X (Twitter)",
   "modmenu.wiki": "Wiki",
+  "modmenu.twitter": "X (Twitter)",
   "modmenu.youtube": "YouTube",
 
   "modmenu.credits.role.author": "Autores",
@@ -118,7 +121,7 @@
   "option.modmenu.show_libraries": "Bibliotecas",
   "option.modmenu.show_libraries.true": "Mostradas",
   "option.modmenu.show_libraries.false": "Ocultas",
-  "option.modmenu.show_libraries.with_config": "Con Config",
+  "option.modmenu.show_libraries.with_config": "Con configuración",
   "option.modmenu.hide_config_buttons": "Botones de config",
   "option.modmenu.hide_config_buttons.true": "Ocultos",
   "option.modmenu.hide_config_buttons.false": "Visibles",
@@ -182,6 +185,6 @@
   "option.modmenu.quick_configure.false": "Desactivada",
   "option.modmenu.update_channel": "Canal de actualización",
   "option.modmenu.update_channel.alpha": "Todos",
-  "option.modmenu.update_channel.beta": "Release y Beta",
-  "option.modmenu.update_channel.release": "Release"
+  "option.modmenu.update_channel.beta": "Lanzamiento y Beta",
+  "option.modmenu.update_channel.release": "Lanzamiento"
 }
