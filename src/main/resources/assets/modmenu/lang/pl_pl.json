@@ -39,6 +39,9 @@
   "modmenu.badge.forge": "Forge",
   "modmenu.badge.modpack": "Paczka modów",
   "modmenu.badge.minecraft": "Minecraft",
+
+  "modmenu.modrinth.v2_removed.title": "Sprawdzanie aktualizacji nie powiodło się",
+  "modmenu.modrinth.v2_removed.description": "Sprawdzanie aktualizacji nie powiodło się, ponieważ wersja v2 API Modrinth nie jest już dostępna.",
   
   "modmenu.dropInfo.line1": "Przeciągnij i upuść mody",
   "modmenu.dropInfo.line2": "w to okno, aby je dodać",
@@ -115,6 +118,7 @@
   "option.modmenu.show_libraries": "Biblioteki",
   "option.modmenu.show_libraries.true": "Pokazuj",
   "option.modmenu.show_libraries.false": "Ukrywaj",
+  "option.modmenu.show_libraries.with_config": "Z konfiguracją",
   "option.modmenu.hide_config_buttons": "Przyciski konfiguracji",
   "option.modmenu.hide_config_buttons.true": "Ukrywaj",
   "option.modmenu.hide_config_buttons.false": "Pokazuj",
