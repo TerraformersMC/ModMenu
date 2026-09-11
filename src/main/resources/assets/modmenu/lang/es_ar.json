@@ -39,12 +39,6 @@
   "modmenu.badge.forge": "Forge",
   "modmenu.badge.modpack": "Modpack",
   "modmenu.badge.minecraft": "Minecraft",
-  
-  "modmenu.modrinth.v2_removed.title": "Falló la verificación de actualizaciones",
-  "modmenu.modrinth.v2_removed.description": "No se puede verificar actualizaciones porque la API v2 de Modrinth ya no está disponible.",
-
-  "modmenu.modrinth.v2_removed.title": "Error al buscar actualizaciones",
-  "modmenu.modrinth.v2_removed.description": "No se pueden buscar actualizaciones porque la API v2 de Modrinth ya no está disponible.",
 
   "modmenu.modrinth.v2_removed.title": "Error al buscar actualizaciones",
   "modmenu.modrinth.v2_removed.description": "No se pueden buscar actualizaciones porque la API v2 de Modrinth ya no está disponible.",
