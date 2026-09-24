@@ -161,7 +161,7 @@
   "option.modmenu.game_menu_button_style": "暂停菜单中的位置",
   "option.modmenu.game_menu_button_style.icon": "图标",
   "option.modmenu.game_menu_button_style.insert": "“提供反馈”和“报告漏洞”下一行",
-  "option.modmenu.game_menu_button_style.replace": "替换掉“提供反馈”和“报告漏洞”"
+  "option.modmenu.game_menu_button_style.replace": "替换掉“提供反馈”和“报告漏洞”",
   "option.modmenu.random_java_colors": "Java图标颜色",
   "option.modmenu.random_java_colors.true": "供应商颜色",
   "option.modmenu.random_java_colors.false": "总是红色",
@@ -183,5 +183,5 @@
   "option.modmenu.update_channel": "更新频道",
   "option.modmenu.update_channel.alpha": "全部",
   "option.modmenu.update_channel.beta": "正式版和测试版",
-  "option.modmenu.update_channel.release": "仅正式版",
+  "option.modmenu.update_channel.release": "仅正式版"
 }
