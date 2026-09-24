@@ -23,8 +23,8 @@ Here's an example of Mod Menu's translations into Pirate Speak. To create your o
 ```json
 {
     "modmenu.nameTranslation.modmenu": "Menu o' mods!",
-    "modmenu.descriptionTranslation.modmenu": "Menu o' mods ye installed matey!",
-    "modmenu.summaryTranslation.modmenu": "Menu o' mods ye installed matey!"
+    "modmenu.descriptionTranslation.modmenu": "Menu o' mods ye installed matey.",
+    "modmenu.summaryTranslation.modmenu": "Menu o' mods ye installed matey."
 }
 ```
 
