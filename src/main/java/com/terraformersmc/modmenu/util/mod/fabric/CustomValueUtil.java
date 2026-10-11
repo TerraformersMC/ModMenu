@@ -1,7 +1,9 @@
 package com.terraformersmc.modmenu.util.mod.fabric;
 
+import com.terraformersmc.modmenu.ModMenu;
 import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
@@ -62,6 +64,32 @@ public class CustomValueUtil {
             return Optional.of(strings);
         }
         return Optional.empty();
+    }
+
+    public static Optional<Set<Identifier>> getIdentifierSet(String key, CustomValue.CvObject object) {
+        if (object.containsKey(key)) {
+            Set<Identifier> ids = new HashSet<>();
+            for (CustomValue value : object.get(key).getAsArray()) {
+                ids.add(bySeparatorModMenuId(value.getAsString(), ':'));
+            }
+            return Optional.of(ids);
+        }
+        return Optional.empty();
+    }
+
+    private static Identifier bySeparatorModMenuId(final String identifier, final char separator) {
+        int separatorIndex = identifier.indexOf(separator);
+        if (separatorIndex >= 0) {
+            String path = identifier.substring(separatorIndex + 1);
+            if (separatorIndex != 0) {
+                String namespace = identifier.substring(0, separatorIndex);
+                return Identifier.fromNamespaceAndPath(namespace, path);
+            } else {
+                return Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, path);
+            }
+        } else {
+            return Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, identifier);
+        }
     }
 
     public static Optional<Map<String, String>> getStringMap(String key, CustomValue.CvObject object) {

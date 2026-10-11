@@ -9,12 +9,14 @@ import com.terraformersmc.modmenu.api.UpdateChecker;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.VersionUtil;
+import com.terraformersmc.modmenu.util.mod.BadgeHolder;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.*;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -32,8 +34,6 @@ public class FabricMod implements Mod {
     protected final ModMetadata metadata;
 
     protected final ModMenuData modMenuData;
-
-    protected final Set<Badge> badges;
 
     protected final Map<String, String> links = new HashMap<>();
 
@@ -58,7 +58,7 @@ public class FabricMod implements Mod {
         /* Load modern mod menu custom value data */
         Optional<String> parentId = Optional.empty();
         ModMenuData.DummyParentData parentData = null;
-        Set<String> badgeNames = new HashSet<>();
+        Set<Identifier> badgeIds = new HashSet<>();
         CustomValue modMenuValue = metadata.getCustomValue("modmenu");
         if (modMenuValue != null && modMenuValue.getType() == CustomValue.CvType.OBJECT) {
             CustomValue.CvObject modMenuObject = modMenuValue.getAsObject();
@@ -75,7 +75,7 @@ public class FabricMod implements Mod {
                                 CustomValueUtil.getString("name", parentObj),
                                 CustomValueUtil.getString("description", parentObj),
                                 CustomValueUtil.getString("icon", parentObj),
-                                CustomValueUtil.getStringSet("badges", parentObj).orElse(new HashSet<>())
+                                CustomValueUtil.getIdentifierSet("badges", parentObj).orElse(new HashSet<>())
                         );
                         if (parentId.orElse("").equals(id)) {
                             parentId = Optional.empty();
@@ -87,7 +87,7 @@ public class FabricMod implements Mod {
                     }
                 }
             }
-            badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
+            badgeIds.addAll(CustomValueUtil.getIdentifierSet("badges", modMenuObject).orElse(new HashSet<>()));
             links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
             allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
         }
@@ -99,7 +99,7 @@ public class FabricMod implements Mod {
             ModContainer inside = container.getContainingMod().get();
             parentId = Optional.of(inside.getMetadata().getId());
         }
-        this.modMenuData = new ModMenuData(badgeNames, parentId, parentData, id);
+        this.modMenuData = new ModMenuData(badgeIds, parentId, parentData);
 
         /* Hardcode parents and badges for Fabric API & Fabric Loader */
         if (id.startsWith("fabric") && metadata.containsCustomValue("fabric-api:module-lifecycle")) {
@@ -110,39 +110,38 @@ public class FabricMod implements Mod {
                 modMenuData.fillParentIfEmpty("fabric");
             }
 
-            modMenuData.badges.add(Badge.LIBRARY);
+            modMenuData.badgeIds.add(Badge.LIBRARY);
         }
         if (id.startsWith("fabric") && (id.equals("fabricloader") || metadata.getProvides()
                 .contains("fabricloader") || id.equals("fabric") || id.equals("fabric-api") || metadata.getProvides()
                 .contains("fabric") || metadata.getProvides()
                 .contains("fabric-api") || id.equals("fabric-language-kotlin"))) {
-            modMenuData.badges.add(Badge.LIBRARY);
+            modMenuData.badgeIds.add(Badge.LIBRARY);
         }
 
         /* Add additional badges */
-        this.badges = modMenuData.badges;
         if (this.metadata.getEnvironment() == ModEnvironment.CLIENT) {
-            badges.add(Badge.CLIENT);
+            modMenuData.badgeIds.add(Badge.CLIENT);
         }
 
         if (isGenerated || "java".equals(id)) {
-            badges.add(Badge.LIBRARY);
+            modMenuData.badgeIds.add(Badge.LIBRARY);
         }
 
         if ("deprecated".equals(CustomValueUtil.getString("fabric-api:module-lifecycle", metadata).orElse(null))) {
-            badges.add(Badge.DEPRECATED);
+            modMenuData.badgeIds.add(Badge.DEPRECATED);
         }
 
         if (metadata.containsCustomValue("patchwork:patcherMeta")) {
-            badges.add(Badge.PATCHWORK_FORGE);
+            modMenuData.badgeIds.add(Badge.PATCHWORK_FORGE);
         }
 
         if (modpackMods.contains(getId()) && !"builtin".equals(this.metadata.getType())) {
-            badges.add(Badge.MODPACK);
+            modMenuData.badgeIds.add(Badge.MODPACK);
         }
 
         if ("minecraft".equals(getId())) {
-            badges.add(Badge.MINECRAFT);
+            modMenuData.badgeIds.add(Badge.MINECRAFT);
         }
     }
 
@@ -282,8 +281,8 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull Set<Badge> getBadges() {
-        return badges;
+    public @NotNull Set<BadgeHolder> getBadges() {
+        return modMenuData.getBadges();
     }
 
     @Override
@@ -404,20 +403,34 @@ public class FabricMod implements Mod {
         return ModMenuConfig.HIDDEN_MODS.getValue().contains(this.getId());
     }
 
-    static class ModMenuData {
-        private final Set<Badge> badges;
+    @Override
+    public void recalculateBadges() {
+        getModMenuData().setBadges(Mod.Badge.convert(getModMenuData().getBadgeIds(), getId()));
+    }
+
+    public static class ModMenuData {
+        private final Set<Identifier> badgeIds;
+        private Set<BadgeHolder> badges = Set.of();
         private Optional<String> parent;
         private @Nullable
         final DummyParentData dummyParentData;
 
-        public ModMenuData(Set<String> badges, Optional<String> parent, DummyParentData dummyParentData, String id) {
-            this.badges = Badge.convert(badges, id);
+        public ModMenuData(Set<Identifier> badges, Optional<String> parent, DummyParentData dummyParentData) {
+            this.badgeIds = badges;
             this.parent = parent;
             this.dummyParentData = dummyParentData;
         }
 
-        public Set<Badge> getBadges() {
+        public Set<BadgeHolder> getBadges() {
             return badges;
+        }
+
+        public void setBadges(Set<BadgeHolder> badges) {
+            this.badges = badges;
+        }
+
+        public Set<Identifier> getBadgeIds() {
+            return badgeIds;
         }
 
         public Optional<String> getParent() {
@@ -430,13 +443,13 @@ public class FabricMod implements Mod {
 
         public void addClientBadge(boolean add) {
             if (add) {
-                badges.add(Badge.CLIENT);
+                badgeIds.add(Badge.CLIENT);
             }
         }
 
         public void addLibraryBadge(boolean add) {
             if (add) {
-                badges.add(Badge.LIBRARY);
+                badgeIds.add(Badge.LIBRARY);
             }
         }
 
@@ -451,20 +464,21 @@ public class FabricMod implements Mod {
             private final Optional<String> name;
             private final Optional<String> description;
             private final Optional<String> icon;
-            private final Set<Badge> badges;
+            private final Set<Identifier> badgeIds;
+            private Set<BadgeHolder> badges = Set.of();
 
             public DummyParentData(
                     String id,
                     Optional<String> name,
                     Optional<String> description,
                     Optional<String> icon,
-                    Set<String> badges
+                    Set<Identifier> badges
             ) {
                 this.id = id;
                 this.name = name;
                 this.description = description;
                 this.icon = icon;
-                this.badges = Badge.convert(badges, id);
+                this.badgeIds = badges;
             }
 
             public String getId() {
@@ -483,8 +497,16 @@ public class FabricMod implements Mod {
                 return icon;
             }
 
-            public Set<Badge> getBadges() {
+            public Set<BadgeHolder> getBadges() {
                 return badges;
+            }
+
+            public void setBadges(Set<BadgeHolder> badges) {
+                this.badges = badges;
+            }
+
+            public Set<Identifier> getBadgeIds() {
+                return badgeIds;
             }
         }
     }

@@ -39,11 +39,6 @@ public class ModSearch {
         String modDescription = mod.getDescription();
         String modSummary = mod.getSummary();
 
-        String library = I18n.get("modmenu.searchTerms.library");
-        String patchwork = I18n.get("modmenu.searchTerms.patchwork");
-        String modpack = I18n.get("modmenu.searchTerms.modpack");
-        String deprecated = I18n.get("modmenu.searchTerms.deprecated");
-        String clientside = I18n.get("modmenu.searchTerms.clientside");
         String configurable = I18n.get("modmenu.searchTerms.configurable");
         String hasUpdate = I18n.get("modmenu.searchTerms.hasUpdate");
 
@@ -63,13 +58,8 @@ public class ModSearch {
         if (modDescription.toLowerCase(Locale.ROOT).contains(query) // Search default mod description
                 || modSummary.toLowerCase(Locale.ROOT).contains(query) // Search mod summary
                 || authorMatches(mod, query) // Search via author
-                || library.contains(query) && mod.getBadges().contains(Mod.Badge.LIBRARY) // Search for lib mods
-                || patchwork.contains(query) && mod.getBadges()
-                .contains(Mod.Badge.PATCHWORK_FORGE) // Search for patchwork mods
-                || modpack.contains(query) && mod.getBadges().contains(Mod.Badge.MODPACK) // Search for modpack mods
-                || deprecated.contains(query) && mod.getBadges()
-                .contains(Mod.Badge.DEPRECATED) // Search for deprecated mods
-                || clientside.contains(query) && mod.getBadges().contains(Mod.Badge.CLIENT) // Search for clientside mods
+                || mod.getBadges().stream().anyMatch(badgeHolder ->
+                badgeHolder.badge().searchTerms().map(key -> I18n.get(key).contains(query)).orElse(false)) // Search for badges
                 || configurable.contains(query) && screen.getModHasConfigScreen(modId) // Search for mods that can be configured
                 || hasUpdate.contains(query) && mod.hasUpdate() // Search for mods that have updates
         ) {

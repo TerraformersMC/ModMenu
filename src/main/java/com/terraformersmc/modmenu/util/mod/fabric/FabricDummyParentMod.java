@@ -4,6 +4,8 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.api.UpdateChecker;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.util.mod.BadgeHolder;
+import com.terraformersmc.modmenu.util.mod.BadgeManager;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -110,24 +112,31 @@ public class FabricDummyParentMod implements Mod {
     }
 
     @Override
-    public @NotNull Set<Badge> getBadges() {
+    public @NotNull Set<BadgeHolder> getBadges() {
         FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
         if (parentData != null) {
             return parentData.getBadges();
         }
-        var badges = new HashSet<Badge>();
+        var badges = new HashSet<BadgeHolder>();
         if (id.equals("fabric-api")) {
-            badges.add(Badge.LIBRARY);
+            BadgeHolder library = BadgeManager.getBadge(Badge.LIBRARY);
+            if (library != null) {
+                badges.add(library);
+            }
         }
 
         boolean modpackChildren = true;
+        BadgeHolder modpackBadge = BadgeManager.getBadge(Badge.MODPACK);
+        if (modpackBadge == null) {
+            return badges;
+        }
         for (Mod mod : ModMenu.PARENT_MAP.get(this)) {
-            if (!mod.getBadges().contains(Badge.MODPACK)) {
+            if (!mod.getBadges().contains(modpackBadge)) {
                 modpackChildren = false;
             }
         }
         if (modpackChildren) {
-            badges.add(Badge.MODPACK);
+            badges.add(modpackBadge);
         }
 
         return badges;
@@ -206,5 +215,13 @@ public class FabricDummyParentMod implements Mod {
     @Override
     public boolean isHidden() {
         return ModMenuConfig.HIDDEN_MODS.getValue().contains(this.getId());
+    }
+
+    @Override
+    public void recalculateBadges() {
+        FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
+        if (parentData != null) {
+            parentData.setBadges(Mod.Badge.convert(parentData.getBadgeIds(), parentData.getId()));
+        }
     }
 }
