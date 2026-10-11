@@ -230,7 +230,7 @@ public class ModMenu implements ClientModInitializer {
                     return false;
                 }
 
-                boolean isLibrary = mod.getBadges().contains(Mod.Badge.LIBRARY);
+                boolean isLibrary = mod.getBadges().stream().anyMatch(badgeHolder -> badgeHolder.badge().library());
                 if (!includeLibraries && isLibrary) {
                     return false;
                 }

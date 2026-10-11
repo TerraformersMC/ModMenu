@@ -473,7 +473,7 @@ public class ModsScreen extends Screen {
     private Component computeModCountText(boolean includeLibs, boolean onInit) {
         int[] rootMods = formatModCount(ModMenu.ROOT_MODS.values()
                 .stream()
-                .filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY))
+                .filter(mod -> !mod.isHidden() && !mod.getBadges().stream().anyMatch(badgeHolder -> badgeHolder.badge().library()))
                 .map(Mod::getId)
                 .collect(Collectors.toSet()), onInit);
         if (includeLibs && !onInit) {
@@ -481,7 +481,7 @@ public class ModsScreen extends Screen {
 
             int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
                     .stream()
-                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY) && !visibility.hideMod(mod, getModHasConfigScreen(mod.getId())))
+                    .filter(mod -> !mod.isHidden() && mod.getBadges().stream().anyMatch(badgeHolder -> badgeHolder.badge().library()) && !visibility.hideMod(mod, getModHasConfigScreen(mod.getId())))
                     .map(Mod::getId)
                     .collect(Collectors.toSet()), false);
 
@@ -498,7 +498,7 @@ public class ModsScreen extends Screen {
         if (!onInit) {
             int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
                     .stream()
-                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY) && !visibility.hideMod(mod, this.getModHasConfigScreen(mod.getId())))
+                    .filter(mod -> !mod.isHidden() && mod.getBadges().stream().anyMatch(badgeHolder -> badgeHolder.badge().library()) && !visibility.hideMod(mod, this.getModHasConfigScreen(mod.getId())))
                     .map(Mod::getId)
                     .collect(Collectors.toSet()), false);
             return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);

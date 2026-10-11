@@ -147,7 +147,7 @@ public interface Mod {
 
     void recalculateBadges();
 
-    record Badge(Component text, int outlineColor, int fillColor, int textColor, Optional<String> searchTerms) {
+    record Badge(Component text, int outlineColor, int fillColor, int textColor, Optional<String> searchTerms, boolean library) {
 
         public static final Identifier LIBRARY = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "library");
         public static final Identifier CLIENT = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "clientside_only");
@@ -162,7 +162,8 @@ public interface Mod {
                         ExtraCodecs.STRING_ARGB_COLOR.fieldOf("outline_color").forGetter(Badge::outlineColor),
                         ExtraCodecs.STRING_ARGB_COLOR.fieldOf("fill_color").forGetter(Badge::fillColor),
                         ExtraCodecs.STRING_ARGB_COLOR.optionalFieldOf("text_color", 0xFFCACACA).forGetter(Badge::textColor),
-                        Codec.STRING.optionalFieldOf("search_terms").forGetter(Badge::searchTerms)
+                        Codec.STRING.optionalFieldOf("search_terms").forGetter(Badge::searchTerms),
+                        Codec.BOOL.optionalFieldOf("library", false).forGetter(Badge::library)
                 ).apply(instance, Badge::new));
 
         public Component getText() {

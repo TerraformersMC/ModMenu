@@ -99,8 +99,8 @@ public class ModMenuConfig {
         public boolean hideMod(Mod mod, boolean hasConfig) {
             return switch (this) {
                 case TRUE -> false;
-                case FALSE -> mod.getBadges().contains(Mod.Badge.LIBRARY);
-                case WITH_CONFIG -> mod.getBadges().contains(Mod.Badge.LIBRARY) && !hasConfig;
+                case FALSE -> mod.getBadges().stream().anyMatch(badgeHolder -> badgeHolder.badge().library());
+                case WITH_CONFIG -> mod.getBadges().stream().anyMatch(badgeHolder -> badgeHolder.badge().library()) && !hasConfig;
             };
         }
 
