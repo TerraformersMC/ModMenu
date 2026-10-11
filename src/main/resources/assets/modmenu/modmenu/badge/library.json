@@ -1,0 +1,9 @@
+{
+	"text": {
+		"translate": "modmenu.badge.library"
+	},
+	"outline_color": "#FF107454",
+	"fill_color": "#FF093929",
+	"search_terms": "modmenu.searchTerms.library",
+	"library": true
+}

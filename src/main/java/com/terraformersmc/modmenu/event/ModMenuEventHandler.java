@@ -7,10 +7,12 @@ import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
+import com.terraformersmc.modmenu.util.mod.BadgeManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -22,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +41,11 @@ public class ModMenuEventHandler {
         ));
         ClientTickEvents.END_CLIENT_TICK.register(ModMenuEventHandler::onClientEndTick);
         ScreenEvents.AFTER_INIT.register(ModMenuEventHandler::afterScreenInit);
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
+                Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "badge_manager"),
+                BadgeManager.INSTANCE
+        );
+
     }
 
     public static void afterScreenInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {

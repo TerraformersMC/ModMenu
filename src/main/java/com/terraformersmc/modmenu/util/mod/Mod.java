@@ -1,5 +1,7 @@
 package com.terraformersmc.modmenu.util.mod;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.TextPlaceholderApiCompat;
 import com.terraformersmc.modmenu.api.UpdateChecker;
@@ -9,6 +11,9 @@ import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import eu.pb4.placeholders.api.ParserContext;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.locale.Language;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,7 +100,7 @@ public interface Mod {
      */
     @NotNull SortedMap<String, Set<String>> getCredits();
 
-    @NotNull Set<Badge> getBadges();
+    @NotNull Set<BadgeHolder> getBadges();
 
     @Nullable String getWebsite();
 
@@ -140,55 +145,26 @@ public interface Mod {
 
     boolean isHidden();
 
-    enum Badge {
-        LIBRARY(
-                "modmenu.badge.library",
-                0xFF107454,
-                0xFF093929,
-                "library"
-        ),
-        CLIENT(
-                "modmenu.badge.clientsideOnly",
-                0xFF2b4b7c,
-                0xFF0e2a55,
-                null
-        ),
-        DEPRECATED(
-                "modmenu.badge.deprecated",
-                0xFF841426,
-                0xFF530C17,
-                "deprecated"
-        ),
-        PATCHWORK_FORGE(
-                "modmenu.badge.forge",
-                0xFF1f2d42,
-                0xFF101721,
-                null
-        ),
-        MODPACK(
-                "modmenu.badge.modpack",
-                0xFF7a2b7c,
-                0xFF510d54,
-                null
-        ),
-        MINECRAFT(
-                "modmenu.badge.minecraft",
-                0xFF6f6c6a,
-                0xFF31302f,
-                null
-        );
+    void recalculateBadges();
 
-        private final Component text;
-        private final int outlineColor, fillColor;
-        private final String key;
-        private static final Map<String, Badge> KEY_MAP = new HashMap<>();
+    record Badge(Component text, int outlineColor, int fillColor, int textColor, Optional<String> searchTerms, boolean library) {
 
-        Badge(String translationKey, int outlineColor, int fillColor, String key) {
-            this.text = Component.translatable(translationKey);
-            this.outlineColor = outlineColor;
-            this.fillColor = fillColor;
-            this.key = key;
-        }
+        public static final Identifier LIBRARY = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "library");
+        public static final Identifier CLIENT = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "clientside_only");
+        public static final Identifier DEPRECATED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "deprecated");
+        public static final Identifier PATCHWORK_FORGE = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "patchwork_forge");
+        public static final Identifier MODPACK = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "modpack");
+        public static final Identifier MINECRAFT = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "minecraft");
+
+        public static final Codec<Badge> CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        ComponentSerialization.CODEC.fieldOf("text").forGetter(Badge::getText),
+                        ExtraCodecs.STRING_ARGB_COLOR.fieldOf("outline_color").forGetter(Badge::outlineColor),
+                        ExtraCodecs.STRING_ARGB_COLOR.fieldOf("fill_color").forGetter(Badge::fillColor),
+                        ExtraCodecs.STRING_ARGB_COLOR.optionalFieldOf("text_color", 0xFFCACACA).forGetter(Badge::textColor),
+                        Codec.STRING.optionalFieldOf("search_terms").forGetter(Badge::searchTerms),
+                        Codec.BOOL.optionalFieldOf("library", false).forGetter(Badge::library)
+                ).apply(instance, Badge::new));
 
         public Component getText() {
             return this.text;
@@ -202,18 +178,15 @@ public interface Mod {
             return this.fillColor;
         }
 
-        public static Set<Badge> convert(Set<String> badgeKeys, String modId) {
+        public static Set<BadgeHolder> convert(Set<Identifier> badgeKeys, String modId) {
             return badgeKeys.stream().map(key -> {
-                if (!KEY_MAP.containsKey(key)) {
+                BadgeHolder badgeHolder = BadgeManager.getBadge(key);
+                if (badgeHolder == null) {
                     ModMenu.LOGGER.warn("Skipping unknown badge key '{}' specified by mod '{}'", key, modId);
                 }
 
-                return KEY_MAP.get(key);
+                return badgeHolder;
             }).filter(Objects::nonNull).collect(Collectors.toSet());
-        }
-
-        static {
-            Arrays.stream(values()).forEach(badge -> KEY_MAP.put(badge.key, badge));
         }
     }
 }

@@ -27,8 +27,8 @@ public class ModBadgeRenderer {
     public void draw(GuiGraphicsExtractor drawContext, int mouseX, int mouseY) {
         this.badgeX = startX;
         this.badgeY = startY;
-        Set<Mod.Badge> badges = mod.getBadges();
-        badges.forEach(badge -> drawBadge(drawContext, badge, mouseX, mouseY));
+        Set<BadgeHolder> badges = mod.getBadges();
+        badges.forEach(badge -> drawBadge(drawContext, badge.badge(), mouseX, mouseY));
     }
 
     public void drawBadge(GuiGraphicsExtractor drawContext, Mod.Badge badge, int mouseX, int mouseY) {
@@ -37,6 +37,7 @@ public class ModBadgeRenderer {
                 badge.getText().getVisualOrderText(),
                 badge.getOutlineColor(),
                 badge.getFillColor(),
+                badge.textColor(),
                 mouseX,
                 mouseY
         );
@@ -47,12 +48,13 @@ public class ModBadgeRenderer {
             FormattedCharSequence text,
             int outlineColor,
             int fillColor,
+            int textColor,
             int mouseX,
             int mouseY
     ) {
         int width = client.font.width(text) + 6;
         if (badgeX + width < badgeMax) {
-            DrawingUtil.drawBadge(drawContext, badgeX, badgeY, width, text, outlineColor, fillColor, 0xFFCACACA);
+            DrawingUtil.drawBadge(drawContext, badgeX, badgeY, width, text, outlineColor, fillColor, textColor);
             badgeX += width + 3;
         }
     }
