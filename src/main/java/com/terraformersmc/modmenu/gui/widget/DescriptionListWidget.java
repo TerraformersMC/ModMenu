@@ -20,6 +20,7 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.CreditsAndAttributionScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.net.URI;
@@ -243,13 +244,36 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
                         for (var contributor : role.getValue()) {
                             indent = 16;
 
-                            for (var line : textRenderer.split(Component.literal(contributor), wrapWidth - 24)) {
-                                ContactInformation contact = mod.getContact(contributor);
-                                if (contact != null && contact.get("email").isPresent()) {
-                                    this.addEntry(new MailableContactEntry(line, contact.get("email").get(), indent));
+                            boolean hasLink = false;
+                            ContactInformation contact = mod.getContact(contributor);
+
+                            if (contact != null) {
+                                hasLink = contact.get("email").isPresent() || contact.get("homepage").isPresent();
+                            }
+
+                            MutableComponent name = Component.literal(contributor);
+
+                            if (hasLink) {
+                                name = name.withStyle(ChatFormatting.BLUE).withStyle(ChatFormatting.UNDERLINE);
+                            }
+
+                            for (var line : textRenderer.split(name, wrapWidth - 24)) {
+                                DescriptionEntry entry = null;
+
+                                if (hasLink) {
+                                    if (contact.get("email").isPresent()) {
+                                        entry = new MailableContactEntry(line, contact.get("email").get(), indent);
+                                    } else if (contact.get("homepage").isPresent()) {
+                                        entry = new LinkEntry(line, contact.get("homepage").get(), indent);
+                                    }
+                                }
+
+                                if (entry != null) {
+                                    this.addEntry(entry);
                                 } else {
                                     this.addEntry(new DescriptionEntry(line, indent));
                                 }
+
                                 indent = 24;
                             }
                         }
