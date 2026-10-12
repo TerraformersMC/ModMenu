@@ -205,10 +205,10 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
 
     public Identifier getIconTexture() {
         if (this.iconLocation == null) {
-            return this.iconLocation = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.guiScale().get());
+            this.iconLocation = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.guiScale().get());
         }
 
-        return iconLocation;
+        return this.iconLocation;
     }
 
     public void updatePlacement(int leftX, int width, int y) {
