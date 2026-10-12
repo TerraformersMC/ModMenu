@@ -525,8 +525,8 @@ public class ModsScreen extends Screen {
 
     private void setFilterOptionsShown(boolean filterOptionsShown) {
         this.filterOptionsShown = filterOptionsShown;
-        this.sortingButton.visible = filterOptionsShown;
-        this.librariesButton.visible = filterOptionsShown;
+        this.sortingButton.setVisible(filterOptionsShown);
+        this.librariesButton.setVisible(filterOptionsShown);
     }
 
     public ModListEntry getSelectedEntry() {
@@ -545,8 +545,7 @@ public class ModsScreen extends Screen {
 
         if (this.configureButton != null) {
             this.configureButton.active = getModHasConfigScreen(modId);
-            this.configureButton.visible =
-                    getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId);
+            this.configureButton.setVisible(getModHasConfigScreen(modId) || modScreenErrors.containsKey(modId));
 
             if (modScreenErrors.containsKey(modId)) {
                 Throwable e = modScreenErrors.get(modId);
@@ -560,10 +559,10 @@ public class ModsScreen extends Screen {
         this.websiteButton.setMessage(isMinecraft ? SEND_FEEDBACK_TEXT : ModMenuScreenTexts.WEBSITE);
         this.issuesButton.setMessage(isMinecraft ? REPORT_BUGS_TEXT : ModMenuScreenTexts.ISSUES);
 
-        this.websiteButton.visible = true;
+        this.websiteButton.setVisible(true);
         this.websiteButton.active = isMinecraft || selected.getMod().getWebsite() != null;
 
-        this.issuesButton.visible = true;
+        this.issuesButton.setVisible(true);
         this.issuesButton.active = isMinecraft || selected.getMod().getIssueTracker() != null;
     }
 

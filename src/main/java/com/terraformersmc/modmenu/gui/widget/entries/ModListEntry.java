@@ -14,7 +14,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -206,9 +205,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
 
     public Identifier getIconTexture() {
         if (this.iconLocation == null) {
-            this.iconLocation = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, mod.getId() + "_icon");
-            DynamicTexture icon = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.guiScale().get());
-            this.client.getTextureManager().register(this.iconLocation, icon);
+            return this.iconLocation = mod.getIcon(list.getFabricIconHandler(), 64 * this.client.options.guiScale().get());
         }
 
         return iconLocation;

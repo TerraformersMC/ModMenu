@@ -8,7 +8,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ContactInformation;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ public class FabricDummyParentMod implements Mod {
     }
 
     @Override
-    public @NotNull DynamicTexture getIcon(FabricIconHandler iconHandler, int i) {
+    public @NotNull Identifier getIcon(FabricIconHandler iconHandler, int i) {
         String iconSourceId = host.getId();
         FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
         String iconPath = null;

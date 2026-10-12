@@ -9,6 +9,7 @@ import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import eu.pb4.placeholders.api.ParserContext;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.locale.Language;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -36,7 +36,7 @@ public interface Mod {
         }
     }
 
-    @NotNull DynamicTexture getIcon(FabricIconHandler iconHandler, int i);
+    @NotNull Identifier getIcon(FabricIconHandler iconHandler, int i);
 
     @NotNull
     default String getSummary() {

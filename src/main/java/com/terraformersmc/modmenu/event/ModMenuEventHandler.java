@@ -56,7 +56,7 @@ public class ModMenuEventHandler {
                 AbstractWidget widget = buttons.get(i);
                 if (widget instanceof Button button) {
                     if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.CLASSIC) {
-                        if (button.visible) {
+                        if (button.isVisible()) {
                             shiftButtons(button, modsButtonIndex == -1, spacing);
                             if (modsButtonIndex == -1) {
                                 buttonsY = button.getY();
@@ -80,7 +80,7 @@ public class ModMenuEventHandler {
                             }
 
                             modsButtonIndex = i + 1;
-                            if (button.visible) {
+                            if (button.isVisible()) {
                                 buttonsY = button.getY();
                             }
                         }

@@ -86,7 +86,7 @@ public abstract class MixinTitleScreen {
                 ),
                 _ -> Minecraft.getInstance().gui.setScreen(new ModsScreen(screen)),
                 ModMenuApi.createModsButtonText(),
-                null,
+                _ -> ModMenuApi.createModsButtonText().copy(),
                 false
         ));
     }

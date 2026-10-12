@@ -3,7 +3,9 @@ package com.terraformersmc.modmenu.util.mod.fabric;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.terraformersmc.modmenu.ModMenu;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -20,12 +22,13 @@ import java.util.Objects;
 public class FabricIconHandler implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | FabricIconHandler");
 
-    private final Map<Path, DynamicTexture> modIconCache = new HashMap<>();
+    private final Map<Path, Identifier> modIconCache = new HashMap<>();
 
-    public DynamicTexture createIcon(ModContainer iconSource, String iconPath) {
+    public Identifier createIcon(ModContainer iconSource, String iconPath) {
         try {
+            TextureManager textureManager = Minecraft.getInstance().getTextureManager();
             Path path = iconSource.getPath(iconPath);
-            DynamicTexture cachedIcon = getCachedModIcon(path);
+            Identifier cachedIcon = getCachedModIcon(path);
 
             if (cachedIcon != null) {
                 return cachedIcon;
@@ -34,10 +37,11 @@ public class FabricIconHandler implements Closeable {
             try (InputStream inputStream = Files.newInputStream(path)) {
                 NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
                 Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-                DynamicTexture tex = new DynamicTexture(() -> Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, iconPath).toString(), image);
-                cacheModIcon(path, tex);
+                Identifier location = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, iconPath);
+                textureManager.register(location, TextureResources.from2dImage(() -> "Mod icon " + location, image));
+                cacheModIcon(path, location);
 
-                return tex;
+                return location;
             }
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("Must be square icon")) {
@@ -59,16 +63,17 @@ public class FabricIconHandler implements Closeable {
 
     @Override
     public void close() {
-        for (DynamicTexture tex : modIconCache.values()) {
-            tex.close();
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        for (Identifier tex : modIconCache.values()) {
+            textureManager.release(tex);
         }
     }
 
-    DynamicTexture getCachedModIcon(Path path) {
+    Identifier getCachedModIcon(Path path) {
         return modIconCache.get(path);
     }
 
-    void cacheModIcon(Path path, DynamicTexture tex) {
+    void cacheModIcon(Path path, Identifier tex) {
         modIconCache.put(path, tex);
     }
 }
