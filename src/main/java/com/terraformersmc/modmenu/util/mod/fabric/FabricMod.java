@@ -1,8 +1,12 @@
 package com.terraformersmc.modmenu.util.mod.fabric;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.api.UpdateChecker;
+import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.OptionalUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
@@ -12,6 +16,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +24,9 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,10 +41,16 @@ public class FabricMod implements Mod {
 	private final Set<Badge> badges;
 
 	private final Map<String, String> links = new HashMap<>();
+	private boolean allowsUpdateChecks = true;
+	private @Nullable UpdateChecker updateChecker;
+	private volatile @Nullable UpdateInfo updateInfo;
 
 	public FabricMod(ModContainer modContainer) {
 		this.container = modContainer;
 		this.metadata = modContainer.getMetadata();
+		if ("minecraft".equals(metadata.getId()) || "java".equals(metadata.getId())) {
+			this.allowsUpdateChecks = false;
+		}
 
 		/* Load modern mod menu custom value data */
 		boolean usesModernParent = false;
@@ -68,6 +82,7 @@ public class FabricMod implements Mod {
 			}
 			badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
 			links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
+			allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(allowsUpdateChecks);
 			usesModernParent = modMenuObject.containsKey("parent");
 		}
 		if (parentId.orElse("").equals(this.metadata.getId())) {
@@ -283,6 +298,54 @@ public class FabricMod implements Mod {
 	@Override
 	public boolean isReal() {
 		return true;
+	}
+
+	@Override
+	public boolean allowsUpdateChecks() {
+		return allowsUpdateChecks && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(getId());
+	}
+
+	@Override
+	public boolean canConfigureUpdateChecks() {
+		return allowsUpdateChecks;
+	}
+
+	@Override
+	public @Nullable String getSha512Hash() throws IOException {
+		if (container.getContainingMod().isEmpty() && container.getOrigin().getKind() == ModOrigin.Kind.PATH) {
+			for (Path path : container.getOrigin().getPaths()) {
+				if (path.toString().toLowerCase(Locale.ROOT).endsWith(".jar")) {
+					File file = path.toFile();
+					if (file.isFile()) {
+						return Files.asByteSource(file).hash(Hashing.sha512()).toString();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public @Nullable UpdateChecker getUpdateChecker() {
+		return updateChecker;
+	}
+
+	@Override
+	public void setUpdateChecker(@Nullable UpdateChecker updateChecker) {
+		this.updateChecker = updateChecker;
+	}
+
+	@Override
+	public @Nullable UpdateInfo getUpdateInfo() {
+		return updateInfo;
+	}
+
+	@Override
+	public void setUpdateInfo(@Nullable UpdateInfo updateInfo) {
+		this.updateInfo = updateInfo;
+		if (updateInfo != null && updateInfo.isUpdateAvailable()) {
+			ModMenu.modUpdateAvailable = true;
+		}
 	}
 
 	public ModMenuData getModMenuData() {

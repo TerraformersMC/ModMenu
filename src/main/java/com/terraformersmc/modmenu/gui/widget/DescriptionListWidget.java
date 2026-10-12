@@ -3,9 +3,12 @@ package com.terraformersmc.modmenu.gui.widget;
 import com.google.common.util.concurrent.Runnables;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
+import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
+import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -31,12 +34,14 @@ import net.minecraft.util.math.MathHelper;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 
 public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget.DescriptionEntry> {
 
 	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
+	private UpdateInfo lastUpdateInfo;
 
 	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModsScreen parent) {
 		super(client, width, height, top, bottom, entryHeight);
@@ -67,8 +72,10 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		ModListEntry selectedEntry = parent.getSelectedEntry();
-		if (selectedEntry != lastSelected) {
+		UpdateInfo updateInfo = selectedEntry == null ? null : selectedEntry.getMod().getUpdateInfo();
+		if (selectedEntry != lastSelected || updateInfo != lastUpdateInfo) {
 			lastSelected = selectedEntry;
+			lastUpdateInfo = updateInfo;
 			clearEntries();
 			setScrollAmount(-Double.MAX_VALUE);
 			if (lastSelected != null) {
@@ -82,6 +89,23 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					for (OrderedText line : textRenderer.wrapLines(new LiteralText(description.replaceAll("\n", "\n\n")), getRowWidth() - 5)) {
 						children().add(new DescriptionEntry(line, this));
 					}
+				}
+				if (updateInfo != null && updateInfo.isUpdateAvailable()) {
+					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
+					Text updateMessage = updateInfo.getUpdateMessage();
+					if (updateMessage == null) {
+						updateMessage = new TranslatableText("modmenu.updateAvailable");
+					}
+					children().add(new DescriptionEntry(updateMessage.asOrderedText(), this));
+					OrderedText downloadText = new TranslatableText("modmenu.updateDownload")
+							.formatted(Formatting.BLUE)
+							.formatted(Formatting.UNDERLINE)
+							.asOrderedText();
+					children().add(new LinkEntry(downloadText, updateInfo.getDownloadLink(), this));
+				}
+				if (ModMenuConfig.UPDATE_CHECKER.getValue() && mod.canConfigureUpdateChecks()) {
+					children().add(new DescriptionEntry(LiteralText.EMPTY.asOrderedText(), this));
+					children().add(new UpdateCheckerEntry(mod, this));
 				}
 
 				Map<String, String> links = mod.getLinks();
@@ -284,6 +308,35 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					}
 					client.openScreen(parent);
 				}, link, false));
+			}
+			return super.mouseClicked(mouseX, mouseY, button);
+		}
+	}
+
+	protected class UpdateCheckerEntry extends DescriptionEntry {
+		private final Mod mod;
+
+		public UpdateCheckerEntry(Mod mod, DescriptionListWidget widget) {
+			super(new TranslatableText(
+					ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId())
+							? "modmenu.updateChecker.enable"
+							: "modmenu.updateChecker.disable"
+				).formatted(Formatting.BLUE).formatted(Formatting.UNDERLINE).asOrderedText(), widget);
+			this.mod = mod;
+		}
+
+		@Override
+		public boolean mouseClicked(double mouseX, double mouseY, int button) {
+			if (isMouseOver(mouseX, mouseY)) {
+				Set<String> disabledMods = new HashSet<>(ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue());
+				if (!disabledMods.add(mod.getId())) {
+					disabledMods.remove(mod.getId());
+				}
+				ModMenuConfig.DISABLE_UPDATE_CHECKER.setValue(disabledMods);
+				ModMenuConfigManager.save();
+				UpdateCheckerUtil.checkForUpdates();
+				lastSelected = null;
+				return true;
 			}
 			return super.mouseClicked(mouseX, mouseY, button);
 		}

@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.config;
 
 import com.google.gson.annotations.SerializedName;
+import com.terraformersmc.modmenu.api.UpdateChannel;
 import com.terraformersmc.modmenu.config.option.BooleanConfigOption;
 import com.terraformersmc.modmenu.config.option.EnumConfigOption;
 import com.terraformersmc.modmenu.config.option.OptionConvertable;
@@ -30,16 +31,23 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption HIDE_BADGES = new BooleanConfigOption("hide_badges", false);
 	public static final BooleanConfigOption HIDE_MOD_CREDITS = new BooleanConfigOption("hide_mod_credits", false);
 	public static final BooleanConfigOption EASTER_EGGS = new BooleanConfigOption("easter_eggs", true);
+	public static final BooleanConfigOption UPDATE_CHECKER = new BooleanConfigOption("update_checker", true);
+	public static final BooleanConfigOption UPDATE_BADGE = new BooleanConfigOption("update_badge", true);
+	public static final EnumConfigOption<UpdateChannel> UPDATE_CHANNEL = new EnumConfigOption<>(
+			"update_channel", UpdateChannel.RELEASE);
 	public static final BooleanConfigOption MODIFY_TITLE_SCREEN = new BooleanConfigOption("modify_title_screen", true);
 	public static final BooleanConfigOption MODIFY_GAME_MENU = new BooleanConfigOption("modify_game_menu", true);
 	public static final BooleanConfigOption HIDE_CONFIG_BUTTONS = new BooleanConfigOption("hide_config_buttons", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
+	public static final StringSetConfigOption DISABLE_UPDATE_CHECKER = new StringSetConfigOption(
+			"disable_update_checker", new HashSet<>());
 	public static final BooleanConfigOption LOG_DEPRECATION_WARNINGS = new BooleanConfigOption("log_deprecation_warnings", false);
 
 	public static final List<String> HIDDEN_OPTIONS = List.of(
 		"MODIFY_TITLE_SCREEN",
 		"MODIFY_GAME_MENU",
-		"HIDE_CONFIG_BUTTONS"
+		"HIDE_CONFIG_BUTTONS",
+		"DISABLE_UPDATE_CHECKER"
 	);
 
 	public static Option[] asOptions() {

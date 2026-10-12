@@ -1,11 +1,14 @@
 package com.terraformersmc.modmenu.util.mod;
 
+import com.terraformersmc.modmenu.api.UpdateChecker;
+import com.terraformersmc.modmenu.api.UpdateInfo;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,6 +62,35 @@ public interface Mod {
 	Map<String, String> getLinks();
 
 	boolean isReal();
+
+	default boolean allowsUpdateChecks() {
+		return true;
+	}
+
+	default boolean canConfigureUpdateChecks() {
+		return isReal();
+	}
+
+	@Nullable
+	default String getSha512Hash() throws IOException {
+		return null;
+	}
+
+	@Nullable
+	default UpdateChecker getUpdateChecker() {
+		return null;
+	}
+
+	default void setUpdateChecker(@Nullable UpdateChecker checker) {
+	}
+
+	@Nullable
+	default UpdateInfo getUpdateInfo() {
+		return null;
+	}
+
+	default void setUpdateInfo(@Nullable UpdateInfo updateInfo) {
+	}
 
 	enum Badge {
 		LIBRARY("modmenu.badge.library", 0xff107454, 0xff093929, "library"),

@@ -44,6 +44,13 @@ public interface ModMenuApi extends ModMenuApiMarker {
 	}
 
 	/**
+	 * Supplies an update checker for this mod, taking priority over Mod Menu's built-in Modrinth lookup.
+	 */
+	default UpdateChecker getUpdateChecker() {
+		return null;
+	}
+
+	/**
 	 * Used to provide config screen factories for other mods. This takes second
 	 * priority to a mod's own config screen factory provider. For example, if
 	 * mod `xyz` supplies a config screen factory, mod `abc` providing a config
@@ -56,6 +63,13 @@ public interface ModMenuApi extends ModMenuApiMarker {
 	 * @return a map of mod ids to screen factories.
 	 */
 	default Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
+		return ImmutableMap.of();
+	}
+
+	/**
+	 * Supplies update checkers for other mods. A mod's own checker takes priority.
+	 */
+	default Map<String, UpdateChecker> getProvidedUpdateCheckers() {
 		return ImmutableMap.of();
 	}
 }

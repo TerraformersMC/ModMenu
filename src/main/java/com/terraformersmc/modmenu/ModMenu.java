@@ -7,10 +7,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import com.terraformersmc.modmenu.api.UpdateChecker;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import com.terraformersmc.modmenu.util.ModMenuApiMarker;
+import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
@@ -44,6 +46,7 @@ public class ModMenu implements ClientModInitializer {
 
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
 	private static List<Supplier<Map<String, ConfigScreenFactory<?>>>> dynamicScreenFactories = new ArrayList<>();
+	public static volatile boolean modUpdateAvailable;
 
 	private static int cachedDisplayedModCount = -1;
 
@@ -66,6 +69,8 @@ public class ModMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Map<String, ConfigScreenFactory<?>> factories = new HashMap<>();
+		Map<String, UpdateChecker> updateCheckers = new HashMap<>();
+		Map<String, UpdateChecker> providedUpdateCheckers = new HashMap<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApiMarker.class).forEach(entrypoint -> {
 			ModMetadata metadata = entrypoint.getProvider().getMetadata();
 			String modId = metadata.getId();
@@ -76,6 +81,11 @@ public class ModMenu implements ClientModInitializer {
 					ModMenuApi api = (ModMenuApi) marker;
 					factories.put(modId, api.getModConfigScreenFactory());
 					dynamicScreenFactories.add(api::getProvidedConfigScreenFactories);
+					UpdateChecker updateChecker = api.getUpdateChecker();
+					if (updateChecker != null) {
+						updateCheckers.put(modId, updateChecker);
+					}
+					providedUpdateCheckers.putAll(api.getProvidedUpdateCheckers());
 				} else if (marker instanceof io.github.prospector.modmenu.api.ModMenuApi) {
 					/* Legacy API */
 					io.github.prospector.modmenu.api.ModMenuApi api = (io.github.prospector.modmenu.api.ModMenuApi) entrypoint.getEntrypoint();
@@ -117,7 +127,15 @@ public class ModMenu implements ClientModInitializer {
 				ROOT_MODS.put(mod.getId(), mod);
 			}
 		}
+		for (Mod mod : MODS.values()) {
+			UpdateChecker checker = updateCheckers.get(mod.getId());
+			if (checker == null) {
+				checker = providedUpdateCheckers.get(mod.getId());
+			}
+			mod.setUpdateChecker(checker);
+		}
 		MODS.putAll(dummyParents);
+		UpdateCheckerUtil.checkForUpdates();
 		ModMenuEventHandler.register();
 	}
 

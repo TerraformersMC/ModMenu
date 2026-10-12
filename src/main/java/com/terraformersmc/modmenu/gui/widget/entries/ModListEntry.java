@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
+import com.terraformersmc.modmenu.gui.widget.UpdateAvailableBadge;
 import com.terraformersmc.modmenu.util.DrawingUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
@@ -54,6 +55,9 @@ public class ModListEntry extends AlwaysSelectedEntryListWidget.Entry<ModListEnt
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(matrices, x, y, 0.0F, 0.0F, iconSize, iconSize, iconSize, iconSize);
 		RenderSystem.disableBlend();
+		if (ModMenuConfig.UPDATE_BADGE.getValue() && mod.getUpdateInfo() != null && mod.getUpdateInfo().isUpdateAvailable()) {
+			UpdateAvailableBadge.renderBadge(matrices, x + iconSize - 8, y);
+		}
 		Text name = new LiteralText(mod.getName());
 		StringVisitable trimmedName = name;
 		int maxNameWidth = rowWidth - iconSize - 3;

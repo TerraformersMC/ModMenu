@@ -4,6 +4,7 @@ Adds a screen for viewing a list of installed mods.
 * The menu is searchable and sortable, libraries can be hidden. 
 * Client-side and API mods are marked with a special badge in the list.
 * When clicking a mod in the list, its homepage, issues link and description are displayed.
+* Updates are checked for Modrinth-hosted mods and can be supplied by other mods through the Java API.
 * The mod details page also lets the user configure the mod, if available (can be disabled for modpacks via config).
 
 <h4 align="center">
