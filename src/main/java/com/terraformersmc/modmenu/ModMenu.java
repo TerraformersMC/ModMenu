@@ -261,6 +261,8 @@ public class ModMenu implements ClientModInitializer {
                 String key = Language.getInstance().has(specificKey) ? specificKey : "modmenu.loaded";
                 if (ModMenuConfig.EASTER_EGGS.getValue() && Language.getInstance().has(specificKey + ".secret")) {
                     key = specificKey + ".secret";
+                } else if (ModMenuConfig.EASTER_EGGS.getValue() && "67".equals(count)) {
+                    key = "modmenu.loaded.69.secret";
                 }
                 modsText.append(Component.literal(" ")).append(Component.translatable(key, count));
             }
