@@ -253,7 +253,7 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
     }
 
     @Override
-    protected void extractListItems(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float delta) {
+    protected void extractListItems(GuiGraphicsExtractor drawContext) {
         int entryLeft = this.getRowLeft();
         int entryWidth = this.getRowWidth();
         int entryHeight = this.defaultEntryHeight - 4;
@@ -283,10 +283,7 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
                 entry.setYOffset(yOffset);
                 entry.extractContent(
                         drawContext,
-                        mouseX,
-                        mouseY,
-                        this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPos(mouseX, mouseY), entry),
-                        delta
+                        this.isMouseOver(drawContext.mouseX(), drawContext.mouseY()) && Objects.equals(this.getEntryAtPos(drawContext.mouseX(), drawContext.mouseY()), entry)
                 );
             }
         }

@@ -295,9 +295,9 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
     }
 
     @Override
-    public void extractListItems(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float delta) {
+    public void extractListItems(GuiGraphicsExtractor drawContext) {
         this.enableScissor(drawContext);
-        super.extractListItems(drawContext, mouseX, mouseY, delta);
+        super.extractListItems(drawContext);
         drawContext.disableScissor();
     }
 
@@ -333,10 +333,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         @Override
         public void extractContent(
                 GuiGraphicsExtractor drawContext,
-                int mouseX,
-                int mouseY,
-                boolean isSelected,
-                float delta
+                boolean isSelected
         ) {
             int x = this.getX();
             int y = this.getContentY();
@@ -437,8 +434,8 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
 
         @Override
-        public void extractContent(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, boolean isSelected, float delta) {
-            super.extractContent(drawContext, mouseX, mouseY, isSelected, delta);
+        public void extractContent(GuiGraphicsExtractor drawContext, boolean isSelected) {
+            super.extractContent(drawContext, isSelected);
             drawContext.text(textRenderer, Component.literal(" ").append(Component.literal("✉")), this.getContentX() + indent + textRenderer.width(text) + 1, this.getContentY(), 0xFFAAAAAA);
         }
 

@@ -20,12 +20,9 @@ public class ChildEntry extends ModListEntry {
     @Override
     public void extractContent(
             GuiGraphicsExtractor drawContext,
-            int mouseX,
-            int mouseY,
-            boolean isSelected,
-            float delta
+            boolean isSelected
     ) {
-        super.extractContent(drawContext, mouseX, mouseY, isSelected, delta);
+        super.extractContent(drawContext, isSelected);
         int x = this.getContentX() - 2;
         int y = this.getContentY() + this.getYOffset();
 //		int rowWidth = this.getContentWidth();
