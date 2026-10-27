@@ -36,8 +36,8 @@ public class SmallModMenuButtonWidget extends SpriteIconButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float delta) {
-        super.extractContents(drawContext, mouseX, mouseY, delta);
+    public void extractContents(GuiGraphicsExtractor drawContext) {
+        super.extractContents(drawContext);
         if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable() && getAlpha() >= 1.0f) {
             UpdateAvailableBadge.renderBadge(drawContext, this.getX() + this.width - 5, this.getY() - 3);
         }

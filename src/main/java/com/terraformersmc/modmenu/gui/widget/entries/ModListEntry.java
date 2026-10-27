@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -53,10 +53,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
     @Override
     public void extractContent(
             GuiGraphicsExtractor drawContext,
-            int mouseX,
-            int mouseY,
-            boolean hovered,
-            float delta
+            boolean hovered
     ) {
         int x = this.getX() + this.getXOffset();
         int y = this.getContentY() + this.getYOffset();
@@ -112,7 +109,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
                     x + rowWidth,
                     mod,
                     list.getParent()
-            ).draw(drawContext, mouseX, mouseY);
+            ).draw(drawContext);
         }
 
         if (!ModMenuConfig.COMPACT_LIST.getValue()) {
@@ -142,7 +139,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
             final int textureSize = ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256;
             if (hovered) {
                 drawContext.fill(x, y, x + iconSize, y + iconSize, -1601138544);
-                boolean hoveringIcon = mouseX - x < iconSize;
+                boolean hoveringIcon = drawContext.mouseX() - x < iconSize;
                 if (this.list.getParent().modScreenErrors.containsKey(modId)) {
                     drawContext.blitSprite(
                             RenderPipelines.GUI_TEXTURED,

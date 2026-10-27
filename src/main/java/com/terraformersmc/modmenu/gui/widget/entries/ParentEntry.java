@@ -9,7 +9,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
@@ -36,12 +36,11 @@ public class ParentEntry extends ModListEntry {
     @Override
     public void extractContent(
             GuiGraphicsExtractor drawContext,
-            int mouseX,
-            int mouseY,
-            boolean isSelected,
-            float delta
+            boolean isSelected
     ) {
-        super.extractContent(drawContext, mouseX, mouseY, isSelected, delta);
+        int mouseX = drawContext.mouseX();
+        int mouseY = drawContext.mouseY();
+        super.extractContent(drawContext, isSelected);
         Font font = client.font;
         int x = this.getContentX() - 2;
         int y = this.getContentY() + this.getYOffset();

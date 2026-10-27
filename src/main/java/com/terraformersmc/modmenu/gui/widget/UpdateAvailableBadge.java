@@ -1,7 +1,7 @@
 package com.terraformersmc.modmenu.gui.widget;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.resources.Identifier;
 
 public class UpdateAvailableBadge {

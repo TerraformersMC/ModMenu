@@ -30,7 +30,7 @@ import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
@@ -299,15 +299,17 @@ public class ModsScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float delta) {
-        super.extractRenderState(drawContext, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor drawContext) {
+        int mouseX = drawContext.mouseX();
+        int mouseY = drawContext.mouseY();
+        super.extractRenderState(drawContext);
         ModListEntry selectedEntry = selected;
         if (selectedEntry != null) {
-            this.descriptionListWidget.extractRenderState(drawContext, mouseX, mouseY, delta);
+            this.descriptionListWidget.extractRenderState(drawContext);
         }
 
-        this.modList.extractRenderState(drawContext, mouseX, mouseY, delta);
-        this.searchBox.extractRenderState(drawContext, mouseX, mouseY, delta);
+        this.modList.extractRenderState(drawContext);
+        this.searchBox.extractRenderState(drawContext);
         drawContext.centeredText(this.font, this.title, this.modList.getWidth() / 2, 8, 0xFFFFFFFF);
         int grayColor = 0xFFAAAAAA;
         if (!ModMenuConfig.DISABLE_DRAG_AND_DROP.getValue()) {
@@ -434,7 +436,7 @@ public class ModsScreen extends Screen {
             }
 
             if (!ModMenuConfig.HIDE_BADGES.getValue()) {
-                modBadgeRenderer.draw(drawContext, mouseX, mouseY);
+                modBadgeRenderer.draw(drawContext);
             }
 
             if (mod.isReal()) {
