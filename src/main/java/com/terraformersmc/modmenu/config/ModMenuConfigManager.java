@@ -90,8 +90,13 @@ public class ModMenuConfigManager {
                 }
             }
         } catch (IOException | IllegalAccessException e) {
-            System.err.println("Couldn't load Mod Menu configuration file; reverting to defaults");
+            // File is inaccessible
+            System.err.println("Couldn't access Mod Menu configuration file; using defaults");
             e.printStackTrace();
+        } catch (IllegalStateException | JsonSyntaxException e) {
+            // File is malformed JSON
+            System.err.println("Mod Menu configuration file is malformed; reverting to defaults");
+            save();
         }
     }
 
