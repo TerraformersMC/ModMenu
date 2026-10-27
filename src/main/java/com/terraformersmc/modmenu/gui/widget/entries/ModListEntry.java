@@ -11,9 +11,9 @@ import com.terraformersmc.modmenu.util.mod.ModBadgeRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -66,7 +66,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
         }
 
         drawContext.blit(
-                RenderPipelines.GUI_TEXTURED,
+                GuiPipeline.TEXTURED,
                 this.getIconTexture(),
                 x,
                 y,
@@ -142,7 +142,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
                 boolean hoveringIcon = drawContext.mouseX() - x < iconSize;
                 if (this.list.getParent().modScreenErrors.containsKey(modId)) {
                     drawContext.blitSprite(
-                            RenderPipelines.GUI_TEXTURED,
+                            GuiPipeline.TEXTURED,
                             hoveringIcon ? ERROR_HIGHLIGHTED_ICON : ERROR_ICON,
                             x,
                             y,
@@ -156,7 +156,7 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
                 } else {
                     int v = hoveringIcon ? iconSize : 0;
                     drawContext.blit(
-                            RenderPipelines.GUI_TEXTURED,
+                            GuiPipeline.TEXTURED,
                             MOD_CONFIGURATION_ICON,
                             x,
                             y,

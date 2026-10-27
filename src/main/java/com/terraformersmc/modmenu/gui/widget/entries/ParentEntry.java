@@ -7,9 +7,9 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.ModSearch;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
@@ -109,7 +109,7 @@ public class ParentEntry extends ModListEntry {
             int xOffset = list.getParent().showModChildren.contains(getMod().getId()) ? iconSize : 0;
             int yOffset = hoveringIcon ? iconSize : 0;
             drawContext.blit(
-                    RenderPipelines.GUI_TEXTURED,
+                    GuiPipeline.TEXTURED,
                     PARENT_MOD_TEXTURE,
                     x,
                     y,
