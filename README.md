@@ -185,7 +185,7 @@ dependencies {
   implementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 ```
-Then, define the version of Mod Menu you're using in your `gradle.properties`. You can get the latest version number [here](https://modrinth.com/mod/modmenu/version/latest), but you may need a different version if you're not using the latest Minecraft version. See the [versions page](https://modrinth.com/mod/modmenu/versions) for a full list of versions.
+Then, define the version of Mod Menu you're using in your `gradle.properties`. You can get the latest version number [here](https://github.com/TerraformersMC/ModMenu/releases/latest), but you may need a different version if you're not using the latest Minecraft version. See the [versions page](https://modrinth.com/mod/modmenu/versions) for a full list of versions.
 
 `gradle.properties`
 ```properties
