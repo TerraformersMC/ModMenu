@@ -128,13 +128,10 @@ public class ModListEntry extends ObjectSelectionList.Entry<ModListEntry> {
                     0xFF808080
             );
         } else {
-            DrawingUtil.drawWrappedString(
-                    drawContext,
+            drawContext.text(font,
                     mod.getPrefixedVersion(),
                     (x + iconSize + 3),
                     (y + client.font.lineHeight + 2),
-                    rowWidth - iconSize - 7,
-                    2,
                     0xFF808080
             );
         }
