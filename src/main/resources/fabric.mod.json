@@ -17,7 +17,8 @@
   "contact": {
     "homepage": "https://modrinth.com/mod/modmenu",
     "sources": "https://github.com/TerraformersMC/ModMenu",
-    "issues": "https://github.com/TerraformersMC/ModMenu/issues"
+    "issues": "https://github.com/TerraformersMC/ModMenu/issues",
+	"discord": "https://discord.gg/jEGF5fb"
   },
   "depends": {
     "fabric-resource-loader-v1": "*",
@@ -108,12 +109,5 @@
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
     "mixins.modmenu.json"
-  ],
-  "custom": {
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://discord.gg/jEGF5fb"
-      }
-    }
-  }
+  ]
 }
