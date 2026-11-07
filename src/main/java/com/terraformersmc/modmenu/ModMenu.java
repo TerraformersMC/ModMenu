@@ -239,7 +239,7 @@ public class ModMenu implements ClientModInitializer {
             }).count());
         }
 
-        return NumberFormat.getInstance().format(cachedDisplayedModCount);
+        return NumberFormat.getInstance(Locale.ROOT).format(cachedDisplayedModCount);
     }
 
     public static Component createModsButtonText(boolean title) {
