@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.terraformersmc.modmenu.ModMenu;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ExternalTextureProvider;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
@@ -38,7 +39,8 @@ public class FabricIconHandler implements Closeable {
                 NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
                 Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
                 Identifier location = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, iconPath);
-                textureManager.register(location, TextureResources.from2dImage(() -> "Mod icon " + location, image));
+                TextureResources textureResources = TextureResources.from2dImage(() -> "Mod icon " + location, image);
+                textureManager.registerProvider(location, new ExternalTextureProvider(textureResources));
                 cacheModIcon(path, location);
 
                 return location;
