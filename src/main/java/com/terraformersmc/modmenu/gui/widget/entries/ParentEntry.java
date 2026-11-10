@@ -175,7 +175,7 @@ public class ParentEntry extends ModListEntry {
                 list.filter(list.getParent().getSearchInput(), false);
                 return true;
             } else {
-                return list.keyPressed(new KeyEvent(SDLScancode.SDL_SCANCODE_DOWN, 0, 0));
+                return list.keyPressed(new KeyEvent(SDLScancode.SDL_SCANCODE_DOWN, 0, 0, false));
             }
         }
 
