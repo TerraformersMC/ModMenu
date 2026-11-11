@@ -33,6 +33,9 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption MODIFY_GAME_MENU = new BooleanConfigOption("modify_game_menu", true);
 	public static final BooleanConfigOption HIDE_CONFIG_BUTTONS = new BooleanConfigOption("hide_config_buttons", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
+	public static final StringSetConfigOption DISABLE_UPDATE_CHECKER = new StringSetConfigOption("disable_update_checker", new HashSet<>());
+	public static final BooleanConfigOption UPDATE_CHECKER = new BooleanConfigOption("update_checker", true);
+	public static final BooleanConfigOption BUTTON_UPDATE_BADGE = new BooleanConfigOption("button_update_badge", true);
 
 	public static Option[] asOptions() {
 		ArrayList<Option> options = new ArrayList<>();

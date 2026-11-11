@@ -1,12 +1,17 @@
 package com.terraformersmc.modmenu.util.mod;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
+import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.QuiltLoader;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,6 +68,21 @@ public interface Mod {
 	Map<String, String> getLinks();
 
 	boolean isReal();
+
+	@Nullable
+	ModrinthData getModrinthData();
+
+	boolean allowsUpdateChecks();
+
+	default @Nullable String getSha512Hash() throws IOException {
+		return null;
+	}
+
+	void setModrinthData(ModrinthData modrinthData);
+
+	void setChildHasUpdate();
+
+	boolean getChildHasUpdate();
 
 	enum Badge {
 		LIBRARY("modmenu.badge.library", 0xff107454, 0xff093929, "library"),

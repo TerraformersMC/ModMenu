@@ -10,6 +10,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.event.ModMenuEventHandler;
+import com.terraformersmc.modmenu.util.ModrinthUtil;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricDummyParentMod;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
@@ -27,25 +28,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
+	public static final String GITHUB_REF = "TerraformersMC/ModMenu";
 	public static final Logger LOGGER = LogManager.getLogger("Mod Menu");
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
+	public static final Gson GSON_MINIFIED = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
 	public static final Map<String, Mod> MODS = new HashMap<>();
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
+	public static boolean modUpdateAvailable = false;
 
 	private static ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ImmutableMap.of();
 	private static List<Supplier<Map<String, ConfigScreenFactory<?>>>> dynamicScreenFactories = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
+	public static boolean runningQuilt = false;
 
 	public static Screen getConfigScreen(String modid, Screen menuScreen) {
 		ConfigScreenFactory<?> factory = configScreenFactories.get(modid);
@@ -85,11 +87,19 @@ public class ModMenu implements ClientModInitializer {
 				if(FabricLoader.getInstance().isModLoaded("quilt_loader")){
 					QuiltMod mod = new QuiltMod(modContainer);
 					MODS.put(mod.getId(), mod);
+
+					ModrinthUtil.checkForUpdates();
 				}else {
 					FabricMod mod = new FabricMod(modContainer);
 					MODS.put(mod.getId(), mod);
+
+					ModrinthUtil.checkForUpdates();
 				}
 			}
+		}
+
+		if (ModMenuConfig.UPDATE_CHECKER.getValue()) {
+			ModrinthUtil.checkForUpdates();
 		}
 
 		Map<String, Mod> dummyParents = new HashMap<>();

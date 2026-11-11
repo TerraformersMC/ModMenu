@@ -53,6 +53,9 @@
   "modmenu.license": "License:",
   "modmenu.links": "Links:",
   "modmenu.source": "Source",
+  "modmenu.hasUpdate": "An update is available:",
+  "modmenu.childHasUpdate": "A child of this mod has an update available.",
+  "modmenu.updateText": "v%s on %s",
 
   "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
@@ -125,5 +128,11 @@
   "option.modmenu.mods_button_style.classic": "Below Realms",
   "option.modmenu.mods_button_style.replace_realms": "Replace Realms",
   "option.modmenu.mods_button_style.shrink": "Adjacent",
-  "option.modmenu.mods_button_style.icon": "Icon"
+  "option.modmenu.mods_button_style.icon": "Icon",
+  "option.modmenu.update_checker": "Update Checker",
+  "option.modmenu.update_checker.true": "Enabled",
+  "option.modmenu.update_checker.false": "Disabled",
+  "option.modmenu.button_update_badge": "Update Indicator",
+  "option.modmenu.button_update_badge.true": "Shown",
+  "option.modmenu.button_update_badge.false": "Hidden"
 }

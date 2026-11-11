@@ -82,6 +82,22 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 					}
 				}
 
+				if (ModMenuConfig.UPDATE_CHECKER.getValue() && !ModMenuConfig.DISABLE_UPDATE_CHECKER.getValue().contains(mod.getId())) {
+					if (mod.getModrinthData() != null) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(new TranslatableText("modmenu.hasUpdate").asOrderedText(), this).setUpdateTextEntry());
+						children().add(new LinkEntry(
+							new TranslatableText("modmenu.updateText", mod.getModrinthData().versionNumber(), new TranslatableText("modmenu.modrinth"))
+								.formatted(Formatting.BLUE)
+								.formatted(Formatting.UNDERLINE)
+								.asOrderedText(), "https://modrinth.com/project/%s/version/%s".formatted(mod.getModrinthData().projectId(), mod.getModrinthData().versionId()), this));
+					}
+					if (mod.getChildHasUpdate()) {
+						children().add(new DescriptionEntry(OrderedText.EMPTY, this));
+						children().add(new DescriptionEntry(new TranslatableText("modmenu.childHasUpdate").asOrderedText(), this).setUpdateTextEntry());
+					}
+				}
+
 				Map<String, String> links = mod.getLinks();
 				String sourceLink = mod.getSource();
 				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
@@ -234,16 +250,26 @@ public class DescriptionListWidget extends EntryListWidget<DescriptionListWidget
 	protected class DescriptionEntry extends EntryListWidget.Entry<DescriptionEntry> {
 		private final DescriptionListWidget widget;
 		protected OrderedText text;
+		public boolean updateTextEntry = false;
 
 		public DescriptionEntry(OrderedText text, DescriptionListWidget widget) {
 			this.text = text;
 			this.widget = widget;
 		}
 
+		public DescriptionEntry setUpdateTextEntry() {
+			this.updateTextEntry = true;
+			return this;
+		}
+
 		@Override
 		public void render(MatrixStack matrices, int index, int y, int x, int itemWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
 			if (widget.top > y || widget.bottom - textRenderer.fontHeight < y) {
 				return;
+			}
+			if (updateTextEntry) {
+				UpdateAvailableBadge.renderBadge(matrices, x, y);
+				x += 11;
 			}
 			textRenderer.drawWithShadow(matrices, text, x, y, 0xAAAAAA);
 		}
