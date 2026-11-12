@@ -15,8 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +54,8 @@ public class UpdateCheckerUtil {
         Map<String, Instant> currentVersions = null;
         Map<String, VersionUpdate> updatedVersions = null;
         Map<String, Set<Mod>> modHashes;
-        Future<Map<String, Instant>> currentVersionsFuture;
-        Future<Map<String, UpdateCheckerUtil.VersionUpdate>> updatedVersionsFuture;
+        Future<@Nullable Map<String, Instant>> currentVersionsFuture;
+        Future<@Nullable Map<String, UpdateCheckerUtil.VersionUpdate>> updatedVersionsFuture;
 
         List<Mod> updatableMods = ModMenu.MODS.values()
                 .stream()
@@ -317,7 +316,7 @@ public class UpdateCheckerUtil {
         return null;
     }
 
-    private static @NullMarked List<UpdateChannel> getUpdateChannels() {
+    private static List<UpdateChannel> getUpdateChannels() {
         return switch(UpdateChannel.getUserPreference()) {
             case RELEASE -> List.of(UpdateChannel.RELEASE);
             case BETA -> List.of(UpdateChannel.BETA, UpdateChannel.RELEASE);

@@ -1,7 +1,7 @@
 package com.terraformersmc.modmenu.api;
 
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public interface UpdateInfo {
@@ -13,15 +13,14 @@ public interface UpdateInfo {
     /**
      * @return The message that is getting displayed when an update is available or <code>null</code> to let ModMenu handle displaying the message.
      */
-    @Nullable
-    default Component getUpdateMessage() {
+    default @Nullable Component getUpdateMessage() {
         return null;
     }
 
     /**
      * @return The URL to the mod download.
      */
-    String getDownloadLink();
+    @Nullable String getDownloadLink();
 
     /**
      * @return The update channel this update is available for.

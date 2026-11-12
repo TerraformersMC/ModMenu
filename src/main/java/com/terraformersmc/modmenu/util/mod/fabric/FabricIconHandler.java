@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.Validate;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,7 @@ public class FabricIconHandler implements Closeable {
 
     private final Map<Path, DynamicTexture> modIconCache = new HashMap<>();
 
-    public DynamicTexture createIcon(ModContainer iconSource, String iconPath) {
+    public @Nullable DynamicTexture createIcon(ModContainer iconSource, String iconPath) {
         try {
             Path path = iconSource.getPath(iconPath);
             DynamicTexture cachedIcon = getCachedModIcon(path);
@@ -64,7 +65,7 @@ public class FabricIconHandler implements Closeable {
         }
     }
 
-    DynamicTexture getCachedModIcon(Path path) {
+    @Nullable DynamicTexture getCachedModIcon(Path path) {
         return modIconCache.get(path);
     }
 

@@ -21,10 +21,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
 public class ModListWidget extends ObjectSelectionList<ModListEntry> implements AutoCloseable {
     public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
     private final ModsScreen parent;

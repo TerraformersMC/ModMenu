@@ -5,6 +5,7 @@ import com.terraformersmc.modmenu.util.TranslationUtil;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 import net.minecraft.client.OptionInstance;
 import net.minecraft.network.chat.CommonComponents;
@@ -64,7 +65,7 @@ public class EnumConfigOption<E extends Enum<E>> implements OptionConvertible {
                         Codec.STRING.xmap(string -> Arrays.stream(enumClass.getEnumConstants())
                                 .filter(e -> e.name().toLowerCase().equals(string))
                                 .findAny()
-                                .orElse(null), newValue -> newValue.name().toLowerCase())
+                                .orElseThrow(() -> new NoSuchElementException("No enum value present for: " + string)), newValue -> newValue.name().toLowerCase())
                 ),
                 getValue(),
                 value -> ConfigOptionStorage.setEnum(key, value)

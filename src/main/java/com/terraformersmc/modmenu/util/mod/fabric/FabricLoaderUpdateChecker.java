@@ -12,7 +12,7 @@ import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class FabricLoaderUpdateChecker implements UpdateChecker {
     private static final URI LOADER_VERSIONS = URI.create("https://meta.fabricmc.net/v2/versions/loader");
 
     @Override
-    public UpdateInfo checkForUpdates() {
+    public @Nullable UpdateInfo checkForUpdates() {
         UpdateInfo result = null;
 
         try {
@@ -40,7 +40,7 @@ public class FabricLoaderUpdateChecker implements UpdateChecker {
         return result;
     }
 
-    private static UpdateInfo checkForUpdates0() throws IOException, InterruptedException {
+    private static @Nullable UpdateInfo checkForUpdates0() throws IOException, InterruptedException {
         var preferredChannel = UpdateChannel.getUserPreference();
 
         var request = HttpRequest.newBuilder().GET().uri(LOADER_VERSIONS);
