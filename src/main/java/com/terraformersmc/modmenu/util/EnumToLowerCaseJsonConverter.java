@@ -1,16 +1,17 @@
 package com.terraformersmc.modmenu.util;
 
 import com.google.gson.*;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class EnumToLowerCaseJsonConverter implements JsonSerializer<Enum<?>>, JsonDeserializer<Enum<?>> {
+public final class EnumToLowerCaseJsonConverter implements JsonSerializer<@Nullable Enum<?>>, JsonDeserializer<@Nullable Enum<?>> {
     private static final Map<String, Class<? extends Enum<?>>> TYPE_CACHE = new HashMap<>();
 
     @Override
-    public JsonElement serialize(final Enum<?> src, final Type typeOfSrc, final JsonSerializationContext context) {
+    public JsonElement serialize(final @Nullable Enum<?> src, final Type typeOfSrc, final JsonSerializationContext context) {
         if (src == null) {
             return JsonNull.INSTANCE;
         }
@@ -20,8 +21,8 @@ public final class EnumToLowerCaseJsonConverter implements JsonSerializer<Enum<?
 
     @SuppressWarnings("unchecked")
     @Override
-    public Enum<?> deserialize(
-            final JsonElement json,
+    public @Nullable Enum<?> deserialize(
+            final @Nullable JsonElement json,
             final Type type,
             final JsonDeserializationContext context
     ) throws JsonParseException {

@@ -1,6 +1,6 @@
 package com.terraformersmc.modmenu.api;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public interface UpdateChecker {

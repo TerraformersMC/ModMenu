@@ -6,7 +6,7 @@ import com.terraformersmc.modmenu.api.UpdateChecker;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.util.HttpUtil;
 import com.terraformersmc.modmenu.util.JsonUtil;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.Version;
 import org.quiltmc.loader.api.VersionFormatException;
@@ -25,7 +25,7 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
     private static final URI LOADER_VERSIONS = URI.create("https://meta.quiltmc.org/v3/versions/loader");
 
     @Override
-    public UpdateInfo checkForUpdates() {
+    public @Nullable UpdateInfo checkForUpdates() {
         UpdateInfo result = null;
         try {
             result = checkForUpdates0();
@@ -38,7 +38,7 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
         return result;
     }
 
-    private static UpdateInfo checkForUpdates0() throws IOException, InterruptedException {
+    private static @Nullable UpdateInfo checkForUpdates0() throws IOException, InterruptedException {
         var preferredChannel = UpdateChannel.getUserPreference();
 
         var request = HttpRequest.newBuilder().GET().uri(LOADER_VERSIONS);
@@ -122,7 +122,7 @@ public class QuiltLoaderUpdateChecker implements UpdateChecker {
         }
 
         @Override
-        public @NotNull Component getUpdateMessage() {
+        public Component getUpdateMessage() {
             return Component.translatable("modmenu.install_version", this.version.raw());
         }
 
