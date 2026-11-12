@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public interface ModMenuApi {
@@ -50,7 +51,7 @@ public interface ModMenuApi {
      *
      * @return An {@link UpdateChecker} or <code>null</code> if ModMenu should handle update checking.
      */
-    default UpdateChecker getUpdateChecker() {
+    default @Nullable UpdateChecker getUpdateChecker() {
         return null;
     }
 

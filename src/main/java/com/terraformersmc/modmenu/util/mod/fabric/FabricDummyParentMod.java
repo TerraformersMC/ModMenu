@@ -9,8 +9,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -25,12 +24,12 @@ public class FabricDummyParentMod implements Mod {
     }
 
     @Override
-    public @NotNull String getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
         if (parentData != null) {
             return parentData.getName().orElse("");
@@ -42,7 +41,7 @@ public class FabricDummyParentMod implements Mod {
     }
 
     @Override
-    public @NotNull Identifier getIcon(FabricIconHandler iconHandler, int i) {
+    public Identifier getIcon(FabricIconHandler iconHandler, int i) {
         String iconSourceId = host.getId();
         FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
         String iconPath = null;
@@ -71,7 +70,7 @@ public class FabricDummyParentMod implements Mod {
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
         if (parentData != null) {
             return parentData.getDescription().orElse("");
@@ -80,37 +79,37 @@ public class FabricDummyParentMod implements Mod {
     }
 
     @Override
-    public @NotNull String getVersion() {
+    public String getVersion() {
         return "";
     }
 
     @Override
-    public @NotNull String getPrefixedVersion() {
+    public String getPrefixedVersion() {
         return "";
     }
 
     @Override
-    public @NotNull List<String> getAuthors() {
+    public List<String> getAuthors() {
         return new ArrayList<>();
     }
 
     @Override
-    public ContactInformation getContact(String author) {
+    public @Nullable ContactInformation getContact(String author) {
         return null;
     }
 
     @Override
-    public @NotNull Map<String, Collection<String>> getContributors() {
+    public Map<String, Collection<String>> getContributors() {
         return Map.of();
     }
 
     @Override
-    public @NotNull SortedMap<String, Set<String>> getCredits() {
+    public SortedMap<String, Set<String>> getCredits() {
         return new TreeMap<>();
     }
 
     @Override
-    public @NotNull Set<Badge> getBadges() {
+    public Set<Badge> getBadges() {
         FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
         if (parentData != null) {
             return parentData.getBadges();
@@ -154,12 +153,12 @@ public class FabricDummyParentMod implements Mod {
     }
 
     @Override
-    public @NotNull Set<String> getLicense() {
+    public Set<String> getLicense() {
         return new HashSet<>();
     }
 
     @Override
-    public @NotNull Map<String, String> getLinks() {
+    public Map<String, String> getLinks() {
         return new HashMap<>();
     }
 

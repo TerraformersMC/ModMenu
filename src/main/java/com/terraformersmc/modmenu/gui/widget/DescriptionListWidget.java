@@ -22,6 +22,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.util.*;
@@ -39,7 +40,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
 
     private final ModsScreen parent;
     private final Font textRenderer;
-    private Mod selectedMod = null;
+    private @Nullable Mod selectedMod = null;
 
     public DescriptionListWidget(
             Minecraft client,
@@ -47,7 +48,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
             int height,
             int y,
             int itemHeight,
-            DescriptionListWidget copyFrom,
+            @Nullable DescriptionListWidget copyFrom,
             ModsScreen parent
     ) {
         super(client, width, height, y, itemHeight);
@@ -65,7 +66,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
     }
 
     @Override
-    public DescriptionEntry getSelected() {
+    public @Nullable DescriptionEntry getSelected() {
         return null;
     }
 
@@ -287,7 +288,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    public void updateSelectedMod(Mod mod) {
+    public void updateSelectedMod(@Nullable Mod mod) {
         selectedMod = mod;
         clearEntries();
         setScrollAmount(-Double.MAX_VALUE);

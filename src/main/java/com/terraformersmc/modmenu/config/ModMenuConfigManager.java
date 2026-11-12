@@ -8,6 +8,7 @@ import com.terraformersmc.modmenu.config.option.ConfigOptionStorage;
 import com.terraformersmc.modmenu.config.option.EnumConfigOption;
 import com.terraformersmc.modmenu.config.option.StringSetConfigOption;
 import net.fabricmc.loader.api.FabricLoader;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,7 +23,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class ModMenuConfigManager {
-    private static Path path;
+    private static @Nullable Path path;
 
     private static void prepareConfigPath() {
         if (path == null) {
@@ -37,6 +38,7 @@ public class ModMenuConfigManager {
     @SuppressWarnings("unchecked")
     private static void load() {
         prepareConfigPath();
+        assert path != null;
 
         try {
             if (!Files.exists(path)) {
@@ -104,6 +106,8 @@ public class ModMenuConfigManager {
     public static void save() {
         ModMenu.clearModCountCache();
         prepareConfigPath();
+        assert path != null;
+
         JsonObject config = new JsonObject();
         try {
             for (Field field : ModMenuConfig.class.getDeclaredFields()) {

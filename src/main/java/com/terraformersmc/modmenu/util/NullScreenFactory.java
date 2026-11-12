@@ -2,6 +2,7 @@ package com.terraformersmc.modmenu.util;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import net.minecraft.client.gui.screens.Screen;
+import org.jspecify.annotations.Nullable;
 
 /*
  * This class is used to detect mods which do not override the default ModMenuApi.getModConfigScreenFactory()
@@ -9,7 +10,7 @@ import net.minecraft.client.gui.screens.Screen;
  */
 public class NullScreenFactory<S extends Screen> implements ConfigScreenFactory<S> {
     @Override
-    public S create(Screen parent) {
+    public @Nullable S create(Screen parent) {
         return null;
     }
 }

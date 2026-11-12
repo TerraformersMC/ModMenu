@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.Validate;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,7 @@ public class FabricIconHandler implements Closeable {
 
     private final Map<Path, Identifier> modIconCache = new HashMap<>();
 
-    public Identifier createIcon(ModContainer iconSource, String iconPath) {
+    public @Nullable Identifier createIcon(ModContainer iconSource, String iconPath) {
         try {
             TextureManager textureManager = Minecraft.getInstance().getTextureManager();
             Path path = iconSource.getPath(iconPath);
@@ -71,7 +72,7 @@ public class FabricIconHandler implements Closeable {
         }
     }
 
-    Identifier getCachedModIcon(Path path) {
+    @Nullable Identifier getCachedModIcon(Path path) {
         return modIconCache.get(path);
     }
 

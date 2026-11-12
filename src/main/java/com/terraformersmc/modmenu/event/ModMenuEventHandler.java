@@ -20,12 +20,13 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class ModMenuEventHandler {
-    private static KeyMapping MENU_KEY_MAPPING;
+    private static @Nullable KeyMapping MENU_KEY_MAPPING;
 
     public static void register() {
         MENU_KEY_MAPPING = KeyMappingHelper.registerKeyMapping(new KeyMapping(
@@ -114,6 +115,7 @@ public class ModMenuEventHandler {
     }
 
     private static void onClientEndTick(Minecraft client) {
+        assert MENU_KEY_MAPPING != null;
         while (MENU_KEY_MAPPING.consumeClick()) {
             client.gui.setScreen(new ModsScreen(client.gui.screen()));
         }

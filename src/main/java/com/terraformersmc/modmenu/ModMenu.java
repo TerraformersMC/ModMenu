@@ -28,7 +28,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,8 +93,8 @@ public class ModMenu implements ClientModInitializer {
     public void onInitializeClient() {
         ModMenuConfigManager.initializeConfig();
         Set<String> modpackMods = new HashSet<>();
-        Map<String, UpdateChecker> updateCheckers = new HashMap<>();
-        Map<String, UpdateChecker> providedUpdateCheckers = new HashMap<>();
+        Map<String, @Nullable UpdateChecker> updateCheckers = new HashMap<>();
+        Map<String, @Nullable UpdateChecker> providedUpdateCheckers = new HashMap<>();
 
         // Ignore deprecations, they're from Quilt Loader being in the dev env
         //noinspection deprecation

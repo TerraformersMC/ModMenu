@@ -13,14 +13,12 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
-import org.jspecify.annotations.NullMarked;
 import org.lwjgl.sdl.SDLScancode;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@NullMarked
 public class ParentEntry extends ModListEntry {
     private static final Identifier PARENT_MOD_TEXTURE = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
     protected List<Mod> children;

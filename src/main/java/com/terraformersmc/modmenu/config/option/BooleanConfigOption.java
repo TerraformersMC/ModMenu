@@ -50,21 +50,13 @@ public class BooleanConfigOption implements OptionConvertible {
 
     @Override
     public OptionInstance<Boolean> asOption() {
-        if (enabledText != null && disabledText != null) {
-            return new OptionInstance<>(
-                    translationKey,
-                    OptionInstance.noTooltip(),
-                    (text, value) -> value ? enabledText : disabledText,
-                    OptionInstance.BOOLEAN_VALUES,
-                    getValue(),
-                    newValue -> ConfigOptionStorage.setBoolean(key, newValue)
-            );
-        }
-
-        return OptionInstance.createBoolean(
+        return new OptionInstance<>(
                 translationKey,
+                OptionInstance.noTooltip(),
+                (text, value) -> value ? enabledText : disabledText,
+                OptionInstance.BOOLEAN_VALUES,
                 getValue(),
-                (value) -> ConfigOptionStorage.setBoolean(key, value)
+                newValue -> ConfigOptionStorage.setBoolean(key, newValue)
         );
     }
 }

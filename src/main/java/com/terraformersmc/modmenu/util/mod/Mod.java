@@ -10,8 +10,6 @@ import eu.pb4.placeholders.api.ParserContext;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.minecraft.locale.Language;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,13 +17,13 @@ import java.util.stream.Collectors;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
 
 public interface Mod {
-    @NotNull String getId();
+    String getId();
 
-    @NotNull String getName();
+    String getName();
 
-    @NotNull
     default String getTranslatedName() {
         String translationKey = "modmenu.nameTranslation." + getId();
         if ((getId().equals("minecraft") || getId().equals("java") || ModMenuConfig.TRANSLATE_NAMES.getValue()) &&
@@ -36,9 +34,8 @@ public interface Mod {
         }
     }
 
-    @NotNull Identifier getIcon(FabricIconHandler iconHandler, int i);
+    Identifier getIcon(FabricIconHandler iconHandler, int i);
 
-    @NotNull
     default String getSummary() {
         String string = getTranslatedSummary();
         return ModMenu.TEXT_PLACEHOLDER_COMPAT ?
@@ -46,7 +43,6 @@ public interface Mod {
                 string;
     }
 
-    @NotNull
     default String getTranslatedSummary() {
         String translationKey = "modmenu.summaryTranslation." + getId();
         if ((getId().equals("minecraft") || getId().equals("java") || ModMenuConfig.TRANSLATE_DESCRIPTIONS.getValue()) &&
@@ -57,9 +53,8 @@ public interface Mod {
         }
     }
 
-    @NotNull String getDescription();
+    String getDescription();
 
-    @NotNull
     default String getTranslatedDescription() {
         String translatableDescriptionKey = "modmenu.descriptionTranslation." + getId();
         if ((getId().equals("minecraft") || getId().equals("java") || ModMenuConfig.TRANSLATE_DESCRIPTIONS.getValue()) &&
@@ -77,25 +72,25 @@ public interface Mod {
                 Component.literal(string);
     }
 
-    @NotNull String getVersion();
+    String getVersion();
 
-    @NotNull String getPrefixedVersion();
+    String getPrefixedVersion();
 
-    @NotNull List<String> getAuthors();
+    List<String> getAuthors();
 
-    ContactInformation getContact(String author);
+    @Nullable ContactInformation getContact(String author);
 
     /**
      * @return a mapping of contributors to their roles.
      */
-    @NotNull Map<String, Collection<String>> getContributors();
+    Map<String, Collection<String>> getContributors();
 
     /**
      * @return a mapping of roles to each contributor with that role.
      */
-    @NotNull SortedMap<String, Set<String>> getCredits();
+    SortedMap<String, Set<String>> getCredits();
 
-    @NotNull Set<Badge> getBadges();
+    Set<Badge> getBadges();
 
     @Nullable String getWebsite();
 
@@ -105,9 +100,9 @@ public interface Mod {
 
     @Nullable String getParent();
 
-    @NotNull Set<String> getLicense();
+    Set<String> getLicense();
 
-    @NotNull Map<String, String> getLinks();
+    Map<String, String> getLinks();
 
     boolean isReal();
 
@@ -180,10 +175,10 @@ public interface Mod {
 
         private final Component text;
         private final int outlineColor, fillColor;
-        private final String key;
+        private final @Nullable String key;
         private static final Map<String, Badge> KEY_MAP = new HashMap<>();
 
-        Badge(String translationKey, int outlineColor, int fillColor, String key) {
+        Badge(String translationKey, int outlineColor, int fillColor, @Nullable String key) {
             this.text = Component.translatable(translationKey);
             this.outlineColor = outlineColor;
             this.fillColor = fillColor;
@@ -213,7 +208,7 @@ public interface Mod {
         }
 
         static {
-            Arrays.stream(values()).forEach(badge -> KEY_MAP.put(badge.key, badge));
+            Arrays.stream(values()).filter(badge -> badge.key != null).forEach(badge -> KEY_MAP.put(badge.key, badge));
         }
     }
 }

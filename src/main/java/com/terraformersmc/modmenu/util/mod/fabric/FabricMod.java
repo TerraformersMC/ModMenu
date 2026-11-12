@@ -15,8 +15,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.*;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,22 +145,22 @@ public class FabricMod implements Mod {
         }
     }
 
-    public @NotNull ModContainer getContainer() {
+    public ModContainer getContainer() {
         return container;
     }
 
     @Override
-    public @NotNull String getId() {
+    public String getId() {
         return metadata.getId();
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return metadata.getName();
     }
 
     @Override
-    public @NotNull Identifier getIcon(FabricIconHandler iconHandler, int i) {
+    public Identifier getIcon(FabricIconHandler iconHandler, int i) {
         String iconSourceId = getId();
         String iconPath = metadata.getIconPath(i).orElse("assets/" + getId() + "/icon.png");
         if ("minecraft".equals(getId())) {
@@ -195,12 +194,12 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return metadata.getDescription();
     }
 
     @Override
-    public @NotNull String getTranslatedDescription() {
+    public String getTranslatedDescription() {
         var description = Mod.super.getTranslatedDescription();
         if (getId().equals("java")) {
             description = description + "\n" + I18n.get("modmenu.javaDistributionName", getName());
@@ -210,7 +209,7 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull String getVersion() {
+    public String getVersion() {
         if ("java".equals(getId())) {
             return System.getProperty("java.version");
         } else {
@@ -218,12 +217,12 @@ public class FabricMod implements Mod {
         }
     }
 
-    public @NotNull String getPrefixedVersion() {
+    public String getPrefixedVersion() {
         return VersionUtil.getPrefixedVersion(getVersion());
     }
 
     @Override
-    public @NotNull List<String> getAuthors() {
+    public List<String> getAuthors() {
         var authors = metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
         if (authors.isEmpty()) {
             if ("minecraft".equals(getId())) {
@@ -237,7 +236,7 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public ContactInformation getContact(String author) {
+    public @Nullable ContactInformation getContact(String author) {
         for (Person person : metadata.getAuthors()) {
             if (person.getName().equals(author)) {
                 return person.getContact();
@@ -252,7 +251,7 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull Map<String, Collection<String>> getContributors() {
+    public Map<String, Collection<String>> getContributors() {
         var contributors = new LinkedHashMap<String, Collection<String>>();
         for (var contributor : this.metadata.getContributors()) {
             contributors.put(contributor.getName(), List.of("Contributor"));
@@ -262,7 +261,7 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull SortedMap<String, Set<String>> getCredits() {
+    public SortedMap<String, Set<String>> getCredits() {
         SortedMap<String, Set<String>> credits = new TreeMap<>();
 
         var authors = this.getAuthors();
@@ -282,7 +281,7 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull Set<Badge> getBadges() {
+    public Set<Badge> getBadges() {
         return badges;
     }
 
@@ -317,7 +316,7 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull Set<String> getLicense() {
+    public Set<String> getLicense() {
         if ("minecraft".equals(getId())) {
             return Sets.newHashSet("Minecraft EULA");
         } else {
@@ -326,7 +325,7 @@ public class FabricMod implements Mod {
     }
 
     @Override
-    public @NotNull Map<String, String> getLinks() {
+    public Map<String, String> getLinks() {
         return links;
     }
 
@@ -407,10 +406,9 @@ public class FabricMod implements Mod {
     static class ModMenuData {
         private final Set<Badge> badges;
         private Optional<String> parent;
-        private @Nullable
-        final DummyParentData dummyParentData;
+        private @Nullable final DummyParentData dummyParentData;
 
-        public ModMenuData(Set<String> badges, Optional<String> parent, DummyParentData dummyParentData, String id) {
+        public ModMenuData(Set<String> badges, Optional<String> parent, @Nullable DummyParentData dummyParentData, String id) {
             this.badges = Badge.convert(badges, id);
             this.parent = parent;
             this.dummyParentData = dummyParentData;
