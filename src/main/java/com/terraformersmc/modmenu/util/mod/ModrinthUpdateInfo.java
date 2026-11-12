@@ -4,7 +4,6 @@ import com.terraformersmc.modmenu.api.UpdateChannel;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.util.VersionUtil;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 public record ModrinthUpdateInfo(String projectId, String versionId, String versionNumber,
                                  UpdateChannel getUpdateChannel) implements UpdateInfo {

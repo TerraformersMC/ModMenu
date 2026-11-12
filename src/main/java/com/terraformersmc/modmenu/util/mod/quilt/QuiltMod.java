@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.ModContributor;
 import org.quiltmc.loader.api.ModMetadata;
