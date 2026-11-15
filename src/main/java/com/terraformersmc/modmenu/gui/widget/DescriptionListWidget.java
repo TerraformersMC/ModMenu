@@ -1,6 +1,7 @@
 package com.terraformersmc.modmenu.gui.widget;
 
 import com.mojang.blaze3d.Blaze3D;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -377,7 +378,28 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    protected class MojangCreditsEntry extends DescriptionEntry {
+    protected abstract class ClickableDescriptionEntry extends DescriptionEntry {
+        public ClickableDescriptionEntry(FormattedCharSequence text, int indent) {
+            super(text, indent);
+        }
+
+        public ClickableDescriptionEntry(FormattedCharSequence text) {
+            super(text);
+        }
+
+        @Override
+        public void extractContent(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, boolean isSelected, float delta) {
+            super.extractContent(drawContext, mouseX, mouseY, isSelected, delta);
+            if (DescriptionListWidget.this.getBottom() > mouseY &&
+                    DescriptionListWidget.this.getY() <= mouseY &&
+                    isMouseOver(mouseX, mouseY)
+            ) {
+                drawContext.requestCursor(CursorTypes.POINTING_HAND);
+            }
+        }
+    }
+
+    protected class MojangCreditsEntry extends ClickableDescriptionEntry {
         public MojangCreditsEntry(FormattedCharSequence text) {
             super(text);
         }
@@ -398,7 +420,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    protected class LinkEntry extends DescriptionEntry {
+    protected class LinkEntry extends ClickableDescriptionEntry {
         private final String link;
 
         public LinkEntry(FormattedCharSequence text, String link, int indent) {
@@ -425,7 +447,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    protected class MailableContactEntry extends DescriptionEntry {
+    protected class MailableContactEntry extends ClickableDescriptionEntry {
         private final String email;
 
         public MailableContactEntry(FormattedCharSequence text, String email, int indent) {
