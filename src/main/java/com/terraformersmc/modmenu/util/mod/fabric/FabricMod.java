@@ -87,8 +87,10 @@ public class FabricMod implements Mod {
                 }
             }
             badgeNames.addAll(CustomValueUtil.getStringSet("badges", modMenuObject).orElse(new HashSet<>()));
-            links.putAll(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()));
+            links.putAll(getLinksForDisplay(CustomValueUtil.getStringMap("links", modMenuObject).orElse(new HashMap<>()), metadata.getContact().asMap()));
             allowsUpdateChecks = CustomValueUtil.getBoolean("update_checker", modMenuObject).orElse(true);
+        } else {
+            links.putAll(getLinksForDisplay(Map.of(), metadata.getContact().asMap()));
         }
 
         boolean isGenerated = CustomValueUtil.getBoolean("fabric-loom:generated", metadata).orElse(false);
@@ -326,6 +328,23 @@ public class FabricMod implements Mod {
 
     @Override
     public Map<String, String> getLinks() {
+        return links;
+    }
+
+    /*
+    private static final Map<String, String> IDS_TO_TRANSLATION_KEYS = Map.of(
+            "sources", "modmenu.source"
+    );
+     */
+
+    private static Map<String, String> getLinksForDisplay(Map<String, String> modMenuLinks, Map<String, String> fabricApiLinks) {
+        LinkedHashMap<String, String> links = new LinkedHashMap<>();
+        fabricApiLinks.entrySet().stream().filter(entry -> !entry.getKey().equals("homepage") && !entry.getKey().equals("issues") && !entry.getKey().equals("sources") /* TODO before merging, should sources have its special case removed? */)
+                .forEach(entry ->
+                        links.put(/*IDS_TO_TRANSLATION_KEYS.getOrDefault(entry.getKey(), */"modmenu." + entry.getKey()/*)*/, entry.getValue()));
+        modMenuLinks.entrySet().stream().filter(entry -> !links.containsKey(entry.getKey()))
+                .forEach(entry ->
+                        links.put(entry.getKey(), entry.getValue()));
         return links;
     }
 
