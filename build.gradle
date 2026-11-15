@@ -4,9 +4,6 @@ plugins {
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/3.2/ferry.gradle'
 
-// Override just this once to remove the useless entries
-releaseChangelog = "- Fix each description line having an outline box when selected"
-
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"
 
