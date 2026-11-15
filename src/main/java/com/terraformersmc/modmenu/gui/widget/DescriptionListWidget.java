@@ -302,6 +302,11 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         drawContext.disableScissor();
     }
 
+    @Override
+    protected void extractSelection(GuiGraphicsExtractor graphics, DescriptionEntry entry, int outlineColor) {
+
+    }
+
     private Component creditsRoleText(String roleName) {
         // Replace spaces and dashes in role names with underscores if they exist
         // Notably Quilted Fabric API does this with FabricMC as "Upstream Owner"
