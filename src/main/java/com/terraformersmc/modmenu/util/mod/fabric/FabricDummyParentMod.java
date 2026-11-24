@@ -206,4 +206,13 @@ public class FabricDummyParentMod implements Mod {
     public boolean isHidden() {
         return ModMenuConfig.HIDDEN_MODS.getValue().contains(this.getId());
     }
+
+    public boolean hasSpecifiedName() {
+        FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
+        if (parentData != null) {
+            return parentData.getName().isPresent();
+        }
+
+        return false;
+    }
 }
