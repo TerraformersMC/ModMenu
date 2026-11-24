@@ -156,10 +156,7 @@ public class ModMenu implements ClientModInitializer {
                 if (parent == null) {
                     if (mod instanceof FabricMod) {
                         parent = new FabricDummyParentMod((FabricMod) mod, parentId);
-
-                        if (!(dummyParents.get(parentId) instanceof FabricDummyParentMod dummy) || !dummy.hasSpecifiedName()) {
-                            dummyParents.put(parentId, parent);
-                        }
+                        dummyParents.put(parentId, parent);
                     }
                 }
 
