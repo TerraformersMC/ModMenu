@@ -42,6 +42,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
     private final ModsScreen parent;
     private final Font textRenderer;
     private @Nullable Mod selectedMod = null;
+    private @Nullable Double restoreScrollY = null;
 
     public DescriptionListWidget(
             Minecraft client,
@@ -58,7 +59,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
 
         if (copyFrom != null) {
             updateSelectedMod(copyFrom.selectedMod);
-            setScrollAmount(copyFrom.scrollAmount());
+            this.restoreScrollY = copyFrom.scrollAmount();
         }
 
         if (parent.getSelectedEntry() != null) {
@@ -311,6 +312,13 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         // Fixes common role names people use in English (e.g. Author -> Authors)
         var fallback = roleName.endsWith("r") ? roleName + "s" : roleName;
         return Component.translatableWithFallback("modmenu.credits.role." + translationKey, fallback).append(Component.literal(":"));
+    }
+
+    public void finalizeInit() {
+        if (restoreScrollY != null) {
+            setScrollAmount(restoreScrollY);
+            restoreScrollY = null;
+        }
     }
 
     protected class DescriptionEntry extends ContainerObjectSelectionList.Entry<DescriptionEntry> {

@@ -265,6 +265,7 @@ public class ModsScreen extends Screen {
 
         // Initialize data
         modList.finalizeInit();
+        descriptionListWidget.finalizeInit();
         this.setFilterOptionsShown(this.keepFilterOptionsShown && this.filterOptionsShown);
 
         // Add children
