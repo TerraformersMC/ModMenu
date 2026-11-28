@@ -50,6 +50,11 @@ public class ModListWidget extends ObjectSelectionList<ModListEntry> implements 
     }
 
     @Override
+    public double scrollAmount() {
+        return Math.min(maxScrollAmount(), super.scrollAmount());
+    }
+
+    @Override
     public void setScrollAmount(double amount) {
         super.setScrollAmount(amount);
         int denominator = Math.max(0, this.contentHeight() - (this.getBottom() - this.getY() - 4));
