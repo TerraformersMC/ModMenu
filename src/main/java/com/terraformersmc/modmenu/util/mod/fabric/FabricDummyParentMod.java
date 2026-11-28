@@ -32,7 +32,7 @@ public class FabricDummyParentMod implements Mod {
     public String getName() {
         FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
         if (parentData != null) {
-            return parentData.getName().orElse("");
+            return parentData.getName().orElseGet(parentData::getId);
         }
         if (id.equals("fabric-api")) {
             return "Fabric API";
