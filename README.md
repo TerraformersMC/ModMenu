@@ -21,9 +21,11 @@ Here's an example of Mod Menu's translations into Pirate Speak. To create your o
 
 `en_pt.json`
 ```json
-"modmenu.nameTranslation.modmenu": "Menu o' mods!",
-"modmenu.descriptionTranslation.modmenu": "Menu o' mods ye installed matey!",
-"modmenu.summaryTranslation.modmenu": "Menu o' mods ye installed matey!"
+{
+    "modmenu.nameTranslation.modmenu": "Menu o' mods!",
+    "modmenu.descriptionTranslation.modmenu": "Menu o' mods ye installed matey!",
+    "modmenu.summaryTranslation.modmenu": "Menu o' mods ye installed matey!"
+}
 ```
 
 > The summary translation is redundant here and does not need to be included because it's the same as the description, but it was included to show that you may translate the summary (a short, one-sentence description of the mod) separately from the description, even in English!
@@ -183,7 +185,7 @@ dependencies {
   implementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 ```
-Then, define the version of Mod Menu you're using in your `gradle.properties`. You can get the latest version number [here](https://modrinth.com/mod/modmenu/version/latest), but you may need a different version if you're not using the latest Minecraft version. See the [versions page](https://modrinth.com/mod/modmenu/versions) for a full list of versions.
+Then, define the version of Mod Menu you're using in your `gradle.properties`. You can get the latest version number [here](https://github.com/TerraformersMC/ModMenu/releases/latest), but you may need a different version if you're not using the latest Minecraft version. See the [versions page](https://modrinth.com/mod/modmenu/versions) for a full list of versions.
 
 `gradle.properties`
 ```properties

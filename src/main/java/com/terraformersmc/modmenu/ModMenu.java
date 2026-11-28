@@ -25,10 +25,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,8 +93,8 @@ public class ModMenu implements ClientModInitializer {
     public void onInitializeClient() {
         ModMenuConfigManager.initializeConfig();
         Set<String> modpackMods = new HashSet<>();
-        Map<String, UpdateChecker> updateCheckers = new HashMap<>();
-        Map<String, UpdateChecker> providedUpdateCheckers = new HashMap<>();
+        Map<String, @Nullable UpdateChecker> updateCheckers = new HashMap<>();
+        Map<String, @Nullable UpdateChecker> providedUpdateCheckers = new HashMap<>();
 
         // Ignore deprecations, they're from Quilt Loader being in the dev env
         //noinspection deprecation
@@ -205,7 +205,7 @@ public class ModMenu implements ClientModInitializer {
                 continue;
             }
 
-            if (!ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
+            if (ModMenuConfig.SHOW_LIBRARIES.getValue().hideMod(mod, getConfigScreenFactory(mod.getId()) != null)) {
                 continue;
             }
 
@@ -239,7 +239,7 @@ public class ModMenu implements ClientModInitializer {
             }).count());
         }
 
-        return NumberFormat.getInstance().format(cachedDisplayedModCount);
+        return NumberFormat.getInstance(Locale.ROOT).format(cachedDisplayedModCount);
     }
 
     public static Component createModsButtonText(boolean title) {
@@ -258,8 +258,8 @@ public class ModMenu implements ClientModInitializer {
                 modsText.append(Component.literal(" ")).append(Component.translatable("modmenu.loaded.short", count));
             } else {
                 String specificKey = "modmenu.loaded." + count;
-                String key = I18n.exists(specificKey) ? specificKey : "modmenu.loaded";
-                if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.exists(specificKey + ".secret")) {
+                String key = Language.getInstance().has(specificKey) ? specificKey : "modmenu.loaded";
+                if (ModMenuConfig.EASTER_EGGS.getValue() && Language.getInstance().has(specificKey + ".secret")) {
                     key = specificKey + ".secret";
                 }
                 modsText.append(Component.literal(" ")).append(Component.translatable(key, count));

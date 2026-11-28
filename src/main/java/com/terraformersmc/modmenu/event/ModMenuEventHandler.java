@@ -6,7 +6,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
-import com.terraformersmc.modmenu.gui.widget.UpdateCheckerTexturedButtonWidget;
+import com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget;
 import com.terraformersmc.modmenu.mixin.AccessorAbstractWidget;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -28,6 +29,8 @@ import net.minecraft.resources.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.terraformersmc.modmenu.gui.widget.SmallModMenuButtonWidget.*;
 
 public class ModMenuEventHandler {
     public static final Identifier MODS_BUTTON_TEXTURE = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/mods_button.png");
@@ -114,19 +117,22 @@ public class ModMenuEventHandler {
                             )
                     );
                 } else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.TitleMenuButtonStyle.ICON) {
-                    buttons.add(modsButtonIndex, new UpdateCheckerTexturedButtonWidget(
+                    buttons.add(modsButtonIndex, new SmallModMenuButtonWidget(
                             screen.width / 2 + 104,
                             buttonsY,
                             20,
                             20,
-                            0,
-                            0,
+                            ModMenuApi.createModsButtonText(),
                             20,
-                            MODS_BUTTON_TEXTURE,
-                            32,
-                            64,
+                            20,
+                            new WidgetSprites(
+                                    MODS_SPRITE_ENABLED,
+                                    MODS_SPRITE_DISABLED,
+                                    MODS_SPRITE_FOCUSED
+                            ),
                             button -> Minecraft.getInstance().setScreen(new ModsScreen(screen)),
-                            ModMenuApi.createModsButtonText()
+                            ModMenuApi.createModsButtonText(),
+                            null
                     ));
                 }
             }

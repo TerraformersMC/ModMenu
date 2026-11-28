@@ -118,6 +118,7 @@
   "option.modmenu.show_libraries": "Libraries",
   "option.modmenu.show_libraries.true": "Shown",
   "option.modmenu.show_libraries.false": "Hidden",
+  "option.modmenu.show_libraries.with_config": "With Config",
   "option.modmenu.hide_config_buttons": "Config Buttons",
   "option.modmenu.hide_config_buttons.true": "Hidden",
   "option.modmenu.hide_config_buttons.false": "Shown",

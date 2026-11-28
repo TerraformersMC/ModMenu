@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.gui.widget;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
@@ -19,8 +20,10 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.CreditsAndAttributionScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Util;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -37,7 +40,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
 
     private final ModsScreen parent;
     private final Font textRenderer;
-    private Mod selectedMod = null;
+    private @Nullable Mod selectedMod = null;
 
     public DescriptionListWidget(
             Minecraft client,
@@ -45,7 +48,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
             int height,
             int y,
             int itemHeight,
-            DescriptionListWidget copyFrom,
+            @Nullable DescriptionListWidget copyFrom,
             ModsScreen parent
     ) {
         super(client, width, height, y, itemHeight);
@@ -63,7 +66,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
     }
 
     @Override
-    public DescriptionEntry getSelected() {
+    public @Nullable DescriptionEntry getSelected() {
         return null;
     }
 
@@ -242,13 +245,36 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
                         for (var contributor : role.getValue()) {
                             indent = 16;
 
-                            for (var line : textRenderer.split(Component.literal(contributor), wrapWidth - 24)) {
-                                ContactInformation contact = mod.getContact(contributor);
-                                if (contact != null && contact.get("email").isPresent()) {
-                                    this.addEntry(new MailableContactEntry(line, contact.get("email").get(), indent));
+                            boolean hasLink = false;
+                            ContactInformation contact = mod.getContact(contributor);
+
+                            if (contact != null) {
+                                hasLink = contact.get("email").isPresent() || contact.get("homepage").isPresent();
+                            }
+
+                            MutableComponent name = Component.literal(contributor);
+
+                            if (hasLink) {
+                                name = name.withStyle(ChatFormatting.BLUE).withStyle(ChatFormatting.UNDERLINE);
+                            }
+
+                            for (var line : textRenderer.split(name, wrapWidth - 24)) {
+                                DescriptionEntry entry = null;
+
+                                if (hasLink) {
+                                    if (contact.get("email").isPresent()) {
+                                        entry = new MailableContactEntry(line, contact.get("email").get(), indent);
+                                    } else if (contact.get("homepage").isPresent()) {
+                                        entry = new LinkEntry(line, contact.get("homepage").get(), indent);
+                                    }
+                                }
+
+                                if (entry != null) {
+                                    this.addEntry(entry);
                                 } else {
                                     this.addEntry(new DescriptionEntry(line, indent));
                                 }
+
                                 indent = 24;
                             }
                         }
@@ -262,7 +288,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    public void updateSelectedMod(Mod mod) {
+    public void updateSelectedMod(@Nullable Mod mod) {
         selectedMod = mod;
         clearEntries();
         setScrollAmount(-Double.MAX_VALUE);
@@ -351,7 +377,28 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    protected class MojangCreditsEntry extends DescriptionEntry {
+    protected abstract class ClickableDescriptionEntry extends DescriptionEntry {
+        public ClickableDescriptionEntry(FormattedCharSequence text, int indent) {
+            super(text, indent);
+        }
+
+        public ClickableDescriptionEntry(FormattedCharSequence text) {
+            super(text);
+        }
+
+        @Override
+        public void extractContent(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, boolean isSelected, float delta) {
+            super.extractContent(drawContext, mouseX, mouseY, isSelected, delta);
+            if (DescriptionListWidget.this.getBottom() > mouseY &&
+                    DescriptionListWidget.this.getY() <= mouseY &&
+                    isMouseOver(mouseX, mouseY)
+            ) {
+                drawContext.requestCursor(CursorTypes.POINTING_HAND);
+            }
+        }
+    }
+
+    protected class MojangCreditsEntry extends ClickableDescriptionEntry {
         public MojangCreditsEntry(FormattedCharSequence text) {
             super(text);
         }
@@ -372,7 +419,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    protected class LinkEntry extends DescriptionEntry {
+    protected class LinkEntry extends ClickableDescriptionEntry {
         private final String link;
 
         public LinkEntry(FormattedCharSequence text, String link, int indent) {
@@ -399,7 +446,7 @@ public class DescriptionListWidget extends AbstractSelectionList<DescriptionList
         }
     }
 
-    protected class MailableContactEntry extends DescriptionEntry {
+    protected class MailableContactEntry extends ClickableDescriptionEntry {
         private final String email;
 
         public MailableContactEntry(FormattedCharSequence text, String email, int indent) {

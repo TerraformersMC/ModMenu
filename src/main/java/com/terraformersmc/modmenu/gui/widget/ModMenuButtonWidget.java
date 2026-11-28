@@ -24,7 +24,7 @@ public class ModMenuButtonWidget extends Button.Plain {
     @Override
     public void extractContents(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float delta) {
         super.extractContents(drawContext, mouseX, mouseY, delta);
-        if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable()) {
+        if (ModMenuConfig.BUTTON_UPDATE_BADGE.getValue() && ModMenu.areModUpdatesAvailable() && getAlpha() >= 1.0f) {
             UpdateAvailableBadge.renderBadge(
                     drawContext,
                     this.width + this.getX() - 13,

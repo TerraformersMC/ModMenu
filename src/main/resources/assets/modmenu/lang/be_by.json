@@ -42,7 +42,7 @@
 
   "modmenu.modrinth.v2_removed.title": "Не ўдалося праверыць абнаўленні",
   "modmenu.modrinth.v2_removed.description": "Немагчыма праверыць абнаўленні, бо API Modrinth версіі 2 больш не даступны.",
-
+  
   "modmenu.dropInfo.line1": "Перацягніце файлы ў",
   "modmenu.dropInfo.line2": "гэта акно, каб дадаць моды",
   "modmenu.dropConfirm": "Ці вы хочаце скапіяваць наступныя моды ў вашу папку mods?",
@@ -118,6 +118,7 @@
   "option.modmenu.show_libraries": "Бібліятэкі",
   "option.modmenu.show_libraries.true": "Паказаны",
   "option.modmenu.show_libraries.false": "Схаваны",
+  "option.modmenu.show_libraries.with_config": "З канфігурацыяй",
   "option.modmenu.hide_config_buttons": "Кнопка налад",
   "option.modmenu.hide_config_buttons.true": "Схавана",
   "option.modmenu.hide_config_buttons.false": "Паказана",

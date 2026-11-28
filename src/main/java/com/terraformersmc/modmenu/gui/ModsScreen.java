@@ -5,7 +5,6 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.config.ModMenuConfigManager;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
-import com.terraformersmc.modmenu.gui.widget.LegacyTexturedButtonWidget;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.ModListEntry;
 import com.terraformersmc.modmenu.util.DrawingUtil;
@@ -19,8 +18,10 @@ import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -37,11 +38,12 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonLinks;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -49,13 +51,17 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public class ModsScreen extends Screen {
-    private static final Identifier FILTERS_BUTTON_LOCATION = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/filters_button.png");
-    private static final Identifier CONFIGURE_BUTTON_LOCATION = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/configure_button.png");
+    private static final Identifier FILTERS_SPRITE_ENABLED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "filters/enabled");
+    private static final Identifier FILTERS_SPRITE_DISABLED= Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "filters/disabled");
+    private static final Identifier FILTERS_SPRITE_FOCUSED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "filters/focused");
+    private static final Identifier CONFIGURE_SPRITE_ENABLED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "configure/enabled");
+    private static final Identifier CONFIGURE_SPRITE_DISABLED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "configure/disabled");
+    private static final Identifier CONFIGURE_SPRITE_FOCUSED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "configure/focused");
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
-    private final Screen previousScreen;
-    private ModListEntry selected;
-    private ModBadgeRenderer modBadgeRenderer;
+    private final @Nullable Screen previousScreen;
+    private @Nullable ModListEntry selected;
+    private @Nullable ModBadgeRenderer modBadgeRenderer;
     private double scrollPercent = 0;
     private boolean keepFilterOptionsShown = false;
     private boolean init = false;
@@ -69,15 +75,15 @@ public class ModsScreen extends Screen {
     private int searchRowWidth;
     public final Set<String> showModChildren = new HashSet<>();
 
-    private EditBox searchBox;
-    private @Nullable AbstractWidget filtersButton;
-    private AbstractWidget sortingButton;
-    private AbstractWidget librariesButton;
-    private ModListWidget modList;
-    private @Nullable AbstractWidget configureButton;
-    private AbstractWidget websiteButton;
-    private AbstractWidget issuesButton;
-    private DescriptionListWidget descriptionListWidget;
+    private @Nullable EditBox searchBox;
+    private @Nullable SpriteIconButton filtersButton;
+    private @Nullable AbstractWidget sortingButton;
+    private @Nullable AbstractWidget librariesButton;
+    private @Nullable ModListWidget modList;
+    private @Nullable SpriteIconButton configureButton;
+    private @Nullable AbstractWidget websiteButton;
+    private @Nullable AbstractWidget issuesButton;
+    private @Nullable DescriptionListWidget descriptionListWidget;
 
     public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
     public final Map<String, Throwable> modScreenErrors = new HashMap<>();
@@ -85,7 +91,7 @@ public class ModsScreen extends Screen {
     private static final Component SEND_FEEDBACK_TEXT = Component.translatable("menu.sendFeedback");
     private static final Component REPORT_BUGS_TEXT = Component.translatable("menu.reportBugs");
 
-    public ModsScreen(Screen previousScreen) {
+    public ModsScreen(@Nullable Screen previousScreen) {
         super(ModMenuScreenTexts.TITLE);
         this.previousScreen = previousScreen;
     }
@@ -122,6 +128,7 @@ public class ModsScreen extends Screen {
                 ModMenuScreenTexts.SEARCH
         );
         this.searchBox.setResponder(text -> {
+            assert this.modList != null;
             this.modList.filter(text, false);
         });
 
@@ -138,51 +145,67 @@ public class ModsScreen extends Screen {
         this.updateFiltersX(true);
 
         if (!ModMenuConfig.CONFIG_MODE.getValue()) {
-            this.filtersButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS,
-                            button -> {
-                                this.setFilterOptionsShown(!this.filterOptionsShown);
-                            }
+            this.filtersButton =
+                    SpriteIconButton.builder(
+                            ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS,
+                            button -> this.setFilterOptionsShown(!this.filterOptionsShown),
+                            true
                     )
-                    .position(this.paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22)
                     .size(20, 20)
-                    .uv(0, 0, 20)
-                    .texture(FILTERS_BUTTON_LOCATION, 32, 64)
+                    .withTootip()
+                    .sprite(new WidgetSprites(
+                            FILTERS_SPRITE_ENABLED,
+                            FILTERS_SPRITE_DISABLED,
+                            FILTERS_SPRITE_FOCUSED
+                    ), 20, 20)
                     .build();
-
-            this.filtersButton.setTooltip(Tooltip.create(ModMenuScreenTexts.TOGGLE_FILTER_OPTIONS));
+            this.filtersButton.setPosition(this.paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22);
         }
 
         // Sorting button
         this.sortingButton = Button.builder(sortingText, button -> {
             ModMenuConfig.SORTING.cycleValue(this.minecraft.hasShiftDown() ? -1 : 1);
             ModMenuConfigManager.save();
+            assert modList != null;
             modList.reloadFilters();
             button.setMessage(ModMenuConfig.SORTING.getButtonText());
         }).pos(this.filtersX, 45).size(sortingWidth, 20).build();
 
         // Show libraries button
         this.librariesButton = Button.builder(librariesText, button -> {
-            ModMenuConfig.SHOW_LIBRARIES.toggleValue();
+            var values = ModMenuConfig.LibraryVisibility.values();
+            var value = ModMenuConfig.SHOW_LIBRARIES.getValue().ordinal();
+
+            ModMenuConfig.SHOW_LIBRARIES.setValue(values[(values.length + value + (minecraft.hasShiftDown() ? -1 : 1) ) % values.length]);
             ModMenuConfigManager.save();
+            assert modList != null;
             modList.reloadFilters();
             button.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
         }).pos(this.filtersX + sortingWidth + 2, 45).size(librariesWidth, 20).build();
 
         // Configure button
         if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
-            this.configureButton = LegacyTexturedButtonWidget.legacyTexturedBuilder(CommonComponents.EMPTY, button -> {
-                        final String id = Objects.requireNonNull(selected).getMod().getId();
-                        if (getModHasConfigScreen(id)) {
-                            this.safelyOpenConfigScreen(id);
-                        } else {
-                            button.active = false;
-                        }
-                    })
-                    .position(width - 24, RIGHT_PANE_Y)
-                    .size(20, 20)
-                    .uv(0, 0, 20)
-                    .texture(CONFIGURE_BUTTON_LOCATION, 32, 64)
+            this.configureButton =
+                    SpriteIconButton.builder(
+                            ModMenuScreenTexts.CONFIGURE,
+                            button -> {
+                                final String id = Objects.requireNonNull(selected).getMod().getId();
+                                if (getModHasConfigScreen(id)) {
+                                    this.safelyOpenConfigScreen(id);
+                                } else {
+                                    button.active = false;
+                                }
+                            },
+                            true
+                    )
+                    .size(20,20)
+                    .sprite(new WidgetSprites(
+                            CONFIGURE_SPRITE_ENABLED,
+                            CONFIGURE_SPRITE_DISABLED,
+                            CONFIGURE_SPRITE_FOCUSED
+                    ), 20, 20)
                     .build();
+            this.configureButton.setPosition(width - 24, RIGHT_PANE_Y);
         }
 
         // Website button
@@ -197,7 +220,7 @@ public class ModsScreen extends Screen {
                     } else {
                         var url = mod.getWebsite();
                         if (url != null) {
-                            ConfirmLinkScreen.confirmLinkNow(this, url, false);
+                            ConfirmLinkScreen.confirmLinkNow(this, URI.create(url), false);
                         }
                     }
                 })
@@ -214,7 +237,7 @@ public class ModsScreen extends Screen {
                     } else {
                         var url = mod.getIssueTracker();
                         if (url != null) {
-                            ConfirmLinkScreen.confirmLinkNow(this, url, false);
+                            ConfirmLinkScreen.confirmLinkNow(this, URI.create(url), false);
                         }
                     }
                 })
@@ -236,6 +259,7 @@ public class ModsScreen extends Screen {
 
         // Mods folder button
         AbstractWidget modsFolderButton = Button.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Util.getPlatform().openUri(getModsFolder().toUri())).pos(this.width / 2 - 154, this.height - 28).size(150, 20).build();
+
 
         // Done button
         AbstractWidget doneButton = Button.builder(CommonComponents.GUI_DONE, button -> minecraft.setScreen(previousScreen)).pos(this.width / 2 + 4, this.height - 28).size(150, 20).build();
@@ -270,11 +294,12 @@ public class ModsScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent input) {
-        return super.keyPressed(input) || this.searchBox.keyPressed(input);
+        return super.keyPressed(input) || Objects.requireNonNull(this.searchBox).keyPressed(input);
     }
 
     @Override
     public boolean charTyped(CharacterEvent input) {
+        assert this.searchBox != null;
         return this.searchBox.charTyped(input);
     }
 
@@ -283,10 +308,13 @@ public class ModsScreen extends Screen {
         super.extractRenderState(drawContext, mouseX, mouseY, delta);
         ModListEntry selectedEntry = selected;
         if (selectedEntry != null) {
+            assert this.descriptionListWidget != null;
             this.descriptionListWidget.extractRenderState(drawContext, mouseX, mouseY, delta);
         }
 
+        assert this.modList != null;
         this.modList.extractRenderState(drawContext, mouseX, mouseY, delta);
+        assert this.searchBox != null;
         this.searchBox.extractRenderState(drawContext, mouseX, mouseY, delta);
         drawContext.centeredText(this.font, this.title, this.modList.getWidth() / 2, 8, 0xFFFFFFFF);
         int grayColor = 0xFFAAAAAA;
@@ -311,8 +339,7 @@ public class ModsScreen extends Screen {
             Component fullModCount = this.computeModCountText(true, false);
             if (!ModMenuConfig.CONFIG_MODE.getValue() && this.updateFiltersX(false)) {
                 if (this.filterOptionsShown) {
-                    if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
-                            font.width(fullModCount) <= this.filtersX - 5) {
+                    if (font.width(fullModCount) <= this.filtersX - 5) {
                         drawContext.text(
                                 font,
                                 fullModCount.getVisualOrderText(),
@@ -340,8 +367,7 @@ public class ModsScreen extends Screen {
                         );
                     }
                 } else {
-                    if (!ModMenuConfig.SHOW_LIBRARIES.getValue() ||
-                            font.width(fullModCount) <= modList.getWidth() - 5) {
+                    if (font.width(fullModCount) <= modList.getWidth() - 5) {
                         drawContext.text(font,
                                 fullModCount.getVisualOrderText(),
                                 this.searchBoxX,
@@ -458,23 +484,29 @@ public class ModsScreen extends Screen {
                 .filter(mod -> !mod.isHidden() && !mod.getBadges().contains(Mod.Badge.LIBRARY))
                 .map(Mod::getId)
                 .collect(Collectors.toSet()), onInit);
-        if (includeLibs && ModMenuConfig.SHOW_LIBRARIES.getValue() && !onInit) {
+        if (includeLibs && !onInit) {
+            var visibility = ModMenuConfig.SHOW_LIBRARIES.getValue();
+
             int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
                     .stream()
-                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY))
+                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY) && !visibility.hideMod(mod, getModHasConfigScreen(mod.getId())))
                     .map(Mod::getId)
                     .collect(Collectors.toSet()), false);
-            return TranslationUtil.translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
-        } else {
-            return TranslationUtil.translateNumeric("modmenu.showingMods", rootMods);
+
+            if (rootLibs.length == 1 && rootLibs[0] != 0 || rootLibs.length == 2 && rootLibs[1] != 0) {
+                return TranslationUtil.translateNumeric("modmenu.showingModsLibraries", rootMods, rootLibs);
+            }
         }
+
+        return TranslationUtil.translateNumeric("modmenu.showingMods", rootMods);
     }
 
     private Component computeLibraryCountText(boolean onInit) {
-        if (ModMenuConfig.SHOW_LIBRARIES.getValue() && !onInit) {
+        var visibility = ModMenuConfig.SHOW_LIBRARIES.getValue();
+        if (!onInit) {
             int[] rootLibs = formatModCount(ModMenu.ROOT_MODS.values()
                     .stream()
-                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY))
+                    .filter(mod -> !mod.isHidden() && mod.getBadges().contains(Mod.Badge.LIBRARY) && !visibility.hideMod(mod, this.getModHasConfigScreen(mod.getId())))
                     .map(Mod::getId)
                     .collect(Collectors.toSet()), false);
             return TranslationUtil.translateNumeric("modmenu.showingLibraries", rootLibs);
@@ -484,6 +516,7 @@ public class ModsScreen extends Screen {
     }
 
     private int[] formatModCount(Set<String> set, boolean allVisible) {
+        assert this.modList != null;
         int visible = this.modList.getDisplayedCountFor(set);
         int total = set.size();
         if (visible == total || allVisible) {
@@ -495,21 +528,24 @@ public class ModsScreen extends Screen {
 
     @Override
     public void onClose() {
+        assert this.modList != null;
         this.modList.close();
         this.minecraft.setScreen(this.previousScreen);
     }
 
     private void setFilterOptionsShown(boolean filterOptionsShown) {
         this.filterOptionsShown = filterOptionsShown;
+        assert this.sortingButton != null;
         this.sortingButton.visible = filterOptionsShown;
+        assert this.librariesButton != null;
         this.librariesButton.visible = filterOptionsShown;
     }
 
-    public ModListEntry getSelectedEntry() {
+    public @Nullable ModListEntry getSelectedEntry() {
         return selected;
     }
 
-    public void updateSelectedEntry(ModListEntry entry) {
+    public void updateSelectedEntry(@Nullable ModListEntry entry) {
         if (entry == null) {
             return;
         }
@@ -517,6 +553,7 @@ public class ModsScreen extends Screen {
         this.selected = entry;
         String modId = selected.getMod().getId();
 
+        assert this.descriptionListWidget != null;
         this.descriptionListWidget.updateSelectedMod(selected.getMod());
 
         if (this.configureButton != null) {
@@ -533,7 +570,9 @@ public class ModsScreen extends Screen {
         }
 
         boolean isMinecraft = modId.equals("minecraft");
+        assert this.websiteButton != null;
         this.websiteButton.setMessage(isMinecraft ? SEND_FEEDBACK_TEXT : ModMenuScreenTexts.WEBSITE);
+        assert this.issuesButton != null;
         this.issuesButton.setMessage(isMinecraft ? REPORT_BUGS_TEXT : ModMenuScreenTexts.ISSUES);
 
         this.websiteButton.visible = true;
@@ -548,6 +587,7 @@ public class ModsScreen extends Screen {
     }
 
     public String getSearchInput() {
+        assert this.searchBox != null;
         return this.searchBox.getValue();
     }
 
@@ -575,7 +615,6 @@ public class ModsScreen extends Screen {
         }
 
         String modList = mods.stream().map(Path::getFileName).map(Path::toString).collect(Collectors.joining(", "));
-        assert this.minecraft != null;
         this.minecraft.setScreen(new ConfirmScreen((value) -> {
             if (value) {
                 boolean allSuccessful = true;
@@ -638,7 +677,6 @@ public class ModsScreen extends Screen {
         try {
             Screen screen = ModMenu.getConfigScreen(modId, this);
             if (screen != null) {
-                assert this.minecraft != null;
                 this.minecraft.setScreen(screen);
             }
         } catch (java.lang.NoClassDefFoundError e) {

@@ -4,29 +4,31 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.util.Tuple;
+import org.jspecify.annotations.Nullable;
 
 public class ModSearch {
-    public static boolean validSearchQuery(String query) {
+    public static boolean validSearchQuery(@Nullable String query) {
         return query != null && !query.isEmpty();
     }
 
-    public static List<Mod> search(ModsScreen screen, String query, List<Mod> candidates) {
+    public static List<Mod> search(ModsScreen screen, @Nullable String query, List<Mod> candidates) {
         if (!validSearchQuery(query)) {
             return candidates;
         } else {
             return candidates.stream()
-                    .map(modContainer -> new Tuple<>(modContainer,
+                    .map(modContainer -> Map.entry(modContainer,
                             passesFilters(screen, modContainer, query.toLowerCase(Locale.ROOT))
                     ))
-                    .filter(pair -> pair.getB() > 0)
-                    .sorted((a, b) -> b.getB() - a.getB())
-                    .map(Tuple::getA)
+                    .filter(pair -> pair.getValue() > 0)
+                    .sorted(Comparator.<Map.Entry<Mod, Integer>>comparingInt(Map.Entry::getValue).reversed())
+                    .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
         }
     }
@@ -47,7 +49,7 @@ public class ModSearch {
         String hasUpdate = I18n.get("modmenu.searchTerms.hasUpdate");
 
         // Libraries are currently hidden, ignore them entirely
-        if (mod.isHidden() || !ModMenuConfig.SHOW_LIBRARIES.getValue() && mod.getBadges().contains(Mod.Badge.LIBRARY)) {
+        if (mod.isHidden() || ModMenuConfig.SHOW_LIBRARIES.getValue().hideMod(mod, ModMenu.hasConfigScreen(mod.getId()))) {
             return 0;
         }
 

@@ -118,6 +118,7 @@
   "option.modmenu.show_libraries": "Teegid",
   "option.modmenu.show_libraries.true": "kuvatud",
   "option.modmenu.show_libraries.false": "peidetud",
+  "option.modmenu.show_libraries.with_config": "seadistustega",
   "option.modmenu.hide_config_buttons": "Seadistusnupud",
   "option.modmenu.hide_config_buttons.true": "peidetud",
   "option.modmenu.hide_config_buttons.false": "kuvatud",

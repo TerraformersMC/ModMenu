@@ -102,7 +102,9 @@
     "lowercasebtw",
     "tnoctua",
     "litetex",
-    "Starmoe(Celestia)"
+    "Starmoe(Celestia)",
+    "Coredex",
+    "LostLuma"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [

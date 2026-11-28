@@ -2,8 +2,6 @@ package com.terraformersmc.modmenu.util;
 
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.util.mod.Mod;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.locale.Language;
@@ -12,11 +10,11 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
 
-@Environment(EnvType.CLIENT)
 public class DrawingUtil {
     private static final Minecraft CLIENT = Minecraft.getInstance();
 
@@ -41,14 +39,18 @@ public class DrawingUtil {
 
     public static void drawWrappedString(
             GuiGraphicsExtractor drawContext,
-            String string,
+            @Nullable String string,
             int x,
             int y,
             int wrapWidth,
             int lines,
             int color
     ) {
-        while (string != null && string.endsWith("\n")) {
+        if (string == null) {
+            return;
+        }
+
+        while (string.endsWith("\n")) {
             string = string.substring(0, string.length() - 1);
         }
 

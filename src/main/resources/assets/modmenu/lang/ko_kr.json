@@ -68,7 +68,7 @@
   "modmenu.downloadLink": "다운로드",
 
   "modmenu.bluesky": "Bluesky",
-  "modmenu.buymeacoffee": "커피 한 잔 사주기",
+  "modmenu.buymeacoffee": "Buy Me a Coffee",
   "modmenu.coindrop": "Coindrop",
   "modmenu.crowdin": "Crowdin",
   "modmenu.curseforge": "CurseForge",
@@ -157,7 +157,7 @@
   "option.modmenu.game_menu_button_style": "게임 메뉴",
   "option.modmenu.game_menu_button_style.insert": "끼워넣음",
   "option.modmenu.game_menu_button_style.replace": "바꿔침",
-  "option.modmenu.game_menu_button_style.icon": "아이콘",
+	"option.modmenu.game_menu_button_style.icon": "아이콘",
   "option.modmenu.random_java_colors": "Java 색",
   "option.modmenu.random_java_colors.true": "배포사에 맞게",
   "option.modmenu.random_java_colors.false": "항상 빨갛게",
