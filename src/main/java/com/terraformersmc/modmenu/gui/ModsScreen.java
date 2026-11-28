@@ -38,11 +38,12 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonLinks;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -58,9 +59,9 @@ public class ModsScreen extends Screen {
     private static final Identifier CONFIGURE_SPRITE_FOCUSED = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "configure/focused");
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Mod Menu | ModsScreen");
-    private final Screen previousScreen;
-    private ModListEntry selected;
-    private ModBadgeRenderer modBadgeRenderer;
+    private final @Nullable Screen previousScreen;
+    private @Nullable ModListEntry selected;
+    private @Nullable ModBadgeRenderer modBadgeRenderer;
     private double scrollPercent = 0;
     private boolean keepFilterOptionsShown = false;
     private boolean init = false;
@@ -74,15 +75,15 @@ public class ModsScreen extends Screen {
     private int searchRowWidth;
     public final Set<String> showModChildren = new HashSet<>();
 
-    private EditBox searchBox;
+    private @Nullable EditBox searchBox;
     private @Nullable SpriteIconButton filtersButton;
-    private AbstractWidget sortingButton;
-    private AbstractWidget librariesButton;
-    private ModListWidget modList;
+    private @Nullable AbstractWidget sortingButton;
+    private @Nullable AbstractWidget librariesButton;
+    private @Nullable ModListWidget modList;
     private @Nullable SpriteIconButton configureButton;
-    private AbstractWidget websiteButton;
-    private AbstractWidget issuesButton;
-    private DescriptionListWidget descriptionListWidget;
+    private @Nullable AbstractWidget websiteButton;
+    private @Nullable AbstractWidget issuesButton;
+    private @Nullable DescriptionListWidget descriptionListWidget;
 
     public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
     public final Map<String, Throwable> modScreenErrors = new HashMap<>();
@@ -90,7 +91,7 @@ public class ModsScreen extends Screen {
     private static final Component SEND_FEEDBACK_TEXT = Component.translatable("menu.sendFeedback");
     private static final Component REPORT_BUGS_TEXT = Component.translatable("menu.reportBugs");
 
-    public ModsScreen(Screen previousScreen) {
+    public ModsScreen(@Nullable Screen previousScreen) {
         super(ModMenuScreenTexts.TITLE);
         this.previousScreen = previousScreen;
     }
@@ -127,6 +128,7 @@ public class ModsScreen extends Screen {
                 ModMenuScreenTexts.SEARCH
         );
         this.searchBox.setResponder(text -> {
+            assert this.modList != null;
             this.modList.filter(text, false);
         });
 
@@ -164,6 +166,7 @@ public class ModsScreen extends Screen {
         this.sortingButton = Button.builder(sortingText, button -> {
             ModMenuConfig.SORTING.cycleValue(this.minecraft.hasShiftDown() ? -1 : 1);
             ModMenuConfigManager.save();
+            assert modList != null;
             modList.reloadFilters();
             button.setMessage(ModMenuConfig.SORTING.getButtonText());
         }).pos(this.filtersX, 45).size(sortingWidth, 20).build();
@@ -175,6 +178,7 @@ public class ModsScreen extends Screen {
 
             ModMenuConfig.SHOW_LIBRARIES.setValue(values[(values.length + value + (minecraft.hasShiftDown() ? -1 : 1) ) % values.length]);
             ModMenuConfigManager.save();
+            assert modList != null;
             modList.reloadFilters();
             button.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
         }).pos(this.filtersX + sortingWidth + 2, 45).size(librariesWidth, 20).build();
@@ -216,7 +220,7 @@ public class ModsScreen extends Screen {
                     } else {
                         var url = mod.getWebsite();
                         if (url != null) {
-                            ConfirmLinkScreen.confirmLinkNow(this, url, false);
+                            ConfirmLinkScreen.confirmLinkNow(this, URI.create(url), false);
                         }
                     }
                 })
@@ -233,7 +237,7 @@ public class ModsScreen extends Screen {
                     } else {
                         var url = mod.getIssueTracker();
                         if (url != null) {
-                            ConfirmLinkScreen.confirmLinkNow(this, url, false);
+                            ConfirmLinkScreen.confirmLinkNow(this, URI.create(url), false);
                         }
                     }
                 })
@@ -255,6 +259,7 @@ public class ModsScreen extends Screen {
 
         // Mods folder button
         AbstractWidget modsFolderButton = Button.builder(ModMenuScreenTexts.MODS_FOLDER, button -> Util.getPlatform().openUri(getModsFolder().toUri())).pos(this.width / 2 - 154, this.height - 28).size(150, 20).build();
+
 
         // Done button
         AbstractWidget doneButton = Button.builder(CommonComponents.GUI_DONE, button -> minecraft.gui.setScreen(previousScreen)).pos(this.width / 2 + 4, this.height - 28).size(150, 20).build();
@@ -289,11 +294,12 @@ public class ModsScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent input) {
-        return super.keyPressed(input) || this.searchBox.keyPressed(input);
+        return super.keyPressed(input) || Objects.requireNonNull(this.searchBox).keyPressed(input);
     }
 
     @Override
     public boolean charTyped(CharacterEvent input) {
+        assert this.searchBox != null;
         return this.searchBox.charTyped(input);
     }
 
@@ -302,10 +308,13 @@ public class ModsScreen extends Screen {
         super.extractRenderState(drawContext, mouseX, mouseY, delta);
         ModListEntry selectedEntry = selected;
         if (selectedEntry != null) {
+            assert this.descriptionListWidget != null;
             this.descriptionListWidget.extractRenderState(drawContext, mouseX, mouseY, delta);
         }
 
+        assert this.modList != null;
         this.modList.extractRenderState(drawContext, mouseX, mouseY, delta);
+        assert this.searchBox != null;
         this.searchBox.extractRenderState(drawContext, mouseX, mouseY, delta);
         drawContext.centeredText(this.font, this.title, this.modList.getWidth() / 2, 8, 0xFFFFFFFF);
         int grayColor = 0xFFAAAAAA;
@@ -507,6 +516,7 @@ public class ModsScreen extends Screen {
     }
 
     private int[] formatModCount(Set<String> set, boolean allVisible) {
+        assert this.modList != null;
         int visible = this.modList.getDisplayedCountFor(set);
         int total = set.size();
         if (visible == total || allVisible) {
@@ -518,21 +528,24 @@ public class ModsScreen extends Screen {
 
     @Override
     public void onClose() {
+        assert this.modList != null;
         this.modList.close();
         this.minecraft.gui.setScreen(this.previousScreen);
     }
 
     private void setFilterOptionsShown(boolean filterOptionsShown) {
         this.filterOptionsShown = filterOptionsShown;
+        assert this.sortingButton != null;
         this.sortingButton.visible = filterOptionsShown;
+        assert this.librariesButton != null;
         this.librariesButton.visible = filterOptionsShown;
     }
 
-    public ModListEntry getSelectedEntry() {
+    public @Nullable ModListEntry getSelectedEntry() {
         return selected;
     }
 
-    public void updateSelectedEntry(ModListEntry entry) {
+    public void updateSelectedEntry(@Nullable ModListEntry entry) {
         if (entry == null) {
             return;
         }
@@ -540,6 +553,7 @@ public class ModsScreen extends Screen {
         this.selected = entry;
         String modId = selected.getMod().getId();
 
+        assert this.descriptionListWidget != null;
         this.descriptionListWidget.updateSelectedMod(selected.getMod());
 
         if (this.configureButton != null) {
@@ -556,7 +570,9 @@ public class ModsScreen extends Screen {
         }
 
         boolean isMinecraft = modId.equals("minecraft");
+        assert this.websiteButton != null;
         this.websiteButton.setMessage(isMinecraft ? SEND_FEEDBACK_TEXT : ModMenuScreenTexts.WEBSITE);
+        assert this.issuesButton != null;
         this.issuesButton.setMessage(isMinecraft ? REPORT_BUGS_TEXT : ModMenuScreenTexts.ISSUES);
 
         this.websiteButton.visible = true;
@@ -571,6 +587,7 @@ public class ModsScreen extends Screen {
     }
 
     public String getSearchInput() {
+        assert this.searchBox != null;
         return this.searchBox.getValue();
     }
 
@@ -598,7 +615,6 @@ public class ModsScreen extends Screen {
         }
 
         String modList = mods.stream().map(Path::getFileName).map(Path::toString).collect(Collectors.joining(", "));
-        assert this.minecraft != null;
         this.minecraft.gui.setScreen(new ConfirmScreen((value) -> {
             if (value) {
                 boolean allSuccessful = true;
@@ -661,7 +677,6 @@ public class ModsScreen extends Screen {
         try {
             Screen screen = ModMenu.getConfigScreen(modId, this);
             if (screen != null) {
-                assert this.minecraft != null;
                 this.minecraft.gui.setScreen(screen);
             }
         } catch (java.lang.NoClassDefFoundError e) {

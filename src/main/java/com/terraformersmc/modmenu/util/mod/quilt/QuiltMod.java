@@ -4,8 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.terraformersmc.modmenu.util.UpdateCheckerUtil;
 import com.terraformersmc.modmenu.util.mod.fabric.FabricMod;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.ModContributor;
 import org.quiltmc.loader.api.ModMetadata;
@@ -32,7 +31,7 @@ public class QuiltMod extends FabricMod {
     }
 
     @Override
-    public @NotNull List<String> getAuthors() {
+    public List<String> getAuthors() {
         List<String> authors = metadata.contributors()
                 .stream()
                 .filter(contributor -> contributor.role().equals("Author") || contributor.role().equals("Owner"))
@@ -57,7 +56,7 @@ public class QuiltMod extends FabricMod {
     }
 
     @Override
-    public @NotNull Map<String, Collection<String>> getContributors() {
+    public Map<String, Collection<String>> getContributors() {
         Map<String, Collection<String>> contributors = new LinkedHashMap<>();
 
         for (var contributor : this.metadata.contributors()) {
@@ -68,7 +67,7 @@ public class QuiltMod extends FabricMod {
     }
 
     @Override
-    public @NotNull SortedMap<String, Set<String>> getCredits() {
+    public SortedMap<String, Set<String>> getCredits() {
         SortedMap<String, Set<String>> credits = new TreeMap<>();
 
         var contributors = this.getContributors();

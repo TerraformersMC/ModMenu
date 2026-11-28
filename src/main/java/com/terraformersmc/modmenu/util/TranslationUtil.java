@@ -4,20 +4,24 @@ import com.terraformersmc.modmenu.ModMenu;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
 
 public class TranslationUtil {
-    public static Component translateNumeric(String key, int[]... args) {
+    public static Component translateNumeric(String key, int[]@Nullable... args) {
         Object[] realArgs = new Object[args.length];
         for (int i = 0; i < args.length; i++) {
-            NumberFormat nf = NumberFormat.getInstance();
-            if (args[i].length == 1) {
-                realArgs[i] = nf.format(args[i][0]);
+            int[] arg = args[i];
+            assert arg != null;
+            NumberFormat nf = NumberFormat.getInstance(Locale.ROOT);
+            if (arg.length == 1) {
+                realArgs[i] = nf.format(arg[0]);
             } else {
-                assert args[i].length == 2;
-                realArgs[i] = nf.format(args[i][0]) + "/" + nf.format(args[i][1]);
+                assert arg.length == 2;
+                realArgs[i] = nf.format(arg[0]) + "/" + nf.format(arg[1]);
             }
         }
 

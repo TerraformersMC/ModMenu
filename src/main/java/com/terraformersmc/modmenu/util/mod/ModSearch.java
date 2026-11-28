@@ -11,13 +11,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.resources.language.I18n;
+import org.jspecify.annotations.Nullable;
 
 public class ModSearch {
-    public static boolean validSearchQuery(String query) {
+    public static boolean validSearchQuery(@Nullable String query) {
         return query != null && !query.isEmpty();
     }
 
-    public static List<Mod> search(ModsScreen screen, String query, List<Mod> candidates) {
+    public static List<Mod> search(ModsScreen screen, @Nullable String query, List<Mod> candidates) {
         if (!validSearchQuery(query)) {
             return candidates;
         } else {
